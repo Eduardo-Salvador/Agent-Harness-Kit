@@ -10,11 +10,11 @@
 
 Listen to a concise English explanation of what Agent Harness Kit is, how its workflow operates, what version 0.3.0 provides, and what remains intentionally outside the current runtime.
 
-https://github.com/user-attachments/assets/b9f7771b-0bde-4622-a369-24d4c0de955c
+https://github.com/user-attachments/assets/8d0d1956-5199-43d2-9cf7-3a4b625553bd
 
 [Download the English MP3](media/agent-harness-kit-overview-en.mp3) · [Read the current English narration script](media/overview-script-en.txt)
 
-The playable track is the approved legacy narration; the linked versioned script records the pending 0.3.0 narration refresh.
+The approved playable track matches the current version 0.3.0 narration script, including executable goal-lineage budgets.
 
 ## Why use it
 
@@ -175,7 +175,6 @@ python tools/package.py --profile core --output <outside-directory>
 - File leases are governed graph/write-set contracts with collision validation, not operating-system locks; symlink/case equivalence and lease recovery remain open runtime policy.
 - Installed Codex and Claude Code interactive simulations are still required before claiming automated isolation/delegation behavior on every host.
 - Budget enforcement is currently artifact/validator based. Host-level token metering, time limits, and forced process termination are not yet portable or proven across Codex and Claude Code.
-- The playable tracks remain the approved legacy narration; the current versioned scripts require re-rendering and human audition.
 
 ## Next phase
 
@@ -183,10 +182,11 @@ python tools/package.py --profile core --output <outside-directory>
 2. Implement an optional external autonomous orchestrator with atomic revisions and leases.
 3. Add runtime transition, retry, checkpoint, recovery, and non-interference fixtures.
 4. Exercise native first-run discovery against greenfield and mature-host fixtures on supported installations.
-5. Re-render and audition the bilingual overview audio, then decide release automation and GitHub attachment provenance before automating publication.
+5. Decide release automation and GitHub attachment provenance before automating publication.
 
 See [OPEN-DECISIONS.md](OPEN-DECISIONS.md); unchecked items are never implicit permission.
 
 ## License and community
 
 Licensed under the [MIT License](LICENSE), copyright 2026 Agent Harness Kit contributors. See the [contribution guide](.github/CONTRIBUTING.md), [security policy](.github/SECURITY.md), and [support policy](.github/SUPPORT.md).
+
