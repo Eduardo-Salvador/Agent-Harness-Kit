@@ -8,6 +8,8 @@ On a new context window, resume request, or status request, the agent must read 
 
 To control cost without silently reducing quality, tasks are routed by capability. Economical models are limited to narrow mechanical work with deterministic checks. Balanced models are the normal default for bounded implementation, tests, documentation, and inspection. Frontier models are reserved for architecture, security, brainstorming, difficult integration, harness evolution, and repeated failure. Model choice never grants extra permission.
 
+Each task also carries an executable goal-lineage budget. By default, an agent may make at most two implementation attempts, spend at most two consecutive cycles without measurable progress, and expand context at most three times. Changing the model, agent, task, review, decomposition, or session does not reset those counters. When any ceiling is reached, the agent must record evidence, stop, and return the work for bounded replanning instead of consuming more context.
+
 It works for both new projects and mature repositories that already have Claude context, Codex instructions, agents, rules, or a custom harness. In those repositories, it does not overwrite anything immediately. It first inventories and freezes existing authorities. It then installs through staged coexistence in a separate namespace and requires human review before anything is removed or replaced. The README also links to the migration and coexistence playbooks and contracts.
 
 There are three options.
@@ -46,6 +48,6 @@ Users may also define business, security, architecture, style, and path-scoped r
 
 If your goal is to study harness engineering itself, use Full and open the separate learning pack without loading that material into operational project work.
 
-Today, Agent Harness Kit already provides the operating structure, contracts, agents, templates, playbooks, capability-based model routing, coherent change integration, validation, and packaging. It is not yet a standalone program that automatically dispatches agents, creates worktrees, and integrates branches on every platform.
+Today, Agent Harness Kit already provides the operating structure, contracts, agents, templates, playbooks, capability-based model routing, bounded execution budgets, coherent change integration, validation, and packaging. It is not yet a standalone program that automatically dispatches agents, creates worktrees, and integrates branches on every platform.
 
 The project uses the MIT License and is open to the community.

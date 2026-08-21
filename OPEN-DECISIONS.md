@@ -49,7 +49,7 @@ This ledger contains real unresolved choices. An unchecked item is not permissio
 - [x] **Contained installation and continuous delivery release** — `0.2.0`; approved tag: `v0.2.0` from the validated canonical source.
 - [ ] **Release automation and GitHub attachments** — owner: maintainers/security; block: automated release. Validate provenance, checksums, and permissions before enabling.
 - [x] Keep one canonical, profile-aware README pair; copied-profile validation confirms all remaining relative links resolve without profile-specific rendering.
-- [ ] **Overview audio 0.3.0 refresh** — owner: maintainers/user; block: publication polish. Versioned bilingual scripts cover native entrypoints, PENDING/graph authority, executable status, capability routing, bounded focused reviews, coherent change units, and separate publication authority. Re-render both tracks and obtain user audition approval; preserve the current approved narration until an acceptable bilingual pair exists.
+- [x] **Overview audio 0.3.0 refresh** — bilingual tracks were re-rendered with the current scripts, including executable goal-lineage budgets, approved by the user, published as GitHub attachments, and bound by manifest hashes.
 
 ## Next implementation gate
 

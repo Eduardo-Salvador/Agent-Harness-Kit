@@ -1018,6 +1018,7 @@ def validate_repository() -> list[str]:
             if len(player_bytes) < 1024 or b"ftyp" not in player_bytes[:64]:
                 errors.append(f"media.player: {player_name} is empty or not recognizable as MP4")
     audio_manifest_path = ROOT / "media" / "overview-audio-manifest.json"
+    audio_manifest: dict = {}
     if audio_manifest_path.is_file():
         try:
             audio_manifest = json.loads(audio_manifest_path.read_text(encoding="utf-8"))
@@ -1122,11 +1123,12 @@ def validate_repository() -> list[str]:
             readme_text = readme.read_text(encoding="utf-8")
             attachment_urls = re.findall(r"^https://github\.com/user-attachments/assets/[0-9a-f-]{36}$", readme_text, re.MULTILINE)
             is_portuguese = readme.name == "README.pt-BR.md"
-            expected_attachment = (
-                "https://github.com/user-attachments/assets/2fed6fc3-09a8-4493-9233-69f1fb320036"
-                if is_portuguese else
-                "https://github.com/user-attachments/assets/b9f7771b-0bde-4622-a369-24d4c0de955c"
-            )
+            language = "pt-BR" if is_portuguese else "en"
+            manifest_tracks = {
+                track.get("language"): track for track in audio_manifest.get("tracks", [])
+                if isinstance(track, dict)
+            }
+            expected_attachment = manifest_tracks.get(language, {}).get("github_attachment", "")
             expected_audio = "media/agent-harness-kit-overview-pt-BR.mp3" if is_portuguese else "media/agent-harness-kit-overview-en.mp3"
             expected_script = "media/overview-script-pt-BR.txt" if is_portuguese else "media/overview-script-en.txt"
             other_audio = "media/agent-harness-kit-overview-en.mp3" if is_portuguese else "media/agent-harness-kit-overview-pt-BR.mp3"

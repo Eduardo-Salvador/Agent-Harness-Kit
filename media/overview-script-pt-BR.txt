@@ -8,6 +8,8 @@ Em uma nova janela de contexto, em pedidos de retomada ou em pedidos de status, 
 
 Para controlar o custo sem reduzir a qualidade de forma silenciosa, as tarefas são roteadas por capacidade. Modelos econômicos ficam limitados a trabalho mecânico e verificável. Modelos balanceados são o padrão para implementação delimitada, testes, documentação e inspeção. Modelos avançados ficam reservados para arquitetura, segurança, brainstorming, integração difícil, evolução do harness e falhas repetidas. A escolha do modelo nunca concede permissões adicionais.
 
+Cada tarefa também recebe um orçamento executável por linhagem de objetivo. Por padrão, o agente pode fazer no máximo duas tentativas de implementação, passar no máximo dois ciclos consecutivos sem progresso mensurável e expandir o contexto no máximo três vezes. Trocar modelo, agente, tarefa, review, decomposição ou sessão não zera esses contadores. Ao atingir qualquer teto, o agente deve registrar evidências, parar e devolver o trabalho para um replanejamento delimitado, em vez de continuar consumindo contexto.
+
 Ele serve tanto para projetos novos quanto para repositórios maduros que já têm contexto do Claude, instruções do Codex, agentes, regras e até um harness próprio. Nesses casos, não sobrescreve nada de imediato. Primeiro, faz um inventário e congela as autoridades existentes. Depois, instala por coexistência gradual em um espaço separado e pede revisão humana antes de qualquer remoção ou substituição. O README também aponta para o playbook e para os contratos de migração e coexistência.
 
 Existem três opções.
@@ -46,6 +48,6 @@ O usuário também pode definir regras de negócio, segurança, arquitetura, est
 
 Se o seu objetivo é estudar a própria engenharia de harness, pode usar o perfil Full e abrir o pacote educacional separado, sem carregar esse material no trabalho operacional do projeto.
 
-Hoje, o Agent Harness Kit já oferece a estrutura operacional, os contratos, os agentes, os templates, os playbooks, o roteamento de modelos por capacidade, a integração coerente de mudanças, a validação e o empacotamento. Ele ainda não é um programa independente que, sozinho, dispara agentes, cria worktrees e integra branches em qualquer plataforma.
+Hoje, o Agent Harness Kit já oferece a estrutura operacional, os contratos, os agentes, os templates, os playbooks, o roteamento de modelos por capacidade, os orçamentos limitados de execução, a integração coerente de mudanças, a validação e o empacotamento. Ele ainda não é um programa independente que, sozinho, dispara agentes, cria worktrees e integra branches em qualquer plataforma.
 
 O projeto usa a licença MIT e está aberto à comunidade.

@@ -31,6 +31,5 @@ Controlled mature-host adoption is structurally testable, but semantic equivalen
 3. Review third-party/trademark notices and the native instruction/skill/agent security boundaries.
 4. Run the validator and clean-build all profiles from the exact release source; inspect archive inventories/checksums and test on supported operating systems.
 5. Decide release provenance/automation and GitHub attachment workflow before publishing artifacts.
-6. Re-render and audition both overview audios with the minimal dual-native-entrypoint sentence; the current approved MP3s predate that sentence and remain intentionally preserved.
 
 See [open decisions](../OPEN-DECISIONS.md), [distribution](DISTRIBUTION.md), [validation](VALIDATION.md), and [portability](PORTABILITY.md).

@@ -6,29 +6,29 @@
       "language": "en",
       "audio": "media/agent-harness-kit-overview-en.mp3",
       "github_player": "media/agent-harness-kit-overview-en.mp4",
-      "github_attachment": "https://github.com/user-attachments/assets/b9f7771b-0bde-4622-a369-24d4c0de955c",
+      "github_attachment": "https://github.com/user-attachments/assets/8d0d1956-5199-43d2-9cf7-3a4b625553bd",
       "script": "media/overview-script-en.txt",
-      "audio_sha256": "ad0c05b49ab76413a78c7ba9f120a8298cfb0d6c3f56b1ca182836365e46f940",
-      "script_sha256": "17ea7d23eac2d954db2ae72932358600c4308d08278366aae856743b48ef28f3",
-      "github_player_sha256": "0999219bea926337100dd9b80d9149ddfe1c330877768bf6bf1c7f73752231a2",
+      "audio_sha256": "1a7a74d5d520ad81747d72828ecb2716184f87cb06915051ce5f298a53ce416b",
+      "script_sha256": "b120ea11225a58bee1b8298e6294ec875700b78daa9948f3d552c556cbae049c",
+      "github_player_sha256": "1335b22673ba5c1d8d6e0c9c6a25af5a01ea466cab6bd8e5c2fc6bf0b31b23bd",
       "voice": "en-US-EmmaMultilingualNeural",
-      "status": "refresh-required",
-      "script_synced": false,
-      "note": "Approved legacy audio is preserved as MP3 and an AAC-in-MP4 GitHub README player; the current script adds executable status fields and focused second-review evidence, so narration refresh remains required."
+      "status": "approved",
+      "script_synced": true,
+      "note": "User-approved v0.3.0 narration matches the versioned script, including native entrypoints, status authority, bounded reviews, and executable goal-lineage budgets."
     },
     {
       "language": "pt-BR",
       "audio": "media/agent-harness-kit-overview-pt-BR.mp3",
       "github_player": "media/agent-harness-kit-overview-pt-BR.mp4",
-      "github_attachment": "https://github.com/user-attachments/assets/2fed6fc3-09a8-4493-9233-69f1fb320036",
+      "github_attachment": "https://github.com/user-attachments/assets/4c68f8a0-bfac-4847-b2ea-9adeae24c17c",
       "script": "media/overview-script-pt-BR.txt",
-      "audio_sha256": "2f917089a2cd498c30be3188c6cac9c4d813335ecb371e1d44e83bee666b297b",
-      "script_sha256": "3d5685dd5d276d6d2066b85ae09455d32723875be84cda71a6fad3bb84f69df2",
-      "github_player_sha256": "6b79dd6eeca6c4ac1a4694282ff462a81d4c10a711e532542e5f40970b846f15",
+      "audio_sha256": "dd3bfa399c25e1867b48dae681c978a4a6da7c45dc0516e73f5e902dcfd8f016",
+      "script_sha256": "b6ee3f41c3e02597c585c58b35492ddc3ec4caa88f0ea4b3f0e250c7f85b23c8",
+      "github_player_sha256": "988121ca8bd69009ebe01e027cd6cc7b386d3eee4a9c35ec717c5bd646ea0133",
       "voice": "pt-BR-FranciscaNeural",
-      "status": "refresh-required",
-      "script_synced": false,
-      "note": "Approved legacy audio is preserved as MP3 and an AAC-in-MP4 GitHub README player; the current script adds executable status fields and focused second-review evidence, so narration refresh remains required."
+      "status": "approved",
+      "script_synced": true,
+      "note": "User-approved v0.3.0 narration matches the versioned script, including native entrypoints, status authority, bounded reviews, and executable goal-lineage budgets."
     }
   ]
 }
