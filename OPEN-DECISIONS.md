@@ -44,6 +44,7 @@ This ledger contains real unresolved choices. An unchecked item is not permissio
 
 - [x] Define `core`, `core-learning`, and `full` as generated profiles from one source tree and shared `VERSION`.
 - [x] **Initial public version** — `0.1.0`; approved tag: `v0.1.0` from the validated canonical source.
+- [x] **Contained installation and continuous delivery release** — `0.2.0`; approved tag: `v0.2.0` from the validated canonical source.
 - [ ] **Release automation and GitHub attachments** — owner: maintainers/security; block: automated release. Validate provenance, checksums, and permissions before enabling.
 - [x] Keep one canonical, profile-aware README pair; copied-profile validation confirms all remaining relative links resolve without profile-specific rendering.
 - [ ] **Overview audio capability-routing refresh** — owner: maintainers/user; block: publication polish. Versioned bilingual scripts now cover native entrypoints, capability-based routing, coherent change units, and separate publication authority. Re-render both tracks from those scripts and obtain user audition approval; preserve the current approved MP3s until an acceptable bilingual pair exists.

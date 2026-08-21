@@ -48,4 +48,4 @@ Generated names follow `agent-harness-kit-<version>-<profile>.zip` (or the same 
 
 ## Version strategy
 
-`VERSION` is the single version value shared by all three bundles; profile names are suffixes, not independent versions. `0.1.0` is the approved initial public source version. A future approved release changes `VERSION` once, validates all profiles, and may attach the three archives to one GitHub Release. Release automation remains an open decision.
+`VERSION` is the single version value shared by all three bundles; profile names are suffixes, not independent versions. `0.1.0` is the initial public source version and `0.2.0` adds contained installation plus continuous-delivery governance. A future approved release changes `VERSION` once, validates all profiles, and may attach the three archives to one GitHub Release. Release automation remains an open decision.
