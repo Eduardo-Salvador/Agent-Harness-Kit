@@ -1,0 +1,4 @@
+{
+  "mutation": {"action": "set", "field": "inspectable_paths", "value": ["../outside/secrets.txt"]},
+  "expected_errors": ["status.inspectable-path"]
+}

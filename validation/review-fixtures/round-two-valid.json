@@ -1,0 +1,8 @@
+{
+  "round": 2,
+  "scope": "focused-rereview",
+  "prior_review": "REVIEW-TASK-001-01",
+  "blocking_findings": ["REV-001"],
+  "correction_delta": ["src/validator.py", "tests/test_validator.py"],
+  "regression_scope": ["contract validation", "related path normalization"]
+}

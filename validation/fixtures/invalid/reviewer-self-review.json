@@ -1,0 +1,6 @@
+{
+  "expected_errors": ["graph.reviewer-independence"],
+  "nodes": [
+    {"id": "TASK-A", "goal": "A", "depends_on": [], "status": "ready", "assignee": "agent:same", "reviewer": "agent:same", "write_set": ["src/a/**"], "checkpoint": null, "assurance_status": "not-required", "assurance_requires": [], "task_brief": "A.md"}
+  ]
+}
