@@ -23,12 +23,12 @@ NODE_FIELDS = {
 }
 
 REQUIRED_FILES = [
-    "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "LICENSE", "media/agent-harness-kit-overview-en.mp3", "media/agent-harness-kit-overview-pt-BR.mp3",
+    "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "LICENSE", "media/agent-harness-kit-overview-en.mp3", "media/agent-harness-kit-overview-pt-BR.mp3", "media/agent-harness-kit-overview-en.mp4", "media/agent-harness-kit-overview-pt-BR.mp4",
     "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
     "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md",
     "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md",
     "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
-    "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md",
+    "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md",
     "adapters/README.md", "adapters/generic.md", "adapters/codex.md", "adapters/claude.md",
     "harness/roles/README.md", "harness/roles/discovery-interviewer.md",
     "harness/roles/orchestrator-po.md", "harness/roles/task-decomposer.md",
@@ -40,7 +40,7 @@ REQUIRED_FILES = [
     "harness/playbooks/review-integration.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/learning-capture-publication.md",
     "harness/templates/README.md", "harness/templates/PROJECT-CONTEXT.md",
     "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/TASK.md",
-    "harness/templates/HANDOFF.md", "harness/templates/REVIEW.md",
+    "harness/templates/HANDOFF.md", "harness/templates/REVIEW.md", "harness/templates/STATUS.md",
     "harness/templates/DECISION.md", "harness/templates/LEARNING-PROFILE.md",
     "harness/templates/LEARNING-QUEUE.md", "harness/templates/MODEL-ROUTING.md",
     "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md",
@@ -56,6 +56,13 @@ REQUIRED_FILES = [
     "validation/fixtures/invalid/missing-dependency.json",
     "validation/fixtures/invalid/write-collision.json",
     "validation/fixtures/invalid/assurance-gate.json",
+    "validation/fixtures/invalid/reviewer-self-review.json",
+    "validation/fixtures/invalid/path-traversal.json",
+    "validation/status-fixtures/valid.json",
+    "validation/status-fixtures/invalid/missing-progress.json",
+    "validation/status-fixtures/invalid/path-traversal.json",
+    "validation/review-fixtures/round-two-valid.json",
+    "validation/review-fixtures/invalid/missing-correction-delta.json",
     "VERSION", "docs/DISTRIBUTION.md", "docs/PUBLICATION-READINESS.md", "tools/package.py", "tools/install.py", "validation/test_install.py",
     "distribution/project.json", "distribution/profiles/core.json", "distribution/profiles/core-learning.json", "distribution/profiles/full.json",
     "docs/contracts/MIGRATION-MANIFEST.md", "docs/contracts/COEXISTENCE.md", "docs/contracts/ADAPTER-BINDING.md",
@@ -97,8 +104,12 @@ TEMPLATE_RULES = {
         {"Result", "Changes", "Change unit and authority", "Acceptance evidence", "Verification run", "Discoveries and risks", "Routing and authority", "Review request", "User-facing closeout"},
     ),
     "REVIEW.md": (
-        {"schema", "id", "task", "handoff", "revision", "round", "scope", "prior_review", "status", "reviewer", "verdict", "created_at"},
+        {"schema", "id", "task", "handoff", "revision", "round", "scope", "prior_review", "blocking_findings", "correction_delta", "regression_scope", "status", "reviewer", "verdict", "created_at"},
         {"Independence", "Review profile and scope", "Criterion verdicts", "Findings", "Integration recommendation", "Verification", "Next review boundary"},
+    ),
+    "STATUS.md": (
+        {"schema", "id", "revision", "generated_at", "generated_by", "project_context", "pending_authority", "task_graph"},
+        {"Stage and progress", "Human action required", "Blockers", "Next action", "Inspectable paths"},
     ),
     "DECISION.md": (
         {"schema", "id", "revision", "status", "consequence", "decided_by", "decided_at", "supersedes", "source_references"},
@@ -354,6 +365,105 @@ def validate_fixtures() -> list[str]:
             errors.append(f"fixture.no-expectation: {rel(path)}")
         elif path.parent.name == "invalid" and not expected.issubset(actual_codes):
             errors.append(f"fixture.expected-error: {rel(path)} expected {sorted(expected)}, got {sorted(actual_codes)}")
+    return errors
+
+
+STATUS_FIELDS = {"stage", "progress", "blockers", "next_action", "inspectable_paths", "human_pending"}
+
+
+def validate_status_payload(data: dict, source: str) -> list[str]:
+    """Validate the machine-readable payload behind a user-facing status update."""
+    errors: list[str] = []
+    if not isinstance(data, dict):
+        return [f"status.shape: {source}"]
+    for field in sorted(STATUS_FIELDS):
+        if field not in data or data[field] is None or data[field] == "":
+            errors.append(f"status.missing-field: {source} {field}")
+    blockers = data.get("blockers")
+    if not isinstance(blockers, list):
+        errors.append(f"status.blockers-shape: {source}")
+    paths = data.get("inspectable_paths")
+    if not isinstance(paths, list) or not paths:
+        errors.append(f"status.inspectable-path: {source}")
+    else:
+        for value in paths:
+            normalized, reason = normalize_owned_path(str(value))
+            if reason or not normalized:
+                errors.append(f"status.inspectable-path: {source} {value!r}")
+    human_pending = data.get("human_pending")
+    if not isinstance(human_pending, list):
+        errors.append(f"status.human-pending-shape: {source}")
+    else:
+        for index, item in enumerate(human_pending):
+            if not isinstance(item, dict) or not item.get("action") or not item.get("source"):
+                errors.append(f"status.human-source: {source} item {index}")
+    return errors
+
+
+def validate_status_fixtures() -> list[str]:
+    """Execute hostile mutations against one known-good status payload."""
+    errors: list[str] = []
+    root = ROOT / "validation" / "status-fixtures"
+    try:
+        baseline = json.loads((root / "valid.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"status.fixture-baseline: {exc}"]
+    baseline_errors = validate_status_payload(baseline, "validation/status-fixtures/valid.json")
+    if baseline_errors:
+        errors.append(f"status.fixture-valid-failed: {baseline_errors}")
+    for path in sorted((root / "invalid").glob("*.json")):
+        scenario = json.loads(path.read_text(encoding="utf-8"))
+        candidate = copy.deepcopy(baseline)
+        mutation = scenario.get("mutation", {})
+        field = mutation.get("field")
+        if mutation.get("action") == "remove":
+            candidate.pop(field, None)
+        elif mutation.get("action") == "set":
+            candidate[field] = mutation.get("value")
+        else:
+            errors.append(f"status.fixture-mutation: {rel(path)}")
+            continue
+        actual_codes = {item.split(":", 1)[0] for item in validate_status_payload(candidate, rel(path))}
+        expected = set(scenario.get("expected_errors", []))
+        if not expected or not expected.issubset(actual_codes):
+            errors.append(f"status.fixture-expected-error: {rel(path)} expected {sorted(expected)}, got {sorted(actual_codes)}")
+    return errors
+
+
+def validate_round_two_payload(data: dict, source: str) -> list[str]:
+    errors: list[str] = []
+    if data.get("round") != 2 or data.get("scope") != "focused-rereview":
+        errors.append(f"review.fixture-scope: {source}")
+    for field in ("prior_review", "blocking_findings", "correction_delta", "regression_scope"):
+        value = data.get(field)
+        if value is None or value == "" or value == "none":
+            errors.append(f"review.focused-evidence: {source} {field}")
+    return errors
+
+
+def validate_review_fixtures() -> list[str]:
+    """Prove that hostile removal of a round-two audit boundary is rejected."""
+    errors: list[str] = []
+    root = ROOT / "validation" / "review-fixtures"
+    try:
+        baseline = json.loads((root / "round-two-valid.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"review.fixture-baseline: {exc}"]
+    if actual := validate_round_two_payload(baseline, "validation/review-fixtures/round-two-valid.json"):
+        errors.append(f"review.fixture-valid-failed: {actual}")
+    for path in sorted((root / "invalid").glob("*.json")):
+        scenario = json.loads(path.read_text(encoding="utf-8"))
+        candidate = copy.deepcopy(baseline)
+        mutation = scenario.get("mutation", {})
+        if mutation.get("action") == "remove":
+            candidate.pop(mutation.get("field"), None)
+        else:
+            errors.append(f"review.fixture-mutation: {rel(path)}")
+            continue
+        actual_codes = {item.split(":", 1)[0] for item in validate_round_two_payload(candidate, rel(path))}
+        expected = set(scenario.get("expected_errors", []))
+        if not expected or not expected.issubset(actual_codes):
+            errors.append(f"review.fixture-expected-error: {rel(path)} expected {sorted(expected)}, got {sorted(actual_codes)}")
     return errors
 
 
@@ -696,11 +806,13 @@ def validate_repository() -> list[str]:
             "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "LICENSE", "VERSION",
             "media/agent-harness-kit-overview-pt-BR.mp3",
             "media/agent-harness-kit-overview-en.mp3",
+            "media/agent-harness-kit-overview-pt-BR.mp4",
+            "media/agent-harness-kit-overview-en.mp4",
             "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
             "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/VALIDATION.md", "docs/DISTRIBUTION.md",
-            "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md",
+            "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md",
             "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/templates/PROJECT-CONTEXT.md",
-            "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "tools/validate.py", "tools/package.py", "tools/install.py", "validation/test_install.py",
+            "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/STATUS.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "tools/validate.py", "tools/package.py", "tools/install.py", "validation/test_install.py",
             ".agents/skills/first-run-discovery/SKILL.md",
             ".agents/skills/graph-execution/SKILL.md",
             ".agents/skills/governed-review/SKILL.md",
@@ -739,6 +851,12 @@ def validate_repository() -> list[str]:
             audio_bytes = audio_path.read_bytes()
             if len(audio_bytes) < 1024 or not (audio_bytes.startswith(b"ID3") or audio_bytes[:1] == b"\xff"):
                 errors.append(f"media.audio: {audio_name} is empty or not recognizable as MP3")
+    for player_name in ("agent-harness-kit-overview-en.mp4", "agent-harness-kit-overview-pt-BR.mp4"):
+        player_path = ROOT / "media" / player_name
+        if player_path.exists():
+            player_bytes = player_path.read_bytes()
+            if len(player_bytes) < 1024 or b"ftyp" not in player_bytes[:64]:
+                errors.append(f"media.player: {player_name} is empty or not recognizable as MP4")
     audio_manifest_path = ROOT / "media" / "overview-audio-manifest.json"
     if audio_manifest_path.is_file():
         try:
@@ -758,7 +876,7 @@ def validate_repository() -> list[str]:
                 language = track.get("language", "unknown")
                 if track.get("status") not in {"candidate-awaiting-audition", "approved", "refresh-required"}:
                     errors.append(f"media.manifest-status: {language}")
-                for field in ("audio", "script"):
+                for field in ("audio", "script", "github_player"):
                     value = track.get(field)
                     path = (ROOT / str(value)).resolve() if value else None
                     try:
@@ -799,8 +917,16 @@ def validate_repository() -> list[str]:
                 errors.append(f"review.scope: {rel(path)}")
             if round_value == "2" and header.get("prior_review") in {None, "", "none"}:
                 errors.append(f"review.lineage: {rel(path)}")
-        if header.get("schema") == "harness.handoff/v1" and header.get("status") not in {"completed", "blocked", "failed"}:
-            errors.append(f"handoff.status: {rel(path)} must be completed, blocked, or failed")
+            focused_fields = ("blocking_findings", "correction_delta", "regression_scope")
+            if round_value == "2" and any(header.get(field) in {None, "", "none"} for field in focused_fields):
+                errors.append(f"review.focused-evidence: {rel(path)} round 2 must pin blockers, correction delta, and regression scope")
+        if header.get("schema") == "harness.handoff/v1":
+            if header.get("status") not in {"completed", "blocked", "failed"}:
+                errors.append(f"handoff.status: {rel(path)} must be completed, blocked, or failed")
+            closeout = re.search(r"^## User-facing closeout\s*$([\s\S]*?)(?=^## |\Z)", text, re.MULTILINE)
+            required_labels = ("Stage:", "Progress:", "Blockers:", "Next action:", "Inspectable paths:", "Human action required:")
+            if not closeout or any(label not in closeout.group(1) for label in required_labels):
+                errors.append(f"handoff.closeout-fields: {rel(path)}")
         if header.get("schema") == "harness.pending/v1":
             required_pending_sections = {"Human action required", "Project completion overview", "Recently resolved"}
             if not required_pending_sections <= headings(text):
@@ -831,12 +957,20 @@ def validate_repository() -> list[str]:
             errors.append(f"markdown.mermaid: {rel(readme)} must contain exactly one Mermaid block")
         if readme.exists():
             readme_text = readme.read_text(encoding="utf-8")
+            for player_target in (
+                "media/agent-harness-kit-overview-en.mp4",
+                "media/agent-harness-kit-overview-pt-BR.mp4",
+            ):
+                if player_target not in readme_text or "<video controls" not in readme_text:
+                    errors.append(f"media.readme-player: {rel(readme)} missing GitHub-compatible player for {player_target}")
             for audio_target in (
                 "media/agent-harness-kit-overview-en.mp3",
                 "media/agent-harness-kit-overview-pt-BR.mp3",
             ):
-                if f'src="{audio_target}"' not in readme_text or "<audio controls" not in readme_text:
-                    errors.append(f"media.readme-player: {rel(readme)} missing inline player for {audio_target}")
+                if f"]({audio_target})" not in readme_text:
+                    errors.append(f"media.readme-fallback: {rel(readme)} missing MP3 fallback for {audio_target}")
+            if "<audio" in readme_text:
+                errors.append(f"media.readme-unsupported-audio: {rel(readme)}")
             for script_target in ("media/overview-script-en.txt", "media/overview-script-pt-BR.txt"):
                 if f"]({script_target})" not in readme_text:
                     errors.append(f"media.readme-link: {rel(readme)} missing {script_target}")
@@ -868,6 +1002,8 @@ def validate_repository() -> list[str]:
             errors.append(f"identity.readme-title: {rel(readme)}")
     errors.extend(validate_templates())
     errors.extend(validate_fixtures())
+    errors.extend(validate_status_fixtures())
+    errors.extend(validate_review_fixtures())
     errors.extend(validate_host_fixtures())
     errors.extend(validate_native_integration())
     profiles = (package_manifest.get("profile"),) if package_manifest else ("core", "core-learning", "full")
@@ -905,7 +1041,9 @@ def main() -> int:
         return 1
     required_count = 17 if (ROOT / "PACKAGE-MANIFEST.json").exists() else len(REQUIRED_FILES)
     print(f"VALIDATION PASSED: {len(markdown_files())} Markdown files, {required_count} required files")
-    print("Graph fixtures: valid, missing dependency, cycle, and ready-node write collision")
+    print("Graph fixtures: valid, missing dependency, cycle, write collision, self-review, and path traversal")
+    print("Status mutation fixtures: required fields, human-source provenance, and safe inspectable paths")
+    print("Review mutation fixtures: focused round-two blocker, correction-delta, and regression boundaries")
     print("Host fixtures: namespaced adoption, missing backlink, silent omission, stale snapshot, and premature cutover")
     print("Native integration: Codex and Claude Code entrypoints, shared-core routing, safe defaults, and profile boundaries")
     print("Language boundary: README.pt-BR.md is the only Portuguese-content exception")

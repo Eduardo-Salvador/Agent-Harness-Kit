@@ -7,6 +7,9 @@ revision: 1
 round: 1
 scope: initial
 prior_review: none
+blocking_findings: none
+correction_delta: none
+regression_scope: none
 status: final
 reviewer: agent:reviewer
 verdict: accept

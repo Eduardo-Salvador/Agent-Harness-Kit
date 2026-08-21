@@ -55,10 +55,14 @@ Implemented graph-cycle and ownership-overlap validation.
 
 ## User-facing closeout
 - Outcome: Configuration validation is implemented.
+- Stage: Implementation.
+- Progress: 1 of 3 graph-validation tasks completed.
 - Material changes: Validator behavior and deterministic fixtures.
 - Verification: 12 contract checks passed.
 - Lifecycle state: completed.
-- Next automatic action: Dispatch the next ready task and run assurance review non-blockingly.
+- Blockers: None.
+- Next action: Dispatch the next ready task and run assurance review non-blockingly.
+- Inspectable paths: `harness-state/PENDING.md`, `harness-state/TASK-GRAPH.md`, and `artifacts/TASK-001/test-summary.txt`.
 - Human action required: None.
 ```
 
@@ -72,4 +76,4 @@ Implemented graph-cycle and ownership-overlap validation.
 - Blockers name the missing decision, capability, dependency, or external condition.
 - The actual model tier and route changes are recorded; a stronger model is never presented as evidence.
 - The coherent change unit and commit/integration/push/deploy/publication authority states are explicit and independent.
-- The user-facing closeout explains outcome, material changes, verification, lifecycle state, next automatic action, and real human action before a review or approval boundary.
+- The user-facing closeout explains outcome, stage, progress, material changes, verification, lifecycle state, blockers, next action, inspectable paths, and real human action before a review or approval boundary.

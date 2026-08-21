@@ -35,8 +35,8 @@ For “my pending items”, “what do you need from me?”, approvals, or decis
 4. Write only within the exclusive ownership lease. The orchestrator alone changes graph topology/status and leases. Implementers never self-accept; reviewers remain independent.
 5. Run `python tools/validate.py` before review when Python 3 is available, otherwise follow [the validation contract](docs/VALIDATION.md).
 6. Route work by [capability tier](docs/MODEL-ROUTING.md), not prestige: balanced is the normal default; economical requires deterministic low-risk acceptance; frontier is reserved for consequential judgment and escalation triggers. Routing changes no authority.
-7. Apply the [bounded review policy](docs/REVIEW-ROUNDS.md): one initial independent review and, only when blockers remain, at most one focused re-review. Never start a third unchanged review loop; escalate, decompose, rewrite, or request a human decision.
-8. Follow [status and completion communication](docs/STATUS-AND-COMPLETION.md): when declared checks pass, mark the task completed, explain the result, release ownership, and dispatch the next ready node. Post-completion review runs automatically and non-blockingly; ask once only for concrete authority that is genuinely missing.
+7. Apply the [bounded review policy](docs/REVIEW-ROUNDS.md): one initial independent review and, only when blockers remain, at most one focused re-review. A second rejection forces task/acceptance rewrite, decomposition, or a genuine human product/risk decision. Never start a third loop; model escalation may diagnose but is not another disposition or round.
+8. Follow [status and completion communication](docs/STATUS-AND-COMPLETION.md) and [`harness.status/v1`](docs/contracts/STATUS.md): every status reports stage, progress, blockers, next action, and inspectable paths after reading `PENDING.md` with `TASK-GRAPH.md`. When declared checks pass, mark the task completed, explain the result, release ownership, and dispatch the next ready node. Post-completion review runs automatically and non-blockingly; ask once only for concrete authority that is genuinely missing.
 
 ## Native routing
 

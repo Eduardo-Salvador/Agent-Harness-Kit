@@ -14,15 +14,20 @@ For “my pending items”, “what do you need from me?”, approval, or decisi
 
 For general project status, present: human action required, project completion overview, then technical execution state when useful. Never omit a human-owned pending item or macro project gap merely because it is not a graph node. Reconcile contradictions visibly; do not silently choose the graph.
 
+Render every status through [`harness.status/v1`](contracts/STATUS.md): stage, progress, human action, blockers, next action, and repository-relative inspectable paths are mandatory. Pin the consulted project-context, pending-authority, and graph revisions. Status is a derived view, never a competing authority.
+
 ## No silent finish
 
 When implementation or a material phase finishes, tell the user before starting another potentially lengthy phase. The update must name:
 
 - the outcome in plain language;
+- the current stage and measurable progress (or a precise qualitative baseline);
 - material files or behavior changed;
 - checks run and their result;
 - the precise lifecycle state (`completed`, `blocked`, or `failed`), with `human-owned` stated separately when a blocked item requires a person;
-- the next automatic action; and
+- blockers, explicitly “none” when empty;
+- the next action;
+- repository-relative inspectable evidence paths; and
 - any human action actually required, or “none”.
 
 Do not expose only an internal artifact path or say that review is pending without describing the completed work.

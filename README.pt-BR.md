@@ -8,15 +8,15 @@
 
 **English** · [script atual](media/overview-script-en.txt)
 
-<audio controls preload="metadata" src="media/agent-harness-kit-overview-en.mp3">
-Seu visualizador de Markdown não suporta áudio embutido. Abra o repositório em um visualizador com suporte a áudio HTML.
-</audio>
+<video controls preload="metadata" src="https://github.com/Eduardo-Salvador/Agent-Harness-Kit/raw/refs/heads/main/media/agent-harness-kit-overview-en.mp4"></video>
+
+[MP3 alternativo / download](media/agent-harness-kit-overview-en.mp3)
 
 **Português (Brasil)** · [roteiro atual](media/overview-script-pt-BR.txt)
 
-<audio controls preload="metadata" src="media/agent-harness-kit-overview-pt-BR.mp3">
-Seu visualizador de Markdown não suporta áudio embutido. Abra o repositório em um visualizador com suporte a áudio HTML.
-</audio>
+<video controls preload="metadata" src="https://github.com/Eduardo-Salvador/Agent-Harness-Kit/raw/refs/heads/main/media/agent-harness-kit-overview-pt-BR.mp4"></video>
+
+[MP3 alternativo / download](media/agent-harness-kit-overview-pt-BR.mp3)
 
 Os áudios legados aprovados continuam reproduzíveis aqui enquanto a nova narração não é gravada.
 
@@ -68,7 +68,7 @@ Todos também incluem as duas entradas de plataforma e suas pequenas extensões 
    A descoberta também cria ou referencia um [manifesto de capacidades](harness/templates/CAPABILITY-MANIFEST.md) e um [mapa de regras](harness/templates/RULES-MAP.md). Capacidades incluem ferramentas nativas da plataforma, servidores/conectores MCP, skills, scripts/comandos, hooks e integrações externas; sem evidência, ficam indisponíveis, opcionais ou dependentes de aprovação — nunca são presumidas. As regras podem cobrir negócio, segurança/privacidade, arquitetura, convenções de código e caminhos, e são encaminhadas apenas ao trabalho relevante.
 5. O decompositor propõe e valida o [grafo inicial](harness/templates/TASK-GRAPH.md); o orquestrador então despacha uma [tarefa delimitada](harness/templates/TASK.md). O despacho segue o [roteamento por capacidade](docs/MODEL-ROUTING.md): balanceado é o padrão, econômico fica restrito a trabalho determinístico e de baixo risco, e avançado é reservado para decisões consequentes ou gatilhos explícitos de escalonamento. Nomes específicos de modelos ficam nos adaptadores e nas evidências atuais do host.
    As definições de papéis são templates editáveis: a descoberta pode adaptar papéis existentes ou propor especialistas específicos do projeto, responsabilidades, acesso a ferramentas, pacotes de contexto, limites de propriedade e critérios de revisão. Isso é configuração governada, não automodificação descontrolada dos agentes. Mudanças relevantes em ferramentas, permissões, segredos, rede, ações destrutivas, hooks, integrações ou regras duráveis exigem aprovação humana explícita e validação.
-6. O especialista trabalha somente nos caminhos atribuídos, executa as verificações e escreve um [handoff](harness/templates/HANDOFF.md). Quando elas passam, o orquestrador marca o nó como concluído, informa o que mudou, libera a propriedade e despacha a próxima tarefa pronta sem pedir aprovação humana de conclusão. Outro agente registra automaticamente uma [revisão de garantia](harness/templates/REVIEW.md) não bloqueante. A review usa perfil `light`, `standard` ou `critical` com [no máximo duas rodadas](docs/REVIEW-ROUNDS.md); um bloqueio cria uma tarefa de correção vinculada, sem reabrir o nó concluído nem parar trabalho não relacionado. Conclusão não autoriza separadamente commit, push, deploy ou publicação.
+6. O especialista trabalha somente nos caminhos atribuídos, executa as verificações e escreve um [handoff](harness/templates/HANDOFF.md). Quando elas passam, o orquestrador marca o nó como concluído, informa o que mudou, libera a propriedade e despacha a próxima tarefa pronta sem pedir aprovação humana de conclusão. Outro agente registra automaticamente uma [revisão de garantia](harness/templates/REVIEW.md) não bloqueante. A review usa perfil `light`, `standard` ou `critical` com [no máximo duas rodadas](docs/REVIEW-ROUNDS.md); a segunda fica limitada aos bloqueios anteriores, ao delta da correção e às regressões relacionadas. Uma segunda reprovação obriga reescrita, decomposição ou uma decisão humana real de produto ou risco. Conclusão não autoriza separadamente commit, push, deploy ou publicação.
 7. Em `delivery+learning`, os papéis de aprendizado podem atualizar a fila consentida depois que houver evidência de entrega. Em `full`, abra `learning-pack/README.md` separadamente quando quiser estudar o harness.
 8. Execute `python tools/validate.py`. Gere um pacote fora da árvore fonte com `python tools/package.py --profile core --output <diretório-externo>`; troque o perfil quando necessário.
 
@@ -91,7 +91,7 @@ Se o projeto não tiver `harness-state/PROJECT-CONTEXT.md` aprovado, o planejame
 
 Essa regra é nativa nas duas ferramentas: o Codex chega a ela por `AGENTS.md`; o Claude Code chega à mesma regra por `CLAUDE.md` e pela importação `@AGENTS.md`. Abrir o repositório depois com a outra ferramenta não cria outro contexto ou grafo — ela lê os mesmos artefatos neutros aprovados.
 
-Na primeira solicitação de uma nova janela de contexto, em pedidos para continuar/retomar ou em pedidos de status, o agente deve ler primeiro o contexto aprovado, depois `harness-state/PENDING.md` e, por último, `harness-state/TASK-GRAPH.md`. `PENDING.md` contém decisões/ações humanas e a visão macro do que falta no projeto, como backend ou autenticação. `TASK-GRAPH.md` contém ordem, dependências e execução técnica. Em “minhas pendências”, os itens humanos vêm primeiro e o grafo não pode substituí-los. Veja [status e retomada](harness/playbooks/status-resume.md).
+Na primeira solicitação de uma nova janela de contexto, em pedidos para continuar/retomar ou em pedidos de status, o agente deve ler primeiro o contexto aprovado, depois `harness-state/PENDING.md` e, por último, `harness-state/TASK-GRAPH.md`. `PENDING.md` contém decisões/ações humanas e a visão macro do que falta no projeto, como backend ou autenticação. `TASK-GRAPH.md` contém ordem, dependências e execução técnica. Em “minhas pendências”, os itens humanos vêm primeiro e o grafo não pode substituí-los. Toda resposta segue o [contrato executável de status](docs/contracts/STATUS.md): etapa, progresso, bloqueios, próxima ação e caminhos inspecionáveis são obrigatórios. Veja [status e retomada](harness/playbooks/status-resume.md).
 
 Antes ou durante o onboarding, você pode pedir uma explicação em linguagem simples sobre o harness e o que acontecerá em seguida. Essa explicação é opcional e não pode bloquear a entrega. Ela não ativa aprendizado do projeto, consentimento, observação, retenção, publicação nem o Pacote de Engenharia de Harness; essas continuam sendo escolhas explícitas e separadas. Veja a [entrevista de descoberta](docs/DISCOVERY-INTERVIEW.md).
 
@@ -137,7 +137,7 @@ Regras duráveis aprovadas por pessoas são versionadas no mapa de regras ou ref
 
 ## Princípios
 
-1. Arquivos carregam o estado durável; mensagens explicam resultado, verificações, estado da task, próximo passo e pendências humanas reais.
+1. Arquivos carregam o estado durável; mensagens seguem um formato executável com etapa, progresso, bloqueios, próxima ação, caminhos inspecionáveis e pendências humanas reais.
 2. O contexto é progressivo e fixado por revisão; `PENDING.md` contém ações humanas e lacunas macro, enquanto `TASK-GRAPH.md` contém ordem, dependências e execução técnica.
 3. O orquestrador coordena o grafo; agentes iteram dentro dos nós.
 4. Trabalho concorrente usa conjuntos exclusivos de escrita e isolamento declarado.
@@ -150,7 +150,7 @@ Regras duráveis aprovadas por pessoas são versionadas no mapa de regras ou ref
 
 ## Estado atual
 
-**Scaffold operacional nativo para a primeira versão.** O Codex ativa por `AGENTS.md`; o Claude Code ativa por `CLAUDE.md`, importando `@AGENTS.md`. Ambos incluem skills nativas pequenas, o Claude tem subagentes de projeto delimitados, e todas as rotas convergem nos contratos e no estado neutros. Papéis, templates, playbooks, exemplos, módulos de estudo, roteamento por capacidade, rodadas limitadas de review, integração coerente de mudanças, fixtures, validação, empacotamento determinístico e roteiros auditáveis dos áudios existem. Um runtime autônomo separado, que chame APIs, despache agentes, crie isolamento, integre branches ou publique notas sozinho, continua como trabalho futuro.
+**Scaffold operacional nativo para a primeira versão.** O Codex ativa por `AGENTS.md`; o Claude Code ativa por `CLAUDE.md`, importando `@AGENTS.md`. Ambos incluem skills nativas pequenas, o Claude tem subagentes de projeto delimitados, e todas as rotas convergem nos contratos e no estado neutros. Papéis, templates, playbooks, exemplos, módulos de estudo, roteamento por capacidade, rodadas limitadas de review, contrato executável de status com mutações negativas, integração coerente de mudanças, validação, empacotamento determinístico e roteiros auditáveis dos áudios existem. Um runtime autônomo separado, que chame APIs, despache agentes, crie locks no sistema operacional, integre branches ou publique notas sozinho, continua como trabalho futuro.
 
 ```text
 python tools/validate.py

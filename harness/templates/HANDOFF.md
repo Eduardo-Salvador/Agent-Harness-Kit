@@ -55,8 +55,12 @@ Replace with the bounded result or blocker.
 ## User-facing closeout
 
 - Outcome: Replace with a plain-language result.
+- Stage: Replace with the current project or delivery stage.
+- Progress: Replace with a measurable value or precise baseline.
 - Material changes: Replace with behavior and key paths.
 - Verification: Replace with checks and outcomes.
 - Lifecycle state: completed / blocked / failed. If blocked, state separately whether the pending owner is human or software.
-- Next automatic action: Replace with the next ready task; post-completion review runs automatically and non-blockingly.
+- Blockers: None, or list exact blockers and owners.
+- Next action: Replace with the next ready task; post-completion review runs automatically and non-blockingly.
+- Inspectable paths: Replace with repository-relative evidence paths, including the consulted pending authority and graph for project status.
 - Human action required: None, or one exact decision/action with reason and effect.

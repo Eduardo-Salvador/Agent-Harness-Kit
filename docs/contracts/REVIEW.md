@@ -12,6 +12,9 @@ revision: 1
 round: 1
 scope: initial
 prior_review: none
+blocking_findings: none
+correction_delta: none
+regression_scope: none
 status: final
 reviewer: agent:independent-reviewer
 verdict: changes-requested
@@ -56,8 +59,9 @@ created_at: 2026-08-21T12:00:00Z
 - Reviewer identity differs from implementer identity.
 - The review pins exact task and handoff revisions.
 - Round 1 uses `scope: initial`; round 2 uses `scope: focused-rereview` and pins `prior_review`.
+- Round 2 also pins non-empty `blocking_findings`, `correction_delta`, and `regression_scope`; these are the auditable boundary of the re-review.
 - `changes-requested` requires at least one evidence-backed blocking finding.
 - Non-blocking findings cannot prevent `accept` and become follow-up candidates.
 - Round 2 reopens only prior blocking findings, their correction delta, proportional regression risk, and new blockers introduced in that delta.
-- No automatic round 3 exists. An exhausted budget blocks and escalates/decomposes the work under [bounded review rounds](../REVIEW-ROUNDS.md).
+- No automatic round 3 exists. A second rejection forces task/contract rewrite, decomposition, or a genuine human product/risk decision under [bounded review rounds](../REVIEW-ROUNDS.md).
 - `changes-requested` creates linked remediation and may gate affected integration/release work; it never reopens historical completion or blocks unrelated ready nodes.

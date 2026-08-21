@@ -35,9 +35,10 @@ Do not repeat a repository-wide audit, reload unrelated context, or reopen crite
 
 If round 2 still returns `changes-requested`, stop the loop. The orchestrator blocks the remediation or affected integration path—not the completed historical node or unrelated execution—and chooses one of these explicit paths:
 
-- escalate to the frontier model tier for diagnosis/integration;
-- decompose or rewrite the task/acceptance contract;
+- rewrite the task/acceptance contract;
+- decompose the work into new bounded tasks;
 - request a human decision for a genuine product/risk conflict;
-- create a new bounded task after the cause and ownership are understood.
+
+A frontier model may assist diagnosis for one of those paths, but model escalation is not a fourth disposition and never authorizes another review round. A new task may be created only as the product of rewrite or decomposition after cause and ownership are understood.
 
 Do not create a third review attempt on the same unchanged task contract. Human authority may approve a new plan, but it does not turn blind repetition into a review strategy.

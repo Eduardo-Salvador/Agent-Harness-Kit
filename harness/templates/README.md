@@ -7,6 +7,7 @@ Copy these templates into the runtime state location selected by the project. Ph
 | [Project context](PROJECT-CONTEXT.md) | Discovery drafts; human approves |
 | [Task graph](TASK-GRAPH.md) | Orchestrator only |
 | [Pending work](PENDING.md) | Orchestrator maintains human actions and macro project completion; technical execution stays in the graph |
+| [Status](STATUS.md) | Orchestrator derives an inspectable user update from project context, pending authority, and graph |
 | [Task brief](TASK.md) | Orchestrator; implementer updates attempt status only |
 | [Handoff](HANDOFF.md) | Assigned implementer; includes the plain-language user closeout |
 | [Review result](REVIEW.md) | Independent reviewer; one initial review plus at most one focused re-review |

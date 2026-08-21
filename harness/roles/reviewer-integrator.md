@@ -17,7 +17,7 @@ Evaluate a handoff against the pinned task and evidence, then recommend a safe g
 - A risky override requires a human decision; the orchestrator performs the transition/integration.
 - Technical acceptance does not authorize commit, integration, push, deployment, publication, or history rewriting.
 - Do not block acceptance for preferences or optional improvements. `changes-requested` requires an evidence-backed acceptance, security/privacy/data, contract, required-runtime, ownership, or material-regression violation.
-- Round 2 is focused on prior blockers and their correction delta. Do not request round 3 on the unchanged task contract.
+- Round 2 is focused on the pinned prior blocker IDs, correction delta, and related regression scope. A second rejection permits only task/acceptance rewrite, decomposition, or a genuine human product/risk decision; do not request round 3.
 
 ## Exit
 

@@ -56,8 +56,12 @@ Added both boundary-case tests.
 ## User-facing closeout
 
 - Outcome: Parser boundary coverage is complete.
+- Stage: Implementation.
+- Progress: TASK-101 completed; remaining work is recorded in the pending authority and graph.
 - Material changes: Empty and maximum-length boundary tests.
 - Verification: Both approved criteria passed.
 - Lifecycle state: completed.
-- Next automatic action: Release ownership, dispatch the next ready node, and run assurance review non-blockingly.
+- Blockers: None.
+- Next action: Release ownership, dispatch the next ready node, and run assurance review non-blockingly.
+- Inspectable paths: `harness-state/PENDING.md`, `harness-state/TASK-GRAPH.md`, and `artifacts/TASK-101/test-summary.txt`.
 - Human action required: None.

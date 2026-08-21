@@ -8,15 +8,15 @@
 
 **English** · [current script](media/overview-script-en.txt)
 
-<audio controls preload="metadata" src="media/agent-harness-kit-overview-en.mp3">
-Your Markdown viewer does not support inline audio. Open the repository in a viewer with HTML audio support.
-</audio>
+<video controls preload="metadata" src="https://github.com/Eduardo-Salvador/Agent-Harness-Kit/raw/refs/heads/main/media/agent-harness-kit-overview-en.mp4"></video>
+
+[MP3 fallback / download](media/agent-harness-kit-overview-en.mp3)
 
 **Português (Brasil)** · [roteiro atual](media/overview-script-pt-BR.txt)
 
-<audio controls preload="metadata" src="media/agent-harness-kit-overview-pt-BR.mp3">
-Your Markdown viewer does not support inline audio. Open the repository in a viewer with HTML audio support.
-</audio>
+<video controls preload="metadata" src="https://github.com/Eduardo-Salvador/Agent-Harness-Kit/raw/refs/heads/main/media/agent-harness-kit-overview-pt-BR.mp4"></video>
+
+[MP3 alternativo / download](media/agent-harness-kit-overview-pt-BR.mp3)
 
 The approved legacy tracks remain playable here while narration refresh is pending.
 
@@ -68,7 +68,7 @@ Every profile also contains both native platform entrypoints and their small on-
    Discovery also builds or references a [capability manifest](harness/templates/CAPABILITY-MANIFEST.md) and [rules map](harness/templates/RULES-MAP.md). Capabilities cover native platform tools, MCP servers/connectors, skills, scripts/commands, hooks, and external integrations; absent evidence means unavailable, optional, or approval-required—not assumed access. Rules may cover business behavior, security/privacy, architecture, coding conventions, and paths, and are routed only to relevant work.
 5. The decomposer proposes and validates the initial [task graph](harness/templates/TASK-GRAPH.md); the orchestrator then dispatches a bounded [task brief](harness/templates/TASK.md). Dispatch follows [capability-based model routing](docs/MODEL-ROUTING.md): balanced is the normal default, economical is limited to deterministic low-risk work, and frontier is reserved for consequential judgment or explicit escalation triggers. Provider-specific model names stay in adapters and current host evidence.
    Role definitions are editable templates: discovery can adapt existing roles or propose project-specific specialists, responsibilities, tool access, context packets, ownership boundaries, and review criteria. This is governed configuration, not uncontrolled agent self-modification. Consequential changes to tools, permissions, secrets, network, destructive actions, hooks, integrations, or durable rules require explicit human approval and validation.
-6. The specialist works only in its leased paths, runs declared checks, and writes a [handoff](harness/templates/HANDOFF.md). When those checks pass, the orchestrator marks the node completed, reports what changed, releases ownership, and dispatches the next dependency-ready task without asking for human completion approval. A different reviewer then writes a non-blocking [assurance result](harness/templates/REVIEW.md) automatically. Review uses a `light`, `standard`, or `critical` profile with [two rounds maximum](docs/REVIEW-ROUNDS.md); a blocker creates a linked remediation task instead of reopening the completed node or stopping unrelated work. Related microcorrections form one [coherent change unit](docs/CHANGE-INTEGRATION.md). Completion never grants separate commit, push, deploy, or publication authority.
+6. The specialist works only in its leased paths, runs declared checks, and writes a [handoff](harness/templates/HANDOFF.md). When those checks pass, the orchestrator marks the node completed, reports what changed, releases ownership, and dispatches the next dependency-ready task without asking for human completion approval. A different reviewer then writes a non-blocking [assurance result](harness/templates/REVIEW.md) automatically. Review uses a `light`, `standard`, or `critical` profile with [two rounds maximum](docs/REVIEW-ROUNDS.md); round two is limited to prior blockers, the correction delta, and related regressions. A second rejection forces rewrite, decomposition, or a genuine human product/risk decision. Related microcorrections form one [coherent change unit](docs/CHANGE-INTEGRATION.md). Completion never grants separate commit, push, deploy, or publication authority.
 7. In `delivery+learning`, project-learning roles may update the consented learning queue after delivery evidence exists. In `full`, open `learning-pack/README.md` separately when you want to study the harness itself.
 8. Run `python tools/validate.py`. Build a bundle outside the source tree with `python tools/package.py --profile core --output <outside-directory>`; substitute `core-learning` or `full` as needed.
 
@@ -91,7 +91,7 @@ If the host project has no approved `harness-state/PROJECT-CONTEXT.md`, implemen
 
 This gate is native on both supported tools: Codex reaches it through `AGENTS.md`; Claude Code reaches the identical rule through `CLAUDE.md` and its `@AGENTS.md` import. Opening the repository later with the other tool does not create a second context or graph—it reads the same approved neutral artifacts.
 
-On the first request in a new context window, a resume/continue request, or a status request, the agent must read approved project context first, `harness-state/PENDING.md` second, and `harness-state/TASK-GRAPH.md` third. `PENDING.md` owns human decisions/actions and the macro project completion overview (for example, backend or authentication still incomplete). `TASK-GRAPH.md` owns technical order, dependencies, and execution state. For “my pending items”, human-owned entries are reported first and the graph cannot replace them. See [status and resume](harness/playbooks/status-resume.md).
+On the first request in a new context window, a resume/continue request, or a status request, the agent must read approved project context first, `harness-state/PENDING.md` second, and `harness-state/TASK-GRAPH.md` third. `PENDING.md` owns human decisions/actions and the macro project completion overview (for example, backend or authentication still incomplete). `TASK-GRAPH.md` owns technical order, dependencies, and execution state. For “my pending items”, human-owned entries are reported first and the graph cannot replace them. Every answer follows the executable [status contract](docs/contracts/STATUS.md): stage, progress, blockers, next action, and inspectable paths are mandatory. See [status and resume](harness/playbooks/status-resume.md).
 
 Before or during onboarding, you may ask for a plain-language explanation of the harness and what will happen next. This explanation is optional and cannot block delivery. It does not activate project learning, consent, observation, retention, publication, or the Harness Engineering Learning Pack; those remain separate explicit choices. See the [discovery interview](docs/DISCOVERY-INTERVIEW.md).
 
@@ -137,7 +137,7 @@ Human-approved durable rules are versioned in or referenced by the rules map; te
 
 ## Principles
 
-1. Files carry durable state; messages explain outcomes, verification, lifecycle state, next action, and real human pending items.
+1. Files carry durable state; messages follow an executable shape with stage, progress, blockers, next action, inspectable paths, and real human pending items.
 2. Context is progressive and revision-pinned; `PENDING.md` owns human actions and macro project gaps, while `TASK-GRAPH.md` owns technical order, dependencies, and execution.
 3. The orchestrator coordinates the graph; agents loop inside nodes.
 4. Concurrent work has exclusive write sets and declared isolation.
@@ -150,7 +150,7 @@ Human-approved durable rules are versioned in or referenced by the rules map; te
 
 ## Current status
 
-**Native first-version operating scaffold.** Codex activates through `AGENTS.md`; Claude Code activates through `CLAUDE.md` importing `@AGENTS.md`. Both ship small native skills, Claude has bounded project subagents, and all routes converge on the neutral contracts and state. Roles, templates, playbooks, examples, learning modules, capability-tier routing, bounded review rounds, coherent change integration, fixtures, validation, deterministic packaging, and auditable audio scripts exist. A separate autonomous runtime that independently calls APIs, dispatches agents, provisions isolation, merges branches, or publishes notes remains future work.
+**Native first-version operating scaffold.** Codex activates through `AGENTS.md`; Claude Code activates through `CLAUDE.md` importing `@AGENTS.md`. Both ship small native skills, Claude has bounded project subagents, and all routes converge on the neutral contracts and state. Roles, templates, playbooks, examples, learning modules, capability-tier routing, bounded review rounds, executable status/mutation fixtures, coherent change integration, validation, deterministic packaging, and auditable audio scripts exist. A separate autonomous runtime that independently calls APIs, dispatches agents, provisions OS-level locks, merges branches, or publishes notes remains future work.
 
 ```text
 python tools/validate.py

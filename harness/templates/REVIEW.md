@@ -7,6 +7,9 @@ revision: 1
 round: 1
 scope: initial
 prior_review: none
+blocking_findings: none
+correction_delta: none
+regression_scope: none
 status: final
 reviewer: agent:independent-reviewer
 verdict: changes-requested
@@ -48,4 +51,5 @@ created_at: 2000-01-01T00:00:00Z
 ## Next review boundary
 
 - On round 1 `changes-requested`, name the linked remediation task, blocking findings, expected correction delta, and proportional regression checks for round 2.
-- On round 2 `changes-requested`, stop and recommend escalation/decomposition of the remediation or affected integration path. Request a human decision only for a genuine product/risk conflict; do not request round 3.
+- On round 2, the frontmatter must pin the prior blocking finding IDs, the correction delta, and related regression scope.
+- On round 2 `changes-requested`, stop. Rewrite the task/acceptance contract, decompose the work, or request a human decision for a genuine product/risk conflict. A stronger model may diagnose those paths but cannot create round 3.
