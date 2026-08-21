@@ -70,4 +70,4 @@ Human approval is mandatory for consequential product intent, architecture direc
 
 ## Status and scope gate
 
-The first public scope includes native, copied-repository activation for both Codex and Claude Code through their documented root entrypoints and small progressive extensions. It does not include a separate autonomous runtime that independently calls APIs, dispatches sessions, provisions isolation, integrates branches, or publishes notes. Remaining gates are tracked in [OPEN-DECISIONS.md](../OPEN-DECISIONS.md).
+The first public scope includes native activation for both Codex and Claude Code through documented root entrypoints and small progressive extensions. A profile may be copied into an intentionally empty root or installed under `agent-harness-kit/` with minimal root bridges. It does not include a separate autonomous runtime that independently calls APIs, dispatches sessions, provisions isolation, integrates branches, or publishes notes. Remaining gates are tracked in [OPEN-DECISIONS.md](../OPEN-DECISIONS.md).

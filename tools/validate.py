@@ -27,7 +27,7 @@ REQUIRED_FILES = [
     "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
     "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md",
     "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md",
-    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md",
+    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/EMBEDDED-INSTALLATION.md",
     "docs/contracts/REVIEW.md",
     "adapters/README.md", "adapters/generic.md", "adapters/codex.md", "adapters/claude.md",
     "harness/roles/README.md", "harness/roles/discovery-interviewer.md",
@@ -43,6 +43,7 @@ REQUIRED_FILES = [
     "harness/templates/HANDOFF.md", "harness/templates/REVIEW.md",
     "harness/templates/DECISION.md", "harness/templates/LEARNING-PROFILE.md",
     "harness/templates/LEARNING-QUEUE.md", "harness/templates/MODEL-ROUTING.md",
+    "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md",
     "examples/development-only/README.md",
     "examples/development-plus-project-learning/README.md",
     "learning-pack/README.md", "learning-pack/01-HARNESS-BOUNDARIES.md",
@@ -655,9 +656,9 @@ def validate_repository() -> list[str]:
             "media/agent-harness-kit-overview-en.mp3",
             "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
             "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/VALIDATION.md", "docs/DISTRIBUTION.md",
-            "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/contracts/REVIEW.md",
+            "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/REVIEW.md",
             "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md", "harness/playbooks/model-routing.md", "harness/templates/PROJECT-CONTEXT.md",
-            "harness/templates/TASK-GRAPH.md", "harness/templates/MODEL-ROUTING.md", "tools/validate.py", "tools/package.py",
+            "harness/templates/TASK-GRAPH.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "tools/validate.py", "tools/package.py",
             ".agents/skills/first-run-discovery/SKILL.md",
             ".agents/skills/graph-execution/SKILL.md",
             ".agents/skills/governed-review/SKILL.md",
@@ -775,6 +776,25 @@ def validate_repository() -> list[str]:
             ):
                 if f"]({audio_target})" not in readme_text:
                     errors.append(f"media.readme-link: {rel(readme)} missing {audio_target}")
+            if "agent-harness-kit/" not in readme_text or "EMBEDDED-INSTALLATION.md" not in readme_text:
+                errors.append(f"embedded.readme-route: {rel(readme)}")
+    embedded_doc = ROOT / "docs" / "EMBEDDED-INSTALLATION.md"
+    agents_bridge = ROOT / "harness" / "templates" / "ROOT-AGENTS-BRIDGE.md"
+    claude_bridge = ROOT / "harness" / "templates" / "ROOT-CLAUDE-BRIDGE.md"
+    for bridge in (agents_bridge, claude_bridge):
+        if bridge.is_file():
+            bridge_text = bridge.read_text(encoding="utf-8")
+            if bridge_text.count("<!-- agent-harness-kit:begin -->") != 1 or bridge_text.count("<!-- agent-harness-kit:end -->") != 1:
+                errors.append(f"embedded.bridge-markers: {rel(bridge)}")
+    if agents_bridge.is_file() and "agent-harness-kit/AGENTS.md" not in agents_bridge.read_text(encoding="utf-8"):
+        errors.append("embedded.agents-route: root bridge must name agent-harness-kit/AGENTS.md")
+    if claude_bridge.is_file() and "@agent-harness-kit/CLAUDE.md" not in claude_bridge.read_text(encoding="utf-8"):
+        errors.append("embedded.claude-route: root bridge must import agent-harness-kit/CLAUDE.md")
+    if embedded_doc.is_file():
+        embedded_text = embedded_doc.read_text(encoding="utf-8").lower()
+        for phrase in ("harness-state/", "preserve", "degraded", "agent-harness-kit/"):
+            if phrase not in embedded_text:
+                errors.append(f"embedded.installation-policy: missing {phrase!r}")
     agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8").lower() if (ROOT / "AGENTS.md").exists() else ""
     for phrase in ("harness-state/PROJECT-CONTEXT.md", "harness-state/TASK-GRAPH.md", "Session-start, resume, and status gate", "before planning implementation", "must not load `learning-pack/`"):
         if phrase.lower() not in agents:

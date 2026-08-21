@@ -21,6 +21,7 @@ The validator uses only the Python 3 standard library and does not modify files.
 - overview-audio integrity, versioned bilingual script links, and manifest hashes/status so narration drift is visible;
 - distribution-profile boundaries (`core`, `core-learning`, `full`) through dependency-free packaging dry runs.
 - bounded-review invariants: supported profiles, a hard two-round maximum, initial scope for round one, and focused scope with a prior-review reference for round two;
+- embedded-installation documentation and stable managed bridge markers for root `AGENTS.md` and `CLAUDE.md`;
 - migration coverage, classifications, selector expansion, source identities, destinations/backlinks, unresolved ownership, semantic reviewers, and cutover authority.
 
 Inside a generated directory bundle, `PACKAGE-MANIFEST.json` selects bundle-aware required files and the validator checks only that profile's packaging boundary. This lets each copied profile validate without requiring intentionally omitted optional content.

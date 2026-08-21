@@ -16,7 +16,7 @@ The source is suitable for public review as a native Codex/Claude Code operating
 
 ## Package usability
 
-`core`, `core-learning`, and `full` are usable as copied with Codex or Claude Code: each tool reads its native root file and reaches the same first-run rule, neutral contracts, and state. Skills and bounded Claude subagents provide progressive workflow routing. Actions still require the capable agent/user session to follow the playbooks; the kit is not a separate program that independently calls APIs, provisions worktrees, dispatches sessions, merges branches, or publishes notes.
+`core`, `core-learning`, and `full` support intentional root-layout copies and contained installation under `agent-harness-kit/` with minimal root bridges. Each tool reaches the same first-run rule, neutral contracts, and host-owned state. Namespaced native-extension discovery remains capability-dependent and must degrade explicitly. Actions still require the capable agent/user session to follow the playbooks; the kit is not a separate program that independently calls APIs, provisions worktrees, dispatches sessions, merges branches, or publishes notes.
 
 Current automated evidence is structural and fixture-based; installed Codex and Claude Code binaries have not yet been run through the planned interactive simulations. Mature-host semantic equivalence and cutover remain human decisions.
 

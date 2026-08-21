@@ -19,6 +19,8 @@ Every profile includes both native platform entrypoints and the smallest operati
 
 Every generated package records `project_learning_activation: not-activated`. Profile selection controls file availability only; it never activates consent, observation, retention, or publication. Mature hosts should install into a namespace and follow the [adoption playbook](../harness/playbooks/mature-harness-adoption.md), not overwrite colliding root entrypoints, `.agents/`, `.claude/`, or `.mcp.json`.
 
+The recommended contained host layout places the complete generated profile under `agent-harness-kit/` and adds only managed bridge blocks to host root entrypoints. The distribution remains replaceable while host-owned `harness-state/` remains outside it. See [embedded installation](EMBEDDED-INSTALLATION.md).
+
 The explicit manifests are in [distribution/profiles](../distribution/profiles/core.json). `extends` expresses inheritance; source files remain single-copy. The packager expands sorted inclusion globs, applies exclusions, validates profile boundaries, and writes a generated inventory.
 
 ## Build

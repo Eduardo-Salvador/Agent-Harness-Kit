@@ -46,7 +46,7 @@ Every profile also contains both native platform entrypoints and their small on-
 
 ## Quick start
 
-1. Download or clone the canonical source, or choose a generated profile above, and copy it into the project you want to operate.
+1. Download or clone the canonical source, or choose a generated profile above. For a contained installation, copy the profile into `agent-harness-kit/` and add the minimal root bridges described in [embedded installation](docs/EMBEDDED-INSTALLATION.md). A root-layout copy remains supported for a new project that intentionally gives the Kit those paths.
 2. Open the project in Codex or Claude Code. Codex naturally reads [AGENTS.md](AGENTS.md); Claude Code naturally reads [CLAUDE.md](CLAUDE.md), which imports the same map. No profile switch or runtime platform guess is needed. Do not ask for implementation planning yet.
 3. Because `harness-state/PROJECT-CONTEXT.md` is initially absent, the agent follows [first-run discovery](harness/playbooks/first-run.md), inspects greenfield/existing state, asks only unresolved questions, and records consequential [decisions](harness/templates/DECISION.md).
    If the repository already has mature harness instructions, roles, rules, knowledge, or pending-work authority, use [namespaced mature adoption](harness/playbooks/mature-harness-adoption.md), preserve originals, and obtain semantic sign-off before any cutover.
@@ -57,6 +57,12 @@ Every profile also contains both native platform entrypoints and their small on-
 6. The specialist works only in its leased paths, runs declared checks, and writes a [handoff](harness/templates/HANDOFF.md). A different reviewer writes the [review result](harness/templates/REVIEW.md); only the orchestrator accepts the node. Review uses a `light`, `standard`, or `critical` profile with [two rounds maximum](docs/REVIEW-ROUNDS.md): one initial review and, only for blocking findings, one focused re-review. A second failure stops and escalates/decomposes the task. Related microcorrections form one [coherent change unit](docs/CHANGE-INTEGRATION.md) unless meaningful boundaries require a split. Technical acceptance never grants commit, push, deploy, or publication authority.
 7. In `delivery+learning`, project-learning roles may update the consented learning queue after delivery evidence exists. In `full`, open `learning-pack/README.md` separately when you want to study the harness itself.
 8. Run `python tools/validate.py`. Build a bundle outside the source tree with `python tools/package.py --profile core --output <outside-directory>`; substitute `core-learning` or `full` as needed.
+
+## Contained project installation
+
+The recommended low-collision layout keeps the selected profile under `agent-harness-kit/`. Root `AGENTS.md` and `CLAUDE.md` receive only managed bridge blocks; existing content is preserved. Project-specific operational state remains in root `harness-state/`, outside the replaceable Kit directory. See the [installation guide](docs/EMBEDDED-INSTALLATION.md) and bridge templates for [Codex](harness/templates/ROOT-AGENTS-BRIDGE.md) and [Claude Code](harness/templates/ROOT-CLAUDE-BRIDGE.md).
+
+Nested native skills or subagents are not assumed to be auto-discovered. First-run capability discovery records the actual behavior and uses explicit neutral playbook paths when native registration is degraded.
 
 ## First run
 

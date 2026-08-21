@@ -106,6 +106,8 @@ The first-version adapter layer provides a [generic contract](../adapters/generi
 
 These native files activate guidance inside capable installed tools; they are not an external autonomous runtime. No entrypoint enables hooks, MCP, network, secrets, settings, or destructive permissions. Mature hosts preserve colliding platform files through namespaced coexistence and human-approved cutover.
 
+For contained installation, a generated profile may live under host `agent-harness-kit/` while minimal managed blocks in root `AGENTS.md` and `CLAUDE.md` route to it. Host-owned operational state remains in root `harness-state/`, outside the replaceable distribution. Nested native-extension discovery is capability evidence, not an assumption; degraded hosts follow neutral playbooks by explicit path. See [embedded installation](EMBEDDED-INSTALLATION.md).
+
 ## Failure and recovery
 
 - State transitions are appendable/auditable and use expected revisions to prevent stale writes.

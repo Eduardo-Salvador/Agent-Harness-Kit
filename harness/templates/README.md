@@ -16,6 +16,8 @@ Copy these templates into the runtime state location selected by the project. Ph
 | [Capability manifest](CAPABILITY-MANIFEST.md) | Discovery inventories; human policy approves consequential access |
 | [Rules map](RULES-MAP.md) | Human-approved durable rules, scoped through progressive disclosure |
 | [Model routing](MODEL-ROUTING.md) | Humans approve tier policy; adapters maintain current model mappings; orchestrator records dispatch reasons |
+| [Root AGENTS bridge](ROOT-AGENTS-BRIDGE.md) | Installer or adoption lead adds one managed block without replacing host instructions |
+| [Root Claude bridge](ROOT-CLAUDE-BRIDGE.md) | Installer or adoption lead adds one managed import block without replacing host instructions |
 | Learning profile (`LEARNING-PROFILE.md`, `core-learning`/`full`) | User/learning subsystem under consent policy |
 | Learning queue (`LEARNING-QUEUE.md`, `core-learning`/`full`) | Learning subsystem; user controls priorities |
 

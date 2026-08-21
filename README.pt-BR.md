@@ -46,7 +46,7 @@ Todos também incluem as duas entradas de plataforma e suas pequenas extensões 
 
 ## Início rápido
 
-1. Baixe ou clone o código canônico, ou escolha um perfil gerado, e copie-o para o projeto que será operado.
+1. Baixe ou clone o código canônico, ou escolha um perfil gerado. Para uma instalação contida, copie o perfil para `agent-harness-kit/` e adicione as pontes mínimas na raiz descritas em [instalação embedded](docs/EMBEDDED-INSTALLATION.md). A cópia diretamente na raiz continua compatível com projetos novos que concedam esses caminhos ao Kit de forma intencional.
 2. Abra o projeto no Codex ou no Claude Code. O Codex lê naturalmente [AGENTS.md](AGENTS.md); o Claude Code lê naturalmente [CLAUDE.md](CLAUDE.md), que importa o mesmo mapa. Não é preciso trocar de perfil nem adivinhar a plataforma em runtime. Ainda não peça o planejamento da implementação.
 3. Como `harness-state/PROJECT-CONTEXT.md` não existe inicialmente, o agente segue a [descoberta inicial](harness/playbooks/first-run.md), identifica projeto greenfield ou existente, pergunta apenas o que falta e registra [decisões](harness/templates/DECISION.md) relevantes.
    Se o repositório já tiver instruções, papéis, regras, conhecimento ou pendências de um harness maduro, use a [adoção com namespace](harness/playbooks/mature-harness-adoption.md), preserve os originais e obtenha aprovação semântica antes de qualquer cutover.
@@ -57,6 +57,12 @@ Todos também incluem as duas entradas de plataforma e suas pequenas extensões 
 6. O especialista trabalha somente nos caminhos atribuídos, executa as verificações e escreve um [handoff](harness/templates/HANDOFF.md). Outro revisor escreve o [resultado da revisão](harness/templates/REVIEW.md); apenas o orquestrador aceita o nó. A review usa perfil `light`, `standard` ou `critical` com [no máximo duas rodadas](docs/REVIEW-ROUNDS.md): uma revisão inicial e, somente quando houver achado bloqueante, uma re-revisão focada. Uma segunda reprovação interrompe o loop e escala ou decompõe a tarefa. Microcorreções relacionadas formam uma [unidade coerente de mudança](docs/CHANGE-INTEGRATION.md), salvo quando fronteiras relevantes exigirem separação. Aceitação técnica nunca autoriza automaticamente commit, push, deploy ou publicação.
 7. Em `delivery+learning`, os papéis de aprendizado podem atualizar a fila consentida depois que houver evidência de entrega. Em `full`, abra `learning-pack/README.md` separadamente quando quiser estudar o harness.
 8. Execute `python tools/validate.py`. Gere um pacote fora da árvore fonte com `python tools/package.py --profile core --output <diretório-externo>`; troque o perfil quando necessário.
+
+## Instalação contida no projeto
+
+O layout recomendado com menos colisões mantém o perfil selecionado em `agent-harness-kit/`. Os arquivos `AGENTS.md` e `CLAUDE.md` da raiz recebem somente blocos de ponte gerenciados; o conteúdo existente é preservado. O estado operacional específico do projeto permanece em `harness-state/` na raiz, fora do diretório substituível do Kit. Consulte o [guia de instalação](docs/EMBEDDED-INSTALLATION.md) e os templates de ponte para [Codex](harness/templates/ROOT-AGENTS-BRIDGE.md) e [Claude Code](harness/templates/ROOT-CLAUDE-BRIDGE.md).
+
+A descoberta automática de skills ou subagentes aninhados não é presumida. A descoberta inicial registra o comportamento real e usa caminhos explícitos para os playbooks neutros quando o registro nativo estiver degradado.
 
 ## Primeiro uso
 
