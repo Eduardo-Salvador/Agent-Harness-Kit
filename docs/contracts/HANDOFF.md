@@ -8,7 +8,7 @@ schema: harness.handoff/v1
 id: HANDOFF-TASK-001-01
 task: TASK-001@1
 attempt: 1
-status: ready-for-review          # ready-for-review | blocked | failed
+status: completed                 # completed | blocked | failed
 author: agent:builder-1
 created_at: 2026-08-20T14:45:00Z
 model_tier_used: balanced
@@ -52,6 +52,14 @@ Implemented graph-cycle and ownership-overlap validation.
 
 ## Review request
 - Focus on normalization and false-positive overlap.
+
+## User-facing closeout
+- Outcome: Configuration validation is implemented.
+- Material changes: Validator behavior and deterministic fixtures.
+- Verification: 12 contract checks passed.
+- Lifecycle state: completed.
+- Next automatic action: Dispatch the next ready task and run assurance review non-blockingly.
+- Human action required: None.
 ```
 
 ## Invariants
@@ -60,7 +68,8 @@ Implemented graph-cycle and ownership-overlap validation.
 - Every acceptance criterion has a result and durable evidence pointer, including failures/not-run reasons.
 - Changed paths stay within ownership or link to an approved lease change.
 - Claims summarize reproducible checks; they do not treat agent confidence as verification.
-- `ready-for-review` does not mean accepted. Reviewer identity and verdict are independent.
+- `completed` means declared implementation checks passed and the orchestrator may unlock dependents. Independent assurance remains separate and may create remediation without reopening historical completion.
 - Blockers name the missing decision, capability, dependency, or external condition.
 - The actual model tier and route changes are recorded; a stronger model is never presented as evidence.
 - The coherent change unit and commit/integration/push/deploy/publication authority states are explicit and independent.
+- The user-facing closeout explains outcome, material changes, verification, lifecycle state, next automatic action, and real human action before a review or approval boundary.

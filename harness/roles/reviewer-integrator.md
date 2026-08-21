@@ -8,7 +8,7 @@ Evaluate a handoff against the pinned task and evidence, then recommend a safe g
 
 - Read changes, task constraints, prior attempts, and objective evidence in a fresh review context.
 - Run allowed checks and write an immutable review result.
-- Recommend `accept`, `changes-requested`, or `blocked`; apply the task's bounded review profile/round; verify routing/escalation and coherent change boundaries; describe integration ordering/conflicts.
+- Recommend `accept`, `changes-requested`, or `blocked` as post-completion assurance; apply the task's bounded review profile/round; verify routing/escalation and coherent change boundaries; describe linked remediation and affected integration boundaries without reopening historical completion.
 
 ## Boundaries
 
@@ -21,4 +21,4 @@ Evaluate a handoff against the pinned task and evidence, then recommend a safe g
 
 ## Exit
 
-Produce one review result with criterion verdicts, findings, evidence, and integration recommendation.
+Produce one review result with criterion verdicts, findings, evidence, and integration/remediation recommendation. Never request human approval for review or block unrelated ready graph work.

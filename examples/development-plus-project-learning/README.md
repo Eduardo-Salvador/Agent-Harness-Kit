@@ -12,8 +12,8 @@ Codex can enter this copied profile through root `AGENTS.md`, and Claude Code th
 | --- | --- | --- |
 | 1 | [Context](state/PROJECT-CONTEXT.md) approved; [graph](state/TASK-GRAPH.initial.md) makes `TASK-101` ready | [Profile](project-learning/LEARNING-PROFILE.md) activates explicit consent |
 | 2 | Orchestrator dispatches [task](state/TASK-101.md) with lease/isolation | None |
-| 3 | Specialist writes [handoff](state/HANDOFF-TASK-101-01.md) | Assessor may read only consented reasoning/evidence |
-| 4 | Reviewer writes [review](state/REVIEW-TASK-101-01.md) | [Queue](project-learning/LEARNING-QUEUE.md) gains a practice proposal |
-| 5 | Orchestrator writes [completed graph](state/TASK-GRAPH.completed.md) | [Debrief](project-learning/DEBRIEF-001.md) remains a local draft |
+| 3 | Specialist writes a passing [completed handoff](state/HANDOFF-TASK-101-01.md) | Assessor may read only consented reasoning/evidence |
+| 4 | Orchestrator writes [completed graph](state/TASK-GRAPH.completed.md), updates [pending overview](state/PENDING.md), and advances | Delivery does not wait for approval or review |
+| 5 | Reviewer writes automatic [assurance](state/REVIEW-TASK-101-01.md) | [Queue](project-learning/LEARNING-QUEUE.md) gains a practice proposal; [debrief](project-learning/DEBRIEF-001.md) remains local |
 
 The graph contains no project-learning node or dependency. Removing `project-learning/` leaves the delivery trace valid.

@@ -33,6 +33,15 @@ python tools/package.py --profile core-learning --output <outside-directory> --f
 python tools/package.py --profile full --output <outside-directory>
 ```
 
+Install a profile into a host project with a preflight-only pass followed by the explicit write:
+
+```text
+python tools/install.py --profile core --host <host-project> --dry-run
+python tools/install.py --profile core --host <host-project>
+```
+
+The source checkout selects the requested profile. A generated package installs only its own manifest-declared profile and verifies every packaged file hash before writing.
+
 ZIP entries are sorted, use a fixed timestamp and permissions, and contain source bytes plus `PACKAGE-MANIFEST.json`. Repeating a build from identical source/version produces identical archive bytes.
 
 Generated names follow `agent-harness-kit-<version>-<profile>.zip` (or the same name as a directory).

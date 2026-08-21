@@ -24,6 +24,8 @@ source_references: none
       "reviewer": "agent:reviewer",
       "write_set": ["src/config/**", "tests/config/**"],
       "checkpoint": null,
+      "assurance_status": "pending",
+      "assurance_requires": [],
       "task_brief": "TASK-001.md"
     }
   ]

@@ -4,7 +4,7 @@ O Agent Harness Kit é um único harness de desenvolvimento, independente de pla
 
 O suporte nativo às duas ferramentas já vem incluído: o Codex entra por A G E N T S ponto markdown, o Claude Code por CLAUDE ponto markdown, e ambos usam o mesmo núcleo neutro.
 
-Em uma nova janela de contexto, em pedidos de retomada ou em pedidos de status, o agente deve ler primeiro o contexto aprovado, depois a autoridade de pendências e, por último, o grafo de tarefas. Uma varredura mais ampla só pode acontecer quando esses artefatos revelarem uma lacuna concreta ou quando o usuário pedir uma auditoria.
+Em uma nova janela de contexto, em pedidos de retomada ou em pedidos de status, o agente deve ler primeiro o contexto aprovado, depois PENDING ponto M D e, por último, TASK GRAPH ponto M D. PENDING contém decisões e ações humanas e a visão macro das áreas ainda incompletas, como backend ou autenticação. TASK GRAPH contém ordem, dependências e execução técnica. Uma varredura mais ampla só pode acontecer quando esses artefatos revelarem uma lacuna concreta ou quando o usuário pedir uma auditoria.
 
 Para controlar o custo sem reduzir a qualidade de forma silenciosa, as tarefas são roteadas por capacidade. Modelos econômicos ficam limitados a trabalho mecânico e verificável. Modelos balanceados são o padrão para implementação delimitada, testes, documentação e inspeção. Modelos avançados ficam reservados para arquitetura, segurança, brainstorming, integração difícil, evolução do harness e falhas repetidas. A escolha do modelo nunca concede permissões adicionais.
 
@@ -22,9 +22,9 @@ São três pacotes gerados do mesmo código. Instalar uma opção com aprendizag
 
 No primeiro uso, se não houver contexto aprovado, o agente inicia uma entrevista adaptativa. Ele identifica o que já existe e pergunta somente o que falta. A pessoa também pode pedir uma explicação simples sobre o Agent Harness Kit e sobre o que acontecerá no projeto, sem ativar nenhum modo de estudo.
 
-Depois da entrevista, o usuário revisa o contexto, escolhe o modo de trabalho e aprova as decisões importantes. O sistema cria o grafo de tarefas. Cada especialista recebe uma tarefa delimitada e arquivos exclusivos, entrega evidências, outro agente revisa e somente então o orquestrador pode aceitar o trabalho e liberar as próximas tarefas.
+Depois da entrevista, o usuário revisa o contexto, escolhe o modo de trabalho e aprova as decisões importantes. O sistema cria o grafo de tarefas. Cada especialista recebe uma tarefa delimitada e arquivos exclusivos. Quando as verificações previstas passam, o orquestrador marca a task como concluída, informa o que mudou, libera a propriedade e inicia a próxima tarefa pronta sem pedir aprovação de conclusão.
 
-As reviews são independentes, mas limitadas. Cada tarefa recebe uma revisão inicial proporcional ao risco e, somente quando houver um defeito bloqueante, no máximo uma re-revisão focada. Melhorias opcionais não bloqueiam a aceitação. Se a segunda revisão ainda falhar, a tarefa para e é escalada ou decomposta, em vez de entrar em um terceiro loop.
+As reviews são uma garantia independente, automática e não bloqueante. Cada tarefa concluída recebe uma revisão inicial proporcional ao risco e, somente quando houver um defeito bloqueante, no máximo uma revisão focada da correção. Melhorias opcionais viram follow-ups. Um bloqueio cria uma task de correção vinculada e pode segurar apenas a integração ou release afetado; não reabre o histórico concluído nem para tarefas prontas sem relação. Não existe terceiro loop de review.
 
 Microcorreções relacionadas são agrupadas em uma mudança coerente e reversível quando compartilham os mesmos limites de aceitação e rollback. As mudanças são separadas somente quando há uma fronteira relevante de propriedade, implantação, dependência, risco, revisão ou rollback. A aceitação técnica não autoriza automaticamente commit, push, deploy ou publicação.
 

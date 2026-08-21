@@ -1,6 +1,6 @@
 # Contract: Review result
 
-An immutable independent verdict for one task/handoff revision and one bounded review round.
+An immutable independent assurance verdict for one completed task/handoff revision and one bounded review round. It does not require human approval or hold the completed node.
 
 ```yaml
 ---
@@ -60,3 +60,4 @@ created_at: 2026-08-21T12:00:00Z
 - Non-blocking findings cannot prevent `accept` and become follow-up candidates.
 - Round 2 reopens only prior blocking findings, their correction delta, proportional regression risk, and new blockers introduced in that delta.
 - No automatic round 3 exists. An exhausted budget blocks and escalates/decomposes the work under [bounded review rounds](../REVIEW-ROUNDS.md).
+- `changes-requested` creates linked remediation and may gate affected integration/release work; it never reopens historical completion or blocks unrelated ready nodes.

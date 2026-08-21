@@ -6,4 +6,6 @@ Claude Code loads this file and imports the shared operational map above. For a 
 
 Every Claude main agent and subagent follows the imported [bounded review policy](docs/REVIEW-ROUNDS.md): one initial review, at most one focused re-review, and no third unchanged review loop.
 
+They also follow [status and completion communication](docs/STATUS-AND-COMPLETION.md): `PENDING.md` owns human actions and macro project gaps; `TASK-GRAPH.md` owns technical execution. Passing tasks are completed, reported, and followed by the next ready node; assurance review is automatic and non-blocking.
+
 Do not assume or enable hooks, MCP servers, settings, network, secrets, destructive permissions, or integrations. Propose consequential capability changes through discovery and obtain explicit human approval. Existing Claude/Codex/custom instructions use the mature-adoption process; never overwrite them blindly.

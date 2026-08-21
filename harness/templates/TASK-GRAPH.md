@@ -13,6 +13,7 @@ source_references: none
 # Task graph
 
 The JSON block is the executable graph view. `write_set` contains repository-relative paths or directory globs ending in `/**`.
+This artifact owns technical order, dependencies, readiness, leases, remediation, and execution. Human decisions/actions and the macro view of unfinished project areas belong in `harness-state/PENDING.md`, not here.
 
 ```json
 {
@@ -26,6 +27,8 @@ The JSON block is the executable graph view. `write_set` contains repository-rel
       "reviewer": "unassigned",
       "write_set": ["replace/path/**"],
       "checkpoint": null,
+      "assurance_status": "pending",
+      "assurance_requires": [],
       "task_brief": "tasks/TASK-001.md"
     }
   ]

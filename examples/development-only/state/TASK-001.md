@@ -15,6 +15,7 @@ model_tier: balanced
 model_reason: Bounded validator work with deterministic fixtures and no frontier trigger.
 review_profile: light
 max_review_rounds: 2
+assurance_gate: none
 ---
 
 # TASK-001 — Add deterministic configuration validation

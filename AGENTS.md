@@ -19,6 +19,14 @@ On the first request in a new context window, any request to continue/resume, or
 
 Do not substitute repository-wide scanning, dependency inventory, Git-history traversal, or conversational recall for this order. If an artifact is missing, stale, or contradictory, report that exact condition and enter the applicable discovery/recovery playbook. Broader inspection is allowed only for a concrete gap exposed by these artifacts, a required recovery step, or an explicit user audit request; announce its reason and scope first.
 
+For “my pending items”, “what do you need from me?”, approvals, or decisions, read the pending authority in full and report open human-owned items first, including items outside the graph. State explicitly when there is no recorded human action. Never answer these requests from the graph alone.
+
+## State authority split
+
+- `harness-state/PENDING.md` owns human decisions/actions and the macro project completion overview: product areas or outcomes still missing, such as unfinished backend or authentication. It does not schedule technical tasks.
+- `harness-state/TASK-GRAPH.md` owns technical order, dependencies, readiness, leases, dispatch, remediation, and execution state. It does not replace the human/macro pending view.
+- Status and resume reads both in the required order. “My pending items” is answered from human-owned `PENDING.md` entries first; technical detail is added from the graph only when useful or requested.
+
 ## Operational loading order
 
 1. Load the assigned [role](harness/roles/README.md), task brief, pinned context revision, relevant decisions, graph neighborhood, scoped rules, capability manifest, and approved model-routing revision named by the task.
@@ -28,6 +36,7 @@ Do not substitute repository-wide scanning, dependency inventory, Git-history tr
 5. Run `python tools/validate.py` before review when Python 3 is available, otherwise follow [the validation contract](docs/VALIDATION.md).
 6. Route work by [capability tier](docs/MODEL-ROUTING.md), not prestige: balanced is the normal default; economical requires deterministic low-risk acceptance; frontier is reserved for consequential judgment and escalation triggers. Routing changes no authority.
 7. Apply the [bounded review policy](docs/REVIEW-ROUNDS.md): one initial independent review and, only when blockers remain, at most one focused re-review. Never start a third unchanged review loop; escalate, decompose, rewrite, or request a human decision.
+8. Follow [status and completion communication](docs/STATUS-AND-COMPLETION.md): when declared checks pass, mark the task completed, explain the result, release ownership, and dispatch the next ready node. Post-completion review runs automatically and non-blockingly; ask once only for concrete authority that is genuinely missing.
 
 ## Native routing
 

@@ -28,7 +28,7 @@ This ledger contains real unresolved choices. An unchecked item is not permissio
 
 - [x] Use `harness-state/` as the neutral default runtime location; adapters may map it only when the canonical path remains discoverable.
 - [x] Define the minimal immutable review-result record separately from the implementer's handoff.
-- [x] Bound delivery review to one initial round plus at most one focused re-review; after round 2, block and escalate/decompose instead of repeating the unchanged contract.
+- [x] Run delivery review automatically as non-blocking post-completion assurance, limited to one initial round plus at most one focused remediation review; after round 2, block/escalate only the remediation or affected integration path instead of reopening completion or repeating the loop.
 - [x] Define contained installation under `agent-harness-kit/` with minimal managed root bridges, host-owned `harness-state/`, preserved existing authority, and explicit native-extension degradation.
 - [x] Use bounded YAML scalar headers plus JSON for executable task-graph data; avoid a third-party schema dependency in Phase 2.
 - [ ] Add valid and invalid fixtures for every contract invariant. Phase 2 covers graph validity, missing dependencies, cycles, and write collisions.

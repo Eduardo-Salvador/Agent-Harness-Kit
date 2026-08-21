@@ -17,7 +17,7 @@ Agent Harness Kit helps developers deliver real software through a disciplined m
 
 ### Delivery
 
-The required mode. Discovery creates approved project context and an initial task graph. A PO/orchestrator schedules ready nodes, assigns exclusive ownership and isolation, and accepts work only after independent review and objective verification. Review is risk-proportional and bounded to one initial round plus at most one focused re-review; persistent failure escalates or decomposes the task.
+The required mode. Discovery creates approved project context and an initial task graph. A PO/orchestrator schedules ready nodes, assigns exclusive ownership and isolation, and completes work when declared objective checks pass. It reports the result and advances immediately. Independent review runs automatically as non-blocking assurance, bounded to one initial round plus at most one focused remediation review; blockers create linked remediation and may gate only affected integration/release work.
 
 ### Delivery + learning
 
@@ -48,7 +48,7 @@ The harness does not own the user's product strategy, source-control provider, m
 1. A developer can run discovery and obtain a complete, approved `PROJECT-CONTEXT` plus a valid initial `TASK-GRAPH`.
 2. The orchestrator schedules only dependency-ready tasks and prevents overlapping file ownership.
 3. A task runs in a declared isolation mode and produces a concise, traceable handoff.
-4. A different reviewer records a verdict, and objective checks determine whether completion is admissible.
+4. Objective checks make completion admissible; a different reviewer records non-blocking assurance and can trigger linked remediation.
 5. An interrupted run can reconstruct current state from versioned files without relying on chat history.
 6. The same fixture completes through Codex and Claude adapters, with declared degradation where capabilities differ.
 7. Disabling learning changes no delivery artifact except an explicit mode/configuration record.

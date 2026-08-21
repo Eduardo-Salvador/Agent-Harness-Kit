@@ -4,7 +4,7 @@ Agent Harness Kit is a single, platform-agnostic development harness that helps 
 
 Native support for both tools is built in: Codex enters through A G E N T S dot markdown, Claude Code through CLAUDE dot markdown, and both use the same neutral core.
 
-On a new context window, resume request, or status request, the agent must read the approved project context first, the pending-work authority second, and the task graph third. It may scan more broadly only when those artifacts reveal a concrete gap or the user explicitly requests an audit.
+On a new context window, resume request, or status request, the agent must read the approved project context first, PENDING dot M D second, and TASK GRAPH dot M D third. PENDING owns human decisions, human actions, and the macro view of unfinished project areas such as backend or authentication. TASK GRAPH owns technical order, dependencies, and execution. It may scan more broadly only when those artifacts reveal a concrete gap or the user explicitly requests an audit.
 
 To control cost without silently reducing quality, tasks are routed by capability. Economical models are limited to narrow mechanical work with deterministic checks. Balanced models are the normal default for bounded implementation, tests, documentation, and inspection. Frontier models are reserved for architecture, security, brainstorming, difficult integration, harness evolution, and repeated failure. Model choice never grants extra permission.
 
@@ -22,9 +22,9 @@ All three packages are generated from the same source. Installing an option that
 
 On first use, if the project has no approved context, the agent starts an adaptive interview. It discovers what already exists and asks only for missing information. The user may also request a plain-language explanation of Agent Harness Kit and what will happen in the project, without activating any learning mode.
 
-After the interview, the user reviews the project context, selects the working mode, and approves important decisions. The system creates the task graph. Each specialist receives a bounded task and exclusive file ownership, returns evidence, and is reviewed by another agent. Only then may the orchestrator accept the work and release dependent tasks.
+After the interview, the user reviews the project context, selects the working mode, and approves important decisions. The system creates the task graph. Each specialist receives a bounded task and exclusive file ownership. When declared checks pass, the orchestrator marks the task completed, reports what changed, releases ownership, and starts the next ready task without asking for completion approval.
 
-Reviews are independent but bounded. Each task receives one risk-proportional initial review and, only when a blocking defect exists, at most one focused re-review. Optional improvements do not block acceptance. If the second review still fails, the task stops and is escalated or decomposed instead of entering a third review loop.
+Reviews are independent, automatic, non-blocking assurance. Each completed task receives one risk-proportional initial review and, only when a blocking defect exists, at most one focused remediation review. Optional improvements become follow-ups. A blocker creates a linked remediation task and may gate only affected integration or release work; it does not reopen completed history or stop unrelated ready tasks. There is no third review loop.
 
 Related microcorrections are grouped into one coherent, reversible change when they share acceptance and rollback boundaries. Changes are split only for meaningful ownership, deployment, dependency, risk, review, or rollback boundaries. Technical acceptance does not automatically authorize a commit, push, deployment, or publication.
 

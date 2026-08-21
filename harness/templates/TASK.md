@@ -15,6 +15,7 @@ model_tier: balanced
 model_reason: Bounded implementation with deterministic acceptance and no frontier trigger.
 review_profile: standard
 max_review_rounds: 2
+assurance_gate: none
 ---
 
 # TASK-001 — Replace with outcome

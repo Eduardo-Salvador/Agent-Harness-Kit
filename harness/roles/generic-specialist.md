@@ -18,4 +18,4 @@ Complete one bounded task inside its declared loop and produce a reproducible ha
 
 ## Exit
 
-Return `ready-for-review`, `blocked`, or `failed` with changed paths, criterion-level evidence, risks, and reproducible verification details.
+Return `completed`, `blocked`, or `failed` with changed paths, criterion-level evidence, risks, reproducible verification details, and a plain-language user closeout. State what was done; successful completion does not wait for human approval or post-completion assurance review.

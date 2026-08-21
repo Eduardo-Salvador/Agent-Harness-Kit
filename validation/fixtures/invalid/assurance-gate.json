@@ -1,0 +1,44 @@
+{
+  "expected_errors": ["graph.assurance-gate"],
+  "nodes": [
+    {
+      "id": "TASK-SECURITY",
+      "goal": "Define security controls",
+      "depends_on": [],
+      "status": "completed",
+      "assignee": "agent:security",
+      "reviewer": "agent:reviewer",
+      "write_set": ["contracts/security/**"],
+      "checkpoint": null,
+      "assurance_status": "pending",
+      "assurance_requires": [],
+      "task_brief": "tasks/TASK-SECURITY.md"
+    },
+    {
+      "id": "TASK-RELEASE",
+      "goal": "Release the security-sensitive result",
+      "depends_on": ["TASK-SECURITY"],
+      "status": "ready",
+      "assignee": "agent:release",
+      "reviewer": "agent:release-reviewer",
+      "write_set": ["release/**"],
+      "checkpoint": null,
+      "assurance_status": "pending",
+      "assurance_requires": ["TASK-SECURITY"],
+      "task_brief": "tasks/TASK-RELEASE.md"
+    },
+    {
+      "id": "TASK-UNRELATED",
+      "goal": "Continue unrelated documentation",
+      "depends_on": [],
+      "status": "ready",
+      "assignee": "agent:docs",
+      "reviewer": "agent:docs-reviewer",
+      "write_set": ["docs/unrelated/**"],
+      "checkpoint": null,
+      "assurance_status": "not-required",
+      "assurance_requires": [],
+      "task_brief": "tasks/TASK-UNRELATED.md"
+    }
+  ]
+}

@@ -6,8 +6,9 @@ Copy these templates into the runtime state location selected by the project. Ph
 | --- | --- |
 | [Project context](PROJECT-CONTEXT.md) | Discovery drafts; human approves |
 | [Task graph](TASK-GRAPH.md) | Orchestrator only |
+| [Pending work](PENDING.md) | Orchestrator maintains human actions and macro project completion; technical execution stays in the graph |
 | [Task brief](TASK.md) | Orchestrator; implementer updates attempt status only |
-| [Handoff](HANDOFF.md) | Assigned implementer |
+| [Handoff](HANDOFF.md) | Assigned implementer; includes the plain-language user closeout |
 | [Review result](REVIEW.md) | Independent reviewer; one initial review plus at most one focused re-review |
 | [Decision](DECISION.md) | Proposer drafts; named authority decides |
 | [Migration manifest](MIGRATION-MANIFEST.md) | Adoption lead inventories; humans approve semantics/cutover |

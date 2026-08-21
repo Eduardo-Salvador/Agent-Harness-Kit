@@ -3,7 +3,7 @@ schema: harness.handoff/v1
 id: HANDOFF-TASK-001-01
 task: TASK-001@1
 attempt: 1
-status: ready-for-review
+status: completed
 author: agent:implementer
 created_at: 2000-01-01T00:00:00Z
 model_tier_used: balanced
@@ -51,3 +51,12 @@ Replace with the bounded result or blocker.
 ## Review request
 
 - Focus on the acceptance criteria and declared risks.
+
+## User-facing closeout
+
+- Outcome: Replace with a plain-language result.
+- Material changes: Replace with behavior and key paths.
+- Verification: Replace with checks and outcomes.
+- Lifecycle state: completed / blocked / failed. If blocked, state separately whether the pending owner is human or software.
+- Next automatic action: Replace with the next ready task; post-completion review runs automatically and non-blockingly.
+- Human action required: None, or one exact decision/action with reason and effect.

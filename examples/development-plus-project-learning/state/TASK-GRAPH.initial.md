@@ -24,6 +24,8 @@ source_references: none
       "reviewer": "agent:reviewer",
       "write_set": ["tests/parser/**"],
       "checkpoint": null,
+      "assurance_status": "pending",
+      "assurance_requires": [],
       "task_brief": "TASK-101.md"
     }
   ]

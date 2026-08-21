@@ -18,7 +18,7 @@ The optional project-specific learning layer is outside the delivery control pat
 
 At session start, the core checks for approved `harness-state/PROJECT-CONTEXT.md`. Absence, non-approved status, or material conflict triggers the [first-run playbook](../harness/playbooks/first-run.md) before implementation planning. Discovery identifies greenfield versus existing state, fills gaps, records decisions, and selects `delivery` or `delivery+learning`. Only approved context seeds a graph. Adapters may surface this through available facilities or a session-start check; they cannot weaken it.
 
-For a resumed or status-only session with approved context, the [status/resume playbook](../harness/playbooks/status-resume.md) imposes a strict read order: project context, pending-work authority, then task graph. Task-local evidence follows. Repository-wide inspection is evidence-driven fallback, not the opening move.
+For a resumed or status-only session with approved context, the [status/resume playbook](../harness/playbooks/status-resume.md) imposes a strict read order: project context, pending-work authority, then task graph. The pending authority owns human decisions/actions and macro incomplete project areas; the graph owns technical order, dependencies, and execution. Task-local evidence follows.
 
 ### Mature existing harnesses
 
@@ -32,21 +32,21 @@ Existing root instructions, role systems, path rules, knowledge, decisions, pend
 4. The orchestrator finds nodes whose dependencies are satisfied, proposed paths do not overlap active ownership, and required capabilities are available.
 5. It follows [capability-based model routing](MODEL-ROUTING.md), records the least costly safe tier and task-specific reason, then assigns one [task brief](contracts/TASK.md), an exclusive ownership set, and an isolation boundary.
 6. A specialized agent loops inside that node: inspect → act → check → update its task artifact. It cannot mutate graph topology.
-7. The agent emits a [handoff](contracts/HANDOFF.md) that points to changes and evidence; messages merely announce that the artifact changed.
-8. A reviewer other than the implementer evaluates the acceptance criteria using a `light`, `standard`, or `critical` profile. One initial review and at most one focused re-review are allowed; a second failure blocks and escalates/decomposes instead of looping.
-9. The orchestrator alone transitions graph state. Failure creates a bounded retry/follow-up, model-tier escalation, decomposition, or a human checkpoint; success unlocks dependents. Integration follows the [coherent change policy](CHANGE-INTEGRATION.md) and separate action authorities.
+7. The agent emits a [handoff](contracts/HANDOFF.md) with changes, evidence, and a plain-language closeout. When checks pass, the orchestrator marks the node completed, reports the outcome, releases ownership, and unlocks dependents.
+8. A reviewer other than the implementer automatically evaluates the completed work as non-blocking assurance using a `light`, `standard`, or `critical` profile. One initial review and at most one focused remediation review are allowed.
+9. A blocking finding creates a linked remediation node and may gate affected integration/release work; it does not reopen historical completion or stop unrelated ready nodes. Integration follows the [coherent change policy](CHANGE-INTEGRATION.md) and separate action authorities.
 10. Versioned files allow recovery. If project learning is enabled, its observer reads consented artifacts and updates learning-owned state separately.
 
 ## Graph above loops
 
-Graph engineering coordinates work **between** nodes: dependencies, readiness, ownership, isolation, priorities, and acceptance. Agent-loop engineering controls work **inside** a node: its prompt, tools, context, iteration, and exit conditions. An agent may propose graph changes in its handoff; only the orchestrator, and a human when consequential, may approve them.
+Graph engineering coordinates work **between** nodes: dependencies, readiness, ownership, isolation, priorities, completion, and remediation. Agent-loop engineering controls work **inside** a node: its prompt, tools, context, iteration, and exit conditions. An agent may propose graph changes in its handoff; only the orchestrator, and a human when consequential, may approve them.
 
 ## Artifact-based communication
 
 - Canonical state lives in small, versioned Markdown files with a YAML header.
 - Every artifact has an identifier, schema version, lifecycle status, and update timestamp or revision reference where relevant.
 - References use stable artifact IDs plus repository-relative paths; information is linked instead of duplicated.
-- Messages contain only an event such as “`TASK-004` handoff is ready at …”, never required state.
+- Messages summarize outcome, material changes, verification, lifecycle state, next automatic action, and any real human action; durable detail remains in artifacts.
 - Large logs remain external or generated; artifacts retain the command, result summary, and durable evidence pointer.
 
 The Phase 2 [review template](../harness/templates/REVIEW.md) defines the independent immutable result referenced by graph state. It is distinct from the implementer's handoff and cannot be authored by the implementer.

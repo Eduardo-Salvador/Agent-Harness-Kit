@@ -24,7 +24,8 @@ At the user's request, briefly explain in plain language what the harness is, wh
 6. If `delivery+learning` is selected, create/approve the learning profile. Installing `core-learning` never performs this activation. The Harness Engineering Learning Pack is a separate study resource and is never a mode.
 7. Revalidate discovery snapshot identities and selector expansion immediately before approval.
 8. Obtain explicit approval of project context and consequential decisions.
-9. Only then decompose work, validate the initial graph, and create briefs for ready nodes.
+9. Create `harness-state/PENDING.md` from the approved context: human decisions/actions plus a macro project completion overview. Do not put technical order or dependencies there.
+10. Only then decompose work into `harness-state/TASK-GRAPH.md`, validate the initial graph, and create briefs for ready nodes.
 
 ## Resume behavior
 

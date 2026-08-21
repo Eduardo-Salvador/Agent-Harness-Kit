@@ -7,22 +7,22 @@
       "audio": "media/agent-harness-kit-overview-en.mp3",
       "script": "media/overview-script-en.txt",
       "audio_sha256": "ad0c05b49ab76413a78c7ba9f120a8298cfb0d6c3f56b1ca182836365e46f940",
-      "script_sha256": "f3851d9bbd7733f87f4a1c0b4d860b36041e4025a56984e190126a32b2105f14",
+      "script_sha256": "2d31eb2a52f83429bb60811d007c5773f85efd7d17afbac941eb00dcc6f62e7f",
       "voice": "en-US-EmmaMultilingualNeural",
       "status": "refresh-required",
       "script_synced": false,
-      "note": "Approved legacy audio is preserved; the current script adds ordered status/resume loading, capability routing, coherent change integration, and bounded review rounds."
+      "note": "Approved legacy audio is preserved; the current script adds the PENDING/TASK-GRAPH authority split, automatic task completion/advance, non-blocking assurance, capability routing, and coherent change integration."
     },
     {
       "language": "pt-BR",
       "audio": "media/agent-harness-kit-overview-pt-BR.mp3",
       "script": "media/overview-script-pt-BR.txt",
       "audio_sha256": "2f917089a2cd498c30be3188c6cac9c4d813335ecb371e1d44e83bee666b297b",
-      "script_sha256": "4290bf1cf0aea4e1d345cfd92b69739cb2dea0f813cf7b2c5f9370f3c6fe828f",
+      "script_sha256": "7745e83ced3c18e1f8ed3259394dcde280177d3093e721e86e82bd931a7b4801",
       "voice": "pt-BR-FranciscaNeural",
       "status": "refresh-required",
       "script_synced": false,
-      "note": "Approved legacy audio is preserved; the current script adds ordered status/resume loading, capability routing, coherent change integration, and bounded review rounds."
+      "note": "Approved legacy audio is preserved; the current script adds the PENDING/TASK-GRAPH authority split, automatic task completion/advance, non-blocking assurance, capability routing, and coherent change integration."
     }
   ]
 }

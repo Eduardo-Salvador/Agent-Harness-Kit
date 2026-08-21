@@ -16,6 +16,8 @@ At session start, apply the imported first-run/status gate. For resume or status
 
 Apply [bounded review rounds](../docs/REVIEW-ROUNDS.md) to the main context and every delegated subagent. The orchestrator may dispatch one initial independent review and at most one focused re-review; an exhausted budget requires escalation, decomposition, rewrite, or human decision, never a third unchanged loop.
 
+For every main agent or subagent, apply [status and completion communication](../docs/STATUS-AND-COMPLETION.md). `PENDING.md` owns human decisions/actions and macro project gaps; `TASK-GRAPH.md` owns technical order, dependencies, and execution. Passing tasks are marked `completed` and unlock the next node immediately; assurance review is automatic, non-blocking, and never a renewed human approval request.
+
 Discovery records actual tools, skills, agents, MCP/connectors, scripts, hooks, and integrations. Presence does not establish installation, authentication, secret access, network access, or authorization.
 
 For mature repositories, preserve existing `CLAUDE.md`, `.claude/`, `.mcp.json`, and generated `.claude/worktrees/` according to the migration classifications. Generated worktree material is evidence or an exclusion, never silently promoted to canonical state. Cutover or deletion requires human semantic-equivalence review and separate authorization.

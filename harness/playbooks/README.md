@@ -7,6 +7,7 @@ Playbooks describe neutral state transitions. Select the smallest playbook that 
 - [Session start, resume, and status](status-resume.md)
 - [Mature existing-harness adoption](mature-harness-adoption.md)
 - [Task dispatch](task-dispatch.md)
+- [Task closeout and user communication](task-closeout.md)
 - [Capability-based model routing](model-routing.md)
 - [Contract changes](contract-changes.md)
 - [Parallel execution and isolation](parallel-execution.md)

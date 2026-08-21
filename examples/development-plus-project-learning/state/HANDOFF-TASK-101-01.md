@@ -3,7 +3,7 @@ schema: harness.handoff/v1
 id: HANDOFF-TASK-101-01
 task: TASK-101@1
 attempt: 1
-status: ready-for-review
+status: completed
 author: agent:specialist
 created_at: 2026-08-20T11:30:00Z
 model_tier_used: balanced
@@ -52,3 +52,12 @@ Added both boundary-case tests.
 ## Review request
 
 - Confirm both boundaries match approved behavior.
+
+## User-facing closeout
+
+- Outcome: Parser boundary coverage is complete.
+- Material changes: Empty and maximum-length boundary tests.
+- Verification: Both approved criteria passed.
+- Lifecycle state: completed.
+- Next automatic action: Release ownership, dispatch the next ready node, and run assurance review non-blockingly.
+- Human action required: None.

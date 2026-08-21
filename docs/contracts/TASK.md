@@ -20,6 +20,7 @@ model_tier: balanced
 model_reason: Bounded implementation with deterministic checks and no frontier trigger.
 review_profile: standard
 max_review_rounds: 2
+assurance_gate: none
 ---
 ```
 
@@ -65,9 +66,10 @@ Write a handoff; do not self-accept the task.
 - Assignee and reviewer are distinct identities.
 - Owned paths match the graph lease and do not overlap another active task.
 - The task requires no context outside its declared references unless a discovery is recorded in the handoff.
-- The implementer cannot mark the task `accepted` or change its baseline scope.
+- The implementer cannot mutate graph completion or change baseline scope; it writes a `completed` handoff and the orchestrator performs the graph transition after checking evidence.
 - Temporary task context cannot become a durable rule; consequential capability/rule changes require human approval and validation.
 - `model_tier` is `economical`, `balanced`, or `frontier`; `model_reason` names task-specific evidence and any trigger considered.
 - Routing never changes the task's ownership, capability, review, verification, or human-approval boundaries.
 - `review_profile` is `light`, `standard`, or `critical`; `max_review_rounds` is normally `2` and cannot exceed `2` in automatic execution.
-- Review budget means one initial independent review plus at most one focused re-review. Exhaustion blocks and escalates/decomposes; it does not create a third blind loop.
+- `assurance_gate` is `none` or `affected-actions`. Critical work uses `affected-actions`; graph nodes that integrate, release, deploy, or otherwise consume its risk-sensitive result list that task in `assurance_requires` and cannot become `ready` until its assurance is `accepted`.
+- Review budget means one initial independent assurance review plus at most one focused remediation review. Exhaustion blocks/escalates the remediation or affected integration path; it does not reopen completion or create a third loop.

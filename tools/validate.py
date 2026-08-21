@@ -15,11 +15,11 @@ from urllib.parse import unquote
 
 
 ROOT = Path(__file__).resolve().parents[1]
-EXCLUDED_PARTS = {"work", "outputs", "__pycache__"}
+EXCLUDED_PARTS = {"work", "outputs", ".git", "__pycache__"}
 READY_STATES = {"ready", "active"}
 NODE_FIELDS = {
     "id", "goal", "depends_on", "status", "assignee", "reviewer",
-    "write_set", "checkpoint", "task_brief",
+    "write_set", "checkpoint", "task_brief", "assurance_status", "assurance_requires",
 }
 
 REQUIRED_FILES = [
@@ -27,8 +27,8 @@ REQUIRED_FILES = [
     "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
     "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md",
     "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md",
-    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/EMBEDDED-INSTALLATION.md",
-    "docs/contracts/REVIEW.md",
+    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
+    "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md",
     "adapters/README.md", "adapters/generic.md", "adapters/codex.md", "adapters/claude.md",
     "harness/roles/README.md", "harness/roles/discovery-interviewer.md",
     "harness/roles/orchestrator-po.md", "harness/roles/task-decomposer.md",
@@ -37,9 +37,9 @@ REQUIRED_FILES = [
     "harness/playbooks/README.md", "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md",
     "harness/playbooks/discovery-to-graph.md", "harness/playbooks/task-dispatch.md",
     "harness/playbooks/contract-changes.md", "harness/playbooks/parallel-execution.md",
-    "harness/playbooks/review-integration.md", "harness/playbooks/model-routing.md", "harness/playbooks/learning-capture-publication.md",
+    "harness/playbooks/review-integration.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/learning-capture-publication.md",
     "harness/templates/README.md", "harness/templates/PROJECT-CONTEXT.md",
-    "harness/templates/TASK-GRAPH.md", "harness/templates/TASK.md",
+    "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/TASK.md",
     "harness/templates/HANDOFF.md", "harness/templates/REVIEW.md",
     "harness/templates/DECISION.md", "harness/templates/LEARNING-PROFILE.md",
     "harness/templates/LEARNING-QUEUE.md", "harness/templates/MODEL-ROUTING.md",
@@ -55,7 +55,8 @@ REQUIRED_FILES = [
     "validation/fixtures/invalid/cycle.json",
     "validation/fixtures/invalid/missing-dependency.json",
     "validation/fixtures/invalid/write-collision.json",
-    "VERSION", "docs/DISTRIBUTION.md", "docs/PUBLICATION-READINESS.md", "tools/package.py",
+    "validation/fixtures/invalid/assurance-gate.json",
+    "VERSION", "docs/DISTRIBUTION.md", "docs/PUBLICATION-READINESS.md", "tools/package.py", "tools/install.py", "validation/test_install.py",
     "distribution/project.json", "distribution/profiles/core.json", "distribution/profiles/core-learning.json", "distribution/profiles/full.json",
     "docs/contracts/MIGRATION-MANIFEST.md", "docs/contracts/COEXISTENCE.md", "docs/contracts/ADAPTER-BINDING.md",
     "harness/templates/MIGRATION-MANIFEST.md", "harness/templates/COEXISTENCE.md", "harness/templates/ADAPTER-BINDING.md",
@@ -76,20 +77,24 @@ REQUIRED_FILES = [
 
 TEMPLATE_RULES = {
     "PROJECT-CONTEXT.md": (
-        {"schema", "id", "revision", "status", "mode", "updated_at", "approved_by", "supersedes", "discovery_snapshot", "source_references", "capability_manifest", "rules_map"},
+        {"schema", "id", "revision", "status", "mode", "updated_at", "approved_by", "supersedes", "discovery_snapshot", "source_references", "capability_manifest", "rules_map", "pending_authority"},
         {"Project state", "Intent", "Scope", "Success measures", "Constraints", "Rules and capabilities", "Assumptions and unknowns", "Verification environment", "References"},
     ),
     "TASK-GRAPH.md": (
         {"schema", "id", "revision", "status", "project_context", "updated_at", "updated_by", "discovery_snapshot", "source_references"},
         {"Transition log"},
     ),
+    "PENDING.md": (
+        {"schema", "id", "revision", "status", "updated_at", "updated_by"},
+        {"Human action required", "Project completion overview", "Recently resolved"},
+    ),
     "TASK.md": (
-        {"schema", "id", "graph", "revision", "status", "assigned_to", "reviewer", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "review_profile", "max_review_rounds"},
+        {"schema", "id", "graph", "revision", "status", "assigned_to", "reviewer", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "review_profile", "max_review_rounds", "assurance_gate"},
         {"Outcome", "Context to load", "Owned paths", "Constraints", "Rules to load", "Required capabilities", "Acceptance criteria", "Verification", "Exit"},
     ),
     "HANDOFF.md": (
         {"schema", "id", "task", "attempt", "status", "author", "created_at", "model_tier_used", "model_route_changes"},
-        {"Result", "Changes", "Change unit and authority", "Acceptance evidence", "Verification run", "Discoveries and risks", "Routing and authority", "Review request"},
+        {"Result", "Changes", "Change unit and authority", "Acceptance evidence", "Verification run", "Discoveries and risks", "Routing and authority", "Review request", "User-facing closeout"},
     ),
     "REVIEW.md": (
         {"schema", "id", "task", "handoff", "revision", "round", "scope", "prior_review", "status", "reviewer", "verdict", "created_at"},
@@ -271,6 +276,16 @@ def validate_graph(data: dict, source: str) -> list[str]:
                 errors.append(f"graph.invalid-path: {source} {node_id} {owned!r} ({reason})")
         if node.get("assignee") not in {None, "unassigned"} and node.get("assignee") == node.get("reviewer"):
             errors.append(f"graph.reviewer-independence: {source} {node_id}")
+        assurance_status = node.get("assurance_status")
+        if assurance_status not in {"not-required", "pending", "accepted", "changes-requested", "blocked"}:
+            errors.append(f"graph.assurance-status: {source} {node_id}")
+        assurance_requires = node.get("assurance_requires")
+        if not isinstance(assurance_requires, list):
+            errors.append(f"graph.assurance-requires-shape: {source} {node_id}")
+        else:
+            for required_id in assurance_requires:
+                if required_id not in by_id:
+                    errors.append(f"graph.assurance-missing: {source} {node_id} -> {required_id}")
 
     visiting: set[str] = set()
     visited: set[str] = set()
@@ -290,6 +305,13 @@ def validate_graph(data: dict, source: str) -> list[str]:
 
     if any(visit(node_id) for node_id in by_id if node_id not in visited):
         errors.append(f"graph.cycle: {source}")
+
+    for node_id, node in by_id.items():
+        if node.get("status") in READY_STATES:
+            for required_id in node.get("assurance_requires", []):
+                required = by_id.get(required_id)
+                if required and required.get("assurance_status") != "accepted":
+                    errors.append(f"graph.assurance-gate: {source} {node_id} waits for accepted assurance of {required_id}")
 
     concurrent = [node for node in by_id.values() if node.get("status") in READY_STATES]
     for index, left in enumerate(concurrent):
@@ -585,6 +607,26 @@ def validate_native_integration() -> list[str]:
             if "REVIEW-ROUNDS.md" not in text and "max_review_rounds" not in text and "two-round review budget" not in text and "bounded review profile" not in text:
                 errors.append(f"native.bounded-review-routing: {item} does not route to the shared review budget")
 
+    status_completion_surfaces = (
+        "AGENTS.md",
+        "CLAUDE.md",
+        "adapters/codex.md",
+        "adapters/claude.md",
+        ".agents/skills/graph-execution/SKILL.md",
+        ".claude/skills/graph-execution/SKILL.md",
+    )
+    for item in status_completion_surfaces:
+        path = ROOT / item
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        required = ("PENDING.md", "TASK-GRAPH.md", "STATUS-AND-COMPLETION.md")
+        if any(token not in text for token in required):
+            errors.append(f"native.state-authority-routing: {item} must route pending, graph, and completion policy")
+        lowered = text.lower()
+        if "completed" not in lowered or "non-block" not in lowered:
+            errors.append(f"native.nonblocking-closeout: {item} must complete passing tasks and keep assurance non-blocking")
+
     skill_paths = [ROOT / item for item in declared if isinstance(item, str) and item.endswith("/SKILL.md")]
     for path in skill_paths:
         if not path.is_file():
@@ -656,9 +698,9 @@ def validate_repository() -> list[str]:
             "media/agent-harness-kit-overview-en.mp3",
             "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
             "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/VALIDATION.md", "docs/DISTRIBUTION.md",
-            "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/REVIEW.md",
-            "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md", "harness/playbooks/model-routing.md", "harness/templates/PROJECT-CONTEXT.md",
-            "harness/templates/TASK-GRAPH.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "tools/validate.py", "tools/package.py",
+            "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md",
+            "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/templates/PROJECT-CONTEXT.md",
+            "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "tools/validate.py", "tools/package.py", "tools/install.py", "validation/test_install.py",
             ".agents/skills/first-run-discovery/SKILL.md",
             ".agents/skills/graph-execution/SKILL.md",
             ".agents/skills/governed-review/SKILL.md",
@@ -744,6 +786,10 @@ def validate_repository() -> list[str]:
                 errors.append(f"review.profile: {rel(path)}")
             if header.get("max_review_rounds") not in {"1", "2"}:
                 errors.append(f"review.round-budget: {rel(path)} must be 1 or 2")
+            if header.get("assurance_gate") not in {"none", "affected-actions"}:
+                errors.append(f"review.assurance-gate: {rel(path)}")
+            if header.get("review_profile") == "critical" and header.get("assurance_gate") != "affected-actions":
+                errors.append(f"review.critical-gate: {rel(path)} critical work must gate affected actions")
         if header.get("schema") == "harness.review/v1":
             round_value = header.get("round")
             scope = header.get("scope")
@@ -753,6 +799,14 @@ def validate_repository() -> list[str]:
                 errors.append(f"review.scope: {rel(path)}")
             if round_value == "2" and header.get("prior_review") in {None, "", "none"}:
                 errors.append(f"review.lineage: {rel(path)}")
+        if header.get("schema") == "harness.handoff/v1" and header.get("status") not in {"completed", "blocked", "failed"}:
+            errors.append(f"handoff.status: {rel(path)} must be completed, blocked, or failed")
+        if header.get("schema") == "harness.pending/v1":
+            required_pending_sections = {"Human action required", "Project completion overview", "Recently resolved"}
+            if not required_pending_sections <= headings(text):
+                errors.append(f"pending.sections: {rel(path)}")
+            if "Agent and project work" in headings(text):
+                errors.append(f"pending.technical-leak: {rel(path)} must keep technical execution in TASK-GRAPH.md")
         if header.get("schema") == "harness.task-graph/v1":
             try:
                 graph = extract_graph(text)
@@ -763,6 +817,15 @@ def validate_repository() -> list[str]:
                     errors.append(f"graph.missing-json: {rel(path)}")
                 else:
                     errors.extend(validate_graph(graph, rel(path)))
+            transition_revisions = [int(value) for value in re.findall(r"^- r(\d+):", text, re.MULTILINE)]
+            if transition_revisions:
+                try:
+                    declared_revision = int(header.get("revision", ""))
+                except ValueError:
+                    errors.append(f"graph.revision-number: {rel(path)}")
+                else:
+                    if declared_revision != max(transition_revisions):
+                        errors.append(f"graph.revision-log: {rel(path)} declares r{declared_revision} but log reaches r{max(transition_revisions)}")
     for readme in (ROOT / "README.md", ROOT / "README.pt-BR.md"):
         if readme.exists() and len(re.findall(r"^```mermaid$", readme.read_text(encoding="utf-8"), re.MULTILINE)) != 1:
             errors.append(f"markdown.mermaid: {rel(readme)} must contain exactly one Mermaid block")
@@ -771,11 +834,12 @@ def validate_repository() -> list[str]:
             for audio_target in (
                 "media/agent-harness-kit-overview-en.mp3",
                 "media/agent-harness-kit-overview-pt-BR.mp3",
-                "media/overview-script-en.txt",
-                "media/overview-script-pt-BR.txt",
             ):
-                if f"]({audio_target})" not in readme_text:
-                    errors.append(f"media.readme-link: {rel(readme)} missing {audio_target}")
+                if f'src="{audio_target}"' not in readme_text or "<audio controls" not in readme_text:
+                    errors.append(f"media.readme-player: {rel(readme)} missing inline player for {audio_target}")
+            for script_target in ("media/overview-script-en.txt", "media/overview-script-pt-BR.txt"):
+                if f"]({script_target})" not in readme_text:
+                    errors.append(f"media.readme-link: {rel(readme)} missing {script_target}")
             if "agent-harness-kit/" not in readme_text or "EMBEDDED-INSTALLATION.md" not in readme_text:
                 errors.append(f"embedded.readme-route: {rel(readme)}")
     embedded_doc = ROOT / "docs" / "EMBEDDED-INSTALLATION.md"
@@ -796,7 +860,7 @@ def validate_repository() -> list[str]:
             if phrase not in embedded_text:
                 errors.append(f"embedded.installation-policy: missing {phrase!r}")
     agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8").lower() if (ROOT / "AGENTS.md").exists() else ""
-    for phrase in ("harness-state/PROJECT-CONTEXT.md", "harness-state/TASK-GRAPH.md", "Session-start, resume, and status gate", "before planning implementation", "must not load `learning-pack/`"):
+    for phrase in ("harness-state/PROJECT-CONTEXT.md", "harness-state/PENDING.md", "harness-state/TASK-GRAPH.md", "State authority split", "Session-start, resume, and status gate", "before planning implementation", "must not load `learning-pack/`"):
         if phrase.lower() not in agents:
             errors.append(f"policy.root-map: AGENTS.md missing {phrase!r}")
     for readme in (ROOT / "README.md", ROOT / "README.pt-BR.md"):

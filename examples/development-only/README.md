@@ -11,8 +11,8 @@ The same copied profile can start through either native entrypoint: Codex reads 
 | 1 | [Project context](state/PROJECT-CONTEXT.md) and [decision](state/DEC-001.md) become approved | Approved revision is available |
 | 2 | [Initial graph](state/TASK-GRAPH.initial.md) exposes `TASK-001` as ready | Task is ready |
 | 3 | Orchestrator grants lease/isolation in [task brief](state/TASK-001.md) | Assignment path is announced |
-| 4 | Specialist writes [handoff](state/HANDOFF-TASK-001-01.md) | Handoff is ready |
-| 5 | Independent reviewer writes [review](state/REVIEW-TASK-001-01.md) | Review verdict is available |
-| 6 | Orchestrator writes the [completed graph](state/TASK-GRAPH.completed.md) and releases ownership | Task is accepted |
+| 4 | Specialist writes a passing [completed handoff](state/HANDOFF-TASK-001-01.md) | Outcome, checks, next action, and human action are reported |
+| 5 | Orchestrator writes the [completed graph](state/TASK-GRAPH.completed.md), updates [pending overview](state/PENDING.md), releases ownership, and advances | Task is completed without human approval |
+| 6 | Independent reviewer writes automatic [assurance](state/REVIEW-TASK-001-01.md) | Non-blocking verdict is recorded |
 
 The messages in the last column are insufficient without their referenced files. Native instruction discovery is mapped, while optional runtime capabilities remain evidence-based rather than assumed.

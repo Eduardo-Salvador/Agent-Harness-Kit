@@ -11,6 +11,7 @@ discovery_snapshot: example-existing-001
 source_references: none
 capability_manifest: none
 rules_map: none
+pending_authority: state/PENDING.md
 ---
 
 # Project context
@@ -54,3 +55,4 @@ rules_map: none
 ## References
 
 - Learning profile: `learning-profile-example@1`.
+- Pending authority: `state/PENDING.md`.

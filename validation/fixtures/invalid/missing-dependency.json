@@ -1,6 +1,6 @@
 {
   "expected_errors": ["graph.missing-dependency"],
   "nodes": [
-    {"id": "TASK-A", "goal": "A", "depends_on": ["TASK-MISSING"], "status": "pending", "assignee": "unassigned", "reviewer": "unassigned", "write_set": ["a/**"], "checkpoint": null, "task_brief": "A.md"}
+    {"id": "TASK-A", "goal": "A", "depends_on": ["TASK-MISSING"], "status": "pending", "assignee": "unassigned", "reviewer": "unassigned", "write_set": ["a/**"], "checkpoint": null, "assurance_status": "not-required", "assurance_requires": [], "task_brief": "A.md"}
   ]
 }

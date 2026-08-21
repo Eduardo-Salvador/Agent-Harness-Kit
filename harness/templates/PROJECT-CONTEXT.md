@@ -11,6 +11,7 @@ discovery_snapshot: discovery-001
 source_references: none
 capability_manifest: capability-manifest@1
 rules_map: rules-map@1
+pending_authority: harness-state/PENDING.md
 ---
 
 # Project context
@@ -55,4 +56,5 @@ rules_map: rules-map@1
 ## References
 
 - Decisions: none.
+- Pending authority: `harness-state/PENDING.md` for human actions and macro project completion only.
 - Provenance: migration manifest and authoritative existing sources.

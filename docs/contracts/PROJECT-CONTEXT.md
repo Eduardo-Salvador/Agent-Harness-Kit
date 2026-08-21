@@ -16,6 +16,7 @@ discovery_snapshot: discovery-003
 source_references: migration-main@1
 capability_manifest: capability-manifest@1
 rules_map: rules-map@1
+pending_authority: harness-state/PENDING.md
 ---
 ```
 
@@ -54,6 +55,7 @@ rules_map: rules-map@1
 
 ## References
 - Decisions: `DEC-001` at `state/decisions/DEC-001.md` (illustrative runtime path)
+- Pending authority: `harness-state/PENDING.md`; human decisions/actions and macro incomplete project areas only.
 - Provenance: source identities/backlinks in `migration-main@1`.
 ```
 
@@ -65,4 +67,5 @@ rules_map: rules-map@1
 - Every unknown has an owner and resolution condition; assumptions are visibly labeled.
 - `mode: delivery+learning` requires an approved learning profile; `delivery` must not require one.
 - Graphs reference an exact approved revision and cannot silently follow later edits.
+- `pending_authority` names the canonical human-action and macro project completion source; technical ordering remains in the task graph.
 - Approval is invalid if the discovery snapshot selectors or source identities are stale.

@@ -2,9 +2,23 @@
 
 > Agent Harness Kit é um único harness de desenvolvimento, agnóstico de plataforma e orientado a artefatos, com entradas nativas para Codex e Claude Code, aprendizado de projeto opcional e um pacote separado para estudar engenharia de harness.
 
-[English](README.md) · [Mapa dos agentes](AGENTS.md) · [Arquitetura](docs/ARCHITECTURE.md) · [Roteamento de modelos](docs/MODEL-ROUTING.md) · [Rodadas de review](docs/REVIEW-ROUNDS.md) · [Integração de mudanças](docs/CHANGE-INTEGRATION.md) · [Distribuição](docs/DISTRIBUTION.md) · [Auditoria de prontidão](docs/PUBLICATION-READINESS.md) · [Decisões em aberto](OPEN-DECISIONS.md)
+[English](README.md) · [Mapa dos agentes](AGENTS.md) · [Status e conclusão](docs/STATUS-AND-COMPLETION.md) · [Arquitetura](docs/ARCHITECTURE.md) · [Roteamento de modelos](docs/MODEL-ROUTING.md) · [Rodadas de review](docs/REVIEW-ROUNDS.md) · [Integração de mudanças](docs/CHANGE-INTEGRATION.md) · [Distribuição](docs/DISTRIBUTION.md) · [Auditoria de prontidão](docs/PUBLICATION-READINESS.md) · [Decisões em aberto](OPEN-DECISIONS.md)
 
-🔊 Visão geral em áudio (áudio legado aprovado; atualização sobre roteamento por capacidade pendente): [English](media/agent-harness-kit-overview-en.mp3) ([script atual](media/overview-script-en.txt)) · [Português (Brasil)](media/agent-harness-kit-overview-pt-BR.mp3) ([roteiro atual](media/overview-script-pt-BR.txt))
+## Ouça a visão geral
+
+**English** · [script atual](media/overview-script-en.txt)
+
+<audio controls preload="metadata" src="media/agent-harness-kit-overview-en.mp3">
+Seu visualizador de Markdown não suporta áudio embutido. Abra o repositório em um visualizador com suporte a áudio HTML.
+</audio>
+
+**Português (Brasil)** · [roteiro atual](media/overview-script-pt-BR.txt)
+
+<audio controls preload="metadata" src="media/agent-harness-kit-overview-pt-BR.mp3">
+Seu visualizador de Markdown não suporta áudio embutido. Abra o repositório em um visualizador com suporte a áudio HTML.
+</audio>
+
+Os áudios legados aprovados continuam reproduzíveis aqui enquanto a nova narração não é gravada.
 
 ## Por que usar
 
@@ -46,7 +60,7 @@ Todos também incluem as duas entradas de plataforma e suas pequenas extensões 
 
 ## Início rápido
 
-1. Baixe ou clone o código canônico, ou escolha um perfil gerado. Para uma instalação contida, copie o perfil para `agent-harness-kit/` e adicione as pontes mínimas na raiz descritas em [instalação embedded](docs/EMBEDDED-INSTALLATION.md). A cópia diretamente na raiz continua compatível com projetos novos que concedam esses caminhos ao Kit de forma intencional.
+1. Baixe ou clone o código canônico, ou escolha um perfil gerado. Para instalar com segurança em outro projeto, execute `python tools/install.py --profile core --host <diretório-do-projeto>`. O instalador cria `agent-harness-kit/` e adiciona ou atualiza somente blocos de ponte gerenciados em `AGENTS.md` e `CLAUDE.md` da raiz, preservando as instruções existentes. Use `--dry-run` para inspecionar o plano antes. Veja [instalação embedded](docs/EMBEDDED-INSTALLATION.md). A cópia diretamente na raiz continua compatível com projetos novos que concedam esses caminhos ao Kit de forma intencional.
 2. Abra o projeto no Codex ou no Claude Code. O Codex lê naturalmente [AGENTS.md](AGENTS.md); o Claude Code lê naturalmente [CLAUDE.md](CLAUDE.md), que importa o mesmo mapa. Não é preciso trocar de perfil nem adivinhar a plataforma em runtime. Ainda não peça o planejamento da implementação.
 3. Como `harness-state/PROJECT-CONTEXT.md` não existe inicialmente, o agente segue a [descoberta inicial](harness/playbooks/first-run.md), identifica projeto greenfield ou existente, pergunta apenas o que falta e registra [decisões](harness/templates/DECISION.md) relevantes.
    Se o repositório já tiver instruções, papéis, regras, conhecimento ou pendências de um harness maduro, use a [adoção com namespace](harness/playbooks/mature-harness-adoption.md), preserve os originais e obtenha aprovação semântica antes de qualquer cutover.
@@ -54,13 +68,20 @@ Todos também incluem as duas entradas de plataforma e suas pequenas extensões 
    A descoberta também cria ou referencia um [manifesto de capacidades](harness/templates/CAPABILITY-MANIFEST.md) e um [mapa de regras](harness/templates/RULES-MAP.md). Capacidades incluem ferramentas nativas da plataforma, servidores/conectores MCP, skills, scripts/comandos, hooks e integrações externas; sem evidência, ficam indisponíveis, opcionais ou dependentes de aprovação — nunca são presumidas. As regras podem cobrir negócio, segurança/privacidade, arquitetura, convenções de código e caminhos, e são encaminhadas apenas ao trabalho relevante.
 5. O decompositor propõe e valida o [grafo inicial](harness/templates/TASK-GRAPH.md); o orquestrador então despacha uma [tarefa delimitada](harness/templates/TASK.md). O despacho segue o [roteamento por capacidade](docs/MODEL-ROUTING.md): balanceado é o padrão, econômico fica restrito a trabalho determinístico e de baixo risco, e avançado é reservado para decisões consequentes ou gatilhos explícitos de escalonamento. Nomes específicos de modelos ficam nos adaptadores e nas evidências atuais do host.
    As definições de papéis são templates editáveis: a descoberta pode adaptar papéis existentes ou propor especialistas específicos do projeto, responsabilidades, acesso a ferramentas, pacotes de contexto, limites de propriedade e critérios de revisão. Isso é configuração governada, não automodificação descontrolada dos agentes. Mudanças relevantes em ferramentas, permissões, segredos, rede, ações destrutivas, hooks, integrações ou regras duráveis exigem aprovação humana explícita e validação.
-6. O especialista trabalha somente nos caminhos atribuídos, executa as verificações e escreve um [handoff](harness/templates/HANDOFF.md). Outro revisor escreve o [resultado da revisão](harness/templates/REVIEW.md); apenas o orquestrador aceita o nó. A review usa perfil `light`, `standard` ou `critical` com [no máximo duas rodadas](docs/REVIEW-ROUNDS.md): uma revisão inicial e, somente quando houver achado bloqueante, uma re-revisão focada. Uma segunda reprovação interrompe o loop e escala ou decompõe a tarefa. Microcorreções relacionadas formam uma [unidade coerente de mudança](docs/CHANGE-INTEGRATION.md), salvo quando fronteiras relevantes exigirem separação. Aceitação técnica nunca autoriza automaticamente commit, push, deploy ou publicação.
+6. O especialista trabalha somente nos caminhos atribuídos, executa as verificações e escreve um [handoff](harness/templates/HANDOFF.md). Quando elas passam, o orquestrador marca o nó como concluído, informa o que mudou, libera a propriedade e despacha a próxima tarefa pronta sem pedir aprovação humana de conclusão. Outro agente registra automaticamente uma [revisão de garantia](harness/templates/REVIEW.md) não bloqueante. A review usa perfil `light`, `standard` ou `critical` com [no máximo duas rodadas](docs/REVIEW-ROUNDS.md); um bloqueio cria uma tarefa de correção vinculada, sem reabrir o nó concluído nem parar trabalho não relacionado. Conclusão não autoriza separadamente commit, push, deploy ou publicação.
 7. Em `delivery+learning`, os papéis de aprendizado podem atualizar a fila consentida depois que houver evidência de entrega. Em `full`, abra `learning-pack/README.md` separadamente quando quiser estudar o harness.
 8. Execute `python tools/validate.py`. Gere um pacote fora da árvore fonte com `python tools/package.py --profile core --output <diretório-externo>`; troque o perfil quando necessário.
 
 ## Instalação contida no projeto
 
-O layout recomendado com menos colisões mantém o perfil selecionado em `agent-harness-kit/`. Os arquivos `AGENTS.md` e `CLAUDE.md` da raiz recebem somente blocos de ponte gerenciados; o conteúdo existente é preservado. O estado operacional específico do projeto permanece em `harness-state/` na raiz, fora do diretório substituível do Kit. Consulte o [guia de instalação](docs/EMBEDDED-INSTALLATION.md) e os templates de ponte para [Codex](harness/templates/ROOT-AGENTS-BRIDGE.md) e [Claude Code](harness/templates/ROOT-CLAUDE-BRIDGE.md).
+O layout recomendado com menos colisões mantém o perfil selecionado em `agent-harness-kit/`. Apenas baixar o Kit não altera outro repositório; executar o instalador contra o projeto cria essa pasta. Os arquivos `AGENTS.md` e `CLAUDE.md` da raiz recebem somente blocos de ponte gerenciados; o conteúdo existente é preservado. O estado operacional específico do projeto permanece em `harness-state/` na raiz, fora do diretório substituível do Kit.
+
+```text
+python tools/install.py --profile core --host <diretório-do-projeto> --dry-run
+python tools/install.py --profile core --host <diretório-do-projeto>
+```
+
+Consulte o [guia de instalação](docs/EMBEDDED-INSTALLATION.md) e os templates de ponte para [Codex](harness/templates/ROOT-AGENTS-BRIDGE.md) e [Claude Code](harness/templates/ROOT-CLAUDE-BRIDGE.md).
 
 A descoberta automática de skills ou subagentes aninhados não é presumida. A descoberta inicial registra o comportamento real e usa caminhos explícitos para os playbooks neutros quando o registro nativo estiver degradado.
 
@@ -70,7 +91,7 @@ Se o projeto não tiver `harness-state/PROJECT-CONTEXT.md` aprovado, o planejame
 
 Essa regra é nativa nas duas ferramentas: o Codex chega a ela por `AGENTS.md`; o Claude Code chega à mesma regra por `CLAUDE.md` e pela importação `@AGENTS.md`. Abrir o repositório depois com a outra ferramenta não cria outro contexto ou grafo — ela lê os mesmos artefatos neutros aprovados.
 
-Na primeira solicitação de uma nova janela de contexto, em pedidos para continuar/retomar ou em pedidos de status, o agente deve ler primeiro o contexto aprovado, depois a autoridade de pendências do projeto e, por último, o grafo de tarefas. Evidências locais da tarefa vêm somente depois dessa sequência. Uma varredura ampla só é permitida quando esses artefatos revelarem uma lacuna ou conflito concreto, quando um playbook de recuperação exigir ou quando o usuário pedir explicitamente uma auditoria. Veja [status e retomada](harness/playbooks/status-resume.md).
+Na primeira solicitação de uma nova janela de contexto, em pedidos para continuar/retomar ou em pedidos de status, o agente deve ler primeiro o contexto aprovado, depois `harness-state/PENDING.md` e, por último, `harness-state/TASK-GRAPH.md`. `PENDING.md` contém decisões/ações humanas e a visão macro do que falta no projeto, como backend ou autenticação. `TASK-GRAPH.md` contém ordem, dependências e execução técnica. Em “minhas pendências”, os itens humanos vêm primeiro e o grafo não pode substituí-los. Veja [status e retomada](harness/playbooks/status-resume.md).
 
 Antes ou durante o onboarding, você pode pedir uma explicação em linguagem simples sobre o harness e o que acontecerá em seguida. Essa explicação é opcional e não pode bloquear a entrega. Ela não ativa aprendizado do projeto, consentimento, observação, retenção, publicação nem o Pacote de Engenharia de Harness; essas continuam sendo escolhas explícitas e separadas. Veja a [entrevista de descoberta](docs/DISCOVERY-INTERVIEW.md).
 
@@ -78,13 +99,14 @@ Antes ou durante o onboarding, você pode pedir uma explicação em linguagem si
 flowchart LR
     H[Início da sessão] --> I{Contexto aprovado?}
     I -- não --> D[Descoberta adaptativa]
-    I -- sim --> C[Contexto aprovado]
-    D --> C --> G[Grafo com dependências]
+    I -- sim --> A[Contexto aprovado]
+    D --> A --> G[Grafo com dependências]
     G --> O[PO / orquestrador]
     O --> W[Nós isolados]
-    W --> V[Revisão independente + verificação]
-    V --> S[Estado versionado]
-    S --> O
+    W --> X[Checks passam: concluir + informar]
+    X --> O
+    X -. garantia automática .-> V[Review independente limitada]
+    V -. bloqueio cria correção .-> G
     L[Aprendizado opcional do projeto] -. observação consentida .-> S
     P[Pacote de estudo] -. somente por pedido explícito .-> H
 ```
@@ -115,11 +137,11 @@ Regras duráveis aprovadas por pessoas são versionadas no mapa de regras ou ref
 
 ## Princípios
 
-1. Arquivos carregam estado; mensagens apenas anunciam mudanças.
-2. O contexto é progressivo e fixado por revisão; início de sessão/status lê contexto, pendências e grafo antes de uma inspeção ampla.
+1. Arquivos carregam o estado durável; mensagens explicam resultado, verificações, estado da task, próximo passo e pendências humanas reais.
+2. O contexto é progressivo e fixado por revisão; `PENDING.md` contém ações humanas e lacunas macro, enquanto `TASK-GRAPH.md` contém ordem, dependências e execução técnica.
 3. O orquestrador coordena o grafo; agentes iteram dentro dos nós.
 4. Trabalho concorrente usa conjuntos exclusivos de escrita e isolamento declarado.
-5. A revisão é independente, proporcional ao risco e limitada a uma rodada inicial mais, no máximo, uma re-revisão focada; a verificação é objetiva e registrada.
+5. Tasks aprovadas nos checks são concluídas, informadas e seguidas pela próxima tarefa pronta sem aprovação humana; a review é uma garantia automática não bloqueante, limitada a uma rodada inicial e no máximo uma revisão focada da correção.
 6. Decisões consequentes exigem aprovação humana.
 7. O aprendizado do projeto é opcional e não altera o controle da entrega.
 8. Capacidades e degradação são explícitas; adaptadores não inventam suporte.

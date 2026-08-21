@@ -10,6 +10,8 @@
       "reviewer": "agent:reviewer-a",
       "write_set": ["src/a/**"],
       "checkpoint": null,
+      "assurance_status": "accepted",
+      "assurance_requires": [],
       "task_brief": "tasks/TASK-A.md"
     },
     {
@@ -21,6 +23,8 @@
       "reviewer": "agent:reviewer-b",
       "write_set": ["src/b/**"],
       "checkpoint": null,
+      "assurance_status": "accepted",
+      "assurance_requires": [],
       "task_brief": "tasks/TASK-B.md"
     },
     {
@@ -32,6 +36,8 @@
       "reviewer": "unassigned",
       "write_set": ["src/integration/**"],
       "checkpoint": null,
+      "assurance_status": "pending",
+      "assurance_requires": ["TASK-A", "TASK-B"],
       "task_brief": "tasks/TASK-C.md"
     }
   ]

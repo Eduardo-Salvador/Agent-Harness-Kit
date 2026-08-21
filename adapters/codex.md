@@ -16,6 +16,8 @@ At session start, apply the `AGENTS.md` first-run/status gate. For resume or sta
 
 Apply [bounded review rounds](../docs/REVIEW-ROUNDS.md) to the root agent and every delegated agent. The orchestrator may dispatch one initial independent review and at most one focused re-review; an exhausted budget requires escalation, decomposition, rewrite, or human decision, never a third unchanged loop.
 
+For every root or delegated agent, apply [status and completion communication](../docs/STATUS-AND-COMPLETION.md). `PENDING.md` owns human decisions/actions and macro project gaps; `TASK-GRAPH.md` owns technical order, dependencies, and execution. Passing tasks are marked `completed` and unlock the next node immediately; assurance review is automatic, non-blocking, and never a renewed human approval request.
+
 Discovery records platform tools, skills, MCP/connectors, scripts, hooks, and integrations in the capability manifest. Filename presence is not proof of runtime availability or authorization. Do not write user-specific configuration, credentials, hooks, network access, or broad permissions.
 
 For mature repositories, keep existing Codex guidance and `.agents/` content authoritative during namespaced coexistence. Bind or merge only through the migration manifest, provenance backlinks, human semantic-equivalence review, and separate cutover approval.

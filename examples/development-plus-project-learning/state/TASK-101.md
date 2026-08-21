@@ -15,6 +15,7 @@ model_tier: balanced
 model_reason: Bounded parser-test work with deterministic acceptance and no frontier trigger.
 review_profile: light
 max_review_rounds: 2
+assurance_gate: none
 ---
 
 # TASK-101 — Add parser boundary tests

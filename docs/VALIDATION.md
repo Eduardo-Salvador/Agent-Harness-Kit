@@ -18,9 +18,13 @@ The validator uses only the Python 3 standard library and does not modify files.
 - the language boundary using a documented Portuguese-marker heuristic outside `README.pt-BR.md`;
 - root routing: `CLAUDE.md` imports `@AGENTS.md`, both routes converge on neutral state, context remains concise, and safe defaults add no live MCP/settings/hooks;
 - first-run and learning-pack exclusion statements in root entry points;
-- overview-audio integrity, versioned bilingual script links, and manifest hashes/status so narration drift is visible;
+- overview-audio integrity, inline bilingual README players, versioned script links, and manifest hashes/status so narration drift is visible;
 - distribution-profile boundaries (`core`, `core-learning`, `full`) through dependency-free packaging dry runs.
 - bounded-review invariants: supported profiles, a hard two-round maximum, initial scope for round one, and focused scope with a prior-review reference for round two;
+- pending-work schema separation between human actions, macro project gaps, and technical graph execution;
+- user-facing task closeout fields, automatic completion/next-task routing, and non-blocking assurance references across Codex and Claude entrypoints;
+- executable assurance checkpoints: critical results can gate only explicitly affected graph actions while unrelated ready work continues;
+- embedded installer dry-run, content preservation, marker safety, existing-destination refusal, profile selection, and packaged hash verification;
 - embedded-installation documentation and stable managed bridge markers for root `AGENTS.md` and `CLAUDE.md`;
 - migration coverage, classifications, selector expansion, source identities, destinations/backlinks, unresolved ownership, semantic reviewers, and cutover authority.
 

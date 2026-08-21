@@ -39,7 +39,7 @@ created_at: 2000-01-01T00:00:00Z
 
 ## Integration recommendation
 
-- `accept`, `changes-requested`, or `blocked`; include ordering/conflict notes.
+- `accept`, `changes-requested`, or `blocked`; include ordering/conflict and linked-remediation notes. Do not reopen historical completion or block unrelated work.
 
 ## Verification
 
@@ -47,5 +47,5 @@ created_at: 2000-01-01T00:00:00Z
 
 ## Next review boundary
 
-- On round 1 `changes-requested`, name only the blocking findings, expected correction delta, and proportional regression checks for round 2.
-- On round 2 `changes-requested`, stop and recommend escalation, decomposition, a human decision, or a new bounded task. Do not request round 3.
+- On round 1 `changes-requested`, name the linked remediation task, blocking findings, expected correction delta, and proportional regression checks for round 2.
+- On round 2 `changes-requested`, stop and recommend escalation/decomposition of the remediation or affected integration path. Request a human decision only for a genuine product/risk conflict; do not request round 3.
