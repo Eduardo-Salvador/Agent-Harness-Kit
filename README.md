@@ -8,13 +8,13 @@
 
 **English** · [current script](media/overview-script-en.txt)
 
-<video controls preload="metadata" src="https://github.com/Eduardo-Salvador/Agent-Harness-Kit/raw/refs/heads/main/media/agent-harness-kit-overview-en.mp4"></video>
+https://github.com/user-attachments/assets/b9f7771b-0bde-4622-a369-24d4c0de955c
 
 [MP3 fallback / download](media/agent-harness-kit-overview-en.mp3)
 
 **Português (Brasil)** · [roteiro atual](media/overview-script-pt-BR.txt)
 
-<video controls preload="metadata" src="https://github.com/Eduardo-Salvador/Agent-Harness-Kit/raw/refs/heads/main/media/agent-harness-kit-overview-pt-BR.mp4"></video>
+https://github.com/user-attachments/assets/2fed6fc3-09a8-4493-9233-69f1fb320036
 
 [MP3 alternativo / download](media/agent-harness-kit-overview-pt-BR.mp3)
 
@@ -23,6 +23,20 @@ The approved legacy tracks remain playable here while narration refresh is pendi
 ## Why use it
 
 Use this scaffold when agent-assisted development needs durable project context, bounded roles, dependency-aware tasks, exclusive write ownership, independent review, reproducible evidence, and cost-aware model selection instead of state that exists only in chat. Every profile ships both native entrypoints: Codex reads root `AGENTS.md`; Claude Code reads root `CLAUDE.md`, which imports `@AGENTS.md`. Both route into the same neutral core and state without runtime guessing or manual profile switching. The same repository can be opened with either tool at different times without competing harness authority.
+
+**Current source version: `0.3.0`.** The source is an executable, artifact-driven operating scaffold: capable Codex/Claude sessions follow its contracts and validators. It is not a separate daemon that independently launches agents or locks files at the operating-system level.
+
+## What 0.3.0 provides
+
+| Area | Shipped behavior |
+| --- | --- |
+| Native activation | Shared neutral core reached through Codex `AGENTS.md` and Claude Code `CLAUDE.md` |
+| Project state | Approved context, human/macro `PENDING.md`, and technical `TASK-GRAPH.md` with a strict read order |
+| Status | Executable `harness.status/v1` contract requiring stage, progress, blockers, next action, human items, and inspectable paths |
+| Execution | Dependency readiness, declared file leases/write sets, collision checks, handoffs, evidence, and automatic next-task advance |
+| Assurance | Independent reviewer, two reviews maximum, focused round two, and forced rewrite/decomposition/human decision after a second rejection |
+| Safety and portability | Capability/rule manifests, explicit degradation, mature-harness coexistence, Codex/Claude adapters, and no silent permission expansion |
+| Validation and delivery | Hostile mutation fixtures, installer tests, deterministic `core`, `core-learning`, and `full` packages from one version |
 
 ## Greenfield or an existing harness
 
@@ -150,12 +164,19 @@ Human-approved durable rules are versioned in or referenced by the rules map; te
 
 ## Current status
 
-**Native first-version operating scaffold.** Codex activates through `AGENTS.md`; Claude Code activates through `CLAUDE.md` importing `@AGENTS.md`. Both ship small native skills, Claude has bounded project subagents, and all routes converge on the neutral contracts and state. Roles, templates, playbooks, examples, learning modules, capability-tier routing, bounded review rounds, executable status/mutation fixtures, coherent change integration, validation, deterministic packaging, and auditable audio scripts exist. A separate autonomous runtime that independently calls APIs, dispatches agents, provisions OS-level locks, merges branches, or publishes notes remains future work.
+**Version 0.3.0 operating scaffold.** Codex activates through `AGENTS.md`; Claude Code activates through `CLAUDE.md` importing `@AGENTS.md`. Both ship small native skills, Claude has bounded project subagents, and all routes converge on the neutral contracts and state. Roles, templates, playbooks, examples, learning modules, capability-tier routing, bounded review rounds, executable status/review mutation fixtures, coherent change integration, validation, deterministic packaging, and auditable audio scripts exist.
 
 ```text
 python tools/validate.py
 python tools/package.py --profile core --output <outside-directory>
 ```
+
+## Known limitations
+
+- No separate autonomous runtime currently calls model APIs, launches sessions, merges branches, deploys, or publishes notes.
+- File leases are governed graph/write-set contracts with collision validation, not operating-system locks; symlink/case equivalence and lease recovery remain open runtime policy.
+- Installed Codex and Claude Code interactive simulations are still required before claiming automated isolation/delegation behavior on every host.
+- The playable tracks remain the approved legacy narration; the current versioned scripts require re-rendering and human audition.
 
 ## Next phase
 
@@ -163,7 +184,7 @@ python tools/package.py --profile core --output <outside-directory>
 2. Implement an optional external autonomous orchestrator with atomic revisions and leases.
 3. Add runtime transition, retry, checkpoint, recovery, and non-interference fixtures.
 4. Exercise native first-run discovery against greenfield and mature-host fixtures on supported installations.
-5. Keep `0.1.0` as the initial public version and decide release automation only when release scope is approved.
+5. Re-render and audition the bilingual overview audio, then decide release automation and GitHub attachment provenance before automating publication.
 
 See [OPEN-DECISIONS.md](OPEN-DECISIONS.md); unchecked items are never implicit permission.
 

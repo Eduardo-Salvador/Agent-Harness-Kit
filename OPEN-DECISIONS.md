@@ -28,10 +28,10 @@ This ledger contains real unresolved choices. An unchecked item is not permissio
 
 - [x] Use `harness-state/` as the neutral default runtime location; adapters may map it only when the canonical path remains discoverable.
 - [x] Define the minimal immutable review-result record separately from the implementer's handoff.
-- [x] Run delivery review automatically as non-blocking post-completion assurance, limited to one initial round plus at most one focused remediation review; after round 2, block/escalate only the remediation or affected integration path instead of reopening completion or repeating the loop.
+- [x] Run delivery review automatically as non-blocking post-completion assurance, limited to one initial round plus at most one focused remediation review; after a second rejection, force task/acceptance rewrite, decomposition, or a genuine human product/risk decision without reopening completion or repeating the loop.
 - [x] Define contained installation under `agent-harness-kit/` with minimal managed root bridges, host-owned `harness-state/`, preserved existing authority, and explicit native-extension degradation.
 - [x] Use bounded YAML scalar headers plus JSON for executable task-graph data; avoid a third-party schema dependency in Phase 2.
-- [ ] Add valid and invalid fixtures for every contract invariant. Phase 2 covers graph validity, missing dependencies, cycles, and write collisions.
+- [ ] Add valid and invalid fixtures for every contract invariant. Current coverage includes graph validity, missing dependencies, cycles, write collisions, reviewer independence, path traversal, mandatory status/provenance fields, focused re-review evidence, assurance gates, and mature-host migration failures.
 - [x] Validate DAG cycles, missing dependencies, and overlapping normalized paths among concurrently ready/active nodes.
 - [ ] Validate invalid lifecycle transitions and stale expected revisions.
 - [ ] Demonstrate failed verification, retry lineage, reviewer disagreement, checkpoint blocking, and interruption recovery.
@@ -47,7 +47,7 @@ This ledger contains real unresolved choices. An unchecked item is not permissio
 - [x] **Contained installation and continuous delivery release** — `0.2.0`; approved tag: `v0.2.0` from the validated canonical source.
 - [ ] **Release automation and GitHub attachments** — owner: maintainers/security; block: automated release. Validate provenance, checksums, and permissions before enabling.
 - [x] Keep one canonical, profile-aware README pair; copied-profile validation confirms all remaining relative links resolve without profile-specific rendering.
-- [ ] **Overview audio capability-routing refresh** — owner: maintainers/user; block: publication polish. Versioned bilingual scripts now cover native entrypoints, capability-based routing, coherent change units, and separate publication authority. Re-render both tracks from those scripts and obtain user audition approval; preserve the current approved MP3s until an acceptable bilingual pair exists.
+- [ ] **Overview audio 0.3.0 refresh** — owner: maintainers/user; block: publication polish. Versioned bilingual scripts cover native entrypoints, PENDING/graph authority, executable status, capability routing, bounded focused reviews, coherent change units, and separate publication authority. Re-render both tracks and obtain user audition approval; preserve the current approved narration until an acceptable bilingual pair exists.
 
 ## Next implementation gate
 

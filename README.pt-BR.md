@@ -8,13 +8,13 @@
 
 **English** · [script atual](media/overview-script-en.txt)
 
-<video controls preload="metadata" src="https://github.com/Eduardo-Salvador/Agent-Harness-Kit/raw/refs/heads/main/media/agent-harness-kit-overview-en.mp4"></video>
+https://github.com/user-attachments/assets/b9f7771b-0bde-4622-a369-24d4c0de955c
 
 [MP3 alternativo / download](media/agent-harness-kit-overview-en.mp3)
 
 **Português (Brasil)** · [roteiro atual](media/overview-script-pt-BR.txt)
 
-<video controls preload="metadata" src="https://github.com/Eduardo-Salvador/Agent-Harness-Kit/raw/refs/heads/main/media/agent-harness-kit-overview-pt-BR.mp4"></video>
+https://github.com/user-attachments/assets/2fed6fc3-09a8-4493-9233-69f1fb320036
 
 [MP3 alternativo / download](media/agent-harness-kit-overview-pt-BR.mp3)
 
@@ -23,6 +23,20 @@ Os áudios legados aprovados continuam reproduzíveis aqui enquanto a nova narra
 ## Por que usar
 
 Use este scaffold quando o desenvolvimento com agentes precisar de contexto durável, papéis delimitados, tarefas com dependências, propriedade exclusiva de arquivos, revisão independente, evidências reproduzíveis e seleção de modelos consciente de custo, em vez de estado mantido apenas no chat. Todos os perfis trazem as duas entradas nativas: o Codex lê `AGENTS.md` na raiz; o Claude Code lê `CLAUDE.md`, que importa `@AGENTS.md`. Os dois chegam ao mesmo núcleo e estado neutros, sem adivinhar a plataforma em runtime nem trocar o perfil manualmente. O mesmo repositório pode ser aberto com uma ferramenta em um momento e com a outra depois, sem autoridades concorrentes do harness.
+
+**Versão atual do código-fonte: `0.3.0`.** O projeto é um scaffold operacional executável e orientado a artefatos: sessões capazes do Codex/Claude seguem seus contratos e validadores. Ele não é um daemon separado que inicia agentes sozinho ou bloqueia arquivos no sistema operacional.
+
+## O que a 0.3.0 entrega
+
+| Área | Comportamento entregue |
+| --- | --- |
+| Ativação nativa | Núcleo neutro compartilhado, acessado por `AGENTS.md` no Codex e `CLAUDE.md` no Claude Code |
+| Estado do projeto | Contexto aprovado, `PENDING.md` humano/macro e `TASK-GRAPH.md` técnico com ordem rígida de leitura |
+| Status | Contrato executável `harness.status/v1` com etapa, progresso, bloqueios, próxima ação, itens humanos e caminhos inspecionáveis |
+| Execução | Dependências, leases/write sets declarados, colisões validadas, handoffs, evidências e avanço automático para a próxima task |
+| Garantia | Revisor independente, no máximo duas reviews, segunda focada e reescrita/decomposição/decisão humana após segunda reprovação |
+| Segurança e portabilidade | Manifestos de capacidades/regras, degradação explícita, coexistência com harness maduro, adapters Codex/Claude e nenhuma ampliação silenciosa de permissão |
+| Validação e entrega | Mutações hostis, testes do instalador e pacotes determinísticos `core`, `core-learning` e `full` a partir de uma versão |
 
 ## Projeto greenfield ou harness existente
 
@@ -150,12 +164,19 @@ Regras duráveis aprovadas por pessoas são versionadas no mapa de regras ou ref
 
 ## Estado atual
 
-**Scaffold operacional nativo para a primeira versão.** O Codex ativa por `AGENTS.md`; o Claude Code ativa por `CLAUDE.md`, importando `@AGENTS.md`. Ambos incluem skills nativas pequenas, o Claude tem subagentes de projeto delimitados, e todas as rotas convergem nos contratos e no estado neutros. Papéis, templates, playbooks, exemplos, módulos de estudo, roteamento por capacidade, rodadas limitadas de review, contrato executável de status com mutações negativas, integração coerente de mudanças, validação, empacotamento determinístico e roteiros auditáveis dos áudios existem. Um runtime autônomo separado, que chame APIs, despache agentes, crie locks no sistema operacional, integre branches ou publique notas sozinho, continua como trabalho futuro.
+**Scaffold operacional da versão 0.3.0.** O Codex ativa por `AGENTS.md`; o Claude Code ativa por `CLAUDE.md`, importando `@AGENTS.md`. Ambos incluem skills nativas pequenas, o Claude tem subagentes de projeto delimitados, e todas as rotas convergem nos contratos e no estado neutros. Papéis, templates, playbooks, exemplos, módulos de estudo, roteamento por capacidade, rodadas limitadas de review, mutações negativas de status/review, integração coerente de mudanças, validação, empacotamento determinístico e roteiros auditáveis dos áudios existem.
 
 ```text
 python tools/validate.py
 python tools/package.py --profile core --output <diretório-externo>
 ```
+
+## Limitações conhecidas
+
+- Nenhum runtime autônomo separado chama APIs de modelos, inicia sessões, integra branches, faz deploy ou publica notas hoje.
+- Leases de arquivo são contratos governados no grafo/write set com validação de colisão, não locks no sistema operacional; equivalência de symlink/case e recuperação de lease continuam como política pendente.
+- As simulações interativas em instalações reais do Codex e Claude Code ainda são necessárias antes de prometer isolamento/delegação automatizados em todo host.
+- As faixas executáveis ainda contêm a narração legada aprovada; os roteiros versionados atuais precisam ser regravados e ouvidos por uma pessoa.
 
 ## Próxima fase
 
@@ -163,7 +184,7 @@ python tools/package.py --profile core --output <diretório-externo>
 2. Implementar um orquestrador autônomo externo opcional com revisões atômicas e leases.
 3. Adicionar fixtures de runtime para transições, retry, checkpoints, recuperação e não interferência.
 4. Exercitar a descoberta inicial nativa com fixtures greenfield e de repositório maduro em instalações compatíveis.
-5. Manter `0.1.0` como a primeira versão pública e decidir a automação de releases somente quando o escopo for aprovado.
+5. Regravar e ouvir os áudios bilíngues, depois decidir automação de release e proveniência dos anexos do GitHub antes de automatizar a publicação.
 
 Veja [OPEN-DECISIONS.md](OPEN-DECISIONS.md); itens não marcados nunca representam permissão implícita.
 

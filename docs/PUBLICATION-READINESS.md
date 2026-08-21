@@ -12,7 +12,7 @@ The source is suitable for public review as a native Codex/Claude Code operating
 - Each generated directory profile can run its own bundled validator using the generated `PACKAGE-MANIFEST.json`.
 - Host-integration mode validates a sanitized namespaced mature-harness fixture plus missing-backlink, silent-omission, stale-snapshot, and premature-cutover failures.
 - The examples demonstrate greenfield Development Core and existing-project Core plus project learning, but remain artifact traces rather than a live orchestrator test.
-- Packaging uses standard-library Python, fixed ZIP metadata, sorted files, hashes, and the shared project version `0.2.0`.
+- Packaging uses standard-library Python, fixed ZIP metadata, sorted files, hashes, and the shared project version `0.3.0`.
 
 ## Package usability
 

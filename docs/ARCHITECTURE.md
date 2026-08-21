@@ -46,7 +46,7 @@ Graph engineering coordinates work **between** nodes: dependencies, readiness, o
 - Canonical state lives in small, versioned Markdown files with a YAML header.
 - Every artifact has an identifier, schema version, lifecycle status, and update timestamp or revision reference where relevant.
 - References use stable artifact IDs plus repository-relative paths; information is linked instead of duplicated.
-- Messages summarize outcome, material changes, verification, lifecycle state, next automatic action, and any real human action; durable detail remains in artifacts.
+- Messages follow `harness.status/v1`: stage, progress, blockers, next action, inspectable paths, and real human actions are explicit; outcome, changes, verification, and lifecycle remain in closeout evidence.
 - Large logs remain external or generated; artifacts retain the command, result summary, and durable evidence pointer.
 
 The Phase 2 [review template](../harness/templates/REVIEW.md) defines the independent immutable result referenced by graph state. It is distinct from the implementer's handoff and cannot be authored by the implementer.

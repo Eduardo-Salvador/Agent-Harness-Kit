@@ -876,6 +876,9 @@ def validate_repository() -> list[str]:
                 language = track.get("language", "unknown")
                 if track.get("status") not in {"candidate-awaiting-audition", "approved", "refresh-required"}:
                     errors.append(f"media.manifest-status: {language}")
+                attachment = track.get("github_attachment", "")
+                if not re.fullmatch(r"https://github\.com/user-attachments/assets/[0-9a-f-]{36}", attachment):
+                    errors.append(f"media.manifest-attachment: {language}")
                 for field in ("audio", "script", "github_player"):
                     value = track.get(field)
                     path = (ROOT / str(value)).resolve() if value else None
@@ -957,20 +960,17 @@ def validate_repository() -> list[str]:
             errors.append(f"markdown.mermaid: {rel(readme)} must contain exactly one Mermaid block")
         if readme.exists():
             readme_text = readme.read_text(encoding="utf-8")
-            for player_target in (
-                "media/agent-harness-kit-overview-en.mp4",
-                "media/agent-harness-kit-overview-pt-BR.mp4",
-            ):
-                if player_target not in readme_text or "<video controls" not in readme_text:
-                    errors.append(f"media.readme-player: {rel(readme)} missing GitHub-compatible player for {player_target}")
+            attachment_urls = re.findall(r"^https://github\.com/user-attachments/assets/[0-9a-f-]{36}$", readme_text, re.MULTILINE)
+            if len(attachment_urls) != 2 or len(set(attachment_urls)) != 2:
+                errors.append(f"media.readme-player: {rel(readme)} must contain two distinct GitHub attachment players")
             for audio_target in (
                 "media/agent-harness-kit-overview-en.mp3",
                 "media/agent-harness-kit-overview-pt-BR.mp3",
             ):
                 if f"]({audio_target})" not in readme_text:
                     errors.append(f"media.readme-fallback: {rel(readme)} missing MP3 fallback for {audio_target}")
-            if "<audio" in readme_text:
-                errors.append(f"media.readme-unsupported-audio: {rel(readme)}")
+            if "<audio" in readme_text or "<video" in readme_text:
+                errors.append(f"media.readme-unsupported-html: {rel(readme)}")
             for script_target in ("media/overview-script-en.txt", "media/overview-script-pt-BR.txt"):
                 if f"]({script_target})" not in readme_text:
                     errors.append(f"media.readme-link: {rel(readme)} missing {script_target}")
