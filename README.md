@@ -2,23 +2,19 @@
 
 > Agent Harness Kit is one platform-neutral, artifact-driven development harness with native Codex and Claude Code entrypoints, optional project learning, and a separate harness-engineering study pack.
 
-[Português (Brasil)](README.pt-BR.md) · [Agent map](AGENTS.md) · [Status/completion](docs/STATUS-AND-COMPLETION.md) · [Architecture](docs/ARCHITECTURE.md) · [Model routing](docs/MODEL-ROUTING.md) · [Review rounds](docs/REVIEW-ROUNDS.md) · [Change integration](docs/CHANGE-INTEGRATION.md) · [Packaging](docs/DISTRIBUTION.md) · [Readiness audit](docs/PUBLICATION-READINESS.md) · [Open decisions](OPEN-DECISIONS.md)
+> 🌐 **Language:** English · **[Open the README in Português (Brasil) →](README.pt-BR.md)**
 
-## Play the overview
+[Agent map](AGENTS.md) · [Status/completion](docs/STATUS-AND-COMPLETION.md) · [Architecture](docs/ARCHITECTURE.md) · [Model routing](docs/MODEL-ROUTING.md) · [Review rounds](docs/REVIEW-ROUNDS.md) · [Change integration](docs/CHANGE-INTEGRATION.md) · [Packaging](docs/DISTRIBUTION.md) · [Readiness audit](docs/PUBLICATION-READINESS.md) · [Open decisions](OPEN-DECISIONS.md)
 
-**English** · [current script](media/overview-script-en.txt)
+## Project overview audio
+
+Listen to a concise English explanation of what Agent Harness Kit is, how its workflow operates, what version 0.3.0 provides, and what remains intentionally outside the current runtime.
 
 https://github.com/user-attachments/assets/b9f7771b-0bde-4622-a369-24d4c0de955c
 
-[MP3 fallback / download](media/agent-harness-kit-overview-en.mp3)
+[Download the English MP3](media/agent-harness-kit-overview-en.mp3) · [Read the current English narration script](media/overview-script-en.txt)
 
-**Português (Brasil)** · [roteiro atual](media/overview-script-pt-BR.txt)
-
-https://github.com/user-attachments/assets/2fed6fc3-09a8-4493-9233-69f1fb320036
-
-[MP3 alternativo / download](media/agent-harness-kit-overview-pt-BR.mp3)
-
-The approved legacy tracks remain playable here while narration refresh is pending.
+The playable track is the approved legacy narration; the linked versioned script records the pending 0.3.0 narration refresh.
 
 ## Why use it
 

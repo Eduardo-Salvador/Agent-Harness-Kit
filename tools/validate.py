@@ -961,19 +961,24 @@ def validate_repository() -> list[str]:
         if readme.exists():
             readme_text = readme.read_text(encoding="utf-8")
             attachment_urls = re.findall(r"^https://github\.com/user-attachments/assets/[0-9a-f-]{36}$", readme_text, re.MULTILINE)
-            if len(attachment_urls) != 2 or len(set(attachment_urls)) != 2:
-                errors.append(f"media.readme-player: {rel(readme)} must contain two distinct GitHub attachment players")
-            for audio_target in (
-                "media/agent-harness-kit-overview-en.mp3",
-                "media/agent-harness-kit-overview-pt-BR.mp3",
-            ):
-                if f"]({audio_target})" not in readme_text:
-                    errors.append(f"media.readme-fallback: {rel(readme)} missing MP3 fallback for {audio_target}")
+            is_portuguese = readme.name == "README.pt-BR.md"
+            expected_attachment = (
+                "https://github.com/user-attachments/assets/2fed6fc3-09a8-4493-9233-69f1fb320036"
+                if is_portuguese else
+                "https://github.com/user-attachments/assets/b9f7771b-0bde-4622-a369-24d4c0de955c"
+            )
+            expected_audio = "media/agent-harness-kit-overview-pt-BR.mp3" if is_portuguese else "media/agent-harness-kit-overview-en.mp3"
+            expected_script = "media/overview-script-pt-BR.txt" if is_portuguese else "media/overview-script-en.txt"
+            other_audio = "media/agent-harness-kit-overview-en.mp3" if is_portuguese else "media/agent-harness-kit-overview-pt-BR.mp3"
+            other_script = "media/overview-script-en.txt" if is_portuguese else "media/overview-script-pt-BR.txt"
+            if attachment_urls != [expected_attachment]:
+                errors.append(f"media.readme-player: {rel(readme)} must contain only its language-specific GitHub attachment player")
+            if f"]({expected_audio})" not in readme_text or f"]({expected_script})" not in readme_text:
+                errors.append(f"media.readme-language-assets: {rel(readme)} missing its language-specific MP3 or script")
+            if other_audio in readme_text or other_script in readme_text:
+                errors.append(f"media.readme-cross-language: {rel(readme)} must not mix overview media languages")
             if "<audio" in readme_text or "<video" in readme_text:
                 errors.append(f"media.readme-unsupported-html: {rel(readme)}")
-            for script_target in ("media/overview-script-en.txt", "media/overview-script-pt-BR.txt"):
-                if f"]({script_target})" not in readme_text:
-                    errors.append(f"media.readme-link: {rel(readme)} missing {script_target}")
             if "agent-harness-kit/" not in readme_text or "EMBEDDED-INSTALLATION.md" not in readme_text:
                 errors.append(f"embedded.readme-route: {rel(readme)}")
     embedded_doc = ROOT / "docs" / "EMBEDDED-INSTALLATION.md"

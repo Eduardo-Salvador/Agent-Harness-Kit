@@ -2,23 +2,19 @@
 
 > Agent Harness Kit é um único harness de desenvolvimento, agnóstico de plataforma e orientado a artefatos, com entradas nativas para Codex e Claude Code, aprendizado de projeto opcional e um pacote separado para estudar engenharia de harness.
 
-[English](README.md) · [Mapa dos agentes](AGENTS.md) · [Status e conclusão](docs/STATUS-AND-COMPLETION.md) · [Arquitetura](docs/ARCHITECTURE.md) · [Roteamento de modelos](docs/MODEL-ROUTING.md) · [Rodadas de review](docs/REVIEW-ROUNDS.md) · [Integração de mudanças](docs/CHANGE-INTEGRATION.md) · [Distribuição](docs/DISTRIBUTION.md) · [Auditoria de prontidão](docs/PUBLICATION-READINESS.md) · [Decisões em aberto](OPEN-DECISIONS.md)
+> 🌐 **Idioma:** Português (Brasil) · **[Abrir o README em English →](README.md)**
 
-## Ouça a visão geral
+[Mapa dos agentes](AGENTS.md) · [Status e conclusão](docs/STATUS-AND-COMPLETION.md) · [Arquitetura](docs/ARCHITECTURE.md) · [Roteamento de modelos](docs/MODEL-ROUTING.md) · [Rodadas de review](docs/REVIEW-ROUNDS.md) · [Integração de mudanças](docs/CHANGE-INTEGRATION.md) · [Distribuição](docs/DISTRIBUTION.md) · [Auditoria de prontidão](docs/PUBLICATION-READINESS.md) · [Decisões em aberto](OPEN-DECISIONS.md)
 
-**English** · [script atual](media/overview-script-en.txt)
+## Áudio explicativo do projeto
 
-https://github.com/user-attachments/assets/b9f7771b-0bde-4622-a369-24d4c0de955c
-
-[MP3 alternativo / download](media/agent-harness-kit-overview-en.mp3)
-
-**Português (Brasil)** · [roteiro atual](media/overview-script-pt-BR.txt)
+Ouça uma explicação concisa em português sobre o que é o Agent Harness Kit, como seu fluxo funciona, o que a versão 0.3.0 entrega e o que permanece intencionalmente fora do runtime atual.
 
 https://github.com/user-attachments/assets/2fed6fc3-09a8-4493-9233-69f1fb320036
 
-[MP3 alternativo / download](media/agent-harness-kit-overview-pt-BR.mp3)
+[Baixar o MP3 em português](media/agent-harness-kit-overview-pt-BR.mp3) · [Ler o roteiro atual em português](media/overview-script-pt-BR.txt)
 
-Os áudios legados aprovados continuam reproduzíveis aqui enquanto a nova narração não é gravada.
+O áudio reproduzível é a narração legada aprovada; o roteiro versionado registra a atualização de narração da versão 0.3.0 ainda pendente.
 
 ## Por que usar
 
