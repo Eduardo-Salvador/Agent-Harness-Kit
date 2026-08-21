@@ -10,11 +10,11 @@
 
 Ouça uma explicação concisa em português sobre o que é o Agent Harness Kit, como seu fluxo funciona, o que a versão 0.3.0 entrega e o que permanece intencionalmente fora do runtime atual.
 
-https://github.com/user-attachments/assets/2fed6fc3-09a8-4493-9233-69f1fb320036
+https://github.com/user-attachments/assets/4c68f8a0-bfac-4847-b2ea-9adeae24c17c
 
 [Baixar o MP3 em português](media/agent-harness-kit-overview-pt-BR.mp3) · [Ler o roteiro atual em português](media/overview-script-pt-BR.txt)
 
-O áudio reproduzível é a narração legada aprovada; o roteiro versionado registra a atualização de narração da versão 0.3.0 ainda pendente.
+O áudio reproduzível aprovado corresponde ao roteiro atual da versão 0.3.0, incluindo os orçamentos executáveis por linhagem de objetivo.
 
 ## Por que usar
 
@@ -175,7 +175,6 @@ python tools/package.py --profile core --output <diretório-externo>
 - Leases de arquivo são contratos governados no grafo/write set com validação de colisão, não locks no sistema operacional; equivalência de symlink/case e recuperação de lease continuam como política pendente.
 - As simulações interativas em instalações reais do Codex e Claude Code ainda são necessárias antes de prometer isolamento/delegação automatizados em todo host.
 - A aplicação do orçamento hoje ocorre por artefato e validador. Medição de tokens, limite de tempo e encerramento forçado pelo host ainda não são portáveis nem comprovados entre Codex e Claude Code.
-- As faixas executáveis ainda contêm a narração legada aprovada; os roteiros versionados atuais precisam ser regravados e ouvidos por uma pessoa.
 
 ## Próxima fase
 
@@ -183,10 +182,11 @@ python tools/package.py --profile core --output <diretório-externo>
 2. Implementar um orquestrador autônomo externo opcional com revisões atômicas e leases.
 3. Adicionar fixtures de runtime para transições, retry, checkpoints, recuperação e não interferência.
 4. Exercitar a descoberta inicial nativa com fixtures greenfield e de repositório maduro em instalações compatíveis.
-5. Regravar e ouvir os áudios bilíngues, depois decidir automação de release e proveniência dos anexos do GitHub antes de automatizar a publicação.
+5. Decidir automação de release e proveniência dos anexos do GitHub antes de automatizar a publicação.
 
 Veja [OPEN-DECISIONS.md](OPEN-DECISIONS.md); itens não marcados nunca representam permissão implícita.
 
 ## Licença e comunidade
 
 Licenciado sob a [Licença MIT](LICENSE), copyright 2026 Agent Harness Kit contributors. Consulte o [guia de contribuição](.github/CONTRIBUTING.md), a [política de segurança](.github/SECURITY.md) e a [política de suporte](.github/SUPPORT.md).
+
