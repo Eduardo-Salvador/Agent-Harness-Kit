@@ -13,6 +13,7 @@ capability_manifest: capability-manifest@1
 rules_map: rules-map@1
 model_tier: balanced
 model_reason: Bounded implementation with deterministic acceptance and no frontier trigger.
+execution_budget: execution-budget-TASK-001@1
 review_profile: standard
 max_review_rounds: 2
 assurance_gate: none
@@ -36,6 +37,7 @@ Replace with one bounded result.
 ## Constraints
 
 - Do not change graph state or broaden the write set.
+- Stop before another attempt or context expansion when the linked execution budget reaches a ceiling.
 
 ## Rules to load
 

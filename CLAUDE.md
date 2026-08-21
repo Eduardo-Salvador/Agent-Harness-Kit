@@ -8,4 +8,6 @@ Every Claude main agent and subagent follows the imported [bounded review policy
 
 They also follow [status and completion communication](docs/STATUS-AND-COMPLETION.md) and [`harness.status/v1`](docs/contracts/STATUS.md): `PENDING.md` owns human actions and macro project gaps; `TASK-GRAPH.md` owns technical execution. Every status reports stage, progress, blockers, next action, and inspectable paths. Passing tasks are completed, reported, and followed by the next ready node; assurance review is automatic and non-blocking.
 
+All Claude agents enforce the imported [execution budget](docs/EXECUTION-BUDGET.md); ceilings require `stop-and-replan`.
+
 Do not assume or enable hooks, MCP servers, settings, network, secrets, destructive permissions, or integrations. Propose consequential capability changes through discovery and obtain explicit human approval. Existing Claude/Codex/custom instructions use the mature-adoption process; never overwrite them blindly.

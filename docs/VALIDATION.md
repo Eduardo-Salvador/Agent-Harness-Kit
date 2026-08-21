@@ -11,11 +11,13 @@ The validator uses only the Python 3 standard library and does not modify files.
 - required root entrypoints, native Codex skills, native Claude Code skills/subagents, roles, templates, playbooks, adapters, examples, and learning-pack modules;
 - required YAML-header keys and Markdown sections in every operational template;
 - model-routing tier/reason fields in task and handoff templates, plus the provider-neutral routing template;
+- executable goal-lineage budgets in templates, fixtures, and discovered `harness-state/` artifacts, with positive ceilings, stable lineage, monotonic attempt/no-progress/context counters, mandatory stop-and-replan behavior, and safe evidence paths;
 - review-profile and two-round-budget fields in task templates, plus auditable prior blockers, correction delta, and regression scope for focused round-two reviews;
 - JSON task-graph blocks for node shape, unique IDs, existing dependencies, acyclicity, repository-relative write sets, and collisions among ready/active nodes;
 - built-in valid and invalid graph fixtures, including missing dependencies, cycles, write-set collisions, self-review, and path traversal;
 - hostile status mutations that remove mandatory fields, omit human-pending provenance, or escape repository-relative inspectable paths;
 - hostile review mutation that removes the correction delta from a focused second-round payload;
+- hostile budget mutations that bypass attempt, no-progress, or context-expansion ceilings, roll counters backward, narrow scope to one task, or escape evidence paths;
 - relative Markdown links and fragment targets, balanced fenced-code blocks, and one Mermaid block in each README;
 - the language boundary using a documented Portuguese-marker heuristic outside `README.pt-BR.md`;
 - root routing: `CLAUDE.md` imports `@AGENTS.md`, both routes converge on neutral state, context remains concise, and safe defaults add no live MCP/settings/hooks;

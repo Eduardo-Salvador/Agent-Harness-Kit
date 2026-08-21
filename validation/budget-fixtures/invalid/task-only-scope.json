@@ -1,0 +1,4 @@
+{
+  "mutation": {"action": "set", "path": "counter_scope", "value": "task-only"},
+  "expected_errors": ["budget.counter-scope"]
+}

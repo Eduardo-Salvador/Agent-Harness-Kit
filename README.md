@@ -4,7 +4,7 @@
 
 > 🌐 **Language:** English · **[Open the README in Português (Brasil) →](README.pt-BR.md)**
 
-[Agent map](AGENTS.md) · [Status/completion](docs/STATUS-AND-COMPLETION.md) · [Architecture](docs/ARCHITECTURE.md) · [Model routing](docs/MODEL-ROUTING.md) · [Review rounds](docs/REVIEW-ROUNDS.md) · [Change integration](docs/CHANGE-INTEGRATION.md) · [Packaging](docs/DISTRIBUTION.md) · [Readiness audit](docs/PUBLICATION-READINESS.md) · [Open decisions](OPEN-DECISIONS.md)
+[Agent map](AGENTS.md) · [Status/completion](docs/STATUS-AND-COMPLETION.md) · [Architecture](docs/ARCHITECTURE.md) · [Model routing](docs/MODEL-ROUTING.md) · [Execution budget](docs/EXECUTION-BUDGET.md) · [Review rounds](docs/REVIEW-ROUNDS.md) · [Change integration](docs/CHANGE-INTEGRATION.md) · [Packaging](docs/DISTRIBUTION.md) · [Readiness audit](docs/PUBLICATION-READINESS.md) · [Open decisions](OPEN-DECISIONS.md)
 
 ## Project overview audio
 
@@ -30,6 +30,7 @@ Use this scaffold when agent-assisted development needs durable project context,
 | Project state | Approved context, human/macro `PENDING.md`, and technical `TASK-GRAPH.md` with a strict read order |
 | Status | Executable `harness.status/v1` contract requiring stage, progress, blockers, next action, human items, and inspectable paths |
 | Execution | Dependency readiness, declared file leases/write sets, collision checks, handoffs, evidence, and automatic next-task advance |
+| Resource control | Executable per-lineage ceilings: two implementation attempts, two consecutive no-progress cycles, and three context expansions by default |
 | Assurance | Independent reviewer, two reviews maximum, focused round two, and forced rewrite/decomposition/human decision after a second rejection |
 | Safety and portability | Capability/rule manifests, explicit degradation, mature-harness coexistence, Codex/Claude adapters, and no silent permission expansion |
 | Validation and delivery | Hostile mutation fixtures, installer tests, deterministic `core`, `core-learning`, and `full` packages from one version |
@@ -78,7 +79,7 @@ Every profile also contains both native platform entrypoints and their small on-
    Discovery also builds or references a [capability manifest](harness/templates/CAPABILITY-MANIFEST.md) and [rules map](harness/templates/RULES-MAP.md). Capabilities cover native platform tools, MCP servers/connectors, skills, scripts/commands, hooks, and external integrations; absent evidence means unavailable, optional, or approval-required—not assumed access. Rules may cover business behavior, security/privacy, architecture, coding conventions, and paths, and are routed only to relevant work.
 5. The decomposer proposes and validates the initial [task graph](harness/templates/TASK-GRAPH.md); the orchestrator then dispatches a bounded [task brief](harness/templates/TASK.md). Dispatch follows [capability-based model routing](docs/MODEL-ROUTING.md): balanced is the normal default, economical is limited to deterministic low-risk work, and frontier is reserved for consequential judgment or explicit escalation triggers. Provider-specific model names stay in adapters and current host evidence.
    Role definitions are editable templates: discovery can adapt existing roles or propose project-specific specialists, responsibilities, tool access, context packets, ownership boundaries, and review criteria. This is governed configuration, not uncontrolled agent self-modification. Consequential changes to tools, permissions, secrets, network, destructive actions, hooks, integrations, or durable rules require explicit human approval and validation.
-6. The specialist works only in its leased paths, runs declared checks, and writes a [handoff](harness/templates/HANDOFF.md). When those checks pass, the orchestrator marks the node completed, reports what changed, releases ownership, and dispatches the next dependency-ready task without asking for human completion approval. A different reviewer then writes a non-blocking [assurance result](harness/templates/REVIEW.md) automatically. Review uses a `light`, `standard`, or `critical` profile with [two rounds maximum](docs/REVIEW-ROUNDS.md); round two is limited to prior blockers, the correction delta, and related regressions. A second rejection forces rewrite, decomposition, or a genuine human product/risk decision. Related microcorrections form one [coherent change unit](docs/CHANGE-INTEGRATION.md). Completion never grants separate commit, push, deploy, or publication authority.
+6. The specialist works only in its leased paths and under the linked [execution budget](docs/EXECUTION-BUDGET.md): two implementation attempts, two consecutive no-progress cycles, and three context expansions per goal lineage by default. Model, agent, task, review, decomposition, and session changes cannot reset these counters. At a ceiling, the agent records evidence and stops for bounded replanning. It runs declared checks and writes a [handoff](harness/templates/HANDOFF.md). When those checks pass, the orchestrator marks the node completed, reports what changed, releases ownership, and dispatches the next dependency-ready task without asking for human completion approval. A different reviewer then writes a non-blocking [assurance result](harness/templates/REVIEW.md) automatically. Review uses a `light`, `standard`, or `critical` profile with [two rounds maximum](docs/REVIEW-ROUNDS.md); round two is limited to prior blockers, the correction delta, and related regressions. A second rejection forces rewrite, decomposition, or a genuine human product/risk decision. Related microcorrections form one [coherent change unit](docs/CHANGE-INTEGRATION.md). Completion never grants separate commit, push, deploy, or publication authority.
 7. In `delivery+learning`, project-learning roles may update the consented learning queue after delivery evidence exists. In `full`, open `learning-pack/README.md` separately when you want to study the harness itself.
 8. Run `python tools/validate.py`. Build a bundle outside the source tree with `python tools/package.py --profile core --output <outside-directory>`; substitute `core-learning` or `full` as needed.
 
@@ -157,10 +158,11 @@ Human-approved durable rules are versioned in or referenced by the rules map; te
 8. Capabilities and degradation are explicit; adapters never invent support.
 9. Models are routed by capability and risk; stronger models grant no additional authority.
 10. Changes follow coherent acceptance and rollback units; commit, integration, push, deploy, and publication remain separate gates.
+11. Execution budgets follow the goal lineage and stop repeated attempts, no-progress cycles, and context expansion at explicit ceilings.
 
 ## Current status
 
-**Version 0.3.0 operating scaffold.** Codex activates through `AGENTS.md`; Claude Code activates through `CLAUDE.md` importing `@AGENTS.md`. Both ship small native skills, Claude has bounded project subagents, and all routes converge on the neutral contracts and state. Roles, templates, playbooks, examples, learning modules, capability-tier routing, bounded review rounds, executable status/review mutation fixtures, coherent change integration, validation, deterministic packaging, and auditable audio scripts exist.
+**Version 0.3.0 operating scaffold.** Codex activates through `AGENTS.md`; Claude Code activates through `CLAUDE.md` importing `@AGENTS.md`. Both ship small native skills, Claude has bounded project subagents, and all routes converge on the neutral contracts and state. Roles, templates, playbooks, examples, learning modules, capability-tier routing, bounded goal-lineage execution budgets, bounded review rounds, executable status/review/budget mutation fixtures, coherent change integration, validation, deterministic packaging, and auditable audio scripts exist.
 
 ```text
 python tools/validate.py
@@ -172,6 +174,7 @@ python tools/package.py --profile core --output <outside-directory>
 - No separate autonomous runtime currently calls model APIs, launches sessions, merges branches, deploys, or publishes notes.
 - File leases are governed graph/write-set contracts with collision validation, not operating-system locks; symlink/case equivalence and lease recovery remain open runtime policy.
 - Installed Codex and Claude Code interactive simulations are still required before claiming automated isolation/delegation behavior on every host.
+- Budget enforcement is currently artifact/validator based. Host-level token metering, time limits, and forced process termination are not yet portable or proven across Codex and Claude Code.
 - The playable tracks remain the approved legacy narration; the current versioned scripts require re-rendering and human audition.
 
 ## Next phase

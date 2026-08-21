@@ -8,6 +8,7 @@ author: agent:implementer
 created_at: 2000-01-01T00:00:00Z
 model_tier_used: balanced
 model_route_changes: none
+execution_budget: execution-budget-TASK-001@2
 ---
 
 # Handoff — TASK-001
@@ -37,6 +38,13 @@ Replace with the bounded result or blocker.
 - Command/check: Replace.
 - Outcome: Replace.
 - Environment/adapter: Replace.
+
+## Execution budget
+
+- Goal lineage: Replace.
+- Usage: Replace with implementation attempts, consecutive no-progress cycles, and context expansions.
+- Decision: `continue` or `stop-and-replan` with the inspectable budget artifact path.
+- Token/cost measurement: `unavailable`, `advisory`, or `host-reported`; never estimate unavailable usage.
 
 ## Discoveries and risks
 

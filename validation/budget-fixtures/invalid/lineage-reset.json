@@ -1,0 +1,4 @@
+{
+  "mutation": {"action": "set", "path": "goal_lineage", "value": "goal-lineage-reset"},
+  "expected_errors": ["budget.lineage-reset"]
+}

@@ -3,10 +3,13 @@
 1. Orchestrator selects a node whose dependencies are completed and checkpoint/capability requirements pass.
 2. Compare its normalized write set with all ready/active leases; serialize or repartition any collision.
 3. Select an implementer and distinct reviewer. Negotiate the adapter capability manifest.
-4. Follow [capability-based model routing](model-routing.md): choose the least costly safe tier, record `model_tier` and `model_reason`, and resolve the tier through the active adapter.
-5. Grant an explicit lease and isolation identifier; update graph and task revisions atomically or stop on stale state.
-6. Send a notification pointing to the task artifact. The specialist loads only declared context.
-7. On lost notification, reconciliation discovers the active artifact; no canonical state is lost.
+4. Initialize or inherit the executable goal-lineage budget before dispatch. The same outcome keeps cumulative counters across model, agent, task, remediation, decomposition, review, and session changes.
+5. Follow [capability-based model routing](model-routing.md): choose the least costly safe tier, record `model_tier` and `model_reason`, and resolve the tier through the active adapter.
+6. Grant an explicit lease and isolation identifier; update graph and task revisions atomically or stop on stale state.
+7. Send a notification pointing to the task artifact. The specialist loads only declared context.
+8. On lost notification, reconciliation discovers the active artifact; no canonical state is lost.
+
+Before each new implementation cycle or context expansion, reconcile the linked [`harness.execution-budget/v1`](../../docs/contracts/EXECUTION-BUDGET.md) state. At any ceiling, stop that lineage and replan; do not hide a retry behind a stronger model or a new task ID.
 
 Local checks, completion, post-completion review, focused remediation, and graph transitions declared by an approved task are part of its execution authority. Announce material results and continue; do not turn each one into a fresh human approval request. Use [task closeout](task-closeout.md) and dispatch the next ready node after completion.
 

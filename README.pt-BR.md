@@ -4,7 +4,7 @@
 
 > 🌐 **Idioma:** Português (Brasil) · **[Abrir o README em English →](README.md)**
 
-[Mapa dos agentes](AGENTS.md) · [Status e conclusão](docs/STATUS-AND-COMPLETION.md) · [Arquitetura](docs/ARCHITECTURE.md) · [Roteamento de modelos](docs/MODEL-ROUTING.md) · [Rodadas de review](docs/REVIEW-ROUNDS.md) · [Integração de mudanças](docs/CHANGE-INTEGRATION.md) · [Distribuição](docs/DISTRIBUTION.md) · [Auditoria de prontidão](docs/PUBLICATION-READINESS.md) · [Decisões em aberto](OPEN-DECISIONS.md)
+[Mapa dos agentes](AGENTS.md) · [Status e conclusão](docs/STATUS-AND-COMPLETION.md) · [Arquitetura](docs/ARCHITECTURE.md) · [Roteamento de modelos](docs/MODEL-ROUTING.md) · [Orçamento de execução](docs/EXECUTION-BUDGET.md) · [Rodadas de review](docs/REVIEW-ROUNDS.md) · [Integração de mudanças](docs/CHANGE-INTEGRATION.md) · [Distribuição](docs/DISTRIBUTION.md) · [Auditoria de prontidão](docs/PUBLICATION-READINESS.md) · [Decisões em aberto](OPEN-DECISIONS.md)
 
 ## Áudio explicativo do projeto
 
@@ -30,6 +30,7 @@ Use este scaffold quando o desenvolvimento com agentes precisar de contexto dur�
 | Estado do projeto | Contexto aprovado, `PENDING.md` humano/macro e `TASK-GRAPH.md` técnico com ordem rígida de leitura |
 | Status | Contrato executável `harness.status/v1` com etapa, progresso, bloqueios, próxima ação, itens humanos e caminhos inspecionáveis |
 | Execução | Dependências, leases/write sets declarados, colisões validadas, handoffs, evidências e avanço automático para a próxima task |
+| Controle de recursos | Tetos executáveis por linhagem: duas tentativas de implementação, dois ciclos consecutivos sem progresso e três expansões de contexto por padrão |
 | Garantia | Revisor independente, no máximo duas reviews, segunda focada e reescrita/decomposição/decisão humana após segunda reprovação |
 | Segurança e portabilidade | Manifestos de capacidades/regras, degradação explícita, coexistência com harness maduro, adapters Codex/Claude e nenhuma ampliação silenciosa de permissão |
 | Validação e entrega | Mutações hostis, testes do instalador e pacotes determinísticos `core`, `core-learning` e `full` a partir de uma versão |
@@ -78,7 +79,7 @@ Todos também incluem as duas entradas de plataforma e suas pequenas extensões 
    A descoberta também cria ou referencia um [manifesto de capacidades](harness/templates/CAPABILITY-MANIFEST.md) e um [mapa de regras](harness/templates/RULES-MAP.md). Capacidades incluem ferramentas nativas da plataforma, servidores/conectores MCP, skills, scripts/comandos, hooks e integrações externas; sem evidência, ficam indisponíveis, opcionais ou dependentes de aprovação — nunca são presumidas. As regras podem cobrir negócio, segurança/privacidade, arquitetura, convenções de código e caminhos, e são encaminhadas apenas ao trabalho relevante.
 5. O decompositor propõe e valida o [grafo inicial](harness/templates/TASK-GRAPH.md); o orquestrador então despacha uma [tarefa delimitada](harness/templates/TASK.md). O despacho segue o [roteamento por capacidade](docs/MODEL-ROUTING.md): balanceado é o padrão, econômico fica restrito a trabalho determinístico e de baixo risco, e avançado é reservado para decisões consequentes ou gatilhos explícitos de escalonamento. Nomes específicos de modelos ficam nos adaptadores e nas evidências atuais do host.
    As definições de papéis são templates editáveis: a descoberta pode adaptar papéis existentes ou propor especialistas específicos do projeto, responsabilidades, acesso a ferramentas, pacotes de contexto, limites de propriedade e critérios de revisão. Isso é configuração governada, não automodificação descontrolada dos agentes. Mudanças relevantes em ferramentas, permissões, segredos, rede, ações destrutivas, hooks, integrações ou regras duráveis exigem aprovação humana explícita e validação.
-6. O especialista trabalha somente nos caminhos atribuídos, executa as verificações e escreve um [handoff](harness/templates/HANDOFF.md). Quando elas passam, o orquestrador marca o nó como concluído, informa o que mudou, libera a propriedade e despacha a próxima tarefa pronta sem pedir aprovação humana de conclusão. Outro agente registra automaticamente uma [revisão de garantia](harness/templates/REVIEW.md) não bloqueante. A review usa perfil `light`, `standard` ou `critical` com [no máximo duas rodadas](docs/REVIEW-ROUNDS.md); a segunda fica limitada aos bloqueios anteriores, ao delta da correção e às regressões relacionadas. Uma segunda reprovação obriga reescrita, decomposição ou uma decisão humana real de produto ou risco. Conclusão não autoriza separadamente commit, push, deploy ou publicação.
+6. O especialista trabalha somente nos caminhos atribuídos e sob o [orçamento de execução](docs/EXECUTION-BUDGET.md) vinculado: por padrão, duas tentativas de implementação, dois ciclos consecutivos sem progresso e três expansões de contexto por linhagem de objetivo. Trocar modelo, agente, tarefa, review, decomposição ou sessão não zera os contadores. Ao atingir um teto, o agente registra evidências e para para um replanejamento delimitado. Ele executa as verificações e escreve um [handoff](harness/templates/HANDOFF.md). Quando elas passam, o orquestrador marca o nó como concluído, informa o que mudou, libera a propriedade e despacha a próxima tarefa pronta sem pedir aprovação humana de conclusão. Outro agente registra automaticamente uma [revisão de garantia](harness/templates/REVIEW.md) não bloqueante. A review usa perfil `light`, `standard` ou `critical` com [no máximo duas rodadas](docs/REVIEW-ROUNDS.md); a segunda fica limitada aos bloqueios anteriores, ao delta da correção e às regressões relacionadas. Uma segunda reprovação obriga reescrita, decomposição ou uma decisão humana real de produto ou risco. Conclusão não autoriza separadamente commit, push, deploy ou publicação.
 7. Em `delivery+learning`, os papéis de aprendizado podem atualizar a fila consentida depois que houver evidência de entrega. Em `full`, abra `learning-pack/README.md` separadamente quando quiser estudar o harness.
 8. Execute `python tools/validate.py`. Gere um pacote fora da árvore fonte com `python tools/package.py --profile core --output <diretório-externo>`; troque o perfil quando necessário.
 
@@ -157,10 +158,11 @@ Regras duráveis aprovadas por pessoas são versionadas no mapa de regras ou ref
 8. Capacidades e degradação são explícitas; adaptadores não inventam suporte.
 9. Modelos são escolhidos por capacidade e risco; modelos mais fortes não recebem autoridade adicional.
 10. Mudanças seguem unidades coerentes de aceitação e rollback; commit, integração, push, deploy e publicação continuam sendo gates separados.
+11. Orçamentos de execução acompanham a linhagem do objetivo e interrompem tentativas, ciclos sem progresso e expansões de contexto ao atingir tetos explícitos.
 
 ## Estado atual
 
-**Scaffold operacional da versão 0.3.0.** O Codex ativa por `AGENTS.md`; o Claude Code ativa por `CLAUDE.md`, importando `@AGENTS.md`. Ambos incluem skills nativas pequenas, o Claude tem subagentes de projeto delimitados, e todas as rotas convergem nos contratos e no estado neutros. Papéis, templates, playbooks, exemplos, módulos de estudo, roteamento por capacidade, rodadas limitadas de review, mutações negativas de status/review, integração coerente de mudanças, validação, empacotamento determinístico e roteiros auditáveis dos áudios existem.
+**Scaffold operacional da versão 0.3.0.** O Codex ativa por `AGENTS.md`; o Claude Code ativa por `CLAUDE.md`, importando `@AGENTS.md`. Ambos incluem skills nativas pequenas, o Claude tem subagentes de projeto delimitados, e todas as rotas convergem nos contratos e no estado neutros. Papéis, templates, playbooks, exemplos, módulos de estudo, roteamento por capacidade, orçamentos limitados por linhagem de objetivo, rodadas limitadas de review, mutações negativas de status/review/orçamento, integração coerente de mudanças, validação, empacotamento determinístico e roteiros auditáveis dos áudios existem.
 
 ```text
 python tools/validate.py
@@ -172,6 +174,7 @@ python tools/package.py --profile core --output <diretório-externo>
 - Nenhum runtime autônomo separado chama APIs de modelos, inicia sessões, integra branches, faz deploy ou publica notas hoje.
 - Leases de arquivo são contratos governados no grafo/write set com validação de colisão, não locks no sistema operacional; equivalência de symlink/case e recuperação de lease continuam como política pendente.
 - As simulações interativas em instalações reais do Codex e Claude Code ainda são necessárias antes de prometer isolamento/delegação automatizados em todo host.
+- A aplicação do orçamento hoje ocorre por artefato e validador. Medição de tokens, limite de tempo e encerramento forçado pelo host ainda não são portáveis nem comprovados entre Codex e Claude Code.
 - As faixas executáveis ainda contêm a narração legada aprovada; os roteiros versionados atuais precisam ser regravados e ouvidos por uma pessoa.
 
 ## Próxima fase

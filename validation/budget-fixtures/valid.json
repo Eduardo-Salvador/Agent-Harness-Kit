@@ -1,0 +1,26 @@
+{
+  "schema": "harness.execution-budget/v1",
+  "task": "TASK-001@1",
+  "goal_lineage": "goal-lineage-001",
+  "previous_goal_lineage": "goal-lineage-001",
+  "counter_scope": "goal-lineage",
+  "limits": {
+    "max_implementation_attempts": 2,
+    "max_consecutive_no_progress_cycles": 2,
+    "max_context_expansions": 3
+  },
+  "previous_usage": {
+    "implementation_attempts": 0,
+    "consecutive_no_progress_cycles": 0,
+    "context_expansions": 0
+  },
+  "usage": {
+    "implementation_attempts": 1,
+    "consecutive_no_progress_cycles": 0,
+    "context_expansions": 1
+  },
+  "decision": "continue",
+  "reason": "Acceptance progress and bounded context use recorded.",
+  "evidence_paths": ["harness-state/handoffs/HANDOFF-TASK-001-01.md"],
+  "token_measurement": "unavailable"
+}

@@ -1,0 +1,4 @@
+{
+  "mutation": {"action": "set", "path": "usage.implementation_attempts", "value": 2},
+  "expected_errors": ["budget.ceiling-bypass"]
+}

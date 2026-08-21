@@ -1,0 +1,4 @@
+{
+  "mutation": {"action": "set", "path": "usage.consecutive_no_progress_cycles", "value": 2},
+  "expected_errors": ["budget.ceiling-bypass"]
+}

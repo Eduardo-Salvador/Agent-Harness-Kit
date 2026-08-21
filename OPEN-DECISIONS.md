@@ -28,6 +28,7 @@ This ledger contains real unresolved choices. An unchecked item is not permissio
 
 - [x] Use `harness-state/` as the neutral default runtime location; adapters may map it only when the canonical path remains discoverable.
 - [x] Define the minimal immutable review-result record separately from the implementer's handoff.
+- [x] Define an executable goal-lineage budget with default ceilings of two implementation attempts, two consecutive no-progress cycles, and three context expansions; hostile fixtures reject ceiling bypass, counter rollback, task-only reset scope, and unsafe evidence paths.
 - [x] Run delivery review automatically as non-blocking post-completion assurance, limited to one initial round plus at most one focused remediation review; after a second rejection, force task/acceptance rewrite, decomposition, or a genuine human product/risk decision without reopening completion or repeating the loop.
 - [x] Define contained installation under `agent-harness-kit/` with minimal managed root bridges, host-owned `harness-state/`, preserved existing authority, and explicit native-extension degradation.
 - [x] Use bounded YAML scalar headers plus JSON for executable task-graph data; avoid a third-party schema dependency in Phase 2.
@@ -35,6 +36,7 @@ This ledger contains real unresolved choices. An unchecked item is not permissio
 - [x] Validate DAG cycles, missing dependencies, and overlapping normalized paths among concurrently ready/active nodes.
 - [ ] Validate invalid lifecycle transitions and stale expected revisions.
 - [ ] Demonstrate failed verification, retry lineage, reviewer disagreement, checkpoint blocking, and interruption recovery.
+- [ ] Add live host token/time telemetry and optional numerical cost ceilings after Codex/Claude capability simulations establish which measurements are actually exposed.
 - [ ] Demonstrate learning disabled, paused, destination failure, denied publication, and a graph-change recommendation with no direct effect.
 - [ ] Run the two approved interactive pre-commit simulations (plain-language explanation and adaptive project interview) through installed Codex and Claude Code, recording visible capability degradation.
 - [x] Add namespaced mature-harness adoption, migration/coexistence/provenance contracts, host-mode validation, and sanitized drift/backlink fixtures.

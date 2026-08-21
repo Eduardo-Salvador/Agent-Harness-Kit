@@ -8,7 +8,7 @@ The source is suitable for public review as a native Codex/Claude Code operating
 
 ## Evidence currently available
 
-- Source validation checks required assets, contract templates, Markdown links/fragments/fences, both Mermaid blocks, language boundary, license text, first-run policy, graph dependencies/cycles/write collisions, reviewer independence, fixtures, and profile boundaries.
+- Source validation checks required assets, contract templates, Markdown links/fragments/fences, both Mermaid blocks, language boundary, license text, first-run policy, graph dependencies/cycles/write collisions, reviewer independence, executable goal-lineage budget ceilings, fixtures, and profile boundaries.
 - Each generated directory profile can run its own bundled validator using the generated `PACKAGE-MANIFEST.json`.
 - Host-integration mode validates a sanitized namespaced mature-harness fixture plus missing-backlink, silent-omission, stale-snapshot, and premature-cutover failures.
 - The examples demonstrate greenfield Development Core and existing-project Core plus project learning, but remain artifact traces rather than a live orchestrator test.
@@ -19,6 +19,8 @@ The source is suitable for public review as a native Codex/Claude Code operating
 `core`, `core-learning`, and `full` support intentional root-layout copies and contained installation under `agent-harness-kit/` with minimal root bridges. Each tool reaches the same first-run rule, neutral contracts, and host-owned state. Namespaced native-extension discovery remains capability-dependent and must degrade explicitly. Actions still require the capable agent/user session to follow the playbooks; the kit is not a separate program that independently calls APIs, provisions worktrees, dispatches sessions, merges branches, or publishes notes.
 
 Current automated evidence is structural and fixture-based; installed Codex and Claude Code binaries have not yet been run through the planned interactive simulations. Mature-host semantic equivalence and cutover remain human decisions.
+
+The execution budget now prevents contract-valid continuation after two implementation attempts, two consecutive no-progress cycles, or three context expansions in one goal lineage. The validator also checks discovered budget artifacts under direct-root or embedded-host `harness-state/`. This is artifact-level enforcement, not host-level process termination or measured token billing.
 
 Controlled mature-host adoption is structurally testable, but semantic equivalence and cutover remain human decisions. Package selection never activates project learning.
 

@@ -27,8 +27,8 @@ REQUIRED_FILES = [
     "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
     "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md",
     "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md",
-    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
-    "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md",
+    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
+    "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
     "adapters/README.md", "adapters/generic.md", "adapters/codex.md", "adapters/claude.md",
     "harness/roles/README.md", "harness/roles/discovery-interviewer.md",
     "harness/roles/orchestrator-po.md", "harness/roles/task-decomposer.md",
@@ -39,7 +39,7 @@ REQUIRED_FILES = [
     "harness/playbooks/contract-changes.md", "harness/playbooks/parallel-execution.md",
     "harness/playbooks/review-integration.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/learning-capture-publication.md",
     "harness/templates/README.md", "harness/templates/PROJECT-CONTEXT.md",
-    "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/TASK.md",
+    "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/TASK.md", "harness/templates/EXECUTION-BUDGET.md",
     "harness/templates/HANDOFF.md", "harness/templates/REVIEW.md", "harness/templates/STATUS.md",
     "harness/templates/DECISION.md", "harness/templates/LEARNING-PROFILE.md",
     "harness/templates/LEARNING-QUEUE.md", "harness/templates/MODEL-ROUTING.md",
@@ -63,6 +63,14 @@ REQUIRED_FILES = [
     "validation/status-fixtures/invalid/path-traversal.json",
     "validation/review-fixtures/round-two-valid.json",
     "validation/review-fixtures/invalid/missing-correction-delta.json",
+    "validation/budget-fixtures/valid.json",
+    "validation/budget-fixtures/invalid/attempt-ceiling-bypass.json",
+    "validation/budget-fixtures/invalid/no-progress-ceiling-bypass.json",
+    "validation/budget-fixtures/invalid/context-ceiling-bypass.json",
+    "validation/budget-fixtures/invalid/counter-rollback.json",
+    "validation/budget-fixtures/invalid/lineage-reset.json",
+    "validation/budget-fixtures/invalid/task-only-scope.json",
+    "validation/budget-fixtures/invalid/path-traversal.json",
     "VERSION", "docs/DISTRIBUTION.md", "docs/PUBLICATION-READINESS.md", "tools/package.py", "tools/install.py", "validation/test_install.py",
     "distribution/project.json", "distribution/profiles/core.json", "distribution/profiles/core-learning.json", "distribution/profiles/full.json",
     "docs/contracts/MIGRATION-MANIFEST.md", "docs/contracts/COEXISTENCE.md", "docs/contracts/ADAPTER-BINDING.md",
@@ -96,12 +104,12 @@ TEMPLATE_RULES = {
         {"Human action required", "Project completion overview", "Recently resolved"},
     ),
     "TASK.md": (
-        {"schema", "id", "graph", "revision", "status", "assigned_to", "reviewer", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "review_profile", "max_review_rounds", "assurance_gate"},
+        {"schema", "id", "graph", "revision", "status", "assigned_to", "reviewer", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "execution_budget", "review_profile", "max_review_rounds", "assurance_gate"},
         {"Outcome", "Context to load", "Owned paths", "Constraints", "Rules to load", "Required capabilities", "Acceptance criteria", "Verification", "Exit"},
     ),
     "HANDOFF.md": (
-        {"schema", "id", "task", "attempt", "status", "author", "created_at", "model_tier_used", "model_route_changes"},
-        {"Result", "Changes", "Change unit and authority", "Acceptance evidence", "Verification run", "Discoveries and risks", "Routing and authority", "Review request", "User-facing closeout"},
+        {"schema", "id", "task", "attempt", "status", "author", "created_at", "model_tier_used", "model_route_changes", "execution_budget"},
+        {"Result", "Changes", "Change unit and authority", "Acceptance evidence", "Verification run", "Execution budget", "Discoveries and risks", "Routing and authority", "Review request", "User-facing closeout"},
     ),
     "REVIEW.md": (
         {"schema", "id", "task", "handoff", "revision", "round", "scope", "prior_review", "blocking_findings", "correction_delta", "regression_scope", "status", "reviewer", "verdict", "created_at"},
@@ -146,6 +154,10 @@ TEMPLATE_RULES = {
     "MODEL-ROUTING.md": (
         {"schema", "id", "revision", "status", "default_tier", "updated_at", "approved_by", "decision"},
         {"Tiers", "Escalation triggers", "Adapter mappings", "Dispatch record", "Context efficiency", "Authority boundary"},
+    ),
+    "EXECUTION-BUDGET.md": (
+        {"schema", "id", "revision", "status", "updated_at", "updated_by"},
+        {"Transition log"},
     ),
 }
 
@@ -464,6 +476,154 @@ def validate_review_fixtures() -> list[str]:
         expected = set(scenario.get("expected_errors", []))
         if not expected or not expected.issubset(actual_codes):
             errors.append(f"review.fixture-expected-error: {rel(path)} expected {sorted(expected)}, got {sorted(actual_codes)}")
+    return errors
+
+
+BUDGET_COUNTERS = {
+    "implementation_attempts": "max_implementation_attempts",
+    "consecutive_no_progress_cycles": "max_consecutive_no_progress_cycles",
+    "context_expansions": "max_context_expansions",
+}
+
+
+def validate_budget_payload(data: dict, source: str) -> list[str]:
+    """Validate one executable goal-lineage budget state."""
+    errors: list[str] = []
+    if not isinstance(data, dict) or data.get("schema") != "harness.execution-budget/v1":
+        return [f"budget.shape: {source}"]
+    for field in ("task", "goal_lineage", "reason"):
+        if not isinstance(data.get(field), str) or not data[field].strip():
+            errors.append(f"budget.missing-field: {source} {field}")
+    if data.get("counter_scope") != "goal-lineage":
+        errors.append(f"budget.counter-scope: {source}")
+    previous_lineage = data.get("previous_goal_lineage")
+    if data.get("decision") not in {"continue", "stop-and-replan"}:
+        errors.append(f"budget.decision: {source}")
+    if data.get("token_measurement") not in {"unavailable", "advisory", "host-reported"}:
+        errors.append(f"budget.token-measurement: {source}")
+
+    limits = data.get("limits")
+    usage = data.get("usage")
+    previous = data.get("previous_usage")
+    if not isinstance(limits, dict) or not isinstance(usage, dict):
+        errors.append(f"budget.counter-shape: {source}")
+        return errors
+    if previous is not None and not isinstance(previous, dict):
+        errors.append(f"budget.counter-shape: {source} previous_usage")
+        previous = None
+    if isinstance(previous, dict) and previous_lineage != data.get("goal_lineage"):
+        errors.append(f"budget.lineage-reset: {source}")
+    elif previous is None and previous_lineage is not None:
+        errors.append(f"budget.lineage-shape: {source}")
+
+    ceiling_reached = False
+    for usage_field, limit_field in BUDGET_COUNTERS.items():
+        limit = limits.get(limit_field)
+        current = usage.get(usage_field)
+        if not isinstance(limit, int) or isinstance(limit, bool) or limit <= 0:
+            errors.append(f"budget.limit: {source} {limit_field}")
+            continue
+        if not isinstance(current, int) or isinstance(current, bool) or current < 0:
+            errors.append(f"budget.usage: {source} {usage_field}")
+            continue
+        if isinstance(previous, dict):
+            prior = previous.get(usage_field)
+            if not isinstance(prior, int) or isinstance(prior, bool) or prior < 0:
+                errors.append(f"budget.usage: {source} previous_usage.{usage_field}")
+            elif current < prior:
+                errors.append(f"budget.counter-rollback: {source} {usage_field}")
+        if current >= limit:
+            ceiling_reached = True
+    if ceiling_reached and data.get("decision") != "stop-and-replan":
+        errors.append(f"budget.ceiling-bypass: {source}")
+
+    paths = data.get("evidence_paths")
+    if not isinstance(paths, list) or not paths:
+        errors.append(f"budget.evidence-path: {source}")
+    else:
+        for value in paths:
+            normalized, reason = normalize_owned_path(str(value))
+            if reason or not normalized:
+                errors.append(f"budget.evidence-path: {source} {value!r}")
+    return errors
+
+
+def set_nested_value(data: dict, dotted_path: str, value: object) -> bool:
+    parts = dotted_path.split(".")
+    target = data
+    for part in parts[:-1]:
+        candidate = target.get(part)
+        if not isinstance(candidate, dict):
+            return False
+        target = candidate
+    target[parts[-1]] = value
+    return True
+
+
+def validate_budget_fixtures() -> list[str]:
+    """Execute hostile budget mutations against one known-good state."""
+    errors: list[str] = []
+    root = ROOT / "validation" / "budget-fixtures"
+    try:
+        baseline = json.loads((root / "valid.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"budget.fixture-baseline: {exc}"]
+    if actual := validate_budget_payload(baseline, "validation/budget-fixtures/valid.json"):
+        errors.append(f"budget.fixture-valid-failed: {actual}")
+    template_path = ROOT / "harness" / "templates" / "EXECUTION-BUDGET.md"
+    if template_path.is_file():
+        try:
+            template_payload = extract_graph(template_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            errors.append(f"budget.template-json: {exc}")
+        else:
+            if template_payload is None:
+                errors.append("budget.template-json: missing executable JSON block")
+            elif actual := validate_budget_payload(template_payload, rel(template_path)):
+                errors.append(f"budget.template-invalid: {actual}")
+    for path in sorted((root / "invalid").glob("*.json")):
+        scenario = json.loads(path.read_text(encoding="utf-8"))
+        candidate = copy.deepcopy(baseline)
+        mutation = scenario.get("mutation", {})
+        if mutation.get("action") != "set" or not set_nested_value(
+            candidate, str(mutation.get("path", "")), mutation.get("value")
+        ):
+            errors.append(f"budget.fixture-mutation: {rel(path)}")
+            continue
+        actual_codes = {item.split(":", 1)[0] for item in validate_budget_payload(candidate, rel(path))}
+        expected = set(scenario.get("expected_errors", []))
+        if not expected or not expected.issubset(actual_codes):
+            errors.append(f"budget.fixture-expected-error: {rel(path)} expected {sorted(expected)}, got {sorted(actual_codes)}")
+    return errors
+
+
+def validate_runtime_budgets() -> list[str]:
+    """Validate discovered runtime budget artifacts in root or embedded host state."""
+    errors: list[str] = []
+    roots = [ROOT / "harness-state"]
+    if (ROOT / "PACKAGE-MANIFEST.json").is_file():
+        roots.append(ROOT.parent / "harness-state")
+    seen: set[Path] = set()
+    for state_root in roots:
+        if not state_root.is_dir():
+            continue
+        for path in sorted(state_root.rglob("*.md")):
+            resolved = path.resolve()
+            if resolved in seen:
+                continue
+            seen.add(resolved)
+            text = path.read_text(encoding="utf-8")
+            if frontmatter(text).get("schema") != "harness.execution-budget/v1":
+                continue
+            try:
+                payload = extract_graph(text)
+            except json.JSONDecodeError as exc:
+                errors.append(f"budget.runtime-json: {path}: {exc}")
+                continue
+            if payload is None:
+                errors.append(f"budget.runtime-json: {path}: missing executable JSON block")
+            else:
+                errors.extend(validate_budget_payload(payload, str(path)))
     return errors
 
 
@@ -810,9 +970,9 @@ def validate_repository() -> list[str]:
             "media/agent-harness-kit-overview-en.mp4",
             "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
             "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/VALIDATION.md", "docs/DISTRIBUTION.md",
-            "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md",
+            "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
             "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/templates/PROJECT-CONTEXT.md",
-            "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/STATUS.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "tools/validate.py", "tools/package.py", "tools/install.py", "validation/test_install.py",
+            "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/STATUS.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/EXECUTION-BUDGET.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "tools/validate.py", "tools/package.py", "tools/install.py", "validation/test_install.py", "validation/budget-fixtures/valid.json",
             ".agents/skills/first-run-discovery/SKILL.md",
             ".agents/skills/graph-execution/SKILL.md",
             ".agents/skills/governed-review/SKILL.md",
@@ -1009,6 +1169,8 @@ def validate_repository() -> list[str]:
     errors.extend(validate_fixtures())
     errors.extend(validate_status_fixtures())
     errors.extend(validate_review_fixtures())
+    errors.extend(validate_budget_fixtures())
+    errors.extend(validate_runtime_budgets())
     errors.extend(validate_host_fixtures())
     errors.extend(validate_native_integration())
     profiles = (package_manifest.get("profile"),) if package_manifest else ("core", "core-learning", "full")
@@ -1049,6 +1211,7 @@ def main() -> int:
     print("Graph fixtures: valid, missing dependency, cycle, write collision, self-review, and path traversal")
     print("Status mutation fixtures: required fields, human-source provenance, and safe inspectable paths")
     print("Review mutation fixtures: focused round-two blocker, correction-delta, and regression boundaries")
+    print("Execution budget fixtures: attempt, no-progress, context-expansion, lineage, and path ceilings")
     print("Host fixtures: namespaced adoption, missing backlink, silent omission, stale snapshot, and premature cutover")
     print("Native integration: Codex and Claude Code entrypoints, shared-core routing, safe defaults, and profile boundaries")
     print("Language boundary: README.pt-BR.md is the only Portuguese-content exception")

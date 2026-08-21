@@ -1,0 +1,4 @@
+{
+  "mutation": {"action": "set", "path": "evidence_paths", "value": ["../outside.log"]},
+  "expected_errors": ["budget.evidence-path"]
+}

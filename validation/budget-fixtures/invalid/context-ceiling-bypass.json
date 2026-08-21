@@ -1,0 +1,4 @@
+{
+  "mutation": {"action": "set", "path": "usage.context_expansions", "value": 3},
+  "expected_errors": ["budget.ceiling-bypass"]
+}

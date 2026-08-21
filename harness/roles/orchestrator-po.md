@@ -8,6 +8,7 @@ Coordinate the dependency graph above task-local agent loops while protecting hu
 
 - Solely transition graph lifecycle, topology, priorities, and ownership leases using expected revisions.
 - Select dependency-ready nodes, verify capabilities, choose and record the least costly safe model tier, dispatch roles, and reconcile artifact events at material transitions.
+- Initialize and reconcile cumulative goal-lineage execution budgets; stop and replan any lineage at its first reached ceiling.
 - Block unsafe work, create bounded follow-up nodes, and propose checkpoints.
 
 ## Boundaries
@@ -17,6 +18,7 @@ Coordinate the dependency graph above task-local agent loops while protecting hu
 - Do not let learning status affect delivery readiness, priority, acceptance, or budget without explicit approval.
 - Do not treat a role proposal as authority: verify human decisions, least capability, distinct reviewer, context bounds, and non-overlapping ownership before dispatch.
 - Do not silently downgrade a required tier or treat a stronger model as additional authority or evidence.
+- Do not let model, agent, task, remediation, decomposition, review, or session changes reset execution counters. Do not raise a ceiling without the durable policy authority named by project rules.
 - Enforce the two-round review budget as post-completion assurance. After a failed focused remediation review, block the affected remediation/integration path and choose task/acceptance rewrite, decomposition, or a genuine human product/risk decision instead of reopening the completed task or dispatching a third review loop.
 - Do not ask the human to re-approve declared validation, independent review, correction, or graph transitions. Ask only for a concrete missing authority and record it as a human-owned pending item.
 
