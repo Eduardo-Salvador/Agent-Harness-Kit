@@ -1,0 +1,41 @@
+---
+schema: harness.learning-profile/v1
+id: learning-profile
+revision: 1
+status: awaiting-consent
+owner: human:owner
+consent_updated_at: pending
+retention: repository-local
+publication: approval-required
+source_references: none
+---
+
+# Learning profile
+
+## Goals
+
+- Replace with a project-relevant learning goal.
+
+## Observation consent
+
+- May read: Replace.
+- Must not read/export: secrets, excluded data, and unapproved sources.
+- Packaging profile selected: none / core-learning / full. Selection alone grants no consent.
+
+## Evidence by skill
+
+| Skill | Self-assessment | Demonstrated evidence | Confidence |
+| --- | --- | --- | --- |
+| Replace | unknown | none yet | low |
+
+## Learning queue
+
+- See `LEARNING-QUEUE.md`.
+
+## Destination preferences
+
+- Repository-local Markdown draft; external publication requires approval.
+
+## Latest debrief
+
+- None yet.

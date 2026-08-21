@@ -1,0 +1,28 @@
+{
+  "schema": "agent-harness-kit.overview-audio/v1",
+  "updated_at": "2026-08-21",
+  "tracks": [
+    {
+      "language": "en",
+      "audio": "media/agent-harness-kit-overview-en.mp3",
+      "script": "media/overview-script-en.txt",
+      "audio_sha256": "ad0c05b49ab76413a78c7ba9f120a8298cfb0d6c3f56b1ca182836365e46f940",
+      "script_sha256": "f3851d9bbd7733f87f4a1c0b4d860b36041e4025a56984e190126a32b2105f14",
+      "voice": "en-US-EmmaMultilingualNeural",
+      "status": "refresh-required",
+      "script_synced": false,
+      "note": "Approved legacy audio is preserved; the current script adds ordered status/resume loading, capability routing, coherent change integration, and bounded review rounds."
+    },
+    {
+      "language": "pt-BR",
+      "audio": "media/agent-harness-kit-overview-pt-BR.mp3",
+      "script": "media/overview-script-pt-BR.txt",
+      "audio_sha256": "2f917089a2cd498c30be3188c6cac9c4d813335ecb371e1d44e83bee666b297b",
+      "script_sha256": "4290bf1cf0aea4e1d345cfd92b69739cb2dea0f813cf7b2c5f9370f3c6fe828f",
+      "voice": "pt-BR-FranciscaNeural",
+      "status": "refresh-required",
+      "script_synced": false,
+      "note": "Approved legacy audio is preserved; the current script adds ordered status/resume loading, capability routing, coherent change integration, and bounded review rounds."
+    }
+  ]
+}

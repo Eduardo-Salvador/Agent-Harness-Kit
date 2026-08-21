@@ -1,0 +1,4 @@
+{
+  "expected_errors": ["migration.silent-omission"],
+  "mutation": {"action": "remove", "material_id": "MAT-VERIFY"}
+}

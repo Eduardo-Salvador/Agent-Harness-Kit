@@ -1,0 +1,4 @@
+{
+  "expected_errors": ["migration.source-drift"],
+  "mutation": {"material_id": "MAT-DECISIONS", "field": "source_identity", "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+}

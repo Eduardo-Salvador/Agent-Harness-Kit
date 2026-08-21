@@ -1,0 +1,36 @@
+{
+  "schema": "agent-harness-kit.native-integration/v1",
+  "shared_context": "harness-state/PROJECT-CONTEXT.md",
+  "codex": {
+    "entrypoint": "AGENTS.md",
+    "adapter": "adapters/codex.md",
+    "core_skills": [
+      ".agents/skills/first-run-discovery/SKILL.md",
+      ".agents/skills/graph-execution/SKILL.md",
+      ".agents/skills/governed-review/SKILL.md"
+    ],
+    "learning_extension": ".agents/skills/project-learning/SKILL.md"
+  },
+  "claude": {
+    "entrypoint": "CLAUDE.md",
+    "shared_import": "@AGENTS.md",
+    "adapter": "adapters/claude.md",
+    "core_skills": [
+      ".claude/skills/first-run-discovery/SKILL.md",
+      ".claude/skills/graph-execution/SKILL.md",
+      ".claude/skills/governed-review/SKILL.md"
+    ],
+    "learning_extension": ".claude/skills/project-learning/SKILL.md",
+    "core_agents": [
+      ".claude/agents/discovery-interviewer.md",
+      ".claude/agents/task-specialist.md",
+      ".claude/agents/independent-reviewer.md"
+    ],
+    "learning_agent": ".claude/agents/learning-assessor.md"
+  },
+  "forbidden_live_configuration": [
+    ".mcp.json",
+    ".claude/settings.json",
+    ".claude/settings.local.json"
+  ]
+}

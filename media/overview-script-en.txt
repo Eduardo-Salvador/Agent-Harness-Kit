@@ -1,0 +1,51 @@
+Agent Harness Kit.
+
+Agent Harness Kit is a single, platform-agnostic development harness that helps coding agents work with durable context, clearly defined roles, dependency-aware tasks, isolated environments, independent review, and reproducible evidence.
+
+Native support for both tools is built in: Codex enters through A G E N T S dot markdown, Claude Code through CLAUDE dot markdown, and both use the same neutral core.
+
+On a new context window, resume request, or status request, the agent must read the approved project context first, the pending-work authority second, and the task graph third. It may scan more broadly only when those artifacts reveal a concrete gap or the user explicitly requests an audit.
+
+To control cost without silently reducing quality, tasks are routed by capability. Economical models are limited to narrow mechanical work with deterministic checks. Balanced models are the normal default for bounded implementation, tests, documentation, and inspection. Frontier models are reserved for architecture, security, brainstorming, difficult integration, harness evolution, and repeated failure. Model choice never grants extra permission.
+
+It works for both new projects and mature repositories that already have Claude context, Codex instructions, agents, rules, or a custom harness. In those repositories, it does not overwrite anything immediately. It first inventories and freezes existing authorities. It then installs through staged coexistence in a separate namespace and requires human review before anything is removed or replaced. The README also links to the migration and coexistence playbooks and contracts.
+
+There are three options.
+
+Core is for development only.
+
+Core Learning adds learning based on the current project.
+
+Full also includes a separate, optional pack for studying harness engineering.
+
+All three packages are generated from the same source. Installing an option that contains learning features does not grant consent or activate anything automatically.
+
+On first use, if the project has no approved context, the agent starts an adaptive interview. It discovers what already exists and asks only for missing information. The user may also request a plain-language explanation of Agent Harness Kit and what will happen in the project, without activating any learning mode.
+
+After the interview, the user reviews the project context, selects the working mode, and approves important decisions. The system creates the task graph. Each specialist receives a bounded task and exclusive file ownership, returns evidence, and is reviewed by another agent. Only then may the orchestrator accept the work and release dependent tasks.
+
+Reviews are independent but bounded. Each task receives one risk-proportional initial review and, only when a blocking defect exists, at most one focused re-review. Optional improvements do not block acceptance. If the second review still fails, the task stops and is escalated or decomposed instead of entering a third review loop.
+
+Related microcorrections are grouped into one coherent, reversible change when they share acceptance and rollback boundaries. Changes are split only for meaningful ownership, deployment, dependency, risk, review, or rollback boundaries. Technical acceptance does not automatically authorize a commit, push, deployment, or publication.
+
+The README also explains prerequisites, validation and package generation, what works today, what is not automated yet, next steps, the MIT License, and community participation.
+
+Here are a few examples.
+
+If you want to build a platform from scratch and learn the technologies while building it, use Core Learning. The kit helps discover the product, organize context, create the task graph, and turn real project decisions into guided practice.
+
+If you already know the stack and only want more organized and verifiable agent-assisted development, use Core.
+
+If your repository already has Claude context, Codex instructions, or a custom harness, the kit can enter through coexistence. It preserves what already exists, records the source of every material item, and allows cutover only after human review.
+
+Agents are editable as well. During discovery, the kit identifies the specialties the project needs and helps adapt or create roles, responsibilities, tools, and review criteria. You can customize the team without changing the harness core, provided that authority boundaries and verification remain explicit.
+
+Tools include native agent capabilities, MCP servers, skills, scripts, hooks, and integrations. Discovery identifies which capabilities are actually needed, which are already available, and which require installation or authorization. The kit never assumes access that has not been confirmed.
+
+Users may also define business, security, architecture, style, and path-scoped rules. The harness organizes those rules in a dedicated area, routes each rule only to relevant agents and tasks, and preserves rules that already exist in the project.
+
+If your goal is to study harness engineering itself, use Full and open the separate learning pack without loading that material into operational project work.
+
+Today, Agent Harness Kit already provides the operating structure, contracts, agents, templates, playbooks, capability-based model routing, coherent change integration, validation, and packaging. It is not yet a standalone program that automatically dispatches agents, creates worktrees, and integrates branches on every platform.
+
+The project uses the MIT License and is open to the community.

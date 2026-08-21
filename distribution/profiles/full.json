@@ -1,0 +1,9 @@
+{
+  "profile": "full",
+  "project": "agent-harness-kit",
+  "project_learning_activation": "not-activated",
+  "description": "Development Core, project learning, and Harness Engineering Learning Pack",
+  "extends": "core-learning",
+  "include": ["learning-pack/**"],
+  "exclude": []
+}

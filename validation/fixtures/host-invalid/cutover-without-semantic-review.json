@@ -1,0 +1,4 @@
+{
+  "expected_errors": ["migration.cutover-authority", "migration.cutover-semantic-review"],
+  "header_mutation": {"status": "cutover-approved", "cutover_authorized_by": "none"}
+}

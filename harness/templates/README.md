@@ -1,0 +1,22 @@
+# Operational templates
+
+Copy these templates into the runtime state location selected by the project. Phase 2 examples use `examples/*/state/`; the permanent runtime location remains an open decision.
+
+| Template | Authority that updates instances |
+| --- | --- |
+| [Project context](PROJECT-CONTEXT.md) | Discovery drafts; human approves |
+| [Task graph](TASK-GRAPH.md) | Orchestrator only |
+| [Task brief](TASK.md) | Orchestrator; implementer updates attempt status only |
+| [Handoff](HANDOFF.md) | Assigned implementer |
+| [Review result](REVIEW.md) | Independent reviewer; one initial review plus at most one focused re-review |
+| [Decision](DECISION.md) | Proposer drafts; named authority decides |
+| [Migration manifest](MIGRATION-MANIFEST.md) | Adoption lead inventories; humans approve semantics/cutover |
+| [Coexistence](COEXISTENCE.md) | Existing-harness owner + project owner |
+| [Adapter binding](ADAPTER-BINDING.md) | Adapter maintainer; existing authority remains referenced |
+| [Capability manifest](CAPABILITY-MANIFEST.md) | Discovery inventories; human policy approves consequential access |
+| [Rules map](RULES-MAP.md) | Human-approved durable rules, scoped through progressive disclosure |
+| [Model routing](MODEL-ROUTING.md) | Humans approve tier policy; adapters maintain current model mappings; orchestrator records dispatch reasons |
+| Learning profile (`LEARNING-PROFILE.md`, `core-learning`/`full`) | User/learning subsystem under consent policy |
+| Learning queue (`LEARNING-QUEUE.md`, `core-learning`/`full`) | Learning subsystem; user controls priorities |
+
+Keep YAML scalar values concrete, retain required headings, and replace the task graph's JSON block with valid JSON. Run the validator after copying.

@@ -1,0 +1,7 @@
+{
+  "expected_errors": ["graph.cycle"],
+  "nodes": [
+    {"id": "TASK-A", "goal": "A", "depends_on": ["TASK-B"], "status": "pending", "assignee": "unassigned", "reviewer": "unassigned", "write_set": ["a/**"], "checkpoint": null, "task_brief": "A.md"},
+    {"id": "TASK-B", "goal": "B", "depends_on": ["TASK-A"], "status": "pending", "assignee": "unassigned", "reviewer": "unassigned", "write_set": ["b/**"], "checkpoint": null, "task_brief": "B.md"}
+  ]
+}

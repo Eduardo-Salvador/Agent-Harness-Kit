@@ -1,0 +1,38 @@
+{
+  "expected_errors": [],
+  "nodes": [
+    {
+      "id": "TASK-A",
+      "goal": "Build component A",
+      "depends_on": [],
+      "status": "ready",
+      "assignee": "agent:a",
+      "reviewer": "agent:reviewer-a",
+      "write_set": ["src/a/**"],
+      "checkpoint": null,
+      "task_brief": "tasks/TASK-A.md"
+    },
+    {
+      "id": "TASK-B",
+      "goal": "Build component B",
+      "depends_on": [],
+      "status": "ready",
+      "assignee": "agent:b",
+      "reviewer": "agent:reviewer-b",
+      "write_set": ["src/b/**"],
+      "checkpoint": null,
+      "task_brief": "tasks/TASK-B.md"
+    },
+    {
+      "id": "TASK-C",
+      "goal": "Integrate components",
+      "depends_on": ["TASK-A", "TASK-B"],
+      "status": "pending",
+      "assignee": "unassigned",
+      "reviewer": "unassigned",
+      "write_set": ["src/integration/**"],
+      "checkpoint": null,
+      "task_brief": "tasks/TASK-C.md"
+    }
+  ]
+}

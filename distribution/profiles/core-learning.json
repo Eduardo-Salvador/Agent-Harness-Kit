@@ -1,0 +1,15 @@
+{
+  "profile": "core-learning",
+  "project": "agent-harness-kit",
+  "project_learning_activation": "not-activated",
+  "description": "Development Core plus project-specific learning",
+  "extends": "core",
+  "include": [
+    "harness/roles/learning-assessor.md", "harness/roles/learning-debriefer-publisher.md",
+    "harness/templates/LEARNING-PROFILE.md", "harness/templates/LEARNING-QUEUE.md",
+    "harness/playbooks/learning-capture-publication.md",
+    "examples/development-plus-project-learning/**",
+    ".agents/skills/project-learning/**", ".claude/skills/project-learning/**", ".claude/agents/learning-assessor.md"
+  ],
+  "exclude": ["learning-pack/**"]
+}

@@ -1,0 +1,51 @@
+Agent Harness Kit.
+
+O Agent Harness Kit é um único harness de desenvolvimento, independente de plataforma, que ajuda agentes a desenvolver software com contexto durável, papéis bem definidos, tarefas encadeadas, ambientes isolados, revisão independente e evidências reproduzíveis.
+
+O suporte nativo às duas ferramentas já vem incluído: o Codex entra por A G E N T S ponto markdown, o Claude Code por CLAUDE ponto markdown, e ambos usam o mesmo núcleo neutro.
+
+Em uma nova janela de contexto, em pedidos de retomada ou em pedidos de status, o agente deve ler primeiro o contexto aprovado, depois a autoridade de pendências e, por último, o grafo de tarefas. Uma varredura mais ampla só pode acontecer quando esses artefatos revelarem uma lacuna concreta ou quando o usuário pedir uma auditoria.
+
+Para controlar o custo sem reduzir a qualidade de forma silenciosa, as tarefas são roteadas por capacidade. Modelos econômicos ficam limitados a trabalho mecânico e verificável. Modelos balanceados são o padrão para implementação delimitada, testes, documentação e inspeção. Modelos avançados ficam reservados para arquitetura, segurança, brainstorming, integração difícil, evolução do harness e falhas repetidas. A escolha do modelo nunca concede permissões adicionais.
+
+Ele serve tanto para projetos novos quanto para repositórios maduros que já têm contexto do Claude, instruções do Codex, agentes, regras e até um harness próprio. Nesses casos, não sobrescreve nada de imediato. Primeiro, faz um inventário e congela as autoridades existentes. Depois, instala por coexistência gradual em um espaço separado e pede revisão humana antes de qualquer remoção ou substituição. O README também aponta para o playbook e para os contratos de migração e coexistência.
+
+Existem três opções.
+
+Core é somente desenvolvimento.
+
+Core Learning acrescenta aprendizagem baseada no projeto.
+
+Full também traz um pacote opcional e separado para estudar engenharia de harness.
+
+São três pacotes gerados do mesmo código. Instalar uma opção com aprendizagem não concede consentimento nem inicia nada automaticamente.
+
+No primeiro uso, se não houver contexto aprovado, o agente inicia uma entrevista adaptativa. Ele identifica o que já existe e pergunta somente o que falta. A pessoa também pode pedir uma explicação simples sobre o Agent Harness Kit e sobre o que acontecerá no projeto, sem ativar nenhum modo de estudo.
+
+Depois da entrevista, o usuário revisa o contexto, escolhe o modo de trabalho e aprova as decisões importantes. O sistema cria o grafo de tarefas. Cada especialista recebe uma tarefa delimitada e arquivos exclusivos, entrega evidências, outro agente revisa e somente então o orquestrador pode aceitar o trabalho e liberar as próximas tarefas.
+
+As reviews são independentes, mas limitadas. Cada tarefa recebe uma revisão inicial proporcional ao risco e, somente quando houver um defeito bloqueante, no máximo uma re-revisão focada. Melhorias opcionais não bloqueiam a aceitação. Se a segunda revisão ainda falhar, a tarefa para e é escalada ou decomposta, em vez de entrar em um terceiro loop.
+
+Microcorreções relacionadas são agrupadas em uma mudança coerente e reversível quando compartilham os mesmos limites de aceitação e rollback. As mudanças são separadas somente quando há uma fronteira relevante de propriedade, implantação, dependência, risco, revisão ou rollback. A aceitação técnica não autoriza automaticamente commit, push, deploy ou publicação.
+
+O README também cobre os pré-requisitos, como validar e gerar os pacotes, o que já funciona hoje, o que ainda não é automático, os próximos passos, a licença MIT e a abertura à comunidade.
+
+Veja alguns exemplos.
+
+Se você quer desenvolver uma plataforma do zero e aprender as tecnologias enquanto constrói, pode usar o Core Learning. O kit ajuda a descobrir o produto, organizar o contexto, criar o grafo de tarefas e transformar as decisões reais do projeto em prática guiada.
+
+Se você já domina a stack e quer somente desenvolver com agentes de forma mais organizada e verificável, pode usar o Core.
+
+Se o seu repositório já tem contexto do Claude, instruções do Codex ou um harness próprio, o kit pode entrar por coexistência. Ele preserva o que já existe, registra a origem de cada informação e só permite a transição depois de uma revisão humana.
+
+Os agentes também são editáveis. Durante a entrevista, o kit identifica as especialidades que o projeto precisa e ajuda a adaptar ou criar papéis, responsabilidades, ferramentas e critérios de revisão. Você pode personalizar esse time sem alterar o núcleo do harness, desde que os limites de autoridade e as verificações continuem explícitos.
+
+Quando falamos em ferramentas, isso inclui recursos nativos do agente, servidores MCP, skills, scripts, hooks e integrações. A entrevista identifica quais capacidades o projeto realmente precisa, quais já estão disponíveis e quais dependem de instalação ou autorização. O kit nunca presume acesso que não foi confirmado.
+
+O usuário também pode definir regras de negócio, segurança, arquitetura, estilo e convenções específicas para determinados caminhos. O harness organiza essas regras em uma área própria, conecta cada regra aos agentes e tarefas relevantes e preserva regras que já existam no projeto.
+
+Se o seu objetivo é estudar a própria engenharia de harness, pode usar o perfil Full e abrir o pacote educacional separado, sem carregar esse material no trabalho operacional do projeto.
+
+Hoje, o Agent Harness Kit já oferece a estrutura operacional, os contratos, os agentes, os templates, os playbooks, o roteamento de modelos por capacidade, a integração coerente de mudanças, a validação e o empacotamento. Ele ainda não é um programa independente que, sozinho, dispara agentes, cria worktrees e integra branches em qualquer plataforma.
+
+O projeto usa a licença MIT e está aberto à comunidade.

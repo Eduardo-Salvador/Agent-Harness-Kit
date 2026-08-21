@@ -1,0 +1,832 @@
+#!/usr/bin/env python3
+"""Dependency-free structural validator for Agent Harness Kit."""
+
+from __future__ import annotations
+
+import json
+import argparse
+import copy
+import hashlib
+import re
+import subprocess
+import sys
+from pathlib import Path, PurePosixPath
+from urllib.parse import unquote
+
+
+ROOT = Path(__file__).resolve().parents[1]
+EXCLUDED_PARTS = {"work", "outputs", "__pycache__"}
+READY_STATES = {"ready", "active"}
+NODE_FIELDS = {
+    "id", "goal", "depends_on", "status", "assignee", "reviewer",
+    "write_set", "checkpoint", "task_brief",
+}
+
+REQUIRED_FILES = [
+    "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "LICENSE", "media/agent-harness-kit-overview-en.mp3", "media/agent-harness-kit-overview-pt-BR.mp3",
+    "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
+    "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md",
+    "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md",
+    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md",
+    "docs/contracts/REVIEW.md",
+    "adapters/README.md", "adapters/generic.md", "adapters/codex.md", "adapters/claude.md",
+    "harness/roles/README.md", "harness/roles/discovery-interviewer.md",
+    "harness/roles/orchestrator-po.md", "harness/roles/task-decomposer.md",
+    "harness/roles/generic-specialist.md", "harness/roles/reviewer-integrator.md",
+    "harness/roles/learning-assessor.md", "harness/roles/learning-debriefer-publisher.md",
+    "harness/playbooks/README.md", "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md",
+    "harness/playbooks/discovery-to-graph.md", "harness/playbooks/task-dispatch.md",
+    "harness/playbooks/contract-changes.md", "harness/playbooks/parallel-execution.md",
+    "harness/playbooks/review-integration.md", "harness/playbooks/model-routing.md", "harness/playbooks/learning-capture-publication.md",
+    "harness/templates/README.md", "harness/templates/PROJECT-CONTEXT.md",
+    "harness/templates/TASK-GRAPH.md", "harness/templates/TASK.md",
+    "harness/templates/HANDOFF.md", "harness/templates/REVIEW.md",
+    "harness/templates/DECISION.md", "harness/templates/LEARNING-PROFILE.md",
+    "harness/templates/LEARNING-QUEUE.md", "harness/templates/MODEL-ROUTING.md",
+    "examples/development-only/README.md",
+    "examples/development-plus-project-learning/README.md",
+    "learning-pack/README.md", "learning-pack/01-HARNESS-BOUNDARIES.md",
+    "learning-pack/02-SEVEN-COMPONENTS.md", "learning-pack/03-AGENT-LOOPS.md",
+    "learning-pack/04-MEMORY.md", "learning-pack/05-CONTEXT-ENGINEERING.md",
+    "learning-pack/06-ISOLATION.md", "learning-pack/07-ASSURANCE.md",
+    "learning-pack/08-ORCHESTRATION.md",
+    "validation/fixtures/valid/task-graph.json",
+    "validation/fixtures/invalid/cycle.json",
+    "validation/fixtures/invalid/missing-dependency.json",
+    "validation/fixtures/invalid/write-collision.json",
+    "VERSION", "docs/DISTRIBUTION.md", "docs/PUBLICATION-READINESS.md", "tools/package.py",
+    "distribution/project.json", "distribution/profiles/core.json", "distribution/profiles/core-learning.json", "distribution/profiles/full.json",
+    "docs/contracts/MIGRATION-MANIFEST.md", "docs/contracts/COEXISTENCE.md", "docs/contracts/ADAPTER-BINDING.md",
+    "harness/templates/MIGRATION-MANIFEST.md", "harness/templates/COEXISTENCE.md", "harness/templates/ADAPTER-BINDING.md",
+    "harness/playbooks/mature-harness-adoption.md",
+    "validation/host-fixtures/mature-existing/harness-adoption/MIGRATION-MANIFEST.md",
+    "validation/fixtures/host-invalid/missing-backlink.json", "validation/fixtures/host-invalid/stale-snapshot.json",
+    "validation/fixtures/host-invalid/silent-omission.json", "validation/fixtures/host-invalid/cutover-without-semantic-review.json",
+    "docs/contracts/CAPABILITY-MANIFEST.md", "docs/contracts/RULES-MAP.md",
+    "harness/templates/CAPABILITY-MANIFEST.md", "harness/templates/RULES-MAP.md",
+    "validation/native-integration.json",
+    ".agents/skills/first-run-discovery/SKILL.md", ".agents/skills/graph-execution/SKILL.md",
+    ".agents/skills/governed-review/SKILL.md", ".agents/skills/project-learning/SKILL.md",
+    ".claude/skills/first-run-discovery/SKILL.md", ".claude/skills/graph-execution/SKILL.md",
+    ".claude/skills/governed-review/SKILL.md", ".claude/skills/project-learning/SKILL.md",
+    ".claude/agents/discovery-interviewer.md", ".claude/agents/task-specialist.md",
+    ".claude/agents/independent-reviewer.md", ".claude/agents/learning-assessor.md",
+]
+
+TEMPLATE_RULES = {
+    "PROJECT-CONTEXT.md": (
+        {"schema", "id", "revision", "status", "mode", "updated_at", "approved_by", "supersedes", "discovery_snapshot", "source_references", "capability_manifest", "rules_map"},
+        {"Project state", "Intent", "Scope", "Success measures", "Constraints", "Rules and capabilities", "Assumptions and unknowns", "Verification environment", "References"},
+    ),
+    "TASK-GRAPH.md": (
+        {"schema", "id", "revision", "status", "project_context", "updated_at", "updated_by", "discovery_snapshot", "source_references"},
+        {"Transition log"},
+    ),
+    "TASK.md": (
+        {"schema", "id", "graph", "revision", "status", "assigned_to", "reviewer", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "review_profile", "max_review_rounds"},
+        {"Outcome", "Context to load", "Owned paths", "Constraints", "Rules to load", "Required capabilities", "Acceptance criteria", "Verification", "Exit"},
+    ),
+    "HANDOFF.md": (
+        {"schema", "id", "task", "attempt", "status", "author", "created_at", "model_tier_used", "model_route_changes"},
+        {"Result", "Changes", "Change unit and authority", "Acceptance evidence", "Verification run", "Discoveries and risks", "Routing and authority", "Review request"},
+    ),
+    "REVIEW.md": (
+        {"schema", "id", "task", "handoff", "revision", "round", "scope", "prior_review", "status", "reviewer", "verdict", "created_at"},
+        {"Independence", "Review profile and scope", "Criterion verdicts", "Findings", "Integration recommendation", "Verification", "Next review boundary"},
+    ),
+    "DECISION.md": (
+        {"schema", "id", "revision", "status", "consequence", "decided_by", "decided_at", "supersedes", "source_references"},
+        {"Context", "Decision", "Options considered", "Consequences", "Affected artifacts", "Provenance"},
+    ),
+    "LEARNING-PROFILE.md": (
+        {"schema", "id", "revision", "status", "owner", "consent_updated_at", "retention", "publication", "source_references"},
+        {"Goals", "Observation consent", "Evidence by skill", "Learning queue", "Destination preferences", "Latest debrief"},
+    ),
+    "LEARNING-QUEUE.md": (
+        {"schema", "id", "revision", "status", "profile", "updated_at", "updated_by"},
+        {"Non-interference record", "Publication status"},
+    ),
+    "MIGRATION-MANIFEST.md": (
+        {"schema", "id", "revision", "status", "source_root", "snapshot_revision", "snapshot_created_at", "semantic_review", "cutover_authorized_by"},
+        {"Coverage statement", "Semantic review"},
+    ),
+    "COEXISTENCE.md": (
+        {"schema", "id", "revision", "status", "updated_at", "approved_by"},
+        {"Existing authorities", "Namespaced kit placement", "Precedence and conflicts", "Exclusions and sensitive paths", "Cutover gate", "Source references"},
+    ),
+    "ADAPTER-BINDING.md": (
+        {"schema", "id", "revision", "adapter", "status", "reviewer"},
+        {"Existing source reference", "Neutral mapping", "Precedence and permissions", "Degradation", "Provenance backlinks"},
+    ),
+    "CAPABILITY-MANIFEST.md": (
+        {"schema", "id", "revision", "status", "updated_at", "approved_by"},
+        {"Inventory notes", "Change gate"},
+    ),
+    "RULES-MAP.md": (
+        {"schema", "id", "revision", "status", "updated_at", "approved_by"},
+        {"Progressive disclosure", "Temporary context boundary", "Mature-adoption provenance"},
+    ),
+    "MODEL-ROUTING.md": (
+        {"schema", "id", "revision", "status", "default_tier", "updated_at", "approved_by", "decision"},
+        {"Tiers", "Escalation triggers", "Adapter mappings", "Dispatch record", "Context efficiency", "Authority boundary"},
+    ),
+}
+
+PORTUGUESE_MARKERS = re.compile(
+    r"\b(pendências|decisões|usuários|aprendizado|entrega|arquitetura|"
+    r"próxima fase|nome provisório|estado atual|o que é|princípios|"
+    r"decisão|verificação|contexto aprovado)\b",
+    re.IGNORECASE,
+)
+
+
+def rel(path: Path) -> str:
+    return path.relative_to(ROOT).as_posix()
+
+
+def markdown_files() -> list[Path]:
+    return sorted(
+        p for p in ROOT.rglob("*.md")
+        if not any(part in EXCLUDED_PARTS for part in p.relative_to(ROOT).parts)
+    )
+
+
+def frontmatter(text: str) -> dict[str, str]:
+    if not text.startswith("---\n"):
+        return {}
+    end = text.find("\n---\n", 4)
+    if end < 0:
+        return {}
+    result: dict[str, str] = {}
+    for line in text[4:end].splitlines():
+        if not line.strip() or line.lstrip().startswith("#") or ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        result[key.strip()] = value.strip()
+    return result
+
+
+def headings(text: str) -> set[str]:
+    return {m.group(1).strip() for m in re.finditer(r"^#{1,6}\s+(.+?)\s*$", text, re.MULTILINE)}
+
+
+def slug(value: str) -> str:
+    value = re.sub(r"[^\w\- ]", "", value.lower(), flags=re.UNICODE)
+    return re.sub(r"\s+", "-", value.strip())
+
+
+def validate_markdown(path: Path) -> list[str]:
+    errors: list[str] = []
+    text = path.read_text(encoding="utf-8")
+    if len(re.findall(r"^```", text, re.MULTILINE)) % 2:
+        errors.append(f"markdown.fence: {rel(path)} has unbalanced fenced-code markers")
+    for match in re.finditer(r"\[[^\]]+\]\(([^)]+)\)", text):
+        target = unquote(match.group(1).strip())
+        if re.match(r"^(https?://|mailto:)", target):
+            continue
+        path_part, _, fragment = target.partition("#")
+        resolved = path if not path_part else (path.parent / path_part).resolve()
+        try:
+            resolved.relative_to(ROOT)
+        except ValueError:
+            errors.append(f"markdown.link-scope: {rel(path)} -> {target}")
+            continue
+        if not resolved.exists():
+            errors.append(f"markdown.broken-link: {rel(path)} -> {target}")
+            continue
+        if fragment and resolved.suffix.lower() == ".md":
+            target_headings = {slug(h) for h in headings(resolved.read_text(encoding="utf-8"))}
+            if fragment.lower() not in target_headings:
+                errors.append(f"markdown.missing-fragment: {rel(path)} -> {target}")
+    if path.name != "README.pt-BR.md":
+        scrubbed = text.replace("[Português (Brasil)](README.pt-BR.md)", "")
+        marker = PORTUGUESE_MARKERS.search(scrubbed)
+        if marker:
+            errors.append(f"language.portuguese-marker: {rel(path)} contains '{marker.group(0)}'")
+    return errors
+
+
+def extract_graph(text: str) -> dict | None:
+    match = re.search(r"```json\s*\n(.*?)\n```", text, re.DOTALL)
+    if not match:
+        return None
+    return json.loads(match.group(1))
+
+
+def normalize_owned_path(raw: str) -> tuple[str | None, str | None]:
+    value = raw.replace("\\", "/").strip()
+    if value.endswith("/**"):
+        value = value[:-3]
+    if not value or value.startswith("/") or re.match(r"^[A-Za-z]:", value):
+        return None, "absolute-or-empty"
+    parts = PurePosixPath(value).parts
+    if ".." in parts:
+        return None, "parent-segment"
+    wildcard_at = next((i for i, part in enumerate(parts) if "*" in part or "?" in part), None)
+    if wildcard_at is not None:
+        parts = parts[:wildcard_at]
+    normalized = "/".join(part for part in parts if part not in {"", "."}).casefold().rstrip("/")
+    return normalized or None, None if normalized else "empty-prefix"
+
+
+def paths_collide(left: str, right: str) -> bool:
+    return left == right or left.startswith(right + "/") or right.startswith(left + "/")
+
+
+def validate_graph(data: dict, source: str) -> list[str]:
+    errors: list[str] = []
+    nodes = data.get("nodes")
+    if not isinstance(nodes, list):
+        return [f"graph.shape: {source} has no nodes array"]
+    by_id: dict[str, dict] = {}
+    for index, node in enumerate(nodes):
+        if not isinstance(node, dict):
+            errors.append(f"graph.node-shape: {source} node {index} is not an object")
+            continue
+        missing = NODE_FIELDS - set(node)
+        if missing:
+            errors.append(f"graph.node-fields: {source} {node.get('id', index)} missing {sorted(missing)}")
+        node_id = node.get("id")
+        if not isinstance(node_id, str) or not node_id:
+            errors.append(f"graph.node-id: {source} node {index} has invalid id")
+        elif node_id in by_id:
+            errors.append(f"graph.duplicate-id: {source} repeats {node_id}")
+        else:
+            by_id[node_id] = node
+    for node_id, node in by_id.items():
+        dependencies = node.get("depends_on", [])
+        if not isinstance(dependencies, list):
+            errors.append(f"graph.dependencies-shape: {source} {node_id}")
+            continue
+        for dependency in dependencies:
+            if dependency not in by_id:
+                errors.append(f"graph.missing-dependency: {source} {node_id} -> {dependency}")
+        write_set = node.get("write_set", [])
+        if not isinstance(write_set, list) or not write_set:
+            errors.append(f"graph.write-set: {source} {node_id} must own at least one path")
+        for owned in write_set if isinstance(write_set, list) else []:
+            normalized, reason = normalize_owned_path(str(owned))
+            if reason:
+                errors.append(f"graph.invalid-path: {source} {node_id} {owned!r} ({reason})")
+        if node.get("assignee") not in {None, "unassigned"} and node.get("assignee") == node.get("reviewer"):
+            errors.append(f"graph.reviewer-independence: {source} {node_id}")
+
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(node_id: str) -> bool:
+        if node_id in visiting:
+            return True
+        if node_id in visited:
+            return False
+        visiting.add(node_id)
+        for dependency in by_id[node_id].get("depends_on", []):
+            if dependency in by_id and visit(dependency):
+                return True
+        visiting.remove(node_id)
+        visited.add(node_id)
+        return False
+
+    if any(visit(node_id) for node_id in by_id if node_id not in visited):
+        errors.append(f"graph.cycle: {source}")
+
+    concurrent = [node for node in by_id.values() if node.get("status") in READY_STATES]
+    for index, left in enumerate(concurrent):
+        left_paths = [normalize_owned_path(str(p))[0] for p in left.get("write_set", [])]
+        for right in concurrent[index + 1:]:
+            right_paths = [normalize_owned_path(str(p))[0] for p in right.get("write_set", [])]
+            if any(a and b and paths_collide(a, b) for a in left_paths for b in right_paths):
+                errors.append(f"graph.write-collision: {source} {left['id']} <> {right['id']}")
+    return errors
+
+
+def validate_templates() -> list[str]:
+    errors: list[str] = []
+    template_root = ROOT / "harness" / "templates"
+    for name, (required_header, required_sections) in TEMPLATE_RULES.items():
+        path = template_root / name
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        missing_header = required_header - set(frontmatter(text))
+        missing_sections = required_sections - headings(text)
+        if missing_header:
+            errors.append(f"template.header: {rel(path)} missing {sorted(missing_header)}")
+        if missing_sections:
+            errors.append(f"template.section: {rel(path)} missing {sorted(missing_sections)}")
+    return errors
+
+
+def validate_fixtures() -> list[str]:
+    errors: list[str] = []
+    fixture_root = ROOT / "validation" / "fixtures"
+    for path in sorted(fixture_root.rglob("*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        actual = validate_graph(data, rel(path))
+        actual_codes = {item.split(":", 1)[0] for item in actual}
+        expected = set(data.get("expected_errors", []))
+        if path.parent.name == "valid" and actual:
+            errors.append(f"fixture.valid-failed: {rel(path)} -> {actual}")
+        elif path.parent.name == "invalid" and not expected:
+            errors.append(f"fixture.no-expectation: {rel(path)}")
+        elif path.parent.name == "invalid" and not expected.issubset(actual_codes):
+            errors.append(f"fixture.expected-error: {rel(path)} expected {sorted(expected)}, got {sorted(actual_codes)}")
+    return errors
+
+
+MIGRATION_CLASSIFICATIONS = {
+    "migrated", "retained-as-authoritative-reference",
+    "intentionally-duplicated-during-transition", "unresolved",
+}
+MATERIAL_TYPES = {
+    "rule", "decision", "constraint", "pending-item", "role-responsibility",
+    "learning-reference", "verification-source", "generated-source-exclusion",
+    "secret-boundary",
+}
+
+
+def safe_host_path(host_root: Path, relative: str) -> Path | None:
+    candidate = (host_root / relative).resolve()
+    try:
+        candidate.relative_to(host_root.resolve())
+    except ValueError:
+        return None
+    return candidate
+
+
+def file_identity(path: Path) -> str:
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def validate_migration_data(host_root: Path, header: dict[str, str], data: dict, source: str) -> list[str]:
+    errors: list[str] = []
+    required_header = {
+        "schema", "id", "revision", "status", "source_root", "snapshot_revision",
+        "snapshot_created_at", "semantic_review", "cutover_authorized_by",
+    }
+    if header.get("schema") != "harness.migration-manifest/v1":
+        errors.append(f"migration.schema: {source}")
+    missing_header = required_header - set(header)
+    if missing_header:
+        errors.append(f"migration.header: {source} missing {sorted(missing_header)}")
+    selectors = data.get("source_selectors")
+    items = data.get("items")
+    if not isinstance(selectors, list) or not isinstance(items, list):
+        return errors + [f"migration.shape: {source}"]
+
+    covered_sources: set[str] = set()
+    item_ids: set[str] = set()
+    for item in items:
+        if not isinstance(item, dict):
+            errors.append(f"migration.item-shape: {source}")
+            continue
+        required = {
+            "material_id", "material_type", "source", "source_identity", "classification",
+            "destinations", "backlinks", "unresolved_owner", "unresolved_checkpoint",
+            "semantic_review", "reviewed_by",
+        }
+        missing = required - set(item)
+        if missing:
+            errors.append(f"migration.item-fields: {source} missing {sorted(missing)}")
+            continue
+        material_id = item["material_id"]
+        if material_id in item_ids:
+            errors.append(f"migration.duplicate-id: {source} {material_id}")
+        item_ids.add(material_id)
+        if item["material_type"] not in MATERIAL_TYPES:
+            errors.append(f"migration.material-type: {source} {material_id}")
+        if item["classification"] not in MIGRATION_CLASSIFICATIONS:
+            errors.append(f"migration.classification: {source} {material_id}")
+        if item["classification"] == "unresolved" and (not item["unresolved_owner"] or not item["unresolved_checkpoint"]):
+            errors.append(f"migration.unresolved-gate: {source} {material_id}")
+        source_path = safe_host_path(host_root, str(item["source"]))
+        if source_path is None:
+            errors.append(f"migration.path-scope: {source} {material_id}")
+            continue
+        covered_sources.add(Path(item["source"]).as_posix())
+        if not source_path.is_file():
+            errors.append(f"migration.source-missing: {source} {material_id}")
+        elif file_identity(source_path) != item["source_identity"]:
+            errors.append(f"migration.source-drift: {source} {material_id}")
+        for destination in item["destinations"]:
+            destination_path = safe_host_path(host_root, str(destination))
+            if destination_path is None or not destination_path.is_file():
+                errors.append(f"migration.destination-missing: {source} {material_id} -> {destination}")
+        for backlink in item["backlinks"]:
+            backlink_path = safe_host_path(host_root, str(backlink))
+            if backlink_path is None or not backlink_path.is_file():
+                errors.append(f"migration.backlink-missing: {source} {material_id} -> {backlink}")
+            elif str(item["source"]) not in backlink_path.read_text(encoding="utf-8"):
+                errors.append(f"migration.backlink-content: {source} {material_id} -> {backlink}")
+        if not item["destinations"] or not item["backlinks"]:
+            errors.append(f"migration.provenance: {source} {material_id}")
+        if item["semantic_review"] == "approved" and not str(item["reviewed_by"] or "").startswith("human:"):
+            errors.append(f"migration.semantic-reviewer: {source} {material_id}")
+
+    expanded_all: set[str] = set()
+    for selector in selectors:
+        if not isinstance(selector, dict) or set(selector) < {"selector", "expanded_sources"}:
+            errors.append(f"migration.selector-shape: {source}")
+            continue
+        pattern = str(selector["selector"])
+        actual = sorted(
+            path.relative_to(host_root).as_posix()
+            for path in host_root.glob(pattern) if path.is_file()
+        )
+        expected = sorted(str(path).replace("\\", "/") for path in selector["expanded_sources"])
+        if actual != expected:
+            errors.append(f"migration.selector-drift: {source} {pattern}")
+        expanded_all.update(expected)
+    omitted = expanded_all - covered_sources
+    if omitted:
+        errors.append(f"migration.silent-omission: {source} {sorted(omitted)}")
+
+    if header.get("status") == "cutover-approved":
+        if not str(header.get("cutover_authorized_by", "")).startswith("human:"):
+            errors.append(f"migration.cutover-authority: {source}")
+        for item in items:
+            if item.get("classification") in {"retained-as-authoritative-reference", "intentionally-duplicated-during-transition"}:
+                if item.get("semantic_review") != "approved" or not str(item.get("reviewed_by") or "").startswith("human:"):
+                    errors.append(f"migration.cutover-semantic-review: {source} {item.get('material_id')}")
+    return errors
+
+
+def load_migration_manifest(path: Path) -> tuple[dict[str, str], dict]:
+    text = path.read_text(encoding="utf-8")
+    data = extract_graph(text)
+    if data is None:
+        raise ValueError("missing JSON block")
+    return frontmatter(text), data
+
+
+def validate_host_integration(host_root: Path, manifest_path: Path) -> list[str]:
+    if not host_root.is_dir():
+        return [f"migration.host-root: not a directory: {host_root}"]
+    if not manifest_path.is_absolute():
+        manifest_path = host_root / manifest_path
+    if not manifest_path.is_file():
+        return [f"migration.manifest-missing: {manifest_path}"]
+    try:
+        header, data = load_migration_manifest(manifest_path)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        return [f"migration.manifest-read: {exc}"]
+    errors = validate_migration_data(host_root.resolve(), header, data, str(manifest_path))
+    context_path = host_root / "harness-state" / "PROJECT-CONTEXT.md"
+    if context_path.is_file():
+        context_header = frontmatter(context_path.read_text(encoding="utf-8"))
+        if context_header.get("status") == "approved":
+            if context_header.get("discovery_snapshot") != header.get("snapshot_revision"):
+                errors.append("migration.context-snapshot: approved context does not pin the current discovery snapshot")
+            expected_reference = f"{header.get('id')}@{header.get('revision')}"
+            if context_header.get("source_references") != expected_reference:
+                errors.append("migration.context-provenance: approved context does not pin the migration manifest")
+            if any(error.startswith(("migration.source-drift:", "migration.selector-drift:")) for error in errors):
+                errors.append("migration.approval-stale: approved context rests on a stale discovery snapshot")
+    return errors
+
+
+def validate_host_fixtures() -> list[str]:
+    errors: list[str] = []
+    host_root = ROOT / "validation" / "host-fixtures" / "mature-existing"
+    manifest_path = host_root / "harness-adoption" / "MIGRATION-MANIFEST.md"
+    valid_errors = validate_host_integration(host_root, manifest_path)
+    if valid_errors:
+        errors.append(f"fixture.host-valid-failed: {valid_errors}")
+        return errors
+    header, base_data = load_migration_manifest(manifest_path)
+    for scenario_path in sorted((ROOT / "validation" / "fixtures" / "host-invalid").glob("*.json")):
+        scenario = json.loads(scenario_path.read_text(encoding="utf-8"))
+        mutated = copy.deepcopy(base_data)
+        mutated_header = dict(header)
+        if "header_mutation" in scenario:
+            mutated_header.update(scenario["header_mutation"])
+        if "mutation" in scenario:
+            mutation = scenario["mutation"]
+            if mutation.get("action") == "remove":
+                mutated["items"] = [item for item in mutated["items"] if item["material_id"] != mutation["material_id"]]
+            else:
+                target = next(item for item in mutated["items"] if item["material_id"] == mutation["material_id"])
+                target[mutation["field"]] = mutation["value"]
+        actual = validate_migration_data(host_root, mutated_header, mutated, rel(scenario_path))
+        codes = {item.split(":", 1)[0] for item in actual}
+        expected = set(scenario["expected_errors"])
+        if not expected.issubset(codes):
+            errors.append(f"fixture.host-invalid: {rel(scenario_path)} expected {sorted(expected)}, got {sorted(codes)}")
+    return errors
+
+
+def validate_native_integration() -> list[str]:
+    errors: list[str] = []
+    fixture_path = ROOT / "validation" / "native-integration.json"
+    try:
+        fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"native.fixture: {exc}"]
+    if fixture.get("schema") != "agent-harness-kit.native-integration/v1":
+        errors.append("native.fixture-schema: validation/native-integration.json")
+
+    codex = fixture.get("codex", {})
+    claude = fixture.get("claude", {})
+    package_profile = None
+    package_path = ROOT / "PACKAGE-MANIFEST.json"
+    if package_path.is_file():
+        try:
+            package_profile = json.loads(package_path.read_text(encoding="utf-8")).get("profile")
+        except (OSError, json.JSONDecodeError):
+            pass
+    learning_declared = [] if package_profile == "core" else [
+        codex.get("learning_extension"), claude.get("learning_extension"), claude.get("learning_agent")
+    ]
+    declared = [
+        codex.get("entrypoint"), codex.get("adapter"),
+        claude.get("entrypoint"), claude.get("adapter"),
+        *learning_declared, *codex.get("core_skills", []),
+        *claude.get("core_skills", []), *claude.get("core_agents", []),
+    ]
+    for item in declared:
+        if not isinstance(item, str) or not (ROOT / item).is_file():
+            errors.append(f"native.required-file: {item!r}")
+
+    agents_path = ROOT / "AGENTS.md"
+    claude_path = ROOT / "CLAUDE.md"
+    if agents_path.is_file() and claude_path.is_file():
+        agents_text = agents_path.read_text(encoding="utf-8")
+        claude_text = claude_path.read_text(encoding="utf-8")
+        if not claude_text.startswith("@AGENTS.md\n"):
+            errors.append("native.claude-import: CLAUDE.md must start with @AGENTS.md")
+        if len(claude_text) > 1600 or len(claude_text) > len(agents_text) * 0.65:
+            errors.append("native.context-duplication: CLAUDE.md must remain a thin compatibility entry")
+        shared = str(fixture.get("shared_context", ""))
+        if shared not in agents_text or shared not in (ROOT / "adapters" / "claude.md").read_text(encoding="utf-8"):
+            errors.append("native.shared-core: both routes must name the neutral project-context path")
+        if ".agents/skills/" not in agents_text or "adapters/codex.md" not in agents_text:
+            errors.append("native.codex-routing: AGENTS.md does not route Codex")
+        if ".claude/skills/" not in claude_text or "adapters/claude.md" not in claude_text:
+            errors.append("native.claude-routing: CLAUDE.md does not route Claude Code")
+
+    bounded_review_surfaces = (
+        "AGENTS.md",
+        "CLAUDE.md",
+        "adapters/codex.md",
+        "adapters/claude.md",
+        ".agents/skills/graph-execution/SKILL.md",
+        ".claude/skills/graph-execution/SKILL.md",
+        ".agents/skills/governed-review/SKILL.md",
+        ".claude/skills/governed-review/SKILL.md",
+        ".claude/agents/independent-reviewer.md",
+        "harness/roles/orchestrator-po.md",
+        "harness/roles/reviewer-integrator.md",
+    )
+    for item in bounded_review_surfaces:
+        path = ROOT / item
+        if path.is_file():
+            text = path.read_text(encoding="utf-8")
+            if "REVIEW-ROUNDS.md" not in text and "max_review_rounds" not in text and "two-round review budget" not in text and "bounded review profile" not in text:
+                errors.append(f"native.bounded-review-routing: {item} does not route to the shared review budget")
+
+    skill_paths = [ROOT / item for item in declared if isinstance(item, str) and item.endswith("/SKILL.md")]
+    for path in skill_paths:
+        if not path.is_file():
+            continue
+        header = frontmatter(path.read_text(encoding="utf-8"))
+        expected_name = path.parent.name
+        if header.get("name") != expected_name or not header.get("description"):
+            errors.append(f"native.skill-frontmatter: {rel(path)}")
+
+    allowed_claude_tools = {"Read", "Grep", "Glob", "Edit", "Write"}
+    for item in claude.get("core_agents", []) + [claude.get("learning_agent")]:
+        if not isinstance(item, str) or not (ROOT / item).is_file():
+            continue
+        path = ROOT / item
+        header = frontmatter(path.read_text(encoding="utf-8"))
+        if header.get("name") != path.stem or not header.get("description") or not header.get("tools"):
+            errors.append(f"native.claude-agent-frontmatter: {rel(path)}")
+            continue
+        tools = {tool.strip() for tool in header["tools"].split(",")}
+        if not tools <= allowed_claude_tools:
+            errors.append(f"native.unsafe-agent-tools: {rel(path)} has {sorted(tools - allowed_claude_tools)}")
+
+    for item in fixture.get("forbidden_live_configuration", []):
+        if (ROOT / item).exists():
+            errors.append(f"native.unsafe-live-config: {item}")
+    for adapter in (ROOT / "adapters" / "codex.md", ROOT / "adapters" / "claude.md"):
+        if adapter.is_file() and re.search(r"\bstub\b", adapter.read_text(encoding="utf-8"), re.IGNORECASE):
+            errors.append(f"native.adapter-stub: {rel(adapter)}")
+    return errors
+
+
+def validate_repository() -> list[str]:
+    errors: list[str] = []
+    project_metadata_path = ROOT / "distribution" / "project.json"
+    project_metadata = {}
+    if project_metadata_path.exists():
+        try:
+            project_metadata = json.loads(project_metadata_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError) as exc:
+            errors.append(f"identity.metadata: {exc}")
+        else:
+            expected_identity = {
+                "name": "Agent Harness Kit",
+                "slug": "agent-harness-kit",
+                "version_file": "VERSION",
+                "license": "MIT",
+                "copyright": "2026 Agent Harness Kit contributors",
+            }
+            for key, value in expected_identity.items():
+                if project_metadata.get(key) != value:
+                    errors.append(f"identity.metadata: {key} must be {value!r}")
+    package_manifest_path = ROOT / "PACKAGE-MANIFEST.json"
+    package_manifest = None
+    if package_manifest_path.exists():
+        try:
+            package_manifest = json.loads(package_manifest_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError) as exc:
+            errors.append(f"distribution.manifest: {exc}")
+        else:
+            if package_manifest.get("name") != "Agent Harness Kit" or package_manifest.get("slug") != "agent-harness-kit":
+                errors.append("distribution.manifest-identity: wrong name or slug")
+            if package_manifest.get("project_learning_activation") != "not-activated":
+                errors.append("distribution.learning-activation: package selection must not activate learning")
+    required_files = REQUIRED_FILES
+    if package_manifest:
+        required_files = [
+            "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "LICENSE", "VERSION",
+            "media/agent-harness-kit-overview-pt-BR.mp3",
+            "media/agent-harness-kit-overview-en.mp3",
+            "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
+            "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/VALIDATION.md", "docs/DISTRIBUTION.md",
+            "docs/MODEL-ROUTING.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/contracts/REVIEW.md",
+            "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md", "harness/playbooks/model-routing.md", "harness/templates/PROJECT-CONTEXT.md",
+            "harness/templates/TASK-GRAPH.md", "harness/templates/MODEL-ROUTING.md", "tools/validate.py", "tools/package.py",
+            ".agents/skills/first-run-discovery/SKILL.md",
+            ".agents/skills/graph-execution/SKILL.md",
+            ".agents/skills/governed-review/SKILL.md",
+            ".claude/skills/first-run-discovery/SKILL.md",
+            ".claude/skills/graph-execution/SKILL.md",
+            ".claude/skills/governed-review/SKILL.md",
+            ".claude/agents/discovery-interviewer.md",
+            ".claude/agents/task-specialist.md",
+            ".claude/agents/independent-reviewer.md",
+            "validation/native-integration.json",
+        ]
+        for entry in package_manifest.get("files", []):
+            path = entry.get("path") if isinstance(entry, dict) else None
+            if not path or not (ROOT / path).is_file():
+                errors.append(f"distribution.manifest-file: missing {path!r}")
+    for required in required_files:
+        if not (ROOT / required).is_file():
+            errors.append(f"repository.required-file: missing {required}")
+    if (ROOT / "PENDENCIAS.md").exists():
+        errors.append("language.filename: PENDENCIAS.md must remain OPEN-DECISIONS.md")
+    license_path = ROOT / "LICENSE"
+    if license_path.exists():
+        license_text = license_path.read_text(encoding="utf-8")
+        required_license_text = (
+            "MIT License",
+            "Copyright (c) 2026 Agent Harness Kit contributors",
+            "Permission is hereby granted, free of charge",
+            'THE SOFTWARE IS PROVIDED "AS IS"',
+        )
+        for phrase in required_license_text:
+            if phrase not in license_text:
+                errors.append(f"license.content: LICENSE missing {phrase!r}")
+    for audio_name in ("agent-harness-kit-overview-en.mp3", "agent-harness-kit-overview-pt-BR.mp3"):
+        audio_path = ROOT / "media" / audio_name
+        if audio_path.exists():
+            audio_bytes = audio_path.read_bytes()
+            if len(audio_bytes) < 1024 or not (audio_bytes.startswith(b"ID3") or audio_bytes[:1] == b"\xff"):
+                errors.append(f"media.audio: {audio_name} is empty or not recognizable as MP3")
+    audio_manifest_path = ROOT / "media" / "overview-audio-manifest.json"
+    if audio_manifest_path.is_file():
+        try:
+            audio_manifest = json.loads(audio_manifest_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError) as exc:
+            errors.append(f"media.manifest: {exc}")
+        else:
+            if audio_manifest.get("schema") != "agent-harness-kit.overview-audio/v1":
+                errors.append("media.manifest-schema: overview-audio-manifest.json")
+            tracks = audio_manifest.get("tracks", [])
+            if not isinstance(tracks, list) or {track.get("language") for track in tracks if isinstance(track, dict)} != {"en", "pt-BR"}:
+                errors.append("media.manifest-languages: expected en and pt-BR")
+            for track in tracks if isinstance(tracks, list) else []:
+                if not isinstance(track, dict):
+                    errors.append("media.manifest-track: track must be an object")
+                    continue
+                language = track.get("language", "unknown")
+                if track.get("status") not in {"candidate-awaiting-audition", "approved", "refresh-required"}:
+                    errors.append(f"media.manifest-status: {language}")
+                for field in ("audio", "script"):
+                    value = track.get(field)
+                    path = (ROOT / str(value)).resolve() if value else None
+                    try:
+                        if path is None:
+                            raise ValueError
+                        path.relative_to(ROOT)
+                    except ValueError:
+                        errors.append(f"media.manifest-path: {language} {field}")
+                        continue
+                    if not path.is_file():
+                        errors.append(f"media.manifest-missing: {language} {field}")
+                        continue
+                    expected = track.get(f"{field}_sha256")
+                    actual = hashlib.sha256(path.read_bytes()).hexdigest()
+                    if expected != actual:
+                        errors.append(f"media.manifest-hash: {language} {field}")
+                if track.get("status") in {"candidate-awaiting-audition", "approved"} and track.get("script_synced") is not True:
+                    errors.append(f"media.manifest-script-sync: {language}")
+    for path in markdown_files():
+        errors.extend(validate_markdown(path))
+        text = path.read_text(encoding="utf-8")
+        header = frontmatter(text)
+        if header.get("schema") == "harness.task/v1":
+            if header.get("review_profile") not in {"light", "standard", "critical"}:
+                errors.append(f"review.profile: {rel(path)}")
+            if header.get("max_review_rounds") not in {"1", "2"}:
+                errors.append(f"review.round-budget: {rel(path)} must be 1 or 2")
+        if header.get("schema") == "harness.review/v1":
+            round_value = header.get("round")
+            scope = header.get("scope")
+            if round_value not in {"1", "2"}:
+                errors.append(f"review.round: {rel(path)}")
+            if (round_value == "1" and scope != "initial") or (round_value == "2" and scope != "focused-rereview"):
+                errors.append(f"review.scope: {rel(path)}")
+            if round_value == "2" and header.get("prior_review") in {None, "", "none"}:
+                errors.append(f"review.lineage: {rel(path)}")
+        if header.get("schema") == "harness.task-graph/v1":
+            try:
+                graph = extract_graph(text)
+            except json.JSONDecodeError as exc:
+                errors.append(f"graph.json: {rel(path)} {exc}")
+            else:
+                if graph is None:
+                    errors.append(f"graph.missing-json: {rel(path)}")
+                else:
+                    errors.extend(validate_graph(graph, rel(path)))
+    for readme in (ROOT / "README.md", ROOT / "README.pt-BR.md"):
+        if readme.exists() and len(re.findall(r"^```mermaid$", readme.read_text(encoding="utf-8"), re.MULTILINE)) != 1:
+            errors.append(f"markdown.mermaid: {rel(readme)} must contain exactly one Mermaid block")
+        if readme.exists():
+            readme_text = readme.read_text(encoding="utf-8")
+            for audio_target in (
+                "media/agent-harness-kit-overview-en.mp3",
+                "media/agent-harness-kit-overview-pt-BR.mp3",
+                "media/overview-script-en.txt",
+                "media/overview-script-pt-BR.txt",
+            ):
+                if f"]({audio_target})" not in readme_text:
+                    errors.append(f"media.readme-link: {rel(readme)} missing {audio_target}")
+    agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8").lower() if (ROOT / "AGENTS.md").exists() else ""
+    for phrase in ("harness-state/PROJECT-CONTEXT.md", "harness-state/TASK-GRAPH.md", "Session-start, resume, and status gate", "before planning implementation", "must not load `learning-pack/`"):
+        if phrase.lower() not in agents:
+            errors.append(f"policy.root-map: AGENTS.md missing {phrase!r}")
+    for readme in (ROOT / "README.md", ROOT / "README.pt-BR.md"):
+        if readme.exists() and not readme.read_text(encoding="utf-8").startswith("# Agent Harness Kit\n"):
+            errors.append(f"identity.readme-title: {rel(readme)}")
+    errors.extend(validate_templates())
+    errors.extend(validate_fixtures())
+    errors.extend(validate_host_fixtures())
+    errors.extend(validate_native_integration())
+    profiles = (package_manifest.get("profile"),) if package_manifest else ("core", "core-learning", "full")
+    for profile in profiles:
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "tools" / "package.py"), "--profile", profile, "--output", str(ROOT.parent), "--check"],
+            cwd=ROOT, capture_output=True, text=True, check=False,
+        )
+        if result.returncode:
+            errors.append(f"distribution.profile: {profile}: {(result.stderr or result.stdout).strip()}")
+    return errors
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Validate Agent Harness Kit source or a namespaced host adoption")
+    parser.add_argument("--host-root", type=Path)
+    parser.add_argument("--migration-manifest", type=Path)
+    args = parser.parse_args()
+    if bool(args.host_root) != bool(args.migration_manifest):
+        parser.error("--host-root and --migration-manifest must be provided together")
+    if args.host_root:
+        host_errors = validate_host_integration(args.host_root.resolve(), args.migration_manifest)
+        if host_errors:
+            print(f"HOST INTEGRATION VALIDATION FAILED ({len(host_errors)} error(s))")
+            for error in host_errors:
+                print(f"- {error}")
+            return 1
+        print("HOST INTEGRATION VALIDATION PASSED: migration coverage, backlinks, snapshot identities, and cutover gates")
+        return 0
+    errors = validate_repository()
+    if errors:
+        print(f"VALIDATION FAILED ({len(errors)} error(s))")
+        for error in errors:
+            print(f"- {error}")
+        return 1
+    required_count = 17 if (ROOT / "PACKAGE-MANIFEST.json").exists() else len(REQUIRED_FILES)
+    print(f"VALIDATION PASSED: {len(markdown_files())} Markdown files, {required_count} required files")
+    print("Graph fixtures: valid, missing dependency, cycle, and ready-node write collision")
+    print("Host fixtures: namespaced adoption, missing backlink, silent omission, stale snapshot, and premature cutover")
+    print("Native integration: Codex and Claude Code entrypoints, shared-core routing, safe defaults, and profile boundaries")
+    print("Language boundary: README.pt-BR.md is the only Portuguese-content exception")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
