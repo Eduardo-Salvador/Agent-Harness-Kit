@@ -131,11 +131,11 @@ python tools/package.py --profile core --output <outside-directory>
 
 ## Next phase
 
-1. Run the planned interactive Codex/Claude onboarding simulations before the first commit.
+1. Run and record the planned interactive Codex/Claude onboarding simulations.
 2. Implement an optional external autonomous orchestrator with atomic revisions and leases.
 3. Add runtime transition, retry, checkpoint, recovery, and non-interference fixtures.
 4. Exercise native first-run discovery against greenfield and mature-host fixtures on supported installations.
-5. Decide an initial public version and release automation only when release scope is approved.
+5. Keep `0.1.0` as the initial public version and decide release automation only when release scope is approved.
 
 See [OPEN-DECISIONS.md](OPEN-DECISIONS.md); unchecked items are never implicit permission.
 

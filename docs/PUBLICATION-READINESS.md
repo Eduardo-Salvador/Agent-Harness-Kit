@@ -12,7 +12,7 @@ The source is suitable for public review as a native Codex/Claude Code operating
 - Each generated directory profile can run its own bundled validator using the generated `PACKAGE-MANIFEST.json`.
 - Host-integration mode validates a sanitized namespaced mature-harness fixture plus missing-backlink, silent-omission, stale-snapshot, and premature-cutover failures.
 - The examples demonstrate greenfield Development Core and existing-project Core plus project learning, but remain artifact traces rather than a live orchestrator test.
-- Packaging uses standard-library Python, fixed ZIP metadata, sorted files, hashes, and a shared development version.
+- Packaging uses standard-library Python, fixed ZIP metadata, sorted files, hashes, and the shared project version `0.1.0`.
 
 ## Package usability
 
@@ -24,13 +24,12 @@ Controlled mature-host adoption is structurally testable, but semantic equivalen
 
 ## Remaining blockers before a public release
 
-1. Choose the initial public semantic version.
-2. Decide contribution governance and add the corresponding contributor/security/support documents.
-3. Run and record the planned interactive native onboarding simulations in installed Codex and Claude Code.
-4. Complete filesystem-specific path/symlink/lease recovery policy before concurrent execution claims.
-5. Review third-party/trademark notices and the native instruction/skill/agent security boundaries.
-6. Run the validator and clean-build all profiles from the exact release source; inspect archive inventories/checksums and test on supported operating systems.
-7. Decide release provenance/automation and GitHub attachment workflow before publishing artifacts.
-8. Re-render and audition both overview audios with the minimal dual-native-entrypoint sentence; the current approved MP3s predate that sentence and remain intentionally preserved.
+1. Decide contribution governance and add the corresponding contributor/security/support documents.
+2. Run and record the planned interactive native onboarding simulations in installed Codex and Claude Code.
+3. Complete filesystem-specific path/symlink/lease recovery policy before concurrent execution claims.
+4. Review third-party/trademark notices and the native instruction/skill/agent security boundaries.
+5. Run the validator and clean-build all profiles from the exact release source; inspect archive inventories/checksums and test on supported operating systems.
+6. Decide release provenance/automation and GitHub attachment workflow before publishing artifacts.
+7. Re-render and audition both overview audios with the minimal dual-native-entrypoint sentence; the current approved MP3s predate that sentence and remain intentionally preserved.
 
 See [open decisions](../OPEN-DECISIONS.md), [distribution](DISTRIBUTION.md), [validation](VALIDATION.md), and [portability](PORTABILITY.md).

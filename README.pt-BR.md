@@ -131,11 +131,11 @@ python tools/package.py --profile core --output <diretório-externo>
 
 ## Próxima fase
 
-1. Executar as simulações interativas planejadas de onboarding no Codex e Claude antes do primeiro commit.
+1. Executar e registrar as simulações interativas planejadas de onboarding no Codex e Claude.
 2. Implementar um orquestrador autônomo externo opcional com revisões atômicas e leases.
 3. Adicionar fixtures de runtime para transições, retry, checkpoints, recuperação e não interferência.
 4. Exercitar a descoberta inicial nativa com fixtures greenfield e de repositório maduro em instalações compatíveis.
-5. Decidir a primeira versão pública e a automação de releases somente quando o escopo for aprovado.
+5. Manter `0.1.0` como a primeira versão pública e decidir a automação de releases somente quando o escopo for aprovado.
 
 Veja [OPEN-DECISIONS.md](OPEN-DECISIONS.md); itens não marcados nunca representam permissão implícita.
 
