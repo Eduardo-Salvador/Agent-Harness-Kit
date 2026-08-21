@@ -5,7 +5,7 @@
   "description": "Development Core only",
   "extends": null,
   "include": [
-    ".gitignore", "VERSION", "LICENSE", "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "OPEN-DECISIONS.md",
+    ".gitignore", ".github/**", "VERSION", "LICENSE", "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "OPEN-DECISIONS.md",
     "docs/**", "docs/contracts/**", "adapters/**", "media/**",
     ".agents/skills/first-run-discovery/**", ".agents/skills/graph-execution/**", ".agents/skills/governed-review/**",
     ".claude/skills/first-run-discovery/**", ".claude/skills/graph-execution/**", ".claude/skills/governed-review/**",

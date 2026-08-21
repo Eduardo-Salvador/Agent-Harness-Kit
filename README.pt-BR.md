@@ -141,4 +141,4 @@ Veja [OPEN-DECISIONS.md](OPEN-DECISIONS.md); itens não marcados nunca represent
 
 ## Licença e comunidade
 
-Licenciado sob a [Licença MIT](LICENSE), copyright 2026 Agent Harness Kit contributors. As orientações para contribuições, relatos de segurança e governança da comunidade ainda estão sendo definidas em [OPEN-DECISIONS.md](OPEN-DECISIONS.md).
+Licenciado sob a [Licença MIT](LICENSE), copyright 2026 Agent Harness Kit contributors. Consulte o [guia de contribuição](.github/CONTRIBUTING.md), a [política de segurança](.github/SECURITY.md) e a [política de suporte](.github/SUPPORT.md).

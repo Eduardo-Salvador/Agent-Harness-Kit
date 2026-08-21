@@ -6,7 +6,7 @@ This ledger contains real unresolved choices. An unchecked item is not permissio
 
 - [x] **Project identity** — name: Agent Harness Kit; repository/package slug: `agent-harness-kit`.
 - [x] **License** — standard MIT License, copyright 2026 Agent Harness Kit contributors.
-- [ ] **Governance and contribution policy** — owner: maintainers; block: accepting external contributions.
+- [x] **Governance and contribution policy** — maintainers retain final acceptance and release authority; contribution, conduct, security-reporting, and support boundaries are defined under `.github/`.
 
 ## Learning and notes
 

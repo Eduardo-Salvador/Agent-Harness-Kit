@@ -141,4 +141,4 @@ See [OPEN-DECISIONS.md](OPEN-DECISIONS.md); unchecked items are never implicit p
 
 ## License and community
 
-Licensed under the [MIT License](LICENSE), copyright 2026 Agent Harness Kit contributors. Contribution, security-reporting, and community-governance guidance is still being defined in [OPEN-DECISIONS.md](OPEN-DECISIONS.md).
+Licensed under the [MIT License](LICENSE), copyright 2026 Agent Harness Kit contributors. See the [contribution guide](.github/CONTRIBUTING.md), [security policy](.github/SECURITY.md), and [support policy](.github/SUPPORT.md).
