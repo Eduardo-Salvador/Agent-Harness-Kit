@@ -94,13 +94,13 @@ On the first request in a new context window, a resume request, or a status requ
 2. `harness-state/PENDING.md`;
 3. `harness-state/TASK-GRAPH.md`.
 
-`PENDING.md` owns human decisions/actions and the macro completion view. `TASK-GRAPH.md` owns technical order, dependencies, leases, and execution. For “what do you need from me?”, the agent reports human items first and then summarizes each workstream with progress, technical pending work, active context, blockers, and next action.
+`PENDING.md` owns human decisions/actions and the macro completion view. `TASK-GRAPH.md` owns technical order, dependencies, leases, and execution. Every progress/step update—not only an explicit status request—shows current stage, progress, what continues without user action, human and macro pending items, active/ready/blocked graph nodes, blockers, next action, and inspectable paths. For “what do you need from me?”, human items come first.
 
 ### Contexts, frontend, and learning
 
 - **Contexts:** a fresh context per task is the default. Visible threads, subagents, and parallelism are used only when the host exposes and authorizes them; otherwise the harness uses a manual or serialized artifact-handoff fallback.
-- **Frontend:** screen requests use the `frontend-screen` skill, coordinating `design-taste-frontend`, `imagegen-frontend-web`, `imagegen`, and `image-to-code` when available.
-- **Learning:** requests such as “enable study mode” begin setup for goals, observation boundaries, and note destination. Credentials are never stored in the profile.
+- **Frontend:** screen requests use `frontend-screen` for orchestration. With approved screenshots, `image-to-code` is the primary coding skill, `frontend-screen` checks desktop/mobile fidelity, and `imagegen` creates only temporary photographs/raster assets. Design-direction skills remain available when no approved screen exists.
+- **Learning:** requests such as “enable study mode” begin setup for goals, observation boundaries, and the exact note destination. No note is created and no `docs/` or remote fallback is assumed before the user confirms a path or a connector/MCP plus target. Credentials are never stored in the profile.
 
 ## Repository map
 

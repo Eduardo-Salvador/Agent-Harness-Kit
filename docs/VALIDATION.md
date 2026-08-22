@@ -29,7 +29,7 @@ The validator uses only the Python 3 standard library and does not modify files.
 - distribution-profile boundaries (`core`, `core-learning`, `full`) through dependency-free packaging dry runs.
 - bounded-review invariants: supported profiles, a hard two-round maximum, initial scope for round one, and focused scope with a prior-review reference for round two;
 - pending-work schema separation between human actions, macro project gaps, and technical graph execution;
-- user-facing status/closeout fields—stage, progress, blockers, next action, inspectable paths, and human action—plus automatic completion/next-task routing and non-blocking assurance references across Codex and Claude entrypoints;
+- mandatory user-facing progress/status fields—stage, progress, automatic work, human and macro pending items, active/ready/blocked graph snapshot, blockers, next action, and inspectable paths—with hostile field-removal mutations, automatic completion/next-task routing, and non-blocking assurance references across Codex and Claude entrypoints;
 - executable assurance checkpoints: critical results can gate only explicitly affected graph actions while unrelated ready work continues;
 - embedded installer dry-run, content preservation, marker safety, existing-destination refusal, profile selection, and packaged hash verification;
 - embedded-installation documentation and stable managed bridge markers for root `AGENTS.md` and `CLAUDE.md`;

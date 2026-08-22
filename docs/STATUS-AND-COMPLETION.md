@@ -2,6 +2,12 @@
 
 The harness distinguishes the project-level completion overview and actions that require a human from technical execution state. A task graph is not a substitute for the pending-work authority, and an internal handoff is not a substitute for telling the user what happened.
 
+## Mandatory step update
+
+This contract applies to every user-facing progress or step update, not only replies to the word “status.” Emit a compact update at task start, meaningful progress, task/phase completion, a blocker, and before or after a lengthy phase. Do not emit prose-only “working on it,” checklist, or handoff messages that omit the status shape.
+
+Each update explicitly labels: **Current stage**, **Progress**, **Continuing without your action**, **Human pending and macro gaps (`PENDING.md`)**, **Technical graph (`TASK-GRAPH.md`)**, **Blockers**, **Next action**, and **Inspectable paths**. Localize those labels to the user's language (for example, **Etapa atual** and **Continua sem sua ação**) without dropping or merging sections. “Continuing without your action” names automatic work already authorized or says `None`. The pending section lists human actions plus incomplete macro areas, even when empty. The graph section summarizes active, ready, and blocked nodes plus relevant dependencies; it never substitutes for `PENDING.md`.
+
 ## Pending-work precedence
 
 For “my pending items”, “what do you need from me?”, approval, or decision queries:
@@ -14,7 +20,7 @@ For “my pending items”, “what do you need from me?”, approval, or decisi
 
 For general project status, present: human action required, project completion overview, then a workstream view that joins each area to its technical graph nodes, active agent/context, blockers, and next action. Never omit a human-owned pending item or macro project gap merely because it is not a graph node. Reconcile contradictions visibly; do not silently choose the graph.
 
-Render every status through [`harness.status/v1`](contracts/STATUS.md): stage, progress, human action, per-workstream pending/progress/context, blockers, next action, and repository-relative inspectable paths are mandatory. Pin the consulted project-context, pending-authority, and graph revisions. Status is a derived view, never a competing authority.
+Render every progress/status update through [`harness.status/v1`](contracts/STATUS.md): stage, progress, automatic actions, human action, macro pending work, graph snapshot, per-workstream pending/progress/context, blockers, next action, and repository-relative inspectable paths are mandatory. Pin the consulted project-context, pending-authority, and graph revisions. Status is a derived view, never a competing authority.
 
 ## No silent finish
 

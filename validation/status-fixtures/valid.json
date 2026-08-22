@@ -1,10 +1,17 @@
 {
   "stage": "implementation",
   "progress": "3 of 7 tasks completed; authentication remains partial",
+  "automatic_actions": ["Dispatch TASK-004 after reporting this update"],
   "blockers": [],
   "next_action": "Dispatch TASK-004",
   "inspectable_paths": ["harness-state/PENDING.md", "harness-state/TASK-GRAPH.md"],
   "human_pending": [],
+  "macro_pending": ["Authentication remains incomplete"],
+  "graph_snapshot": {
+    "active_nodes": [],
+    "ready_nodes": ["TASK-004"],
+    "blocked_nodes": ["TASK-005 waits for TASK-004"]
+  },
   "workstreams": [
     {
       "area": "authentication",

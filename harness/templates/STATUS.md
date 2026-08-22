@@ -16,9 +16,23 @@ task_graph: graph-main@1
 - Stage: Replace.
 - Progress: Replace with a measurable value or precise baseline.
 
+## Continuing without your action
+
+- Replace with already-authorized automatic work, or `None`.
+
 ## Human action required
 
 - None, or exact action, reason, delivery effect, owner, and source.
+
+## Macro pending from PENDING.md
+
+- None, or incomplete project area/outcome and its current state.
+
+## Technical graph from TASK-GRAPH.md
+
+- Active nodes: None or IDs with current task/context.
+- Ready nodes: None or dependency-ready IDs.
+- Blocked nodes: None or IDs with dependency/blocker.
 
 ## Workstream status
 

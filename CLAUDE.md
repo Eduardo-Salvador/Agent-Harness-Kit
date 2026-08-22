@@ -6,7 +6,7 @@ Claude Code loads this file and imports the shared operational map above. For a 
 
 Every Claude main agent and subagent follows the imported [bounded review policy](docs/REVIEW-ROUNDS.md): one initial review, at most one focused re-review, and no third loop. A second rejection forces task/acceptance rewrite, decomposition, or a genuine human product/risk decision.
 
-They also follow [status and completion communication](docs/STATUS-AND-COMPLETION.md) and [`harness.status/v1`](docs/contracts/STATUS.md): `PENDING.md` owns human actions and macro project gaps; `TASK-GRAPH.md` owns technical execution. Every status reports stage, progress, blockers, next action, and inspectable paths. Passing tasks are completed, reported, and followed by the next ready node; assurance review is automatic and non-blocking.
+Every user-facing progress/step update joins `PENDING.md` with `TASK-GRAPH.md` through [STATUS-AND-COMPLETION.md](docs/STATUS-AND-COMPLETION.md) and the full imported [`harness.status/v1`](docs/contracts/STATUS.md) shape; a prose-only update is invalid. Passing tasks are completed, reported, and followed by the next ready node; assurance review is automatic and non-blocking.
 
 All Claude agents enforce the imported [execution budget](docs/EXECUTION-BUDGET.md); ceilings require `stop-and-replan`.
 

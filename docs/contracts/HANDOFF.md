@@ -82,4 +82,4 @@ Implemented graph-cycle and ownership-overlap validation.
 - Blockers name the missing decision, capability, dependency, or external condition.
 - The actual model tier and route changes are recorded; a stronger model is never presented as evidence.
 - The coherent change unit and commit/integration/push/deploy/publication authority states are explicit and independent.
-- The user-facing closeout explains outcome, stage, progress, material changes, verification, lifecycle state, blockers, next action, inspectable paths, and real human action before a review or approval boundary.
+- The user-facing closeout explains outcome, stage, progress, work continuing without user action, human/macro pending items, active/ready/blocked graph nodes, material changes, verification, lifecycle state, blockers, next action, and inspectable paths before a review or approval boundary.

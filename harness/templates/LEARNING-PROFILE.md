@@ -34,6 +34,7 @@ source_references: none
 
 ## Destination preferences
 
+- Activation/write gate: learning remains `awaiting-consent` and no notes may be created until the user approves the exact destination below; there is no implicit `docs/` or repository fallback.
 - Destination type: repository-markdown / local-path / obsidian / notion / other.
 - Exact location: Replace with a project-relative path or user-approved external locator.
 - Format and organization: Markdown; replace with folder/page and naming preference when relevant.

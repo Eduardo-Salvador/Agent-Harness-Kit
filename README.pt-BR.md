@@ -94,13 +94,13 @@ Na primeira chamada de uma nova janela, em pedidos de retomada ou de status, o a
 2. `harness-state/PENDING.md`;
 3. `harness-state/TASK-GRAPH.md`.
 
-`PENDING.md` guarda decisões, ações humanas e a visão macro do que falta. `TASK-GRAPH.md` guarda ordem, dependências, leases e execução técnica. Ao perguntar “quais são minhas pendências?”, o agente mostra primeiro os itens humanos e depois resume cada área com progresso, pendências técnicas, contexto ativo, bloqueios e próxima ação.
+`PENDING.md` guarda decisões, ações humanas e a visão macro do que falta. `TASK-GRAPH.md` guarda ordem, dependências, leases e execução técnica. Toda atualização de progresso/etapa — não apenas um pedido explícito de status — mostra etapa atual, progresso, o que continua sem ação do usuário, pendências humanas e macro, nós ativos/prontos/bloqueados do grafo, bloqueios, próxima ação e caminhos inspecionáveis. Ao perguntar “quais são minhas pendências?”, os itens humanos vêm primeiro.
 
 ### Contextos, frontend e estudo
 
 - **Contextos:** um contexto novo por task é o padrão. Chats visíveis, subagentes e paralelismo só são usados quando o host oferece e autoriza essas capacidades; caso contrário, há fallback manual ou sequencial com handoff.
-- **Frontend:** pedidos de tela usam a skill `frontend-screen`, que coordena `design-taste-frontend`, `imagegen-frontend-web`, `imagegen` e `image-to-code` conforme disponibilidade.
-- **Estudo:** pedidos como “ativa modo estudo” iniciam a configuração de objetivos, limites de observação e destino das notas. Credenciais nunca são gravadas no perfil.
+- **Frontend:** pedidos de tela usam `frontend-screen` para orquestração. Com screenshots aprovados, `image-to-code` é a skill principal de código, `frontend-screen` confere fidelidade entre desktop e mobile, e `imagegen` cria apenas fotografias/recursos raster temporários. Skills de direção visual continuam disponíveis quando ainda não existe tela aprovada.
+- **Estudo:** pedidos como “ativa modo estudo” iniciam a configuração de objetivos, limites de observação e destino exato das notas. Nenhuma nota é criada e nenhum fallback em `docs/` ou serviço remoto é presumido antes de o usuário confirmar um caminho ou um conector/MCP e alvo. Credenciais nunca são gravadas no perfil.
 
 ## Mapa do repositório
 

@@ -15,16 +15,21 @@ task_graph: graph-main@1
 ---
 ```
 
-Every rendered status and machine payload must contain:
+Every rendered status or user-facing progress/step update and machine payload must contain:
+
+Rendered labels may be localized to the user's language, but the sections and payload fields remain mandatory and separate.
 
 - stage;
 - measurable progress or a precise qualitative baseline;
+- work that continues automatically under existing authority, explicitly `None` when empty;
 - human actions from the pending authority;
+- incomplete macro project areas from the pending authority;
+- a graph snapshot with active, ready, and blocked nodes from the task graph;
 - a workstream view with progress, human pending items, technical pending items, active agent/context, blockers, and next action for each relevant area;
 - blockers, explicitly `None` when empty;
 - one next action; and
 - repository-relative inspectable paths, including the consulted pending authority and task graph.
 
-The executable payload shape is `stage`, `progress`, `blockers[]`, `next_action`, `inspectable_paths[]`, `human_pending[]`, and `workstreams[]`. Every human-pending item includes `action` and `source`. Every workstream item includes `area`, `progress`, `human_pending[]`, `technical_pending[]`, `active_context`, `blockers[]`, and `next_action`. Absolute paths and `..` traversal are invalid.
+The executable payload shape is `stage`, `progress`, `automatic_actions[]`, `human_pending[]`, `macro_pending[]`, `graph_snapshot`, `workstreams[]`, `blockers[]`, `next_action`, and `inspectable_paths[]`. `graph_snapshot` contains `active_nodes[]`, `ready_nodes[]`, and `blocked_nodes[]`. Every human-pending item includes `action` and `source`. Every workstream item includes `area`, `progress`, `human_pending[]`, `technical_pending[]`, `active_context`, `blockers[]`, and `next_action`. Absolute paths and `..` traversal are invalid.
 
 See `validation/status-fixtures/`: the validator starts from a valid payload, applies hostile field-removal/path mutations, and proves that the contract rejects them.

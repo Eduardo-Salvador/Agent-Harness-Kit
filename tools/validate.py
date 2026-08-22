@@ -64,6 +64,9 @@ REQUIRED_FILES = [
     "validation/status-fixtures/invalid/missing-progress.json",
     "validation/status-fixtures/invalid/path-traversal.json",
     "validation/status-fixtures/invalid/missing-workstreams.json",
+    "validation/status-fixtures/invalid/missing-automatic-actions.json",
+    "validation/status-fixtures/invalid/missing-macro-pending.json",
+    "validation/status-fixtures/invalid/missing-graph-snapshot.json",
     "validation/review-fixtures/round-two-valid.json",
     "validation/review-fixtures/invalid/missing-correction-delta.json",
     "validation/budget-fixtures/valid.json",
@@ -120,7 +123,7 @@ TEMPLATE_RULES = {
     ),
     "STATUS.md": (
         {"schema", "id", "revision", "generated_at", "generated_by", "project_context", "pending_authority", "task_graph"},
-        {"Stage and progress", "Human action required", "Workstream status", "Blockers", "Next action", "Inspectable paths"},
+        {"Stage and progress", "Continuing without your action", "Human action required", "Macro pending from PENDING.md", "Technical graph from TASK-GRAPH.md", "Workstream status", "Blockers", "Next action", "Inspectable paths"},
     ),
     "DECISION.md": (
         {"schema", "id", "revision", "status", "consequence", "decided_by", "decided_at", "supersedes", "source_references"},
@@ -401,7 +404,7 @@ def validate_fixtures() -> list[str]:
     return errors
 
 
-STATUS_FIELDS = {"stage", "progress", "blockers", "next_action", "inspectable_paths", "human_pending", "workstreams"}
+STATUS_FIELDS = {"stage", "progress", "automatic_actions", "blockers", "next_action", "inspectable_paths", "human_pending", "macro_pending", "graph_snapshot", "workstreams"}
 
 
 def validate_status_payload(data: dict, source: str) -> list[str]:
@@ -430,6 +433,16 @@ def validate_status_payload(data: dict, source: str) -> list[str]:
         for index, item in enumerate(human_pending):
             if not isinstance(item, dict) or not item.get("action") or not item.get("source"):
                 errors.append(f"status.human-source: {source} item {index}")
+    if not isinstance(data.get("automatic_actions"), list):
+        errors.append(f"status.automatic-actions-shape: {source}")
+    if not isinstance(data.get("macro_pending"), list):
+        errors.append(f"status.macro-pending-shape: {source}")
+    graph_snapshot = data.get("graph_snapshot")
+    graph_fields = {"active_nodes", "ready_nodes", "blocked_nodes"}
+    if not isinstance(graph_snapshot, dict) or graph_fields - set(graph_snapshot):
+        errors.append(f"status.graph-snapshot-fields: {source}")
+    elif any(not isinstance(graph_snapshot[field], list) for field in graph_fields):
+        errors.append(f"status.graph-snapshot-shape: {source}")
     workstreams = data.get("workstreams")
     if not isinstance(workstreams, list) or not workstreams:
         errors.append(f"status.workstreams-shape: {source}")
@@ -898,10 +911,19 @@ def validate_native_integration() -> list[str]:
         for capability in ("design-taste-frontend", "imagegen-frontend-web", "imagegen", "image-to-code"):
             if capability not in frontend_text:
                 errors.append(f"native.frontend-capability: frontend playbook does not name {capability}")
+        frontend_lower = frontend_text.lower()
+        for token in ("approved-screen implementation route", "primary coding skill", "desktop and mobile", "temporary photographs", "never frontend code"):
+            if token not in frontend_lower:
+                errors.append(f"native.frontend-approved-screen-route: frontend playbook lacks {token!r}")
     for item in (".agents/skills/frontend-screen/SKILL.md", ".claude/skills/frontend-screen/SKILL.md"):
         path = ROOT / item
-        if path.is_file() and "harness/playbooks/frontend-screen.md" not in path.read_text(encoding="utf-8"):
-            errors.append(f"native.frontend-playbook-routing: {item}")
+        if path.is_file():
+            skill_text = path.read_text(encoding="utf-8")
+            if "harness/playbooks/frontend-screen.md" not in skill_text:
+                errors.append(f"native.frontend-playbook-routing: {item}")
+            for token in ("image-to-code` the primary coding skill", "frontend-screen` responsible for desktop/mobile", "imagegen` only for temporary photographs"):
+                if token not in skill_text:
+                    errors.append(f"native.frontend-approved-screen-skill: {item} lacks {token!r}")
 
     learning_playbook = ROOT / "harness" / "playbooks" / "learning-capture-publication.md"
     if learning_playbook.is_file():
@@ -909,6 +931,16 @@ def validate_native_integration() -> list[str]:
         for token in ("obsidian", "notion", "local", "capability manifest", "destination preferences"):
             if token not in learning_text:
                 errors.append(f"native.learning-destination-routing: learning playbook does not cover {token}")
+        for token in ("hard activation and write gate", "do not create a note", "do not infer `docs/`", "which connector/mcp", "explicit approved fallback destination"):
+            if token not in learning_text:
+                errors.append(f"native.learning-destination-gate: learning playbook lacks {token!r}")
+    for item in (".agents/skills/project-learning/SKILL.md", ".claude/skills/project-learning/SKILL.md"):
+        path = ROOT / item
+        if path.is_file():
+            skill_text = path.read_text(encoding="utf-8").lower()
+            for token in ("destination confirmation is mandatory", "do not create files/folders", "which connector/mcp", "exact page/database"):
+                if token not in skill_text:
+                    errors.append(f"native.learning-skill-destination-gate: {item} lacks {token!r}")
 
     context_playbook = ROOT / "harness" / "playbooks" / "context-routing.md"
     context_doc = ROOT / "docs" / "CONTEXT-ROUTING.md"

@@ -25,4 +25,4 @@ Coordinate the dependency graph above task-local agent loops while protecting hu
 
 ## Exit
 
-Persist every transition, release or recover leases, and leave the graph reconstructable from files alone. When checks pass, mark the task completed, report what changed and verification, release its lease, and dispatch the next ready node without waiting for human approval or assurance review. An artifact-only handoff is not sufficient communication.
+Persist every transition, release or recover leases, and leave the graph reconstructable from files alone. At each user-facing step boundary, render the compact mandatory status with current stage, progress, automatic work, `PENDING.md` human/macro items, `TASK-GRAPH.md` active/ready/blocked nodes, blockers, next action, and paths. When checks pass, mark the task completed, report what changed and verification, release its lease, and dispatch the next ready node without waiting for human approval or assurance review. An artifact-only handoff or prose-only progress message is not sufficient communication.

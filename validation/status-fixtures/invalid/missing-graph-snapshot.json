@@ -1,0 +1,4 @@
+{
+  "mutation": {"action": "remove", "field": "graph_snapshot"},
+  "expected_errors": ["status.missing-field", "status.graph-snapshot-fields"]
+}

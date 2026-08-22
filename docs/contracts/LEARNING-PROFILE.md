@@ -54,6 +54,7 @@ source_references: migration-main@1
 
 - The owner explicitly controls consent, visibility, retention, and publication.
 - Activation records the learning goal, observation boundary, exact note destination, format, capability state, retention, and write/publication policy. A conversational request starts this configuration instead of being ignored because no profile exists yet.
+- The exact destination is a hard gate. Before user confirmation, the profile cannot become `active` and no note file/folder may be created; `docs/`, repository Markdown, local paths, Obsidian, Notion, and remote connectors are never implicit fallbacks.
 - Skill/seniority feedback is evidence-linked, scoped by skill, and uncertainty-calibrated; no unsupported global rank.
 - Queue items cannot be delivery dependencies or mutate delivery priority/status.
 - Private writes to the exact approved destination follow its recorded policy. Public sharing, a new destination, broader visibility, and consequential retention changes require human approval; destination credentials never appear here.
