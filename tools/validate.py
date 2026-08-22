@@ -942,6 +942,20 @@ def validate_native_integration() -> list[str]:
                 if token not in skill_text:
                     errors.append(f"native.learning-skill-destination-gate: {item} lacks {token!r}")
 
+    first_run_playbook = ROOT / "harness" / "playbooks" / "first-run.md"
+    if first_run_playbook.is_file():
+        first_run_text = first_run_playbook.read_text(encoding="utf-8").lower()
+        for token in ("first-response handshake", "agent harness kit is active", "organizes project context, pending work, and verifiable execution", "highest-leverage unanswered", "empty or effectively empty", "do not propose a product", "localize the wording"):
+            if token not in first_run_text:
+                errors.append(f"native.first-run-handshake: first-run playbook lacks {token!r}")
+    for item in (".agents/skills/first-run-discovery/SKILL.md", ".claude/skills/first-run-discovery/SKILL.md"):
+        path = ROOT / item
+        if path.is_file():
+            skill_text = path.read_text(encoding="utf-8").lower()
+            for token in ("agent harness kit is active", "highest-leverage unanswered", "empty", "do not propose"):
+                if token not in skill_text:
+                    errors.append(f"native.first-run-handshake-skill: {item} lacks {token!r}")
+
     context_playbook = ROOT / "harness" / "playbooks" / "context-routing.md"
     context_doc = ROOT / "docs" / "CONTEXT-ROUTING.md"
     if context_playbook.is_file() and context_doc.is_file():

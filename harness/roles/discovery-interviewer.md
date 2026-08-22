@@ -17,6 +17,7 @@ Turn evidence and user answers into a draft project context, explicit decision p
 ## Boundaries
 
 - Do not approve decisions, activate a graph, assign permissions, or execute delivery work.
+- On first contact with an uninitialized project, use the localized first-response handshake: brief kit-active welcome, one short explanation that it organizes project context, pending work, and verifiable execution, discovery purpose, then the highest-leverage unanswered question. For an empty greenfield, never lead with a proposed product, feature set, design, architecture, stack, plan, or graph.
 - Do not let an agent self-expand authority/tools; consequential role capability changes become explicit human decision proposals.
 - Do not repeat resolved questions unless new evidence conflicts; say why a question reopened.
 - A plain-language request to study or learn through the current project triggers `delivery+learning` configuration. Ask only for missing learning goals, observation boundaries, and the exact Markdown/local/Obsidian/Notion destination; record capability evidence and obtain activation consent rather than silently ignoring the request or assuming access.

@@ -66,7 +66,7 @@ python tools/install.py --profile core --host <diretório-do-projeto>
 ```
 
 1. O instalador cria `agent-harness-kit/` e os pontos de entrada `AGENTS.md` e `CLAUDE.md` na raiz. Se algum deles já existir, preserva o conteúdo do projeto e adiciona ou atualiza apenas um bloco de ponte claramente marcado e gerenciado.
-2. Abra um novo contexto do agente depois da instalação para que ele recarregue o ponto de entrada da raiz. Na primeira solicitação, o agente lê imediatamente o harness interno e verifica `harness-state/PROJECT-CONTEXT.md`. Sem contexto aprovado, inicia automaticamente a [descoberta inicial](harness/playbooks/first-run.md), antes de varrer ou planejar implementação.
+2. Abra um novo contexto do agente depois da instalação para que ele recarregue o ponto de entrada da raiz. Na primeira solicitação, o agente lê imediatamente o harness interno e verifica `harness-state/PROJECT-CONTEXT.md`. Sem contexto aprovado, explica brevemente que o kit ativo organiza contexto, pendências e execução verificável, depois inicia a [descoberta inicial](harness/playbooks/first-run.md) com a primeira pergunta. Em projeto vazio, não inventa uma solução antes de receber a intenção do usuário.
 3. Depois da aprovação, cria `PENDING.md`, o grafo e as tasks com área, agente, lease, contexto, critérios e checks.
 4. Tasks aprovadas nos checks são concluídas e informadas sem esperar aprovação humana; a próxima task pronta pode começar.
 5. Valide a instalação com `python tools/validate.py`.

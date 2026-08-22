@@ -19,6 +19,12 @@ This interview is the mandatory first-run behavior when `harness-state/PROJECT-C
 
 Questions should use the user's vocabulary and offer concrete tradeoffs when useful. The interview must not force a fixed questionnaire or ask the user to reconfirm unchanged approved facts.
 
+## First-response handshake
+
+For an uninitialized project, the first response identifies that Agent Harness Kit is active, explains briefly that it organizes project context, pending work, and verifiable execution, says discovery establishes context before implementation planning, and asks the highest-leverage unanswered question immediately. The welcome is localized to the user's language, at most two short sentences, and is not marketing copy or a separate approval checkpoint.
+
+For an empty or effectively empty greenfield directory, the first question asks what the user wants to create, for whom, what problem/value it addresses, and what the first successful outcome is. The agent does not first invent or recommend product scope, features, visual direction, architecture, stack, implementation steps, or a task graph. When the initial user request already answers some of those fields, reflect and pre-fill them, then ask only for the consequential gap.
+
 ## Optional onboarding explanation
 
 The user may request a plain-language explanation before or during discovery. Explain the harness purpose, why approved context precedes implementation planning, the artifacts/checkpoints that will be created, and the expected next steps. This is an optional onboarding aid, not a prerequisite or delivery node. It cannot block delivery and does not activate `delivery+learning`, learning consent, observation, retention, publication, or the separate Harness Engineering Learning Pack.
