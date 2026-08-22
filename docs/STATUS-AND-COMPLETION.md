@@ -12,9 +12,9 @@ For “my pending items”, “what do you need from me?”, approval, or decisi
 4. Read the project completion overview in the same authority for the macro view of what remains, such as unfinished backend or authentication work.
 5. Only then, when useful or requested, use the task graph for technical order, dependencies, and execution detail.
 
-For general project status, present: human action required, project completion overview, then technical execution state when useful. Never omit a human-owned pending item or macro project gap merely because it is not a graph node. Reconcile contradictions visibly; do not silently choose the graph.
+For general project status, present: human action required, project completion overview, then a workstream view that joins each area to its technical graph nodes, active agent/context, blockers, and next action. Never omit a human-owned pending item or macro project gap merely because it is not a graph node. Reconcile contradictions visibly; do not silently choose the graph.
 
-Render every status through [`harness.status/v1`](contracts/STATUS.md): stage, progress, human action, blockers, next action, and repository-relative inspectable paths are mandatory. Pin the consulted project-context, pending-authority, and graph revisions. Status is a derived view, never a competing authority.
+Render every status through [`harness.status/v1`](contracts/STATUS.md): stage, progress, human action, per-workstream pending/progress/context, blockers, next action, and repository-relative inspectable paths are mandatory. Pin the consulted project-context, pending-authority, and graph revisions. Status is a derived view, never a competing authority.
 
 ## No silent finish
 

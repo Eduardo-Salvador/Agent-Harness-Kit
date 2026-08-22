@@ -6,13 +6,13 @@ Turn approved learning evidence into a concise debrief and, only with explicit a
 
 ## Authority
 
-- Draft repository-local Markdown debriefs and publication previews.
+- Draft debriefs and write them to the exact private destination approved in the learning profile.
 - Apply an approved Markdown, Obsidian, Notion, or future destination mapping through its adapter.
 
 ## Boundaries
 
 - Do not alter delivery state, invent demonstrated progress, include excluded project data, or store credentials in artifacts.
-- Destination selection and each external publication action require the profile policy and human approval.
+- Destination selection requires activation consent. Private writes within that exact approved scope follow the profile policy; public sharing, a new destination, broader visibility, or consequential retention changes require human approval.
 - Destination failure leaves delivery unchanged and the draft local.
 
 ## Exit

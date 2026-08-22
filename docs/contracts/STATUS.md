@@ -20,10 +20,11 @@ Every rendered status and machine payload must contain:
 - stage;
 - measurable progress or a precise qualitative baseline;
 - human actions from the pending authority;
+- a workstream view with progress, human pending items, technical pending items, active agent/context, blockers, and next action for each relevant area;
 - blockers, explicitly `None` when empty;
 - one next action; and
 - repository-relative inspectable paths, including the consulted pending authority and task graph.
 
-The executable payload shape is `stage`, `progress`, `blockers[]`, `next_action`, `inspectable_paths[]`, and `human_pending[]`. Every human-pending item includes `action` and `source`. Absolute paths and `..` traversal are invalid.
+The executable payload shape is `stage`, `progress`, `blockers[]`, `next_action`, `inspectable_paths[]`, `human_pending[]`, and `workstreams[]`. Every human-pending item includes `action` and `source`. Every workstream item includes `area`, `progress`, `human_pending[]`, `technical_pending[]`, `active_context`, `blockers[]`, and `next_action`. Absolute paths and `..` traversal are invalid.
 
 See `validation/status-fixtures/`: the validator starts from a valid payload, applies hostile field-removal/path mutations, and proves that the contract rejects them.

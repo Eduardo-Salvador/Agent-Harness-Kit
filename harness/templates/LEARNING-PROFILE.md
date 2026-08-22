@@ -34,7 +34,13 @@ source_references: none
 
 ## Destination preferences
 
-- Repository-local Markdown draft; external publication requires approval.
+- Destination type: repository-markdown / local-path / obsidian / notion / other.
+- Exact location: Replace with a project-relative path or user-approved external locator.
+- Format and organization: Markdown; replace with folder/page and naming preference when relevant.
+- Capability status: available / degraded / unavailable / approval-required; cite evidence in `CAPABILITY-MANIFEST.md`.
+- Write policy: private destination writes within this approved scope are allowed / preview-required.
+- Public sharing: approval-required.
+- Credentials: never stored in this artifact.
 
 ## Latest debrief
 

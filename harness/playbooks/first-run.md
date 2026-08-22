@@ -18,10 +18,10 @@ At the user's request, briefly explain in plain language what the harness is, wh
 2. If existing harness material is mature, switch to the [mature adoption playbook](mature-harness-adoption.md), record a discovery snapshot, and preserve originals.
 3. Pre-fill known context; ask only questions that close consequential gaps or conflicts.
 4. Record product, architecture, scope, permission, and publication choices as decision proposals for human confirmation.
-5. Ask the user to select exactly one runtime mode:
+5. Ask the user to select exactly one runtime mode. A plain-language request to study, learn through the project, receive guided practice, or keep learning notes selects configuration of `delivery+learning`; do not require the internal label:
    - `delivery` — Development Core only;
    - `delivery+learning` — the same core plus consented project-specific learning.
-6. If `delivery+learning` is selected, create/approve the learning profile. Installing `core-learning` never performs this activation. The Harness Engineering Learning Pack is a separate study resource and is never a mode.
+6. If `delivery+learning` is selected, follow `harness/playbooks/learning-capture-publication.md` when the extension is installed: ask only for missing goals, observation boundaries, and the exact note destination; verify local/Obsidian filesystem access or Notion/other connector capability; then create and approve the learning profile. Installing `core-learning` never performs this activation. The Harness Engineering Learning Pack is a separate study resource and is never a mode.
 7. Revalidate discovery snapshot identities and selector expansion immediately before approval.
 8. Obtain explicit approval of project context and consequential decisions.
 9. Create `harness-state/PENDING.md` from the approved context: human decisions/actions plus a macro project completion overview. Do not put technical order or dependencies there.

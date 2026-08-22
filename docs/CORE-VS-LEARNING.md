@@ -30,6 +30,8 @@ Learning is active only when all are true:
 
 Distribution is not activation: installing `core-learning` or `full` creates no consent, observation scope, retention policy, or publication permission. Until a user approves an active learning profile, project learning remains off.
 
+An explicit request to study or learn through the current project is the trigger to configure that profile, even when the user does not say `delivery+learning`. The agent asks only for missing goals, observation boundaries, and the note destination. That destination may be repository Markdown, a user-approved local path, an Obsidian vault/folder, a Notion page/database, or another named system. Exact location, format, capability evidence, retention, and write/publication policy become durable project-learning context; credentials do not.
+
 If any condition stops being true, learning pauses while delivery continues. The user can disable it at any time; disabling requires no migration of delivery state.
 
 ## Allowed inputs and outputs
@@ -45,7 +47,7 @@ It may recommend a delivery-graph change by creating a proposal addressed to the
 3. Learning priorities cannot reorder delivery priorities or consume delivery budget without explicit approval.
 4. Learning context is not injected into delivery agents unless the task explicitly requires it and the user approves disclosure.
 5. Learning completion never counts as delivery verification; delivery completion never fabricates learning progress.
-6. External notes remain drafts until the user approves the destination and publication action.
+6. Private notes may be written under the exact destination policy approved in the active profile. Public sharing, a new destination, broader visibility, or consequential retention changes require fresh approval.
 7. With learning disabled, delivery reads no learning artifacts. Removing the learning directory/adapter leaves all core contracts valid.
 
 These guarantees should become automated conformance tests in Phase 2.
@@ -58,7 +60,7 @@ These guarantees should become automated conformance tests in Phase 2.
 4. **Review:** compare the user's reasoning with evidence and calibrate demonstrated level by skill area, never as a global label.
 5. **Queue:** prioritize gaps by relevance, prerequisites, and user intent.
 6. **Debrief:** summarize what changed, remaining uncertainty, and a next practice step.
-7. **Publish:** transform an approved draft through a Markdown, Obsidian, Notion, or future destination adapter.
+7. **Retain or publish:** write private notes under the approved destination policy; use separate approval for public sharing or a changed destination/visibility boundary.
 
 ## Privacy and control
 

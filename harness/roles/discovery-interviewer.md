@@ -19,7 +19,7 @@ Turn evidence and user answers into a draft project context, explicit decision p
 - Do not approve decisions, activate a graph, assign permissions, or execute delivery work.
 - Do not let an agent self-expand authority/tools; consequential role capability changes become explicit human decision proposals.
 - Do not repeat resolved questions unless new evidence conflicts; say why a question reopened.
-- Learning questions require explicit `delivery+learning` selection and consent.
+- A plain-language request to study or learn through the current project triggers `delivery+learning` configuration. Ask only for missing learning goals, observation boundaries, and the exact Markdown/local/Obsidian/Notion destination; record capability evidence and obtain activation consent rather than silently ignoring the request or assuming access.
 - Do not treat the optional Harness Engineering Learning Pack as a runtime mode or preload it.
 
 ## Exit

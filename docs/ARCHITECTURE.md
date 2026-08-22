@@ -31,6 +31,7 @@ Existing root instructions, role systems, path rules, knowledge, decisions, pend
 3. Approval freezes a context revision and creates the initial [task graph](contracts/TASK-GRAPH.md).
 4. The orchestrator finds nodes whose dependencies are satisfied, proposed paths do not overlap active ownership, and required capabilities are available.
 5. It follows [capability-based model routing](MODEL-ROUTING.md), records the least costly safe tier and task-specific reason, then assigns one [task brief](contracts/TASK.md), an exclusive ownership set, and an isolation boundary.
+   It also applies [context routing](CONTEXT-ROUTING.md): each task receives a workstream, agent role, execution-context policy, and adapter-owned thread reference. Different workstreams use different contexts unless an explicit integration node owns the crossing.
 6. A specialized agent loops inside that node: inspect → act → check → update its task artifact. It cannot mutate graph topology.
 7. The agent emits a [handoff](contracts/HANDOFF.md) with changes, evidence, and a plain-language closeout. When checks pass, the orchestrator marks the node completed, reports the outcome, releases ownership, and unlocks dependents.
 8. A reviewer other than the implementer automatically evaluates the completed work as non-blocking assurance using a `light`, `standard`, or `critical` profile. One initial review and at most one focused remediation review are allowed.

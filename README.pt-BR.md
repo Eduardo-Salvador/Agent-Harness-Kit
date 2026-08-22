@@ -8,21 +8,21 @@
 
 ## Áudio explicativo do projeto
 
-Ouça uma explicação concisa em português sobre o que é o Agent Harness Kit, como seu fluxo funciona, o que a versão 0.3.0 entrega e o que permanece intencionalmente fora do runtime atual.
+Ouça uma explicação concisa em português sobre a base do Agent Harness Kit até a versão 0.3.0. As adições de frontend, ativação de aprendizado e roteamento de contexto da 0.4.0 estão documentadas abaixo.
 
 https://github.com/user-attachments/assets/4c68f8a0-bfac-4847-b2ea-9adeae24c17c
 
 [Baixar o MP3 em português](media/agent-harness-kit-overview-pt-BR.mp3) · [Ler o roteiro atual em português](media/overview-script-pt-BR.txt)
 
-O áudio reproduzível aprovado corresponde ao roteiro atual da versão 0.3.0, incluindo os orçamentos executáveis por linhagem de objetivo.
+O áudio reproduzível aprovado corresponde ao roteiro aprovado da versão 0.3.0, incluindo os orçamentos executáveis por linhagem de objetivo.
 
 ## Por que usar
 
 Use este scaffold quando o desenvolvimento com agentes precisar de contexto durável, papéis delimitados, tarefas com dependências, propriedade exclusiva de arquivos, revisão independente, evidências reproduzíveis e seleção de modelos consciente de custo, em vez de estado mantido apenas no chat. Todos os perfis trazem as duas entradas nativas: o Codex lê `AGENTS.md` na raiz; o Claude Code lê `CLAUDE.md`, que importa `@AGENTS.md`. Os dois chegam ao mesmo núcleo e estado neutros, sem adivinhar a plataforma em runtime nem trocar o perfil manualmente. O mesmo repositório pode ser aberto com uma ferramenta em um momento e com a outra depois, sem autoridades concorrentes do harness.
 
-**Versão atual do código-fonte: `0.3.0`.** O projeto é um scaffold operacional executável e orientado a artefatos: sessões capazes do Codex/Claude seguem seus contratos e validadores. Ele não é um daemon separado que inicia agentes sozinho ou bloqueia arquivos no sistema operacional.
+**Versão atual do código-fonte: `0.4.0`.** O projeto é um scaffold operacional executável e orientado a artefatos: sessões capazes do Codex/Claude seguem seus contratos e validadores. Ele não é um daemon separado que inicia agentes sozinho ou bloqueia arquivos no sistema operacional.
 
-## O que a 0.3.0 entrega
+## O que a 0.4.0 entrega
 
 | Área | Comportamento entregue |
 | --- | --- |
@@ -30,6 +30,9 @@ Use este scaffold quando o desenvolvimento com agentes precisar de contexto dur�
 | Estado do projeto | Contexto aprovado, `PENDING.md` humano/macro e `TASK-GRAPH.md` técnico com ordem rígida de leitura |
 | Status | Contrato executável `harness.status/v1` com etapa, progresso, bloqueios, próxima ação, itens humanos e caminhos inspecionáveis |
 | Execução | Dependências, leases/write sets declarados, colisões validadas, handoffs, evidências e avanço automático para a próxima task |
+| Separação de contexto | Tasks são agrupadas em áreas de frontend/backend/dados/infra/integração e executadas em chats visíveis, subagentes, janelas manuais ou fallback sequencial conforme as capacidades comprovadas do host |
+| Telas frontend | Uma rota padrão e multiplataforma coordena `design-taste-frontend`, direção visual responsiva, `imagegen` e `image-to-code`, com degradação explícita quando faltar uma capacidade |
+| Aprendizado do projeto | Pedidos de estudo em linguagem comum iniciam a configuração consentida de objetivos, observação e destino exato das notas em Markdown/local/Obsidian/Notion |
 | Controle de recursos | Tetos executáveis por linhagem: duas tentativas de implementação, dois ciclos consecutivos sem progresso e três expansões de contexto por padrão |
 | Garantia | Revisor independente, no máximo duas reviews, segunda focada e reescrita/decomposição/decisão humana após segunda reprovação |
 | Segurança e portabilidade | Manifestos de capacidades/regras, degradação explícita, coexistência com harness maduro, adapters Codex/Claude e nenhuma ampliação silenciosa de permissão |
@@ -78,9 +81,10 @@ Todos também incluem as duas entradas de plataforma e suas pequenas extensões 
 4. Selecione `delivery` ou `delivery+learning`, revise o [contexto do projeto](harness/templates/PROJECT-CONTEXT.md) gerado e aprove-o explicitamente.
    A descoberta também cria ou referencia um [manifesto de capacidades](harness/templates/CAPABILITY-MANIFEST.md) e um [mapa de regras](harness/templates/RULES-MAP.md). Capacidades incluem ferramentas nativas da plataforma, servidores/conectores MCP, skills, scripts/comandos, hooks e integrações externas; sem evidência, ficam indisponíveis, opcionais ou dependentes de aprovação — nunca são presumidas. As regras podem cobrir negócio, segurança/privacidade, arquitetura, convenções de código e caminhos, e são encaminhadas apenas ao trabalho relevante.
 5. O decompositor propõe e valida o [grafo inicial](harness/templates/TASK-GRAPH.md); o orquestrador então despacha uma [tarefa delimitada](harness/templates/TASK.md). O despacho segue o [roteamento por capacidade](docs/MODEL-ROUTING.md): balanceado é o padrão, econômico fica restrito a trabalho determinístico e de baixo risco, e avançado é reservado para decisões consequentes ou gatilhos explícitos de escalonamento. Nomes específicos de modelos ficam nos adaptadores e nas evidências atuais do host.
+   Como boa prática de engenharia de contexto, cada task também declara área, especialista e política de contexto. Frontend, backend, dados, infraestrutura e aprendizado devem usar janelas de contexto diferentes; um contexto novo por task é o padrão. Quando o host oferece chats/tasks visíveis ou subagentes internos e seu uso está aprovado, o adaptador os cria. Caso contrário, a pessoa pode abrir uma janela nova ou o harness serializa o trabalho por handoffs completos em arquivos. Veja [roteamento de contexto](docs/CONTEXT-ROUTING.md).
    As definições de papéis são templates editáveis: a descoberta pode adaptar papéis existentes ou propor especialistas específicos do projeto, responsabilidades, acesso a ferramentas, pacotes de contexto, limites de propriedade e critérios de revisão. Isso é configuração governada, não automodificação descontrolada dos agentes. Mudanças relevantes em ferramentas, permissões, segredos, rede, ações destrutivas, hooks, integrações ou regras duráveis exigem aprovação humana explícita e validação.
 6. O especialista trabalha somente nos caminhos atribuídos e sob o [orçamento de execução](docs/EXECUTION-BUDGET.md) vinculado: por padrão, duas tentativas de implementação, dois ciclos consecutivos sem progresso e três expansões de contexto por linhagem de objetivo. Trocar modelo, agente, tarefa, review, decomposição ou sessão não zera os contadores. Ao atingir um teto, o agente registra evidências e para para um replanejamento delimitado. Ele executa as verificações e escreve um [handoff](harness/templates/HANDOFF.md). Quando elas passam, o orquestrador marca o nó como concluído, informa o que mudou, libera a propriedade e despacha a próxima tarefa pronta sem pedir aprovação humana de conclusão. Outro agente registra automaticamente uma [revisão de garantia](harness/templates/REVIEW.md) não bloqueante. A review usa perfil `light`, `standard` ou `critical` com [no máximo duas rodadas](docs/REVIEW-ROUNDS.md); a segunda fica limitada aos bloqueios anteriores, ao delta da correção e às regressões relacionadas. Uma segunda reprovação obriga reescrita, decomposição ou uma decisão humana real de produto ou risco. Conclusão não autoriza separadamente commit, push, deploy ou publicação.
-7. Em `delivery+learning`, os papéis de aprendizado podem atualizar a fila consentida depois que houver evidência de entrega. Em `full`, abra `learning-pack/README.md` separadamente quando quiser estudar o harness.
+7. Pedir para estudar, aprender durante o projeto, ativar modo estudo ou guardar anotações inicia a configuração de `delivery+learning` quando essa extensão estiver instalada. O agente pergunta apenas objetivos, consentimento de observação e destino ainda ausentes — Markdown no repositório, outro caminho local, vault/pasta do Obsidian, página/database do Notion ou outro sistema nomeado — e registra formato, estado da capacidade, retenção e política de escrita/publicação no perfil de aprendizado. Ele nunca guarda credenciais nem presume um conector. Em `full`, abra `learning-pack/README.md` separadamente quando quiser estudar o próprio harness.
 8. Execute `python tools/validate.py`. Gere um pacote fora da árvore fonte com `python tools/package.py --profile core --output <diretório-externo>`; troque o perfil quando necessário.
 
 ## Instalação contida no projeto
@@ -156,13 +160,15 @@ Regras duráveis aprovadas por pessoas são versionadas no mapa de regras ou ref
 6. Decisões consequentes exigem aprovação humana.
 7. O aprendizado do projeto é opcional e não altera o controle da entrega.
 8. Capacidades e degradação são explícitas; adaptadores não inventam suporte.
-9. Modelos são escolhidos por capacidade e risco; modelos mais fortes não recebem autoridade adicional.
-10. Mudanças seguem unidades coerentes de aceitação e rollback; commit, integração, push, deploy e publicação continuam sendo gates separados.
-11. Orçamentos de execução acompanham a linhagem do objetivo e interrompem tentativas, ciclos sem progresso e expansões de contexto ao atingir tetos explícitos.
+9. Trabalho de tela frontend usa por padrão a rota visual até código; capacidades visuais indisponíveis degradam de forma visível em vez de serem simuladas.
+10. Áreas diferentes usam contextos de execução distintos por padrão; o status mostra pendências humanas e técnicas, contexto ativo, bloqueios e próxima ação por área.
+11. Modelos são escolhidos por capacidade e risco; modelos mais fortes não recebem autoridade adicional.
+12. Mudanças seguem unidades coerentes de aceitação e rollback; commit, integração, push, deploy e publicação continuam sendo gates separados.
+13. Orçamentos de execução acompanham a linhagem do objetivo e interrompem tentativas, ciclos sem progresso e expansões de contexto ao atingir tetos explícitos.
 
 ## Estado atual
 
-**Scaffold operacional da versão 0.3.0.** O Codex ativa por `AGENTS.md`; o Claude Code ativa por `CLAUDE.md`, importando `@AGENTS.md`. Ambos incluem skills nativas pequenas, o Claude tem subagentes de projeto delimitados, e todas as rotas convergem nos contratos e no estado neutros. Papéis, templates, playbooks, exemplos, módulos de estudo, roteamento por capacidade, orçamentos limitados por linhagem de objetivo, rodadas limitadas de review, mutações negativas de status/review/orçamento, integração coerente de mudanças, validação, empacotamento determinístico e roteiros auditáveis dos áudios existem.
+**Scaffold operacional da versão 0.4.0.** O Codex ativa por `AGENTS.md`; o Claude Code ativa por `CLAUDE.md`, importando `@AGENTS.md`. Ambos incluem skills nativas pequenas e convergem nos contratos e no estado neutros. A versão adiciona o fluxo frontend visual até código, ativação de aprendizado por linguagem comum com destino durável das notas, contextos de execução por área, fallback portátil entre chats visíveis e subagentes e status por área, preservando budgets e reviews limitados.
 
 ```text
 python tools/validate.py

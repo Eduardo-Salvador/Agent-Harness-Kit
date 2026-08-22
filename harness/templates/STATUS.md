@@ -20,6 +20,12 @@ task_graph: graph-main@1
 
 - None, or exact action, reason, delivery effect, owner, and source.
 
+## Workstream status
+
+| Area | Progress | Human pending | Technical pending | Active agent/context | Blockers | Next action |
+| --- | --- | --- | --- | --- | --- | --- |
+| Replace | Replace | none | Replace | agent/ref or none | none | Replace |
+
 ## Blockers
 
 - Blockers: None, or exact blocker and owner.

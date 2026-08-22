@@ -21,13 +21,14 @@ NODE_FIELDS = {
     "id", "goal", "depends_on", "status", "assignee", "reviewer",
     "write_set", "checkpoint", "task_brief", "assurance_status", "assurance_requires",
 }
+NODE_CONTEXT_FIELDS = {"workstream", "agent_role", "execution_context", "thread_policy", "thread_ref"}
 
 REQUIRED_FILES = [
     "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "LICENSE", "media/agent-harness-kit-overview-en.mp3", "media/agent-harness-kit-overview-pt-BR.mp3", "media/agent-harness-kit-overview-en.mp4", "media/agent-harness-kit-overview-pt-BR.mp4",
     "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
     "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md",
     "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md",
-    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
+    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
     "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
     "adapters/README.md", "adapters/generic.md", "adapters/codex.md", "adapters/claude.md",
     "harness/roles/README.md", "harness/roles/discovery-interviewer.md",
@@ -37,7 +38,7 @@ REQUIRED_FILES = [
     "harness/playbooks/README.md", "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md",
     "harness/playbooks/discovery-to-graph.md", "harness/playbooks/task-dispatch.md",
     "harness/playbooks/contract-changes.md", "harness/playbooks/parallel-execution.md",
-    "harness/playbooks/review-integration.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/learning-capture-publication.md",
+    "harness/playbooks/review-integration.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/context-routing.md", "harness/playbooks/frontend-screen.md", "harness/playbooks/learning-capture-publication.md",
     "harness/templates/README.md", "harness/templates/PROJECT-CONTEXT.md",
     "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/TASK.md", "harness/templates/EXECUTION-BUDGET.md",
     "harness/templates/HANDOFF.md", "harness/templates/REVIEW.md", "harness/templates/STATUS.md",
@@ -58,9 +59,11 @@ REQUIRED_FILES = [
     "validation/fixtures/invalid/assurance-gate.json",
     "validation/fixtures/invalid/reviewer-self-review.json",
     "validation/fixtures/invalid/path-traversal.json",
+    "validation/fixtures/invalid/context-collision.json",
     "validation/status-fixtures/valid.json",
     "validation/status-fixtures/invalid/missing-progress.json",
     "validation/status-fixtures/invalid/path-traversal.json",
+    "validation/status-fixtures/invalid/missing-workstreams.json",
     "validation/review-fixtures/round-two-valid.json",
     "validation/review-fixtures/invalid/missing-correction-delta.json",
     "validation/budget-fixtures/valid.json",
@@ -83,9 +86,9 @@ REQUIRED_FILES = [
     "harness/templates/CAPABILITY-MANIFEST.md", "harness/templates/RULES-MAP.md",
     "validation/native-integration.json",
     ".agents/skills/first-run-discovery/SKILL.md", ".agents/skills/graph-execution/SKILL.md",
-    ".agents/skills/governed-review/SKILL.md", ".agents/skills/project-learning/SKILL.md",
+    ".agents/skills/governed-review/SKILL.md", ".agents/skills/frontend-screen/SKILL.md", ".agents/skills/project-learning/SKILL.md",
     ".claude/skills/first-run-discovery/SKILL.md", ".claude/skills/graph-execution/SKILL.md",
-    ".claude/skills/governed-review/SKILL.md", ".claude/skills/project-learning/SKILL.md",
+    ".claude/skills/governed-review/SKILL.md", ".claude/skills/frontend-screen/SKILL.md", ".claude/skills/project-learning/SKILL.md",
     ".claude/agents/discovery-interviewer.md", ".claude/agents/task-specialist.md",
     ".claude/agents/independent-reviewer.md", ".claude/agents/learning-assessor.md",
 ]
@@ -104,11 +107,11 @@ TEMPLATE_RULES = {
         {"Human action required", "Project completion overview", "Recently resolved"},
     ),
     "TASK.md": (
-        {"schema", "id", "graph", "revision", "status", "assigned_to", "reviewer", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "execution_budget", "review_profile", "max_review_rounds", "assurance_gate"},
+        {"schema", "id", "graph", "revision", "status", "assigned_to", "reviewer", "workstream", "agent_role", "execution_context", "thread_policy", "thread_ref", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "execution_budget", "review_profile", "max_review_rounds", "assurance_gate"},
         {"Outcome", "Context to load", "Owned paths", "Constraints", "Rules to load", "Required capabilities", "Acceptance criteria", "Verification", "Exit"},
     ),
     "HANDOFF.md": (
-        {"schema", "id", "task", "attempt", "status", "author", "created_at", "model_tier_used", "model_route_changes", "execution_budget"},
+        {"schema", "id", "task", "attempt", "status", "author", "workstream", "agent_role", "execution_context", "thread_ref", "created_at", "model_tier_used", "model_route_changes", "execution_budget"},
         {"Result", "Changes", "Change unit and authority", "Acceptance evidence", "Verification run", "Execution budget", "Discoveries and risks", "Routing and authority", "Review request", "User-facing closeout"},
     ),
     "REVIEW.md": (
@@ -117,7 +120,7 @@ TEMPLATE_RULES = {
     ),
     "STATUS.md": (
         {"schema", "id", "revision", "generated_at", "generated_by", "project_context", "pending_authority", "task_graph"},
-        {"Stage and progress", "Human action required", "Blockers", "Next action", "Inspectable paths"},
+        {"Stage and progress", "Human action required", "Workstream status", "Blockers", "Next action", "Inspectable paths"},
     ),
     "DECISION.md": (
         {"schema", "id", "revision", "status", "consequence", "decided_by", "decided_at", "supersedes", "source_references"},
@@ -282,6 +285,9 @@ def validate_graph(data: dict, source: str) -> list[str]:
             errors.append(f"graph.duplicate-id: {source} repeats {node_id}")
         else:
             by_id[node_id] = node
+        present_context = NODE_CONTEXT_FIELDS & set(node)
+        if present_context and present_context != NODE_CONTEXT_FIELDS:
+            errors.append(f"graph.context-fields: {source} {node.get('id', index)} missing {sorted(NODE_CONTEXT_FIELDS - set(node))}")
     for node_id, node in by_id.items():
         dependencies = node.get("depends_on", [])
         if not isinstance(dependencies, list):
@@ -299,6 +305,17 @@ def validate_graph(data: dict, source: str) -> list[str]:
                 errors.append(f"graph.invalid-path: {source} {node_id} {owned!r} ({reason})")
         if node.get("assignee") not in {None, "unassigned"} and node.get("assignee") == node.get("reviewer"):
             errors.append(f"graph.reviewer-independence: {source} {node_id}")
+        if NODE_CONTEXT_FIELDS <= set(node):
+            if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", str(node.get("workstream", ""))):
+                errors.append(f"graph.workstream: {source} {node_id}")
+            if not str(node.get("agent_role", "")).strip():
+                errors.append(f"graph.agent-role: {source} {node_id}")
+            if node.get("execution_context") not in {"isolated", "shared-integration", "sequential-fallback"}:
+                errors.append(f"graph.execution-context: {source} {node_id}")
+            if node.get("thread_policy") not in {"create-per-task", "reuse-workstream", "manual", "sequential-fallback"}:
+                errors.append(f"graph.thread-policy: {source} {node_id}")
+            if not str(node.get("thread_ref", "")).strip():
+                errors.append(f"graph.thread-ref: {source} {node_id}")
         assurance_status = node.get("assurance_status")
         if assurance_status not in {"not-required", "pending", "accepted", "changes-requested", "blocked"}:
             errors.append(f"graph.assurance-status: {source} {node_id}")
@@ -343,6 +360,10 @@ def validate_graph(data: dict, source: str) -> list[str]:
             right_paths = [normalize_owned_path(str(p))[0] for p in right.get("write_set", [])]
             if any(a and b and paths_collide(a, b) for a in left_paths for b in right_paths):
                 errors.append(f"graph.write-collision: {source} {left['id']} <> {right['id']}")
+            left_ref, right_ref = left.get("thread_ref"), right.get("thread_ref")
+            if (left_ref not in {None, "pending", "manual", "sequential"} and left_ref == right_ref
+                    and left.get("workstream") != right.get("workstream")):
+                errors.append(f"graph.context-collision: {source} {left['id']} <> {right['id']}")
     return errors
 
 
@@ -380,7 +401,7 @@ def validate_fixtures() -> list[str]:
     return errors
 
 
-STATUS_FIELDS = {"stage", "progress", "blockers", "next_action", "inspectable_paths", "human_pending"}
+STATUS_FIELDS = {"stage", "progress", "blockers", "next_action", "inspectable_paths", "human_pending", "workstreams"}
 
 
 def validate_status_payload(data: dict, source: str) -> list[str]:
@@ -409,6 +430,14 @@ def validate_status_payload(data: dict, source: str) -> list[str]:
         for index, item in enumerate(human_pending):
             if not isinstance(item, dict) or not item.get("action") or not item.get("source"):
                 errors.append(f"status.human-source: {source} item {index}")
+    workstreams = data.get("workstreams")
+    if not isinstance(workstreams, list) or not workstreams:
+        errors.append(f"status.workstreams-shape: {source}")
+    else:
+        required = {"area", "progress", "human_pending", "technical_pending", "active_context", "blockers", "next_action"}
+        for index, item in enumerate(workstreams):
+            if not isinstance(item, dict) or required - set(item):
+                errors.append(f"status.workstream-fields: {source} item {index}")
     return errors
 
 
@@ -857,6 +886,42 @@ def validate_native_integration() -> list[str]:
         if ".claude/skills/" not in claude_text or "adapters/claude.md" not in claude_text:
             errors.append("native.claude-routing: CLAUDE.md does not route Claude Code")
 
+        if "frontend-screen" not in agents_text or "harness/playbooks/frontend-screen.md" not in agents_text:
+            errors.append("native.frontend-routing: AGENTS.md must route screen requests through the frontend workflow")
+        learning_tokens = ("delivery+learning", "learning-profile", "destination")
+        if any(token not in agents_text.lower() for token in learning_tokens):
+            errors.append("native.learning-activation-routing: AGENTS.md must recognize learning requests and collect a note destination")
+
+    frontend_playbook = ROOT / "harness" / "playbooks" / "frontend-screen.md"
+    if frontend_playbook.is_file():
+        frontend_text = frontend_playbook.read_text(encoding="utf-8")
+        for capability in ("design-taste-frontend", "imagegen-frontend-web", "imagegen", "image-to-code"):
+            if capability not in frontend_text:
+                errors.append(f"native.frontend-capability: frontend playbook does not name {capability}")
+    for item in (".agents/skills/frontend-screen/SKILL.md", ".claude/skills/frontend-screen/SKILL.md"):
+        path = ROOT / item
+        if path.is_file() and "harness/playbooks/frontend-screen.md" not in path.read_text(encoding="utf-8"):
+            errors.append(f"native.frontend-playbook-routing: {item}")
+
+    learning_playbook = ROOT / "harness" / "playbooks" / "learning-capture-publication.md"
+    if learning_playbook.is_file():
+        learning_text = learning_playbook.read_text(encoding="utf-8").lower()
+        for token in ("obsidian", "notion", "local", "capability manifest", "destination preferences"):
+            if token not in learning_text:
+                errors.append(f"native.learning-destination-routing: learning playbook does not cover {token}")
+
+    context_playbook = ROOT / "harness" / "playbooks" / "context-routing.md"
+    context_doc = ROOT / "docs" / "CONTEXT-ROUTING.md"
+    if context_playbook.is_file() and context_doc.is_file():
+        context_text = context_playbook.read_text(encoding="utf-8") + context_doc.read_text(encoding="utf-8")
+        for token in ("workstream", "create_thread", "spawn_subagent", "thread_ref", "sequential-fallback"):
+            if token not in context_text:
+                errors.append(f"native.context-routing: context policy does not cover {token}")
+        for adapter_name in ("generic.md", "codex.md", "claude.md"):
+            adapter_text = (ROOT / "adapters" / adapter_name).read_text(encoding="utf-8")
+            if "create_thread" not in adapter_text and "thread lifecycle" not in adapter_text.lower():
+                errors.append(f"native.context-adapter: adapters/{adapter_name} lacks thread capability mapping")
+
     bounded_review_surfaces = (
         "AGENTS.md",
         "CLAUDE.md",
@@ -970,15 +1035,17 @@ def validate_repository() -> list[str]:
             "media/agent-harness-kit-overview-en.mp4",
             "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
             "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/VALIDATION.md", "docs/DISTRIBUTION.md",
-            "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
-            "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/templates/PROJECT-CONTEXT.md",
+            "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
+            "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/context-routing.md", "harness/playbooks/frontend-screen.md", "harness/templates/PROJECT-CONTEXT.md",
             "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/STATUS.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/EXECUTION-BUDGET.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "tools/validate.py", "tools/package.py", "tools/install.py", "validation/test_install.py", "validation/budget-fixtures/valid.json",
             ".agents/skills/first-run-discovery/SKILL.md",
             ".agents/skills/graph-execution/SKILL.md",
             ".agents/skills/governed-review/SKILL.md",
+            ".agents/skills/frontend-screen/SKILL.md",
             ".claude/skills/first-run-discovery/SKILL.md",
             ".claude/skills/graph-execution/SKILL.md",
             ".claude/skills/governed-review/SKILL.md",
+            ".claude/skills/frontend-screen/SKILL.md",
             ".claude/agents/discovery-interviewer.md",
             ".claude/agents/task-specialist.md",
             ".claude/agents/independent-reviewer.md",
@@ -1210,12 +1277,12 @@ def main() -> int:
         return 1
     required_count = 17 if (ROOT / "PACKAGE-MANIFEST.json").exists() else len(REQUIRED_FILES)
     print(f"VALIDATION PASSED: {len(markdown_files())} Markdown files, {required_count} required files")
-    print("Graph fixtures: valid, missing dependency, cycle, write collision, self-review, and path traversal")
+    print("Graph fixtures: valid, missing dependency, cycle, write/context collision, self-review, and path traversal")
     print("Status mutation fixtures: required fields, human-source provenance, and safe inspectable paths")
     print("Review mutation fixtures: focused round-two blocker, correction-delta, and regression boundaries")
     print("Execution budget fixtures: attempt, no-progress, context-expansion, lineage, and path ceilings")
     print("Host fixtures: namespaced adoption, missing backlink, silent omission, stale snapshot, and premature cutover")
-    print("Native integration: Codex and Claude Code entrypoints, shared-core routing, safe defaults, and profile boundaries")
+    print("Native integration: Codex and Claude Code entrypoints, frontend/learning/context routing, safe defaults, and profile boundaries")
     print("Language boundary: README.pt-BR.md is the only Portuguese-content exception")
     return 0
 

@@ -41,7 +41,7 @@ Discovery should establish, to the degree relevant:
 - user-defined business rules, security/privacy constraints, architectural invariants, coding conventions, and path-scoped rules, indexed in/referenced by a rules map with authority, scope, precedence, approval, and validation;
 - project-specific domains and whether existing roles suffice; when they do not, proposed specialist responsibilities, least tool access, progressive context packet, ownership boundary, independent reviewer, and verification criteria;
 - known risks, assumptions, dependencies, and open questions;
-- delivery mode and, if explicitly enabled, learning goals/consent/destination preference.
+- delivery mode and, when the user requests study/learning in plain language, learning goals, observation consent, and an exact note destination with format, capability state, retention, and write/publication policy.
 
 Role customization is governed discovery output, never silent agent self-modification. Consequential authority/tool expansion requires a human decision, and customization cannot remove orchestrator/reviewer independence, least capability, exclusive ownership, verification, checkpoints, or learning non-interference.
 

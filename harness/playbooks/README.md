@@ -10,6 +10,8 @@ Playbooks describe neutral state transitions. Select the smallest playbook that 
 - [Task closeout and user communication](task-closeout.md)
 - [Capability-based model routing](model-routing.md)
 - [Bounded execution budget](../../docs/EXECUTION-BUDGET.md)
+- [Frontend screen workflow](frontend-screen.md)
+- [Workstream and execution-context routing](context-routing.md)
 - [Contract changes](contract-changes.md)
 - [Parallel execution and isolation](parallel-execution.md)
 - [Bounded review and integration](review-integration.md)

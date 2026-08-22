@@ -10,6 +10,10 @@ task: TASK-001@1
 attempt: 1
 status: completed                 # completed | blocked | failed
 author: agent:builder-1
+workstream: backend
+agent_role: role:backend-specialist
+execution_context: isolated
+thread_ref: adapter:task-001
 created_at: 2026-08-20T14:45:00Z
 model_tier_used: balanced
 model_route_changes: none
@@ -21,6 +25,8 @@ model_route_changes: none
 
 ## Result
 Implemented graph-cycle and ownership-overlap validation.
+
+- Execution context: `adapter:task-001`; closed after durable handoff.
 
 ## Changes
 - `src/contracts/graph-validator.*`: validation rules.

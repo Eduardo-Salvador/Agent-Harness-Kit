@@ -17,9 +17,9 @@ updated_by: role:orchestrator
 # Pending work
 
 ## Human action required
-| ID | Owner | Request or decision | Why / delivery effect | Needed by | Status | Source |
-| --- | --- | --- | --- | --- | --- | --- |
-| HUMAN-001 | human:product-owner | Choose option A or B | Blocks TASK-003 | Before TASK-003 | open | `DEC-003@1` |
+| ID | Area | Owner | Request or decision | Why / delivery effect | Needed by | Status | Source |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| HUMAN-001 | authentication | human:product-owner | Choose option A or B | Blocks TASK-003 | Before TASK-003 | open | `DEC-003@1` |
 
 ## Project completion overview
 | Area | Current state | What remains | Human dependency | Technical source |
@@ -36,6 +36,7 @@ updated_by: role:orchestrator
 ## Invariants
 
 - Every open item has one explicit owner, actionable wording, status, and durable source.
+- Every human item and macro completion row names its project area so status can group pending work by workstream without moving technical scheduling into this artifact.
 - Human-owned items live under `Human action required`; technical tasks cannot be presented as the user's to-do list.
 - A human item names the requested decision/action and delivery effect, not only “approval required”.
 - `Project completion overview` describes product areas and outcomes still missing, not task ordering or agent dispatch details.

@@ -11,6 +11,7 @@ Codex natively discovers root `AGENTS.md` and repository skills under `.agents/s
 | Tool execution | Tools actually exposed by the current Codex session | Mark unavailable or approval-required |
 | MCP | User/project configuration that already exists and is approved | Do not install, authenticate, or edit global config |
 | Isolation/delegation | Capabilities evidenced in the current host | Serialize work and preserve distinct implementer/reviewer contexts |
+| Task/chat lifecycle | Visible task/thread operations actually exposed by the Codex host | Internal subagent, user-opened fresh context, or sequential artifact handoff |
 
 At session start, apply the `AGENTS.md` first-run/status gate. For resume or status, read project context, pending-work authority, and task graph in that order before any broad scan. Missing or unapproved `harness-state/PROJECT-CONTEXT.md` means discovery precedes implementation planning. Skills contain routing instructions, not canonical project memory.
 
@@ -19,6 +20,8 @@ Apply [bounded review rounds](../docs/REVIEW-ROUNDS.md) to the root agent and ev
 For every root or delegated agent, apply [status and completion communication](../docs/STATUS-AND-COMPLETION.md) and [`harness.status/v1`](../docs/contracts/STATUS.md). `PENDING.md` owns human decisions/actions and macro project gaps; `TASK-GRAPH.md` owns technical order, dependencies, and execution. Every status reports stage, progress, blockers, next action, and inspectable paths. Passing tasks are marked `completed` and unlock the next node immediately; assurance review is automatic, non-blocking, and never a renewed human approval request.
 
 Discovery records platform tools, skills, MCP/connectors, scripts, hooks, and integrations in the capability manifest. Filename presence is not proof of runtime availability or authorization. Do not write user-specific configuration, credentials, hooks, network access, or broad permissions.
+
+Map `create_thread`, `resume_thread`, `message_thread`, and `close_thread` only when the current Codex host exposes those operations. Internal subagent spawning is a separate capability and does not imply a sidebar-visible task. Follow [context routing](../docs/CONTEXT-ROUTING.md), keep workstreams isolated, and store only the returned adapter reference in task state.
 
 For mature repositories, keep existing Codex guidance and `.agents/` content authoritative during namespaced coexistence. Bind or merge only through the migration manifest, provenance backlinks, human semantic-equivalence review, and separate cutover approval.
 

@@ -6,6 +6,11 @@ revision: 1
 status: ready
 assigned_to: unassigned
 reviewer: unassigned
+workstream: replace-area
+agent_role: role:generic-specialist
+execution_context: isolated
+thread_policy: create-per-task
+thread_ref: pending
 ownership_lease: pending
 isolation: pending
 updated_at: 2000-01-01T00:00:00Z
@@ -29,6 +34,7 @@ Replace with one bounded result.
 
 - `project-context@1`
 - `graph-main@1` and direct dependency artifacts
+- `thread_ref` is routing evidence only; reconstruct state from these artifacts, not prior chat memory.
 
 ## Owned paths
 

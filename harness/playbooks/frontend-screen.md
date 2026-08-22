@@ -1,0 +1,33 @@
+# Playbook: Frontend screen workflow
+
+Use this playbook for a new screen, page, landing page, portfolio surface, responsive section, or material visual redesign. A small bug fix or deterministic style adjustment stays in the normal task loop.
+
+## Capability gate
+
+Before visual work, inspect the approved capability manifest for these skill capabilities:
+
+1. `design-taste-frontend` — design read, visual system, interaction judgment, and final preflight.
+2. `imagegen-frontend-web` — section-level visual direction across desktop, tablet, and mobile.
+3. `imagegen` — bitmap mockup and visual-asset generation.
+4. `image-to-code` — faithful translation of an approved proposal into the real frontend.
+
+Presence of a name or file is not evidence of runtime availability. Record each capability as available, degraded, unavailable, or approval-required. If one is unavailable, announce the exact degradation and preserve the same phase boundary with available native tools; never pretend the named skill ran.
+
+## Default sequence
+
+1. Inspect the existing product, frontend stack, brand assets, responsive constraints, task acceptance, and owned paths. For a redesign, audit before proposing replacement.
+2. Use `design-taste-frontend` to state one concise design read and set the visual direction. Preserve an established design system unless the task authorizes an overhaul.
+3. Use `imagegen-frontend-web` to turn that direction into legible section proposals and responsive intent. Prefer separate section references over one unreadable full-page board.
+4. Use `imagegen` to render the required mockups or raster assets. Generate distinct variants with distinct prompts, keep exact user copy, and persist project-bound outputs under an owned project path.
+5. Obtain one consolidated visual approval before implementation only when the workflow introduced new visual judgment. Skip this gate when the user supplied an already-approved reference, explicitly requested direct code, or the task is deterministic.
+6. After approval, use `image-to-code` to inspect the actual repository and implement the proposal in the existing stack. Do not replace real components, dependencies, brand assets, or accessibility behavior merely to resemble the image.
+7. Verify the real result at representative desktop, tablet, and mobile widths. Check content hierarchy, overflow, interaction states, keyboard/accessibility basics, reduced-motion behavior when relevant, and fidelity to the approved proposal.
+8. Use `design-taste-frontend` for the final design preflight. Fix acceptance failures inside the task budget, write the normal handoff, complete passing work, and continue through bounded independent assurance.
+
+## Boundaries
+
+- The visual phase does not grant implementation, package installation, network, publication, commit, or push authority.
+- Do not block implementation on repeated aesthetic approvals. One consolidated approval is the maximum unless the user materially changes direction.
+- Do not load all four skill bodies when a phase is not needed. Route progressively.
+- Do not spend delivery budget generating decorative variants that do not change an acceptance decision.
+- When generation is unavailable, a code-native prototype may replace the mockup phase only after the degradation is visible; verification against task acceptance remains mandatory.

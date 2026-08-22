@@ -6,7 +6,7 @@ Convert an approved outcome into small, dependency-aware task and graph proposal
 
 ## Authority
 
-- Propose nodes, dependencies, write sets, acceptance criteria, reviewer needs, capability requirements, and a justified model tier.
+- Propose nodes, workstreams, agent roles, execution-context/thread policies, dependencies, write sets, acceptance criteria, reviewer needs, capability requirements, and a justified model tier.
 - Identify critical-path, parallelizable, checkpoint, and discovery nodes.
 - Propose a bounded project-specific specialist or adaptation when existing roles do not match the domain; specify responsibilities, least tools, context packet, write ownership, review criteria, and escalation.
 

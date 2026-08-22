@@ -8,21 +8,21 @@
 
 ## Project overview audio
 
-Listen to a concise English explanation of what Agent Harness Kit is, how its workflow operates, what version 0.3.0 provides, and what remains intentionally outside the current runtime.
+Listen to a concise English explanation of the Agent Harness Kit foundation through version 0.3.0. The 0.4.0 frontend, learning-activation, and context-routing additions are documented below.
 
 https://github.com/user-attachments/assets/8d0d1956-5199-43d2-9cf7-3a4b625553bd
 
 [Download the English MP3](media/agent-harness-kit-overview-en.mp3) · [Read the current English narration script](media/overview-script-en.txt)
 
-The approved playable track matches the current version 0.3.0 narration script, including executable goal-lineage budgets.
+The approved playable track matches the approved version 0.3.0 narration script, including executable goal-lineage budgets.
 
 ## Why use it
 
 Use this scaffold when agent-assisted development needs durable project context, bounded roles, dependency-aware tasks, exclusive write ownership, independent review, reproducible evidence, and cost-aware model selection instead of state that exists only in chat. Every profile ships both native entrypoints: Codex reads root `AGENTS.md`; Claude Code reads root `CLAUDE.md`, which imports `@AGENTS.md`. Both route into the same neutral core and state without runtime guessing or manual profile switching. The same repository can be opened with either tool at different times without competing harness authority.
 
-**Current source version: `0.3.0`.** The source is an executable, artifact-driven operating scaffold: capable Codex/Claude sessions follow its contracts and validators. It is not a separate daemon that independently launches agents or locks files at the operating-system level.
+**Current source version: `0.4.0`.** The source is an executable, artifact-driven operating scaffold: capable Codex/Claude sessions follow its contracts and validators. It is not a separate daemon that independently launches agents or locks files at the operating-system level.
 
-## What 0.3.0 provides
+## What 0.4.0 provides
 
 | Area | Shipped behavior |
 | --- | --- |
@@ -30,6 +30,9 @@ Use this scaffold when agent-assisted development needs durable project context,
 | Project state | Approved context, human/macro `PENDING.md`, and technical `TASK-GRAPH.md` with a strict read order |
 | Status | Executable `harness.status/v1` contract requiring stage, progress, blockers, next action, human items, and inspectable paths |
 | Execution | Dependency readiness, declared file leases/write sets, collision checks, handoffs, evidence, and automatic next-task advance |
+| Context separation | Tasks are grouped by frontend/backend/data/infra/integration workstreams and run in distinct visible chats, subagents, manual context windows, or sequential fallbacks according to proven host capabilities |
+| Frontend screens | A default cross-platform route coordinates `design-taste-frontend`, responsive visual direction, `imagegen`, and `image-to-code`, with explicit degradation when a capability is absent |
+| Project learning | Plain-language study requests start a consented setup for goals, observation, and a precise Markdown/local/Obsidian/Notion note destination |
 | Resource control | Executable per-lineage ceilings: two implementation attempts, two consecutive no-progress cycles, and three context expansions by default |
 | Assurance | Independent reviewer, two reviews maximum, focused round two, and forced rewrite/decomposition/human decision after a second rejection |
 | Safety and portability | Capability/rule manifests, explicit degradation, mature-harness coexistence, Codex/Claude adapters, and no silent permission expansion |
@@ -78,9 +81,10 @@ Every profile also contains both native platform entrypoints and their small on-
 4. Select `delivery` or `delivery+learning`, review the generated [project context](harness/templates/PROJECT-CONTEXT.md), and explicitly approve it.
    Discovery also builds or references a [capability manifest](harness/templates/CAPABILITY-MANIFEST.md) and [rules map](harness/templates/RULES-MAP.md). Capabilities cover native platform tools, MCP servers/connectors, skills, scripts/commands, hooks, and external integrations; absent evidence means unavailable, optional, or approval-required—not assumed access. Rules may cover business behavior, security/privacy, architecture, coding conventions, and paths, and are routed only to relevant work.
 5. The decomposer proposes and validates the initial [task graph](harness/templates/TASK-GRAPH.md); the orchestrator then dispatches a bounded [task brief](harness/templates/TASK.md). Dispatch follows [capability-based model routing](docs/MODEL-ROUTING.md): balanced is the normal default, economical is limited to deterministic low-risk work, and frontier is reserved for consequential judgment or explicit escalation triggers. Provider-specific model names stay in adapters and current host evidence.
+   As a context-engineering best practice, each task also declares its workstream, specialist, and execution-context policy. Frontend, backend, data, infrastructure, and learning should use different context windows; a fresh context per task is the default. When the host supports visible chats/tasks or internal subagents and their use is approved, the adapter creates them. Otherwise the user can open a fresh context, or the harness serializes work through complete artifact handoffs. See [context routing](docs/CONTEXT-ROUTING.md).
    Role definitions are editable templates: discovery can adapt existing roles or propose project-specific specialists, responsibilities, tool access, context packets, ownership boundaries, and review criteria. This is governed configuration, not uncontrolled agent self-modification. Consequential changes to tools, permissions, secrets, network, destructive actions, hooks, integrations, or durable rules require explicit human approval and validation.
 6. The specialist works only in its leased paths and under the linked [execution budget](docs/EXECUTION-BUDGET.md): two implementation attempts, two consecutive no-progress cycles, and three context expansions per goal lineage by default. Model, agent, task, review, decomposition, and session changes cannot reset these counters. At a ceiling, the agent records evidence and stops for bounded replanning. It runs declared checks and writes a [handoff](harness/templates/HANDOFF.md). When those checks pass, the orchestrator marks the node completed, reports what changed, releases ownership, and dispatches the next dependency-ready task without asking for human completion approval. A different reviewer then writes a non-blocking [assurance result](harness/templates/REVIEW.md) automatically. Review uses a `light`, `standard`, or `critical` profile with [two rounds maximum](docs/REVIEW-ROUNDS.md); round two is limited to prior blockers, the correction delta, and related regressions. A second rejection forces rewrite, decomposition, or a genuine human product/risk decision. Related microcorrections form one [coherent change unit](docs/CHANGE-INTEGRATION.md). Completion never grants separate commit, push, deploy, or publication authority.
-7. In `delivery+learning`, project-learning roles may update the consented learning queue after delivery evidence exists. In `full`, open `learning-pack/README.md` separately when you want to study the harness itself.
+7. Asking to study, learn through the current project, enable study mode, or keep learning notes starts `delivery+learning` setup when that extension is installed. The agent asks only for missing goals, observation consent, and the exact destination—repository Markdown, another local path, Obsidian vault/folder, Notion page/database, or another named system—then records its format, capability state, retention, and write/publication policy in the learning profile. It never stores credentials or assumes a connector. In `full`, open `learning-pack/README.md` separately when you want to study the harness itself.
 8. Run `python tools/validate.py`. Build a bundle outside the source tree with `python tools/package.py --profile core --output <outside-directory>`; substitute `core-learning` or `full` as needed.
 
 ## Contained project installation
@@ -156,13 +160,15 @@ Human-approved durable rules are versioned in or referenced by the rules map; te
 6. Consequential product, architecture, scope, permission, override, and publication choices require human approval.
 7. Project learning is optional and cannot mutate delivery control state.
 8. Capabilities and degradation are explicit; adapters never invent support.
-9. Models are routed by capability and risk; stronger models grant no additional authority.
-10. Changes follow coherent acceptance and rollback units; commit, integration, push, deploy, and publication remain separate gates.
-11. Execution budgets follow the goal lineage and stop repeated attempts, no-progress cycles, and context expansion at explicit ceilings.
+9. Frontend screen work uses the shared visual-to-code route by default; unavailable visual capabilities degrade visibly instead of being simulated.
+10. Different workstreams use distinct execution contexts by default; status shows human and technical pending work, active context, blockers, and next action per area.
+11. Models are routed by capability and risk; stronger models grant no additional authority.
+12. Changes follow coherent acceptance and rollback units; commit, integration, push, deploy, and publication remain separate gates.
+13. Execution budgets follow the goal lineage and stop repeated attempts, no-progress cycles, and context expansion at explicit ceilings.
 
 ## Current status
 
-**Version 0.3.0 operating scaffold.** Codex activates through `AGENTS.md`; Claude Code activates through `CLAUDE.md` importing `@AGENTS.md`. Both ship small native skills, Claude has bounded project subagents, and all routes converge on the neutral contracts and state. Roles, templates, playbooks, examples, learning modules, capability-tier routing, bounded goal-lineage execution budgets, bounded review rounds, executable status/review/budget mutation fixtures, coherent change integration, validation, deterministic packaging, and auditable audio scripts exist.
+**Version 0.4.0 operating scaffold.** Codex activates through `AGENTS.md`; Claude Code activates through `CLAUDE.md` importing `@AGENTS.md`. Both ship small native skills and converge on neutral contracts and state. The release adds default frontend visual-to-code routing, plain-language project-learning activation with durable note destinations, workstream-aware execution contexts, portable visible-thread/subagent fallbacks, and per-area status reporting while preserving bounded budgets and reviews.
 
 ```text
 python tools/validate.py

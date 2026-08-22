@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "TASK-FRONTEND",
+      "goal": "Implement frontend",
+      "depends_on": [],
+      "status": "ready",
+      "assignee": "agent:frontend",
+      "reviewer": "agent:reviewer-a",
+      "workstream": "frontend",
+      "agent_role": "role:frontend-specialist",
+      "execution_context": "isolated",
+      "thread_policy": "create-per-task",
+      "thread_ref": "thread:shared",
+      "write_set": ["frontend/**"],
+      "checkpoint": null,
+      "task_brief": "tasks/TASK-FRONTEND.md",
+      "assurance_status": "pending",
+      "assurance_requires": []
+    },
+    {
+      "id": "TASK-BACKEND",
+      "goal": "Implement backend",
+      "depends_on": [],
+      "status": "ready",
+      "assignee": "agent:backend",
+      "reviewer": "agent:reviewer-b",
+      "workstream": "backend",
+      "agent_role": "role:backend-specialist",
+      "execution_context": "isolated",
+      "thread_policy": "create-per-task",
+      "thread_ref": "thread:shared",
+      "write_set": ["backend/**"],
+      "checkpoint": null,
+      "task_brief": "tasks/TASK-BACKEND.md",
+      "assurance_status": "pending",
+      "assurance_requires": []
+    }
+  ],
+  "expected_errors": ["graph.context-collision"]
+}

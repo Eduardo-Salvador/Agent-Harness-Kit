@@ -11,9 +11,9 @@ updated_by: role:orchestrator
 
 ## Human action required
 
-| ID | Owner | Request or decision | Why / delivery effect | Needed by | Status | Source |
-| --- | --- | --- | --- | --- | --- | --- |
-| None | none | No human action currently recorded | none | none | clear | none |
+| ID | Area | Owner | Request or decision | Why / delivery effect | Needed by | Status | Source |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| None | all | none | No human action currently recorded | none | none | clear | none |
 
 ## Project completion overview
 

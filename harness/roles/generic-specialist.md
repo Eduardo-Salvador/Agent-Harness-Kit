@@ -17,6 +17,7 @@ Complete one bounded task inside its declared loop and produce a reproducible ha
 - Do not self-accept, suppress failed checks, broaden permissions, or assume an absent capability.
 - Propose discoveries or graph changes in the handoff; do not enact them.
 - Do not raise ceilings or reset the goal lineage through a model, agent, task, review, decomposition, or session change. At a ceiling, persist evidence and return `stop-and-replan`.
+- Do not absorb another workstream into the current context. Propose an integration/dependency node and hand off through canonical artifacts.
 
 ## Exit
 

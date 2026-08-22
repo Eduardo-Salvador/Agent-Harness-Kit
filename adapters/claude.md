@@ -9,6 +9,7 @@ Claude Code natively loads root `CLAUDE.md`. This kit uses the documented `@AGEN
 | Session guidance | `CLAUDE.md` importing root `AGENTS.md` | Load the shared map explicitly |
 | Essential workflow | Relevant `.claude/skills/*/SKILL.md` | Follow the linked neutral playbook directly |
 | Bounded delegation | Explicit `.claude/agents/*.md` definitions | Run sequentially in the main context while preserving reviewer independence |
+| Task/chat lifecycle | Thread/session operations actually exposed by the Claude host | Bounded subagent, user-opened fresh context, or sequential artifact handoff |
 | Tool execution | Tools allowed by the selected agent and current permission system | Mark unavailable or approval-required |
 | Hooks and MCP | Existing, reviewed project configuration | Do not create `.claude/settings.json` or `.mcp.json` automatically |
 
@@ -19,6 +20,8 @@ Apply [bounded review rounds](../docs/REVIEW-ROUNDS.md) to the main context and 
 For every main agent or subagent, apply [status and completion communication](../docs/STATUS-AND-COMPLETION.md) and [`harness.status/v1`](../docs/contracts/STATUS.md). `PENDING.md` owns human decisions/actions and macro project gaps; `TASK-GRAPH.md` owns technical order, dependencies, and execution. Every status reports stage, progress, blockers, next action, and inspectable paths. Passing tasks are marked `completed` and unlock the next node immediately; assurance review is automatic, non-blocking, and never a renewed human approval request.
 
 Discovery records actual tools, skills, agents, MCP/connectors, scripts, hooks, and integrations. Presence does not establish installation, authentication, secret access, network access, or authorization.
+
+Claude subagents provide separate execution context only when runtime evidence confirms them; they do not automatically create user-visible chats. Map visible thread lifecycle operations separately, follow [context routing](../docs/CONTEXT-ROUTING.md), and keep different workstreams out of one implementation context except an explicit integration node.
 
 For mature repositories, preserve existing `CLAUDE.md`, `.claude/`, `.mcp.json`, and generated `.claude/worktrees/` according to the migration classifications. Generated worktree material is evidence or an exclusion, never silently promoted to canonical state. Cutover or deletion requires human semantic-equivalence review and separate authorization.
 

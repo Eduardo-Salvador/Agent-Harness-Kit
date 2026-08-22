@@ -5,6 +5,10 @@ task: TASK-001@1
 attempt: 1
 status: completed
 author: agent:implementer
+workstream: replace-area
+agent_role: role:generic-specialist
+execution_context: isolated
+thread_ref: adapter-owned-or-manual
 created_at: 2000-01-01T00:00:00Z
 model_tier_used: balanced
 model_route_changes: none
@@ -16,6 +20,8 @@ execution_budget: execution-budget-TASK-001@2
 ## Result
 
 Replace with the bounded result or blocker.
+
+- Execution context: Record the adapter evidence/reference and whether it was closed, retained, or degraded.
 
 ## Changes
 

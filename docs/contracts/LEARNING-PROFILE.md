@@ -37,7 +37,13 @@ source_references: migration-main@1
 | LEARN-003 | Ownership overlap | Relevant to TASK-001 review | Path basics | proposed |
 
 ## Destination preferences
-- Local Markdown draft; external publication requires per-item approval.
+- Destination type: obsidian.
+- Exact location: `D:/Notes/Project/Learning/` (user-approved external path).
+- Format and organization: one Markdown debrief per topic.
+- Capability status: available; filesystem evidence is recorded in `CAPABILITY-MANIFEST.md`.
+- Write policy: private writes within the approved folder are allowed.
+- Public sharing: approval-required.
+- Credentials: never stored here.
 
 ## Latest debrief
 - Improved: distinguished node loops from graph orchestration.
@@ -47,9 +53,10 @@ source_references: migration-main@1
 ## Invariants
 
 - The owner explicitly controls consent, visibility, retention, and publication.
+- Activation records the learning goal, observation boundary, exact note destination, format, capability state, retention, and write/publication policy. A conversational request starts this configuration instead of being ignored because no profile exists yet.
 - Skill/seniority feedback is evidence-linked, scoped by skill, and uncertainty-calibrated; no unsupported global rank.
 - Queue items cannot be delivery dependencies or mutate delivery priority/status.
-- External publication always requires the declared human approval; destination credentials never appear here.
+- Private writes to the exact approved destination follow its recorded policy. Public sharing, a new destination, broader visibility, and consequential retention changes require human approval; destination credentials never appear here.
 - `paused` or `withdrawn` stops observation and publication without changing delivery artifacts.
 - Deleting or omitting this artifact leaves all core contracts valid.
 - Installing/selecting `core-learning` does not create consent, activate observation, set retention, or approve publication.

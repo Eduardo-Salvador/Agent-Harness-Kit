@@ -21,6 +21,9 @@ The validator uses only the Python 3 standard library and does not modify files.
 - relative Markdown links and fragment targets, balanced fenced-code blocks, and one Mermaid block in each README;
 - the language boundary using a documented Portuguese-marker heuristic outside `README.pt-BR.md`;
 - root routing: `CLAUDE.md` imports `@AGENTS.md`, both routes converge on neutral state, context remains concise, and safe defaults add no live MCP/settings/hooks;
+- default frontend-screen routing through the same neutral playbook on Codex and Claude, with explicit checks for design-taste, responsive image direction, image generation, and image-to-code capabilities;
+- project-learning activation routing from plain-language study requests, including explicit local/Obsidian/Notion destination discovery and capability-manifest evidence;
+- portable workstream/context routing, separate visible-thread versus subagent capabilities, context-collision checks, and per-area status payloads;
 - first-run and learning-pack exclusion statements in root entry points;
 - overview-audio integrity, inline bilingual README players, versioned script links, and manifest hashes/status so narration drift is visible;
 - distribution-profile boundaries (`core`, `core-learning`, `full`) through dependency-free packaging dry runs.

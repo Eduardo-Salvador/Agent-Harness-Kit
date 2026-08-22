@@ -7,7 +7,8 @@
     "core_skills": [
       ".agents/skills/first-run-discovery/SKILL.md",
       ".agents/skills/graph-execution/SKILL.md",
-      ".agents/skills/governed-review/SKILL.md"
+      ".agents/skills/governed-review/SKILL.md",
+      ".agents/skills/frontend-screen/SKILL.md"
     ],
     "learning_extension": ".agents/skills/project-learning/SKILL.md"
   },
@@ -18,7 +19,8 @@
     "core_skills": [
       ".claude/skills/first-run-discovery/SKILL.md",
       ".claude/skills/graph-execution/SKILL.md",
-      ".claude/skills/governed-review/SKILL.md"
+      ".claude/skills/governed-review/SKILL.md",
+      ".claude/skills/frontend-screen/SKILL.md"
     ],
     "learning_extension": ".claude/skills/project-learning/SKILL.md",
     "core_agents": [

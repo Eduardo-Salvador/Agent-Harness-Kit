@@ -4,5 +4,16 @@
   "blockers": [],
   "next_action": "Dispatch TASK-004",
   "inspectable_paths": ["harness-state/PENDING.md", "harness-state/TASK-GRAPH.md"],
-  "human_pending": []
+  "human_pending": [],
+  "workstreams": [
+    {
+      "area": "authentication",
+      "progress": "partial",
+      "human_pending": [],
+      "technical_pending": ["TASK-004"],
+      "active_context": "pending",
+      "blockers": [],
+      "next_action": "Dispatch TASK-004 in an isolated context"
+    }
+  ]
 }

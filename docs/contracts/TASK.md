@@ -11,6 +11,11 @@ revision: 1
 status: active
 assigned_to: agent:builder-1
 reviewer: agent:reviewer-1
+workstream: backend
+agent_role: role:backend-specialist
+execution_context: isolated
+thread_policy: create-per-task
+thread_ref: adapter:task-001
 ownership_lease: lease-001
 isolation: worktree:task-001
 updated_at: 2026-08-20T14:12:00Z
@@ -64,6 +69,8 @@ Write a handoff; do not self-accept the task.
 - Outcome, bounded owned paths, scoped durable rules, capability states, constraints, acceptance criteria, verification, and exit rule are explicit.
 - Dependencies and graph/context references are pinned to revisions.
 - Assignee and reviewer are distinct identities.
+- Every new task declares a workstream, bounded agent role, execution-context type, thread policy, and adapter-owned reference. Different workstreams do not share one context except an explicit bounded integration task.
+- A visible chat, internal subagent, or manual context is adapter execution evidence, never canonical project memory or additional authority.
 - Owned paths match the graph lease and do not overlap another active task.
 - The task requires no context outside its declared references unless a discovery is recorded in the handoff.
 - The implementer cannot mutate graph completion or change baseline scope; it writes a `completed` handoff and the orchestrator performs the graph transition after checking evidence.
