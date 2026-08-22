@@ -96,6 +96,8 @@ On the first request in a new context window, a resume request, or a status requ
 
 `PENDING.md` owns human decisions/actions and the macro completion view. `TASK-GRAPH.md` owns technical order, dependencies, leases, and execution. Every progress/step update—not only an explicit status request—shows current stage, progress, what continues without user action, human and macro pending items, active/ready/blocked graph nodes, blockers, next action, and inspectable paths. For “what do you need from me?”, human items come first.
 
+Technical movement is persisted in a new `TASK-GRAPH.md` revision before it is reported. `PENDING.md` is updated only when human action or the macro project outcome changes; it is never the sole record of task progress.
+
 ### Contexts, frontend, and learning
 
 - **Contexts:** a fresh context per task is the default. Visible threads, subagents, and parallelism are used only when the host exposes and authorizes them; otherwise the harness uses a manual or serialized artifact-handoff fallback.

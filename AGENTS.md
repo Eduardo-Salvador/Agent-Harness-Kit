@@ -25,6 +25,7 @@ For “my pending items”, “what do you need from me?”, approvals, or decis
 
 - `harness-state/PENDING.md` owns human decisions/actions and the macro project completion overview: product areas or outcomes still missing, such as unfinished backend or authentication. It does not schedule technical tasks.
 - `harness-state/TASK-GRAPH.md` owns technical order, dependencies, readiness, leases, dispatch, remediation, and execution state. It does not replace the human/macro pending view.
+- Every technical event—dispatch/start, material progress, new dependency, block/unblock, remediation, completion, lease/context change, or next-task readiness—must update `TASK-GRAPH.md` and its transition log in the same operational step, before the user-facing update. Never record technical movement only in `PENDING.md`. Update `PENDING.md` in that step only when a human item or macro project outcome also changed, and backlink its technical source to the new graph revision.
 - Status and resume reads both in the required order. “My pending items” is answered from human-owned `PENDING.md` entries first; technical detail is added from the graph only when useful or requested.
 
 ## Operational loading order

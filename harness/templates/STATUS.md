@@ -11,6 +11,12 @@ task_graph: graph-main@1
 
 # Project status
 
+## State revisions and synchronization
+
+- Pending revision: `pending-main@1`.
+- Task graph revision: `graph-main@1`.
+- Technical transition since the prior update: no / yes; when yes, list node changes and confirm they were persisted in that graph revision before this message.
+
 ## Stage and progress
 
 - Stage: Replace.

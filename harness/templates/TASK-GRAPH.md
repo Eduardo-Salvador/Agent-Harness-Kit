@@ -14,6 +14,7 @@ source_references: none
 
 The JSON block is the executable graph view. `write_set` contains repository-relative paths or directory globs ending in `/**`.
 This artifact owns technical order, dependencies, readiness, leases, remediation, and execution. Human decisions/actions and the macro view of unfinished project areas belong in `harness-state/PENDING.md`, not here.
+Revise this artifact in the same operational step as every technical event and before announcing it. The transition log records dispatch/start, material progress evidence, dependency changes, block/unblock, remediation, completion, lease/context changes, and newly ready nodes.
 
 ```json
 {

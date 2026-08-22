@@ -41,6 +41,7 @@ updated_by: role:orchestrator
 - A human item names the requested decision/action and delivery effect, not only “approval required”.
 - `Project completion overview` describes product areas and outcomes still missing, not task ordering or agent dispatch details.
 - Technical order, dependencies, leases, and execution state remain exclusively in `TASK-GRAPH.md`.
+- Technical progress cannot be recorded only here. When technical state changes, `TASK-GRAPH.md` is revised first/in the same operational transaction; this artifact changes only for a related human item or macro outcome and then backlinks the new graph revision.
 - Resolved items leave the open sections and retain evidence under `Recently resolved`.
 - The task graph and pending authority backlink when an item blocks a node, but non-graph human items remain visible.
 - Status answers read this authority before the graph and visibly report stale or contradictory state.

@@ -67,6 +67,7 @@ REQUIRED_FILES = [
     "validation/status-fixtures/invalid/missing-automatic-actions.json",
     "validation/status-fixtures/invalid/missing-macro-pending.json",
     "validation/status-fixtures/invalid/missing-graph-snapshot.json",
+    "validation/status-fixtures/invalid/technical-transition-without-graph-update.json",
     "validation/review-fixtures/round-two-valid.json",
     "validation/review-fixtures/invalid/missing-correction-delta.json",
     "validation/budget-fixtures/valid.json",
@@ -123,7 +124,7 @@ TEMPLATE_RULES = {
     ),
     "STATUS.md": (
         {"schema", "id", "revision", "generated_at", "generated_by", "project_context", "pending_authority", "task_graph"},
-        {"Stage and progress", "Continuing without your action", "Human action required", "Macro pending from PENDING.md", "Technical graph from TASK-GRAPH.md", "Workstream status", "Blockers", "Next action", "Inspectable paths"},
+        {"State revisions and synchronization", "Stage and progress", "Continuing without your action", "Human action required", "Macro pending from PENDING.md", "Technical graph from TASK-GRAPH.md", "Workstream status", "Blockers", "Next action", "Inspectable paths"},
     ),
     "DECISION.md": (
         {"schema", "id", "revision", "status", "consequence", "decided_by", "decided_at", "supersedes", "source_references"},
@@ -404,7 +405,7 @@ def validate_fixtures() -> list[str]:
     return errors
 
 
-STATUS_FIELDS = {"stage", "progress", "automatic_actions", "blockers", "next_action", "inspectable_paths", "human_pending", "macro_pending", "graph_snapshot", "workstreams"}
+STATUS_FIELDS = {"stage", "progress", "automatic_actions", "blockers", "next_action", "inspectable_paths", "human_pending", "macro_pending", "state_revisions", "technical_transition", "graph_snapshot", "workstreams"}
 
 
 def validate_status_payload(data: dict, source: str) -> list[str]:
@@ -443,6 +444,21 @@ def validate_status_payload(data: dict, source: str) -> list[str]:
         errors.append(f"status.graph-snapshot-fields: {source}")
     elif any(not isinstance(graph_snapshot[field], list) for field in graph_fields):
         errors.append(f"status.graph-snapshot-shape: {source}")
+    state_revisions = data.get("state_revisions")
+    if not isinstance(state_revisions, dict) or not state_revisions.get("pending") or not state_revisions.get("task_graph"):
+        errors.append(f"status.state-revisions: {source}")
+    transition = data.get("technical_transition")
+    transition_fields = {"occurred", "graph_updated", "graph_revision", "node_changes"}
+    if not isinstance(transition, dict) or transition_fields - set(transition):
+        errors.append(f"status.graph-transition-shape: {source}")
+    elif transition.get("occurred") is True and (
+        transition.get("graph_updated") is not True
+        or not isinstance(transition.get("node_changes"), list)
+        or not transition.get("node_changes")
+        or not isinstance(state_revisions, dict)
+        or transition.get("graph_revision") != state_revisions.get("task_graph")
+    ):
+        errors.append(f"status.graph-transition: {source}")
     workstreams = data.get("workstreams")
     if not isinstance(workstreams, list) or not workstreams:
         errors.append(f"status.workstreams-shape: {source}")
@@ -1007,6 +1023,19 @@ def validate_native_integration() -> list[str]:
         lowered = text.lower()
         if "completed" not in lowered or "non-block" not in lowered:
             errors.append(f"native.nonblocking-closeout: {item} must complete passing tasks and keep assurance non-blocking")
+
+    graph_sync_surfaces = (
+        "AGENTS.md", "adapters/codex.md", "adapters/claude.md",
+        ".agents/skills/graph-execution/SKILL.md", ".claude/skills/graph-execution/SKILL.md",
+        "harness/playbooks/task-dispatch.md", "harness/playbooks/task-closeout.md",
+        "harness/roles/orchestrator-po.md",
+    )
+    for item in graph_sync_surfaces:
+        path = ROOT / item
+        if path.is_file():
+            sync_text = path.read_text(encoding="utf-8").lower()
+            if "task-graph.md" not in sync_text or "pending.md" not in sync_text or "technical" not in sync_text:
+                errors.append(f"native.graph-sync-routing: {item} must persist technical events in the graph, not pending")
 
     skill_paths = [ROOT / item for item in declared if isinstance(item, str) and item.endswith("/SKILL.md")]
     for path in skill_paths:

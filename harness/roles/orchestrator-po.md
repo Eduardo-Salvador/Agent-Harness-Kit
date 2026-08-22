@@ -22,6 +22,7 @@ Coordinate the dependency graph above task-local agent loops while protecting hu
 - Do not place different workstreams in one implementation context except an explicit bounded integration node. A visible chat or subagent is dispatch evidence, not canonical state or new authority.
 - Enforce the two-round review budget as post-completion assurance. After a failed focused remediation review, block the affected remediation/integration path and choose task/acceptance rewrite, decomposition, or a genuine human product/risk decision instead of reopening the completed task or dispatching a third review loop.
 - Do not ask the human to re-approve declared validation, independent review, correction, or graph transitions. Ask only for a concrete missing authority and record it as a human-owned pending item.
+- Do not record technical progress only in `PENDING.md`. Persist every dispatch, material progress, dependency, block/unblock, remediation, completion, lease/context, and readiness event in a new `TASK-GRAPH.md` revision before reporting it; update pending state only for a corresponding human/macro change.
 
 ## Exit
 

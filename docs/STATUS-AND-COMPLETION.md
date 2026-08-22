@@ -8,6 +8,8 @@ This contract applies to every user-facing progress or step update, not only rep
 
 Each update explicitly labels: **Current stage**, **Progress**, **Continuing without your action**, **Human pending and macro gaps (`PENDING.md`)**, **Technical graph (`TASK-GRAPH.md`)**, **Blockers**, **Next action**, and **Inspectable paths**. Localize those labels to the user's language (for example, **Etapa atual** and **Continua sem sua ação**) without dropping or merging sections. “Continuing without your action” names automatic work already authorized or says `None`. The pending section lists human actions plus incomplete macro areas, even when empty. The graph section summarizes active, ready, and blocked nodes plus relevant dependencies; it never substitutes for `PENDING.md`.
 
+Persist before speaking: when the update reports dispatch/start, material progress, dependency changes, block/unblock, remediation, completion, lease/context changes, or newly ready work, revise `TASK-GRAPH.md` and append its transition log first. Generate status from that new revision. `PENDING.md` changes in the same step only for human/macro state; a pending-only technical update is invalid.
+
 ## Pending-work precedence
 
 For “my pending items”, “what do you need from me?”, approval, or decision queries:

@@ -96,6 +96,8 @@ Na primeira chamada de uma nova janela, em pedidos de retomada ou de status, o a
 
 `PENDING.md` guarda decisões, ações humanas e a visão macro do que falta. `TASK-GRAPH.md` guarda ordem, dependências, leases e execução técnica. Toda atualização de progresso/etapa — não apenas um pedido explícito de status — mostra etapa atual, progresso, o que continua sem ação do usuário, pendências humanas e macro, nós ativos/prontos/bloqueados do grafo, bloqueios, próxima ação e caminhos inspecionáveis. Ao perguntar “quais são minhas pendências?”, os itens humanos vêm primeiro.
 
+Todo movimento técnico é persistido em uma nova revisão de `TASK-GRAPH.md` antes de ser informado. `PENDING.md` só é atualizado quando muda uma ação humana ou o resultado macro do projeto; nunca pode ser o único registro do progresso de uma task.
+
 ### Contextos, frontend e estudo
 
 - **Contextos:** um contexto novo por task é o padrão. Chats visíveis, subagentes e paralelismo só são usados quando o host oferece e autoriza essas capacidades; caso contrário, há fallback manual ou sequencial com handoff.

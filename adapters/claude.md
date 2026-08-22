@@ -19,6 +19,8 @@ Apply [bounded review rounds](../docs/REVIEW-ROUNDS.md) to the main context and 
 
 For every main agent or subagent, apply [status and completion communication](../docs/STATUS-AND-COMPLETION.md) and [`harness.status/v1`](../docs/contracts/STATUS.md). `PENDING.md` owns human decisions/actions and macro project gaps; `TASK-GRAPH.md` owns technical order, dependencies, and execution. Every user-facing progress/step update reports current stage, progress, work continuing without user action, human/macro pending items, active/ready/blocked graph nodes, blockers, next action, and inspectable paths; prose-only updates are invalid. Passing tasks are marked `completed` and unlock the next node immediately; assurance review is automatic, non-blocking, and never a renewed human approval request.
 
+Before that update, persist every technical transition or material progress event in a new `TASK-GRAPH.md` revision. Never use a `PENDING.md` update as its substitute; pending changes only when human/macro state also changes.
+
 Discovery records actual tools, skills, agents, MCP/connectors, scripts, hooks, and integrations. Presence does not establish installation, authentication, secret access, network access, or authorization.
 
 Claude subagents provide separate execution context only when runtime evidence confirms them; they do not automatically create user-visible chats. Map visible thread lifecycle operations separately, follow [context routing](../docs/CONTEXT-ROUTING.md), and keep different workstreams out of one implementation context except an explicit integration node.

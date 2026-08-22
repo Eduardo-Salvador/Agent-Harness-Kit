@@ -7,6 +7,16 @@
   "inspectable_paths": ["harness-state/PENDING.md", "harness-state/TASK-GRAPH.md"],
   "human_pending": [],
   "macro_pending": ["Authentication remains incomplete"],
+  "state_revisions": {
+    "pending": "pending-main@4",
+    "task_graph": "graph-main@7"
+  },
+  "technical_transition": {
+    "occurred": true,
+    "graph_updated": true,
+    "graph_revision": "graph-main@7",
+    "node_changes": ["TASK-003 completed; TASK-004 became ready"]
+  },
   "graph_snapshot": {
     "active_nodes": [],
     "ready_nodes": ["TASK-004"],

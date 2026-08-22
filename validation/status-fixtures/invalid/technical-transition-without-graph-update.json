@@ -1,0 +1,13 @@
+{
+  "mutation": {
+    "action": "set",
+    "field": "technical_transition",
+    "value": {
+      "occurred": true,
+      "graph_updated": false,
+      "graph_revision": "graph-main@6",
+      "node_changes": ["TASK-003 completed"]
+    }
+  },
+  "expected_errors": ["status.graph-transition"]
+}

@@ -9,6 +9,8 @@ updated_by: role:orchestrator
 
 # Pending work
 
+This is not a technical progress log. Never record task dispatch, progress, blockers, dependencies, completion, leases, contexts, or readiness here instead of revising `harness-state/TASK-GRAPH.md`. Update this artifact only for human action/decision state or macro project outcomes, with the latest graph revision as technical source when applicable.
+
 ## Human action required
 
 | ID | Area | Owner | Request or decision | Why / delivery effect | Needed by | Status | Source |

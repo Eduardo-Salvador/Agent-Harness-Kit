@@ -19,6 +19,8 @@ Apply [bounded review rounds](../docs/REVIEW-ROUNDS.md) to the root agent and ev
 
 For every root or delegated agent, apply [status and completion communication](../docs/STATUS-AND-COMPLETION.md) and [`harness.status/v1`](../docs/contracts/STATUS.md). `PENDING.md` owns human decisions/actions and macro project gaps; `TASK-GRAPH.md` owns technical order, dependencies, and execution. Every user-facing progress/step update reports current stage, progress, work continuing without user action, human/macro pending items, active/ready/blocked graph nodes, blockers, next action, and inspectable paths; prose-only updates are invalid. Passing tasks are marked `completed` and unlock the next node immediately; assurance review is automatic, non-blocking, and never a renewed human approval request.
 
+Before that update, persist every technical transition or material progress event in a new `TASK-GRAPH.md` revision. Never use a `PENDING.md` update as its substitute; pending changes only when human/macro state also changes.
+
 Discovery records platform tools, skills, MCP/connectors, scripts, hooks, and integrations in the capability manifest. Filename presence is not proof of runtime availability or authorization. Do not write user-specific configuration, credentials, hooks, network access, or broad permissions.
 
 Map `create_thread`, `resume_thread`, `message_thread`, and `close_thread` only when the current Codex host exposes those operations. Internal subagent spawning is a separate capability and does not imply a sidebar-visible task. Follow [context routing](../docs/CONTEXT-ROUTING.md), keep workstreams isolated, and store only the returned adapter reference in task state.
