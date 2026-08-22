@@ -65,8 +65,8 @@ python tools/install.py --profile core --host <project-directory> --dry-run
 python tools/install.py --profile core --host <project-directory>
 ```
 
-1. The installer creates `agent-harness-kit/` and changes only managed bridge blocks in root `AGENTS.md` and `CLAUDE.md`.
-2. On open, the agent checks `harness-state/PROJECT-CONTEXT.md`. Without approved context it runs [first-run discovery](harness/playbooks/first-run.md) before implementation planning.
+1. The installer creates `agent-harness-kit/` and root `AGENTS.md` and `CLAUDE.md` entrypoints. If either file already exists, it preserves the project's content and adds or refreshes only a clearly marked managed bridge block.
+2. Open a new agent context after installation so the host reloads the root entrypoint. On its first request, the agent reads the nested harness immediately and checks `harness-state/PROJECT-CONTEXT.md`. Without approved context it starts [first-run discovery](harness/playbooks/first-run.md) automatically, before scanning or implementation planning.
 3. After approval it creates `PENDING.md`, the graph, and tasks with workstream, agent, lease, context, criteria, and checks.
 4. Tasks that pass checks are completed and reported without waiting for human approval; the next ready task may begin.
 5. Validate the installation with `python tools/validate.py`.

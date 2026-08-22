@@ -110,8 +110,16 @@ def install(profile: str, host: Path, dry_run: bool) -> list[str]:
     if destination.exists() or destination.is_symlink():
         raise InstallError(f"destination already exists: {destination}")
     files = package_files(profile)
+    generated_manifest: bytes | None = None
+    if "PACKAGE-MANIFEST.json" not in files:
+        sys.path.insert(0, str(ROOT / "tools"))
+        from package import manifest
+
+        version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+        generated_manifest = manifest(profile, version, files)
     rendered = {name: render_entrypoint(host_root / name, bridge) for name, bridge in ENTRYPOINTS.items()}
-    actions = [f"install {len(files)} files into {destination}"]
+    installed_count = len(files) + (1 if generated_manifest is not None else 0)
+    actions = [f"install {installed_count} files into {destination}"]
     actions.extend(f"create or update managed bridge in {host_root / name}" for name in ENTRYPOINTS)
     if dry_run:
         return actions
@@ -135,6 +143,8 @@ def install(profile: str, host: Path, dry_run: bool) -> list[str]:
                 raise InstallError(f"source must be a regular file: {relative}")
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
+        if generated_manifest is not None:
+            (staged_distribution / "PACKAGE-MANIFEST.json").write_bytes(generated_manifest)
         os.replace(staged_distribution, destination)
         for name, content in rendered.items():
             target = host_root / name

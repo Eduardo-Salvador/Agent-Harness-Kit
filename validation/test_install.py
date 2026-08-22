@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -36,6 +37,8 @@ class InstallerTests(unittest.TestCase):
         self.assertIn("project agents", (host / "AGENTS.md").read_text(encoding="utf-8"))
         self.assertEqual((host / "AGENTS.md").read_text(encoding="utf-8").count(INSTALLER.BEGIN), 1)
         self.assertIn("project claude", (host / "CLAUDE.md").read_text(encoding="utf-8"))
+        self.assertIn("first-run discovery interview automatically", (host / "AGENTS.md").read_text(encoding="utf-8"))
+        self.assertIn("first-run discovery interview automatically", (host / "CLAUDE.md").read_text(encoding="utf-8"))
 
     def test_creates_missing_entrypoints(self) -> None:
         temporary, host = self.host()
@@ -43,6 +46,17 @@ class InstallerTests(unittest.TestCase):
         self.install(host)
         self.assertIn("agent-harness-kit/AGENTS.md", (host / "AGENTS.md").read_text(encoding="utf-8"))
         self.assertIn("@agent-harness-kit/CLAUDE.md", (host / "CLAUDE.md").read_text(encoding="utf-8"))
+
+    def test_source_install_generates_profile_manifest(self) -> None:
+        temporary, host = self.host()
+        self.addCleanup(temporary.cleanup)
+        self.install(host)
+        manifest_path = host / "agent-harness-kit" / "PACKAGE-MANIFEST.json"
+        self.assertTrue(manifest_path.is_file())
+        data = json.loads(manifest_path.read_text(encoding="utf-8"))
+        self.assertEqual(data["profile"], "core")
+        self.assertEqual(data["project_learning_activation"], "not-activated")
+        self.assertEqual([entry["path"] for entry in data["files"]], ["AGENTS.md"])
 
     def test_dry_run_changes_nothing(self) -> None:
         temporary, host = self.host()
