@@ -83,19 +83,22 @@ def render_entrypoint(path: Path, bridge_path: Path) -> bytes:
         raise InstallError(f"entrypoint must be a regular file: {path.name}")
     original = path.read_bytes()
     text = original.decode("utf-8")
-    begin_count = text.count(BEGIN)
-    end_count = text.count(END)
+    bom = "\ufeff" if text.startswith("\ufeff") else ""
+    body = text[len(bom):]
+    begin_count = body.count(BEGIN)
+    end_count = body.count(END)
     if begin_count != end_count or begin_count > 1:
         raise InstallError(f"malformed or duplicated managed block in {path.name}")
     newline = newline_for(original)
     normalized_bridge = bridge.replace("\n", newline)
     if begin_count == 1:
-        start = text.index(BEGIN)
-        finish = text.index(END, start) + len(END)
-        updated = text[:start] + normalized_bridge + text[finish:]
+        start = body.index(BEGIN)
+        finish = body.index(END, start) + len(END)
+        remaining = (body[:start] + body[finish:]).lstrip("\r\n")
     else:
-        separator = "" if not text else ("" if text.endswith(("\n", "\r")) else newline) + newline
-        updated = text + separator + normalized_bridge + newline
+        remaining = body
+    separator = newline if remaining else ""
+    updated = bom + normalized_bridge + newline + separator + remaining
     return updated.encode("utf-8")
 
 

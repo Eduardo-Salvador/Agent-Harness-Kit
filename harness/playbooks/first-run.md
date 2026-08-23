@@ -23,7 +23,13 @@ When the project is uninitialized, the first user-facing response must make acti
 3. Reflect any useful facts already present in the user's request or repository so the user does not repeat them.
 4. Ask the highest-leverage unanswered discovery question immediately.
 
-For an empty or effectively empty greenfield directory, do not propose a product, feature list, design, architecture, stack, implementation plan, or task graph before the user supplies intent. Start with a compact question covering the product/idea, intended user, problem or value, and first success outcome; ask delivery versus guided-learning mode only in the same opening when it will not overload the question. A detailed initial brief is evidence to pre-fill, not a reason to skip the handshake or repeat answered facts.
+This is a first-response firewall, not a preference. Until the handshake is sent, do not answer the substantive project request, recommend anything, perform a broad repository scan, or emit a proposal, plan, status, or graph. Restrict the response to the welcome/explanation, the discovery-before-proposals statement, and exactly one discovery question. Before sending, self-check that it contains no recommendation and no second question; if it does, replace it with the restricted handshake.
+
+Treat model memory, summaries, and prior conversations as unverified inputs. They do not establish company facts, brand direction, product scope, technical choices, or approval unless the current user message states them or an approved project artifact records them. Facts in the current message may be acknowledged as unapproved inputs, not silently promoted to decisions.
+
+If an initial briefing exists, pre-fill `harness-state/PROJECT-CONTEXT.md` as a draft before saying the briefing was recorded, then cite its path and revision. Never say information was “registered mentally” or otherwise imply durable storage when no artifact write occurred. The draft is not approval and grants no implementation authority.
+
+For an empty or effectively empty greenfield directory, do not propose a product, company description, brand or color direction, feature list, design, architecture, stack, implementation plan, or task graph before the user supplies intent. Start with one compact question covering the product/idea, intended user, problem or value, and first success outcome. Ask delivery versus guided-learning mode in a later turn unless the user already answered the primary discovery question. A detailed initial brief is evidence to pre-fill, not a reason to skip the handshake or repeat answered facts.
 
 Keep the welcome to at most two short sentences before the question. Do not turn it into marketing copy, a long harness explanation, or an approval gate.
 

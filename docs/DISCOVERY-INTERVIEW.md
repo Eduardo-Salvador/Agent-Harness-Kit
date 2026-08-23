@@ -25,6 +25,10 @@ For an uninitialized project, the first response identifies that Agent Harness K
 
 For an empty or effectively empty greenfield directory, the first question asks what the user wants to create, for whom, what problem/value it addresses, and what the first successful outcome is. The agent does not first invent or recommend product scope, features, visual direction, architecture, stack, implementation steps, or a task graph. When the initial user request already answers some of those fields, reflect and pre-fill them, then ask only for the consequential gap.
 
+The handshake is a first-response firewall. Before it is sent, the agent does not answer the substantive request, scan broadly, recommend, or output a proposal, plan, status, or graph. It contains exactly one discovery question. A pre-send check replaces any draft that includes a recommendation or a second question. Model memory, summaries, and prior conversations are unverified and cannot establish company facts, brand direction, product scope, technical decisions, or approval; only the current user message and approved project artifacts can do so.
+
+“Recorded” means persisted in a draft artifact with an inspectable path and revision. The interviewer never says it registered a briefing mentally. When a briefing is already available, it writes or updates the draft `harness-state/PROJECT-CONTEXT.md`, cites that draft, and keeps its status unapproved until the human checkpoint.
+
 ## Optional onboarding explanation
 
 The user may request a plain-language explanation before or during discovery. Explain the harness purpose, why approved context precedes implementation planning, the artifacts/checkpoints that will be created, and the expected next steps. This is an optional onboarding aid, not a prerequisite or delivery node. It cannot block delivery and does not activate `delivery+learning`, learning consent, observation, retention, publication, or the separate Harness Engineering Learning Pack.

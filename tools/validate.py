@@ -1300,8 +1300,12 @@ def validate_repository() -> list[str]:
     for bridge in (agents_bridge, claude_bridge):
         if bridge.is_file():
             bridge_text = bridge.read_text(encoding="utf-8")
-            if "first request" not in bridge_text or "first-run discovery interview automatically" not in bridge_text:
+            if "first-response" not in bridge_text or "first-run discovery interview automatically" not in bridge_text:
                 errors.append(f"embedded.first-run-route: {rel(bridge)} must trigger automatic discovery from the root entrypoint")
+            bridge_lower = bridge_text.lower()
+            for token in ("mandatory first-response gate", "before any scan", "stop", "substantive project request", "exactly one", "prior conversations", "agent harness kit is active", "registered mentally", "path/revision"):
+                if token not in bridge_lower:
+                    errors.append(f"embedded.first-response-salience: {rel(bridge)} lacks {token!r}")
     if embedded_doc.is_file():
         embedded_text = embedded_doc.read_text(encoding="utf-8").lower()
         for phrase in ("harness-state/", "preserve", "degraded", "agent-harness-kit/"):

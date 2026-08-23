@@ -2,7 +2,7 @@
 
 > A platform-neutral, artifact-driven development harness with native Codex and Claude Code entrypoints, optional project learning, and a separate harness-engineering study pack.
 
-**Current source version: `0.4.0`.** This is an executable operating scaffold: capable agents follow its contracts and validators. It is not a daemon that independently launches agents or locks files at the operating-system level.
+**Current source version: `0.4.1`.** This is an executable operating scaffold: capable agents follow its contracts and validators. It is not a daemon that independently launches agents or locks files at the operating-system level.
 
 > 🌐 **Language:** English
 >
@@ -65,8 +65,8 @@ python tools/install.py --profile core --host <project-directory> --dry-run
 python tools/install.py --profile core --host <project-directory>
 ```
 
-1. The installer creates `agent-harness-kit/` and root `AGENTS.md` and `CLAUDE.md` entrypoints. If either file already exists, it preserves the project's content and adds or refreshes only a clearly marked managed bridge block.
-2. Open a new agent context after installation so the host reloads the root entrypoint. On its first request, the agent reads the nested harness immediately and checks `harness-state/PROJECT-CONTEXT.md`. Without approved context it briefly explains that the active kit organizes context, pending work, and verifiable execution, then starts [first-run discovery](harness/playbooks/first-run.md) with its first question. An empty project receives no invented solution before the user supplies intent.
+1. The installer creates `agent-harness-kit/` and root `AGENTS.md` and `CLAUDE.md` entrypoints. If either file already exists, it preserves the project's content and adds or refreshes one clearly marked managed bridge block at the top so the first-response gate is read before legacy instructions.
+2. Open a new agent context after installation so the host reloads the root entrypoint. On its first request, the agent reads the nested harness immediately and checks `harness-state/PROJECT-CONTEXT.md`. Without approved context, its first response is restricted to the kit welcome, a short discovery explanation, and exactly one [first-run discovery](harness/playbooks/first-run.md) question. It cannot recommend a solution, brand, stack, or plan first, and prior-chat/model memory is not approved project context.
 3. After approval it creates `PENDING.md`, the graph, and tasks with workstream, agent, lease, context, criteria, and checks.
 4. Tasks that pass checks are completed and reported without waiting for human approval; the next ready task may begin.
 5. Validate the installation with `python tools/validate.py`.

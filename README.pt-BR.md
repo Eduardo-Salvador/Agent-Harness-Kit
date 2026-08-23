@@ -2,7 +2,7 @@
 
 > Um harness de desenvolvimento agnóstico de plataforma e orientado a artefatos, com entradas nativas para Codex e Claude Code, aprendizado opcional e um pacote separado para estudar engenharia de harness.
 
-**Versão atual do código-fonte: `0.4.0`.** O projeto é um scaffold operacional executável: agentes capazes seguem seus contratos e validadores. Ele não é um daemon que inicia agentes sozinho ou bloqueia arquivos no sistema operacional.
+**Versão atual do código-fonte: `0.4.1`.** O projeto é um scaffold operacional executável: agentes capazes seguem seus contratos e validadores. Ele não é um daemon que inicia agentes sozinho ou bloqueia arquivos no sistema operacional.
 
 > 🌐 **Idioma:** Português (Brasil)
 >
@@ -65,8 +65,8 @@ python tools/install.py --profile core --host <diretório-do-projeto> --dry-run
 python tools/install.py --profile core --host <diretório-do-projeto>
 ```
 
-1. O instalador cria `agent-harness-kit/` e os pontos de entrada `AGENTS.md` e `CLAUDE.md` na raiz. Se algum deles já existir, preserva o conteúdo do projeto e adiciona ou atualiza apenas um bloco de ponte claramente marcado e gerenciado.
-2. Abra um novo contexto do agente depois da instalação para que ele recarregue o ponto de entrada da raiz. Na primeira solicitação, o agente lê imediatamente o harness interno e verifica `harness-state/PROJECT-CONTEXT.md`. Sem contexto aprovado, explica brevemente que o kit ativo organiza contexto, pendências e execução verificável, depois inicia a [descoberta inicial](harness/playbooks/first-run.md) com a primeira pergunta. Em projeto vazio, não inventa uma solução antes de receber a intenção do usuário.
+1. O instalador cria `agent-harness-kit/` e os pontos de entrada `AGENTS.md` e `CLAUDE.md` na raiz. Se algum deles já existir, preserva o conteúdo do projeto e adiciona ou reposiciona um único bloco gerenciado no topo, para que o gate da primeira resposta seja lido antes das instruções legadas.
+2. Abra um novo contexto do agente depois da instalação para que ele recarregue o ponto de entrada da raiz. Na primeira solicitação, o agente lê imediatamente o harness interno e verifica `harness-state/PROJECT-CONTEXT.md`. Sem contexto aprovado, a primeira resposta fica restrita à apresentação do kit, uma explicação curta da descoberta e exatamente uma pergunta da [descoberta inicial](harness/playbooks/first-run.md). Ele não pode recomendar solução, marca, stack ou plano antes disso, e memória do modelo ou de outro chat não é contexto aprovado do projeto.
 3. Depois da aprovação, cria `PENDING.md`, o grafo e as tasks com área, agente, lease, contexto, critérios e checks.
 4. Tasks aprovadas nos checks são concluídas e informadas sem esperar aprovação humana; a próxima task pronta pode começar.
 5. Valide a instalação com `python tools/validate.py`.

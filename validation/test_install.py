@@ -18,9 +18,7 @@ SPEC.loader.exec_module(INSTALLER)
 
 class InstallerTests(unittest.TestCase):
     def host(self) -> tuple[tempfile.TemporaryDirectory, Path]:
-        work = ROOT / "work"
-        work.mkdir(exist_ok=True)
-        temporary = tempfile.TemporaryDirectory(dir=work)
+        temporary = tempfile.TemporaryDirectory()
         return temporary, Path(temporary.name)
 
     def install(self, host: Path, dry_run: bool = False) -> list[str]:
@@ -35,8 +33,10 @@ class InstallerTests(unittest.TestCase):
         self.install(host)
         self.assertTrue((host / "agent-harness-kit" / "AGENTS.md").is_file())
         self.assertIn("project agents", (host / "AGENTS.md").read_text(encoding="utf-8"))
+        self.assertTrue((host / "AGENTS.md").read_text(encoding="utf-8").startswith(INSTALLER.BEGIN))
         self.assertEqual((host / "AGENTS.md").read_text(encoding="utf-8").count(INSTALLER.BEGIN), 1)
         self.assertIn("project claude", (host / "CLAUDE.md").read_text(encoding="utf-8"))
+        self.assertTrue((host / "CLAUDE.md").read_text(encoding="utf-8").startswith(INSTALLER.BEGIN))
         self.assertIn("first-run discovery interview automatically", (host / "AGENTS.md").read_text(encoding="utf-8"))
         self.assertIn("first-run discovery interview automatically", (host / "CLAUDE.md").read_text(encoding="utf-8"))
 
@@ -57,6 +57,17 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(data["profile"], "core")
         self.assertEqual(data["project_learning_activation"], "not-activated")
         self.assertEqual([entry["path"] for entry in data["files"]], ["AGENTS.md"])
+
+    def test_existing_managed_block_is_repositioned_to_top(self) -> None:
+        temporary, host = self.host()
+        self.addCleanup(temporary.cleanup)
+        path = host / "AGENTS.md"
+        bridge = INSTALLER.ENTRYPOINTS["AGENTS.md"].read_text(encoding="utf-8").strip()
+        path.write_text("project rules\n\n" + bridge + "\n", encoding="utf-8")
+        rendered = INSTALLER.render_entrypoint(path, INSTALLER.ENTRYPOINTS["AGENTS.md"]).decode("utf-8")
+        self.assertTrue(rendered.startswith(INSTALLER.BEGIN))
+        self.assertIn("project rules", rendered)
+        self.assertEqual(rendered.count(INSTALLER.BEGIN), 1)
 
     def test_dry_run_changes_nothing(self) -> None:
         temporary, host = self.host()
