@@ -92,12 +92,26 @@ class InstallerTests(unittest.TestCase):
         with self.assertRaises(INSTALLER.InstallError):
             self.install(host)
 
+    def test_rejects_source_as_host(self) -> None:
+        with self.assertRaisesRegex(INSTALLER.InstallError, "separate, non-nested directories"):
+            INSTALLER.install("core", ROOT, True)
+
     def test_rejects_traversal_and_absolute_paths(self) -> None:
         unsafe = ("../escape.txt", "/absolute.txt", "C:/absolute.txt", "nested\\escape.txt")
         for value in unsafe:
             with self.subTest(value=value):
                 with self.assertRaises(INSTALLER.InstallError):
                     INSTALLER.safe_relative(value)
+
+    def test_help_explains_profiles_host_and_post_install_context(self) -> None:
+        help_text = INSTALLER.build_parser().format_help()
+        for expected in ("core-learning", "harness-engineering study pack", "different directories", "new agent context"):
+            self.assertIn(expected, help_text)
+
+    def test_activation_prompt_routes_through_root_and_embedded_kit(self) -> None:
+        prompt = INSTALLER.ACTIVATION_PROMPT
+        for expected in ("root AGENTS.md or CLAUDE.md", "agent-harness-kit/", "PROJECT-CONTEXT.md", "first-run or resume"):
+            self.assertIn(expected, prompt)
 
 
 if __name__ == "__main__":

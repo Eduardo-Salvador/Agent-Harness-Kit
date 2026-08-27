@@ -21,6 +21,13 @@ ENTRYPOINTS = {
     "AGENTS.md": ROOT / "harness" / "templates" / "ROOT-AGENTS-BRIDGE.md",
     "CLAUDE.md": ROOT / "harness" / "templates" / "ROOT-CLAUDE-BRIDGE.md",
 }
+ACTIVATION_PROMPT = (
+    "Agent Harness Kit is installed in this project. Before scanning, proposing, planning, "
+    "reporting status, or changing files, read the applicable root AGENTS.md or CLAUDE.md, "
+    "then follow the referenced instructions under agent-harness-kit/. Check "
+    "harness-state/PROJECT-CONTEXT.md and run the required first-run or resume flow before "
+    "answering the project request."
+)
 
 
 class InstallError(RuntimeError):
@@ -109,6 +116,9 @@ def install(profile: str, host: Path, dry_run: bool) -> list[str]:
     host_root = requested_host.resolve()
     if not host_root.is_dir():
         raise InstallError(f"host directory does not exist: {host_root}")
+    source_root = ROOT.resolve()
+    if host_root == source_root or host_root in source_root.parents or source_root in host_root.parents:
+        raise InstallError("Kit source and host project must be separate, non-nested directories")
     destination = host_root / DESTINATION_NAME
     if destination.exists() or destination.is_symlink():
         raise InstallError(f"destination already exists: {destination}")
@@ -170,11 +180,36 @@ def install(profile: str, host: Path, dry_run: bool) -> list[str]:
     return actions
 
 
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Install Agent Harness Kit into a host project.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""profiles:
+  core           Delivery, graph, status, review, and validation.
+  core-learning  Core plus optional, consented project-learning support.
+  full           Core-learning plus the separate harness-engineering study pack.
+
+examples:
+  python tools/install.py --profile core --host ../my-project --dry-run
+  python tools/install.py --profile core-learning --host ../my-project
+
+The Kit source/fork and host project must be different directories. After installation,
+open a new agent context at the host-project root so AGENTS.md or CLAUDE.md is reloaded.
+Beginner guides: README.pt-BR.md and README.md#beginner-installation.""",
+    )
+    parser.add_argument(
+        "--profile",
+        choices=("core", "core-learning", "full"),
+        required=True,
+        help="installation profile; see descriptions below",
+    )
+    parser.add_argument("--host", type=Path, required=True, help="existing project directory that will receive the Kit")
+    parser.add_argument("--dry-run", action="store_true", help="show planned actions without writing files")
+    return parser
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Install Agent Harness Kit into a host project")
-    parser.add_argument("--profile", choices=("core", "core-learning", "full"), required=True)
-    parser.add_argument("--host", type=Path, required=True)
-    parser.add_argument("--dry-run", action="store_true")
+    parser = build_parser()
     args = parser.parse_args()
     try:
         actions = install(args.profile, args.host, args.dry_run)
@@ -184,6 +219,10 @@ def main() -> int:
     prefix = "WOULD " if args.dry_run else "DONE "
     for action in actions:
         print(prefix + action)
+    if not args.dry_run:
+        print("NEXT Open a new agent context at the host-project root.")
+        print("NEXT If the host does not load root instructions automatically, paste this prompt:")
+        print(ACTIVATION_PROMPT)
     return 0
 
 

@@ -8,7 +8,7 @@
 >
 > **[Ler em English →](README.md)**
 
-[Início rápido](#início-rápido) · [Instalação contida](docs/EMBEDDED-INSTALLATION.md) · [Como funciona](#como-funciona) · [Arquitetura](docs/ARCHITECTURE.md) · [Status e conclusão](docs/STATUS-AND-COMPLETION.md) · [Distribuição](docs/DISTRIBUTION.md) · [Decisões em aberto](OPEN-DECISIONS.md)
+[Instalação passo a passo](#instalação-passo-a-passo) · [Instalação contida](docs/EMBEDDED-INSTALLATION.md) · [Como funciona](#como-funciona) · [Arquitetura](docs/ARCHITECTURE.md) · [Status e conclusão](docs/STATUS-AND-COMPLETION.md) · [Distribuição](docs/DISTRIBUTION.md) · [Decisões em aberto](OPEN-DECISIONS.md)
 
 ## Projeto greenfield ou harness existente
 
@@ -58,18 +58,134 @@ Instalar `core-learning` ou `full` não ativa observação nem publicação. O m
 - Codex ou Claude Code para ativação nativa; outras plataformas podem seguir os playbooks neutros.
 - Git, múltiplos agentes, sandboxes, MCP e rede são opcionais.
 
-## Início rápido
+## Instalação passo a passo
+
+Este processo copia uma versão contida do Kit para dentro do seu projeto. Ele não instala um programa no Windows e não inicia agentes sozinho. Os arquivos `AGENTS.md` e `CLAUDE.md` criados na raiz dizem ao Codex ou Claude Code onde encontrar as regras do Kit.
+
+### 1. Antes de começar
+
+- Tenha o [Python 3](https://www.python.org/downloads/) instalado. No Windows, confirme com `python --version`; no macOS/Linux, tente `python3 --version`.
+- Tenha uma pasta para o seu projeto. Ela pode estar vazia ou já conter código.
+- Se o projeto já for importante, faça um commit ou backup antes da instalação.
+
+### 2. Baixe o Agent Harness Kit
+
+Escolha uma opção:
+
+- **Clone normal:** `git clone https://github.com/Eduardo-Salvador/Agent-Harness-Kit.git`
+- **Fork:** no GitHub, clique em **Fork**, copie a URL do seu fork e execute `git clone <URL-DO-SEU-FORK>`.
+- **Sem Git:** use **Code → Download ZIP**, extraia o arquivo e renomeie a pasta para `Agent-Harness-Kit`.
+
+Deixe o Kit e seu projeto em pastas separadas, uma ao lado da outra:
 
 ```text
-python tools/install.py --profile core --host <diretório-do-projeto> --dry-run
-python tools/install.py --profile core --host <diretório-do-projeto>
+teste-harness/
+├── Agent-Harness-Kit/   fonte oficial, fork ou ZIP extraído
+└── meu-projeto/         projeto que receberá o Kit
 ```
 
-1. O instalador cria `agent-harness-kit/` e os pontos de entrada `AGENTS.md` e `CLAUDE.md` na raiz. Se algum deles já existir, preserva o conteúdo do projeto e adiciona ou reposiciona um único bloco gerenciado no topo, para que o gate da primeira resposta seja lido antes das instruções legadas.
-2. Abra um novo contexto do agente depois da instalação para que ele recarregue o ponto de entrada da raiz. Na primeira solicitação, o agente lê imediatamente o harness interno e verifica `harness-state/PROJECT-CONTEXT.md`. Sem contexto aprovado, a primeira resposta fica restrita à apresentação do kit, uma explicação curta da descoberta e exatamente uma pergunta da [descoberta inicial](harness/playbooks/first-run.md). Ele não pode recomendar solução, marca, stack ou plano antes disso, e memória do modelo ou de outro chat não é contexto aprovado do projeto.
-3. Depois da aprovação, cria `PENDING.md`, o grafo e as tasks com área, agente, lease, contexto, critérios e checks.
-4. Tasks aprovadas nos checks são concluídas e informadas sem esperar aprovação humana; a próxima task pronta pode começar.
-5. Valide a instalação com `python tools/validate.py`.
+Não coloque `meu-projeto` dentro de `Agent-Harness-Kit` nem instale o Kit nele mesmo. O instalador bloqueia pastas aninhadas para evitar cópias recursivas e confusão entre a fonte e o projeto.
+
+### 3. Abra o terminal dentro do seu projeto
+
+No Windows, abra `meu-projeto` no Explorador de Arquivos, clique com o botão direito em uma área vazia e escolha **Abrir no Terminal**. O prompt deve terminar com o nome do projeto:
+
+```text
+PS C:\...\teste-harness\meu-projeto>
+```
+
+O ponto `.` usado nos comandos abaixo significa “a pasta atual”. `..` significa “a pasta anterior”, onde está `Agent-Harness-Kit` no exemplo.
+
+### 4. Escolha o perfil
+
+- Use `core` se quer apenas organizar e executar o desenvolvimento. **Esta é a escolha recomendada para a maioria das pessoas.**
+- Use `core-learning` se também pretende pedir modo estudo e guardar anotações durante o projeto.
+- Use `full` somente se, além do projeto, quiser estudar a engenharia do próprio harness.
+
+O perfil de aprendizado apenas disponibiliza o recurso. Ele não observa nem cria notas até você pedir e aprovar o destino.
+
+### 5. Faça uma simulação segura
+
+O `--dry-run` mostra o que seria criado sem alterar arquivos:
+
+```powershell
+python ..\Agent-Harness-Kit\tools\install.py --profile core --host . --dry-run
+```
+
+No macOS/Linux, use:
+
+```bash
+python3 ../Agent-Harness-Kit/tools/install.py --profile core --host . --dry-run
+```
+
+Revise as linhas iniciadas por `WOULD`. Elas devem apontar para `meu-projeto`, nunca para a pasta-fonte `Agent-Harness-Kit`.
+
+### 6. Instale
+
+Repita o comando sem `--dry-run`:
+
+```powershell
+python ..\Agent-Harness-Kit\tools\install.py --profile core --host .
+```
+
+No macOS/Linux:
+
+```bash
+python3 ../Agent-Harness-Kit/tools/install.py --profile core --host .
+```
+
+Se as pastas não estiverem lado a lado, use o caminho completo do instalador entre aspas. Exemplo no Windows:
+
+```powershell
+python "C:\caminho\para\Agent-Harness-Kit\tools\install.py" --profile core --host .
+```
+
+Ao terminar, linhas `DONE` confirmam a criação de:
+
+- `agent-harness-kit/`, a cópia gerenciada do Kit;
+- `AGENTS.md`, ponto de entrada para Codex e agentes compatíveis;
+- `CLAUDE.md`, ponto de entrada para Claude Code.
+
+Se `AGENTS.md` ou `CLAUDE.md` já existirem, o instalador preserva o texto do projeto e gerencia apenas um bloco marcado no topo.
+
+### 7. Valide a instalação
+
+Ainda dentro de `meu-projeto`, execute:
+
+```powershell
+python agent-harness-kit\tools\validate.py
+```
+
+No macOS/Linux:
+
+```bash
+python3 agent-harness-kit/tools/validate.py
+```
+
+O resultado esperado começa com `VALIDATION PASSED`. Se aparecer `VALIDATION FAILED`, não comece o desenvolvimento antes de corrigir os erros informados.
+
+### 8. Abra uma conversa nova com o agente
+
+Feche a conversa usada antes da instalação e abra um **novo contexto na raiz de `meu-projeto`**. Isso é necessário porque conversas antigas podem manter instruções carregadas antes da existência do Kit.
+
+Normalmente o agente lerá `AGENTS.md` ou `CLAUDE.md` automaticamente. Se ele ignorar o Kit, cole este prompt:
+
+```text
+O Agent Harness Kit está instalado neste projeto. Antes de varrer, propor, planejar, informar status ou alterar arquivos, leia o AGENTS.md ou CLAUDE.md aplicável na raiz e siga as instruções referenciadas dentro de agent-harness-kit/. Verifique harness-state/PROJECT-CONTEXT.md e execute o fluxo obrigatório de primeira execução ou retomada antes de responder ao pedido do projeto.
+```
+
+Em um projeto sem contexto aprovado, a primeira resposta correta apresenta brevemente o Kit e inicia a entrevista. O agente não deve propor stack, marca, arquitetura ou implementação antes dessa descoberta.
+
+<details>
+<summary><strong>Problemas comuns</strong></summary>
+
+- **`python` não foi reconhecido:** instale o Python 3, reabra o terminal e tente `python --version`; no macOS/Linux use `python3`.
+- **`can't open file` ou caminho não encontrado:** confira o nome e a localização de `Agent-Harness-Kit`; use o caminho completo entre aspas se necessário.
+- **`destination already exists`:** o projeto já possui `agent-harness-kit/`. Não apague `harness-state/`; siga o processo de atualização em [Instalação contida](docs/EMBEDDED-INSTALLATION.md).
+- **`separate, non-nested directories`:** a fonte do Kit e o projeto são a mesma pasta ou uma está dentro da outra. Mova-as para ficarem lado a lado.
+- **O agente não apresentou o Kit:** confirme que abriu uma conversa nova na raiz de `meu-projeto` e use o prompt de ativação acima.
+
+</details>
 
 ## Como funciona
 

@@ -22,6 +22,23 @@ host-project/
 Downloading or cloning the Kit does not modify a host project. Run the bundled installer to create the contained directory and bridges:
 
 ```text
+workspace/
+├── Agent-Harness-Kit/   source repository or fork
+└── host-project/        destination; never the Kit source directory
+```
+
+From `host-project/` on Windows PowerShell:
+
+```powershell
+python ..\Agent-Harness-Kit\tools\install.py --profile core --host . --dry-run
+python ..\Agent-Harness-Kit\tools\install.py --profile core --host .
+```
+
+From another directory layout, replace `..\Agent-Harness-Kit` with the actual source/fork path. On macOS or Linux use `/` separators and `python3`. The source/fork and host must remain different directories.
+
+Alternatively, from the Kit source directory:
+
+```text
 python tools/install.py --profile core --host <host-project> --dry-run
 python tools/install.py --profile core --host <host-project>
 ```
@@ -31,8 +48,14 @@ Substitute `core-learning` or `full` when needed. From a generated profile, the 
 After installation:
 
 1. Inspect root `AGENTS.md` and `CLAUDE.md`; existing content remains outside one managed block.
-2. Ask the active agent to read the root entrypoint. The bridge routes it to the embedded Kit, which applies first-run or status/resume behavior.
+2. Open a new agent context at the host-project root so the host reloads the root entrypoint. The bridge routes it to the embedded Kit, which applies first-run or status/resume behavior.
 3. Run the embedded validator from the host root with `python agent-harness-kit/tools/validate.py`.
+
+If the host does not load root instructions automatically, paste the same activation prompt printed by the installer:
+
+```text
+Agent Harness Kit is installed in this project. Before scanning, proposing, planning, reporting status, or changing files, read the applicable root AGENTS.md or CLAUDE.md, then follow the referenced instructions under agent-harness-kit/. Check harness-state/PROJECT-CONTEXT.md and run the required first-run or resume flow before answering the project request.
+```
 
 Manual installation remains available: copy the complete generated profile to `agent-harness-kit/`, then add exactly one block from the [AGENTS bridge template](../harness/templates/ROOT-AGENTS-BRIDGE.md) and [Claude bridge template](../harness/templates/ROOT-CLAUDE-BRIDGE.md), preserving all surrounding content.
 
