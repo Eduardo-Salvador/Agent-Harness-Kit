@@ -25,6 +25,7 @@ The installer creates a contained `agent-harness-kit/` directory and managed roo
 - approved project context before broad inspection;
 - `PENDING.md` for human decisions and macro gaps;
 - `TASK-GRAPH.md` for dependencies, leases, progress, and execution;
+- scoped `read_set`, exclusive `write_set`, related `impact_set`, and source provenance to avoid unnecessary repository rescans;
 - isolated workstreams and context-aware frontend/backend/integration routing;
 - one independent review and at most one focused re-review;
 - hackathon mode for compressed discovery and demo-first MVP delivery;

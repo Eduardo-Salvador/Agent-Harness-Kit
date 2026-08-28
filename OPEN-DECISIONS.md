@@ -4,7 +4,7 @@ This ledger contains real unresolved choices. An unchecked item is not permissio
 
 ## Product and governance
 
-- [x] **Project identity** — name: Agent Harness Kit; repository/package slug: `agent-harness-kit`.
+- [x] **Project identity** — name: Agent Harness Kit; repository slug: `Agent-Harness-Kit`; contained directory: `agent-harness-kit/`; PyPI distribution: `agent-harness-kit-cli` because the shorter name is owned by an unrelated project.
 - [x] **License** — standard MIT License, copyright 2026 Agent Harness Kit contributors.
 - [x] **Governance and contribution policy** — maintainers retain final acceptance and release authority; contribution, conduct, security-reporting, and support boundaries are defined under `.github/`.
 
@@ -47,6 +47,7 @@ This ledger contains real unresolved choices. An unchecked item is not permissio
 - [x] Define `core`, `core-learning`, and `full` as generated profiles from one source tree and shared `VERSION`.
 - [x] **Initial public version** — `0.1.0`; approved tag: `v0.1.0` from the validated canonical source.
 - [x] **Contained installation and continuous delivery release** — `0.2.0`; approved tag: `v0.2.0` from the validated canonical source.
+- [x] **Installable public CLI release** — `0.5.3` was built as wheel and source distribution, published to PyPI as `agent-harness-kit-cli`, downloaded publicly, installed into an empty host, and accepted by the bundled validator.
 - [ ] **Release automation and GitHub attachments** — owner: maintainers/security; block: automated release. Validate provenance, checksums, and permissions before enabling.
 - [x] Keep one canonical, profile-aware README pair; copied-profile validation confirms all remaining relative links resolve without profile-specific rendering.
 - [x] **Overview audio 0.3.0 refresh** — bilingual tracks were re-rendered with the current scripts, including executable goal-lineage budgets, approved by the user, published as GitHub attachments, and bound by manifest hashes.

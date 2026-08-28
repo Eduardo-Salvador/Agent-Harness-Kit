@@ -1,6 +1,6 @@
 # Distribution profiles
 
-Agent Harness Kit uses the package slug `agent-harness-kit`.
+Agent Harness Kit uses the repository slug `Agent-Harness-Kit`, the contained installation directory `agent-harness-kit/`, and the PyPI distribution name `agent-harness-kit-cli`. The shorter PyPI name is owned by an unrelated project.
 
 One canonical source tree produces three downloadable profiles. Long-lived branches are not editions: they would duplicate fixes, contracts, and safety rules and eventually drift. Profiles are generated views of one shared project version.
 
@@ -48,7 +48,7 @@ ZIP entries are sorted, use a fixed timestamp and permissions, and contain sourc
 
 Generated names follow `agent-harness-kit-<version>-<profile>.zip` (or the same name as a directory).
 
-Build the installable Python package separately with `uv build`. Test the resulting wheel in a clean environment and install a profile into an empty host before publication. Publishing to PyPI is an external release action and is not performed by the build itself.
+Build the installable Python package separately with `uv build`. Before each release, test the resulting wheel in a clean environment and install a profile into an empty host. Publishing to PyPI is an external release action and is not performed by the build itself. Version `0.5.3` was published as `agent-harness-kit-cli`, then downloaded from PyPI and smoke-tested through a clean contained `core` installation and its bundled validator.
 
 ## Version strategy
 

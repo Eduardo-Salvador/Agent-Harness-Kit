@@ -15,15 +15,23 @@ Agent Harness Kit helps developers deliver real software through a disciplined m
 
 ## Modes
 
-### Delivery
+### Standard delivery
 
 The required mode. Discovery creates approved project context and an initial task graph. A PO/orchestrator schedules ready nodes, assigns exclusive ownership and isolation, and completes work when declared objective checks pass. It reports the result and advances immediately. Independent review runs automatically as non-blocking assurance, bounded to one initial round plus at most one focused remediation review; blockers create linked remediation and may gate only affected integration/release work.
 
-### Delivery + learning
+### Standard delivery + learning
 
 An optional observer reads approved delivery artifacts and the user's explicit learning profile. It may create a learning queue, guided practice, reasoning feedback, and debriefs. It cannot add, remove, reprioritize, block, or mark delivery nodes complete. See [Core vs. learning](CORE-VS-LEARNING.md).
 
-Both modes use exactly the same delivery core and contracts.
+### Hackathon delivery
+
+A compressed, demo-first pace for time-boxed MVPs. Discovery uses at most two cohesive questions unless consequential authority or safety is missing. The graph prioritizes one demonstrable vertical slice, early integration, isolated workstreams, and a final demo rehearsal while preserving leases, status, checks, and bounded independent review.
+
+### Hackathon delivery + learning
+
+The same fast delivery graph with the optional learning observer. Learning still requires an explicitly approved destination and cannot block or control delivery.
+
+All four runtime selections use exactly the same delivery core and contracts. Standard versus hackathon changes pace and prioritization; the `+learning` variants add only the consented observer.
 
 ### Optional Harness Engineering Learning Pack
 
@@ -36,6 +44,7 @@ The harness owns:
 - discovery and approval boundaries;
 - layered context and durable artifact contracts;
 - dependency-aware orchestration and task lifecycle;
+- scoped graph execution through focused read paths, exclusive write leases, bounded impact paths, and source provenance;
 - ownership, isolation, review, verification, and handoffs;
 - platform capability negotiation;
 - optional learning observation and approved publication.
@@ -53,6 +62,7 @@ The harness does not own the user's product strategy, source-control provider, m
 6. The same fixture completes through Codex and Claude adapters, with declared degradation where capabilities differ.
 7. Disabling learning changes no delivery artifact except an explicit mode/configuration record.
 8. A new user can follow the documented example without prior harness-engineering knowledge.
+9. A user can install the published CLI, create the contained profile plus root bridges in an empty host, and validate that installation without using the source checkout.
 
 ## Human checkpoints
 
@@ -70,4 +80,4 @@ Human approval is mandatory for consequential product intent, architecture direc
 
 ## Status and scope gate
 
-The first public scope includes native activation for both Codex and Claude Code through documented root entrypoints and small progressive extensions. A profile may be copied into an intentionally empty root or installed under `agent-harness-kit/` with minimal root bridges. It does not include a separate autonomous runtime that independently calls APIs, dispatches sessions, provisions isolation, integrates branches, or publishes notes. Remaining gates are tracked in [OPEN-DECISIONS.md](../OPEN-DECISIONS.md).
+The current public scope includes native activation for both Codex and Claude Code through documented root entrypoints and small progressive extensions. Version `0.5.3` is distributed through PyPI as `agent-harness-kit-cli`; a profile may also be copied into an intentionally empty root or installed under `agent-harness-kit/` with minimal root bridges. It does not include a separate autonomous runtime that independently calls APIs, dispatches sessions, provisions isolation, integrates branches, or publishes notes. Remaining capability and automation decisions are tracked in [OPEN-DECISIONS.md](../OPEN-DECISIONS.md).

@@ -7,7 +7,7 @@ Agent Harness Kit keeps product policy and state platform-neutral; native platfo
 The harness has four platform-neutral layers and thin platform adapters:
 
 1. **Intent and policy:** discovery, approved decisions, project constraints, permissions, and mode selection.
-2. **Coordination:** the PO/orchestrator owns graph transitions, readiness, assignments, checkpoints, and acceptance.
+2. **Coordination:** the PO/orchestrator owns graph transitions, readiness, assignments, checkpoints, acceptance, and scoped code-context hints.
 3. **Execution:** specialized agents run bounded loops inside isolated task nodes with exclusive file ownership.
 4. **Evidence and state:** handoffs, review results, verification evidence, decisions, and durable memory.
 5. **Adapters:** translate neutral capabilities to Codex, Claude, source control, sandboxes, hooks, and optional note destinations.
@@ -30,7 +30,7 @@ Existing root instructions, role systems, path rules, knowledge, decisions, pend
 2. Consequential choices pause at a human checkpoint and become [decision artifacts](contracts/DECISION.md).
 3. Approval freezes a context revision and creates the initial [task graph](contracts/TASK-GRAPH.md).
 4. The orchestrator finds nodes whose dependencies are satisfied, proposed paths do not overlap active ownership, and required capabilities are available.
-5. It follows [capability-based model routing](MODEL-ROUTING.md), records the least costly safe tier and task-specific reason, then assigns one [task brief](contracts/TASK.md), an exclusive ownership set, and an isolation boundary.
+5. It follows [capability-based model routing](MODEL-ROUTING.md), records the least costly safe tier and task-specific reason, then assigns one [task brief](contracts/TASK.md), an exclusive ownership set, and an isolation boundary. Each node may carry a focused `read_set`, exclusive `write_set`, related `impact_set`, and pinned `context_provenance` under [scoped graph execution](SCOPED-GRAPH-EXECUTION.md).
    It also applies [context routing](CONTEXT-ROUTING.md): each task receives a workstream, agent role, execution-context policy, and adapter-owned thread reference. Different workstreams use different contexts unless an explicit integration node owns the crossing.
 6. A specialized agent loops inside that node: inspect → act → check → update its task artifact. It cannot mutate graph topology.
 7. The agent emits a [handoff](contracts/HANDOFF.md) with changes, evidence, and a plain-language closeout. When checks pass, the orchestrator marks the node completed, reports the outcome, releases ownership, and unlocks dependents.
@@ -41,6 +41,8 @@ Existing root instructions, role systems, path rules, knowledge, decisions, pend
 ## Graph above loops
 
 Graph engineering coordinates work **between** nodes: dependencies, readiness, ownership, isolation, priorities, completion, and remediation. Agent-loop engineering controls work **inside** a node: its prompt, tools, context, iteration, and exit conditions. An agent may propose graph changes in its handoff; only the orchestrator, and a human when consequential, may approve them.
+
+A fresh, approved repository index such as Graphify may enrich navigation and regression hints, but it is not a second operational graph. Generated relationships are verified in source, pinned through `context_provenance`, and never grant write authority or mutate lifecycle state automatically.
 
 ## Artifact-based communication
 
@@ -60,9 +62,10 @@ Context is loaded from least to most specific:
 2. approved project context and relevant decisions;
 3. the capability manifest, approved model-routing revision, plus only approved durable rules whose scope intersects the role/task/paths;
 4. graph neighborhood: the task, dependencies, dependents, and ownership map;
-5. task-local files, temporary context, checks, and prior handoff/review evidence;
-6. platform instructions exposed by the selected adapter;
-7. project-learning profile only for project-learning roles, never delivery agents by default.
+5. the node's `read_set`, followed only when necessary by evidence-backed context expansion; its `impact_set` bounds proportional regression checks while `write_set` remains the sole ownership lease;
+6. task-local temporary context, checks, and prior handoff/review evidence;
+7. platform instructions exposed by the selected adapter;
+8. project-learning profile only for project-learning roles, never delivery agents by default.
 
 The Harness Engineering Learning Pack is outside this sequence and is loaded only for an explicit study request.
 
@@ -120,4 +123,4 @@ For contained installation, a generated profile may live under host `agent-harne
 
 ## Source and distribution boundary
 
-There is one canonical source tree and project version. [Generated profiles](DISTRIBUTION.md) select Development Core, Core plus project learning, or the full source including the separable Learning Pack. Profiles are packaging views, never long-lived branches or duplicated harness implementations.
+There is one canonical source tree and project version. [Generated profiles](DISTRIBUTION.md) select Development Core, Core plus project learning, or the full source including the separable Learning Pack. Profiles are packaging views, never long-lived branches or duplicated harness implementations. The public `agent-harness-kit-cli` distribution installs those views; it does not add an autonomous runtime or a competing state store.

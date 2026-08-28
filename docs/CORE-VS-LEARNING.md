@@ -1,6 +1,6 @@
 # Shared core, project learning, and harness study
 
-## One core, two modes
+## One core, two delivery paces, optional learning
 
 There is one delivery graph, one orchestrator, one set of task contracts, and one verification path. `delivery+learning` and `hackathon+learning` activate project-specific observers around that same core; neither is a fork, alternate prompt stack, or duplicate harness. Hackathon pace changes prioritization, not learning authority.
 

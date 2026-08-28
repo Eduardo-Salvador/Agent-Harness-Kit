@@ -54,7 +54,7 @@ O modo hackathon mantém estado, leases, checks e status, mas usa review leve po
 
 Ouça uma explicação curta em português sobre o que o projeto faz e como seu fluxo funciona.
 
-https://github.com/user-attachments/assets/8f5776d8-6d77-4b37-9712-004c21c3a17e
+https://github.com/user-attachments/assets/e3cf95a9-2615-41bc-aec1-f68ffce7df18
 
 [Baixar o MP3 em português](media/agent-harness-kit-overview-pt-BR.mp3) · [Ler o roteiro em português](media/overview-script-pt-BR.txt)
 
@@ -106,6 +106,6 @@ Em um projeto vazio, a descoberta vem antes de propostas de stack, arquitetura, 
 - O Kit coordena agentes capazes por arquivos; não abre chats, integra branches, faz deploy ou publica notas autonomamente.
 - Leases são contratos validados, não locks do sistema operacional.
 - Threads, subagentes, worktrees, MCPs, rede e modelo dependem das capacidades e autorizações reais do host.
-- Um grafo de conhecimento pode reduzir varreduras amplas, mas apenas consultas focadas e orçamentos de execução evitam desperdício; nenhuma ferramenta garante menos tokens.
+- Um grafo de conhecimento pode reduzir varreduras amplas, mas apenas consultas focadas e orçamentos de execução evitam desperdício; nenhuma ferramenta garante menos tokens. Consulte o [contrato de execução focada por grafo](docs/SCOPED-GRAPH-EXECUTION.md) para os limites de `read_set`, `write_set`, `impact_set`, proveniência e Graphify.
 
 Quer aprofundar? Veja a [instalação passo a passo](docs/EMBEDDED-INSTALLATION.md), o [modo hackathon](docs/HACKATHON-MODE.md), a [arquitetura](docs/ARCHITECTURE.md), o [contrato de validação](docs/VALIDATION.md), a [auditoria de prontidão](docs/PUBLICATION-READINESS.md) e a [licença MIT](LICENSE).

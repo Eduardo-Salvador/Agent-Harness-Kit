@@ -54,7 +54,7 @@ Hackathon mode keeps state, file leases, checks, and status, but uses light revi
 
 Listen to a short English explanation of what the project does and how its workflow fits together.
 
-https://github.com/user-attachments/assets/e3cf95a9-2615-41bc-aec1-f68ffce7df18
+https://github.com/user-attachments/assets/8f5776d8-6d77-4b37-9712-004c21c3a17e
 
 [Download the English MP3](media/agent-harness-kit-overview-en.mp3) · [Read the English script](media/overview-script-en.txt)
 
@@ -106,6 +106,6 @@ In an empty project, discovery comes before stack, architecture, branding, or fe
 - The Kit coordinates capable agents through files; it does not autonomously open chats, merge branches, deploy, or publish notes.
 - Leases are validated contracts, not OS-level locks.
 - Threads, subagents, worktrees, MCPs, network, and model choice depend on the host's real capabilities and authorization.
-- A knowledge graph can reduce broad scans, but only scoped queries and execution budgets prevent waste; no tool guarantees lower token usage.
+- A knowledge graph can reduce broad scans, but only scoped queries and execution budgets prevent waste; no tool guarantees lower token usage. See the [scoped graph execution contract](docs/SCOPED-GRAPH-EXECUTION.md) for the `read_set`, `write_set`, `impact_set`, provenance, and Graphify boundaries.
 
 Need more detail? Read the [step-by-step installation guide](docs/EMBEDDED-INSTALLATION.md), [hackathon mode](docs/HACKATHON-MODE.md), [architecture](docs/ARCHITECTURE.md), [validation contract](docs/VALIDATION.md), [publication readiness audit](docs/PUBLICATION-READINESS.md), and [MIT License](LICENSE).
