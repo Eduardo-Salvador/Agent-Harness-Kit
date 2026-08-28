@@ -1,53 +1,27 @@
-Agent Harness Kit.
+Agent Harness Kit, versão zero ponto cinco ponto dois.
 
-O Agent Harness Kit é um único harness de desenvolvimento, independente de plataforma, que ajuda agentes a desenvolver software com contexto durável, papéis bem definidos, tarefas encadeadas, ambientes isolados, revisão independente e evidências reproduzíveis.
+O Agent Harness Kit é um scaffold instalável e independente de plataforma para organizar desenvolvimento de software com agentes de código. Ele oferece contexto durável, limites claros por tarefa, verificações focadas e uma forma confiável de continuar o trabalho sem varrer o repositório inteiro ou pedir aprovações cerimoniais a todo momento.
 
-O suporte nativo às duas ferramentas já vem incluído: o Codex entra por A G E N T S ponto markdown, o Claude Code por CLAUDE ponto markdown, e ambos usam o mesmo núcleo neutro.
+Você instala a ferramenta de linha de comando com U V e executa agent harness install dentro do projeto. O instalador adiciona o kit de forma contida e cria entradas seguras na raiz. O Codex entra por A G E N T S ponto markdown, o Claude Code por CLAUDE ponto markdown, e ambos seguem as mesmas regras e o mesmo estado neutro.
 
 Em uma nova janela de contexto, em pedidos de retomada ou em pedidos de status, o agente deve ler primeiro o contexto aprovado, depois PENDING ponto M D e, por último, TASK GRAPH ponto M D. PENDING contém decisões e ações humanas e a visão macro das áreas ainda incompletas, como backend ou autenticação. TASK GRAPH contém ordem, dependências e execução técnica. Todo status deve mostrar etapa, progresso, bloqueios, próxima ação e caminhos inspecionáveis. Uma varredura mais ampla só pode acontecer quando esses artefatos revelarem uma lacuna concreta ou quando o usuário pedir uma auditoria.
 
-Para controlar o custo sem reduzir a qualidade de forma silenciosa, as tarefas são roteadas por capacidade. Modelos econômicos ficam limitados a trabalho mecânico e verificável. Modelos balanceados são o padrão para implementação delimitada, testes, documentação e inspeção. Modelos avançados ficam reservados para arquitetura, segurança, brainstorming, integração difícil, evolução do harness e falhas repetidas. A escolha do modelo nunca concede permissões adicionais.
+Para controlar o custo sem reduzir a qualidade de forma silenciosa, as tarefas são roteadas por capacidade. Trabalho mecânico pode usar modelos econômicos, implementação normal usa modelos balanceados e modelos avançados ficam reservados para arquitetura, segurança, integração difícil ou falhas repetidas. A escolha do modelo nunca concede permissões adicionais.
 
-Cada tarefa também recebe um orçamento executável por linhagem de objetivo. Por padrão, o agente pode fazer no máximo duas tentativas de implementação, passar no máximo dois ciclos consecutivos sem progresso mensurável e expandir o contexto no máximo três vezes. Trocar modelo, agente, tarefa, review, decomposição ou sessão não zera esses contadores. Ao atingir qualquer teto, o agente deve registrar evidências, parar e devolver o trabalho para um replanejamento delimitado, em vez de continuar consumindo contexto.
+Cada tarefa também recebe um orçamento executável. Tentativas, ciclos sem progresso e expansões de contexto têm limites que continuam valendo para o mesmo objetivo, mesmo quando muda o modelo, o agente, a tarefa ou a sessão. Ao atingir um teto, o agente registra evidências e replana, em vez de consumir tokens indefinidamente.
 
 Ele serve tanto para projetos novos quanto para repositórios maduros que já têm contexto do Claude, instruções do Codex, agentes, regras e até um harness próprio. Nesses casos, não sobrescreve nada de imediato. Primeiro, faz um inventário e congela as autoridades existentes. Depois, instala por coexistência gradual em um espaço separado e pede revisão humana antes de qualquer remoção ou substituição. O README também aponta para o playbook e para os contratos de migração e coexistência.
 
-Existem três opções.
+O perfil recomendado, Core, cobre a entrega normal. Core Learning adiciona aprendizado opcional usando o projeto, e Full também inclui um pacote separado para estudar engenharia de harness. Instalar suporte de aprendizado nunca ativa observação nem cria notas automaticamente. Antes, o agente pergunta o caminho Markdown, a pasta do Obsidian, o alvo e o conector do Notion ou outro destino aprovado.
 
-Core é somente desenvolvimento.
+No primeiro uso, o agente apresenta o Kit e inicia uma descoberta curta antes de propor tecnologia ou implementação. A mensagem também informa que o usuário pode escolher entrega normal ou modo hackathon. No hackathon, a descoberta é comprimida, uma fatia completa e testável vem primeiro, a integração acontece cedo e o foco é chegar rapidamente a um M V P ou demo funcionando.
 
-Core Learning acrescenta aprendizagem baseada no projeto.
+Depois da descoberta, o usuário aprova o contexto e as decisões importantes. O Kit registra ações humanas e pendências macro em PENDING, e ordem técnica e dependências em TASK GRAPH. Frontend, backend, dados, infraestrutura, integração e estudo podem usar contextos separados quando a plataforma permite. Cada tarefa ativa recebe contexto de código delimitado, lease exclusivo de arquivos e um revisor diferente do implementador.
 
-Full também traz um pacote opcional e separado para estudar engenharia de harness.
+Quando as verificações passam, a tarefa é concluída, o resultado é informado e a próxima tarefa pronta pode começar. A revisão independente funciona como garantia não bloqueante: uma review proporcional ao risco e, somente quando existir um bloqueio real, no máximo uma re-review focada na correção e nas regressões relacionadas. No hackathon, a review é leve por padrão. Nunca existe um terceiro loop.
 
-São três pacotes gerados do mesmo código. Instalar uma opção com aprendizagem não concede consentimento nem inicia nada automaticamente.
+O README agora começa pela instalação curta, escolha do modo, os três arquivos de estado, perfis e limites honestos. Os contratos detalhados continuam disponíveis por links para quem precisar se aprofundar.
 
-No primeiro uso, se não houver contexto aprovado, o agente inicia uma entrevista adaptativa. Ele identifica o que já existe e pergunta somente o que falta. A pessoa também pode pedir uma explicação simples sobre o Agent Harness Kit e sobre o que acontecerá no projeto, sem ativar nenhum modo de estudo.
+Hoje, o Agent Harness Kit oferece uma interface de linha de comando instalável, contratos operacionais, papéis, templates, playbooks, roteamento por capacidade, execução limitada, validação e empacotamento. Ele é um scaffold seguido por agentes capazes, não um daemon em segundo plano. Ele não promete criar chats ou worktrees, integrar branches, fazer deploy ou publicar quando a plataforma não oferece e autoriza essas capacidades.
 
-Depois da entrevista, o usuário revisa o contexto, escolhe o modo de trabalho e aprova as decisões importantes. O sistema cria o grafo de tarefas. Cada especialista recebe uma tarefa delimitada e arquivos exclusivos. Quando as verificações previstas passam, o orquestrador marca a task como concluída, informa o que mudou, libera a propriedade e inicia a próxima tarefa pronta sem pedir aprovação de conclusão.
-
-As reviews são uma garantia independente, automática e não bloqueante. Cada tarefa concluída recebe uma revisão inicial proporcional ao risco e, somente quando houver um defeito bloqueante, no máximo uma revisão focada nos bloqueios anteriores, no delta da correção e nas regressões relacionadas. Melhorias opcionais viram follow-ups. Um bloqueio cria uma task de correção vinculada e pode segurar apenas a integração ou release afetado; não reabre o histórico concluído nem para tarefas prontas sem relação. Uma segunda reprovação obriga reescrita, decomposição ou uma decisão humana real de produto ou risco. Não existe terceiro loop de review.
-
-Microcorreções relacionadas são agrupadas em uma mudança coerente e reversível quando compartilham os mesmos limites de aceitação e rollback. As mudanças são separadas somente quando há uma fronteira relevante de propriedade, implantação, dependência, risco, revisão ou rollback. A aceitação técnica não autoriza automaticamente commit, push, deploy ou publicação.
-
-O README também cobre os pré-requisitos, como validar e gerar os pacotes, o que já funciona hoje, o que ainda não é automático, os próximos passos, a licença MIT e a abertura à comunidade.
-
-Veja alguns exemplos.
-
-Se você quer desenvolver uma plataforma do zero e aprender as tecnologias enquanto constrói, pode usar o Core Learning. O kit ajuda a descobrir o produto, organizar o contexto, criar o grafo de tarefas e transformar as decisões reais do projeto em prática guiada.
-
-Se você já domina a stack e quer somente desenvolver com agentes de forma mais organizada e verificável, pode usar o Core.
-
-Se o seu repositório já tem contexto do Claude, instruções do Codex ou um harness próprio, o kit pode entrar por coexistência. Ele preserva o que já existe, registra a origem de cada informação e só permite a transição depois de uma revisão humana.
-
-Os agentes também são editáveis. Durante a entrevista, o kit identifica as especialidades que o projeto precisa e ajuda a adaptar ou criar papéis, responsabilidades, ferramentas e critérios de revisão. Você pode personalizar esse time sem alterar o núcleo do harness, desde que os limites de autoridade e as verificações continuem explícitos.
-
-Quando falamos em ferramentas, isso inclui recursos nativos do agente, servidores MCP, skills, scripts, hooks e integrações. A entrevista identifica quais capacidades o projeto realmente precisa, quais já estão disponíveis e quais dependem de instalação ou autorização. O kit nunca presume acesso que não foi confirmado.
-
-O usuário também pode definir regras de negócio, segurança, arquitetura, estilo e convenções específicas para determinados caminhos. O harness organiza essas regras em uma área própria, conecta cada regra aos agentes e tarefas relevantes e preserva regras que já existam no projeto.
-
-Se o seu objetivo é estudar a própria engenharia de harness, pode usar o perfil Full e abrir o pacote educacional separado, sem carregar esse material no trabalho operacional do projeto.
-
-Hoje, o Agent Harness Kit já oferece a estrutura operacional, os contratos, os agentes, os templates, os playbooks, o roteamento de modelos por capacidade, os orçamentos limitados de execução, a integração coerente de mudanças, a validação e o empacotamento. Ele ainda não é um programa independente que, sozinho, dispara agentes, cria worktrees e integra branches em qualquer plataforma.
-
-O projeto usa a licença MIT e está aberto à comunidade.
+O projeto usa a licença MIT e está aberto à comunidade. Em resumo: instale o Kit, escolha entrega normal ou hackathon, aprove o contexto uma vez e deixe o agente trabalhar com estado durável até um resultado testável.

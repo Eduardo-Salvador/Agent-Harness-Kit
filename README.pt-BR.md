@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Versão 0.5.2" src="https://img.shields.io/badge/vers%C3%A3o-0.5.2-4967ff">
+  <img alt="Versão 0.5.3" src="https://img.shields.io/badge/vers%C3%A3o-0.5.3-4967ff">
   <img alt="Python 3.10 ou mais recente" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Instalado com uv" src="https://img.shields.io/badge/instalador-uv-DE5FE9?logo=uv&amp;logoColor=white">
   <img alt="Compatível com Codex" src="https://img.shields.io/badge/agente-Codex-11131a">
@@ -17,16 +17,44 @@
 </p>
 
 <p align="center">
-  <a href="README.md">English</a> · <a href="#instale-em-30-segundos">Instalação</a> · <a href="docs/ARCHITECTURE.md">Arquitetura</a> · <a href="docs/EMBEDDED-INSTALLATION.md">Atualização contida</a>
+  <a href="README.md">English</a> · <a href="#comece-aqui">Comece aqui</a> · <a href="#escolha-o-ritmo">Modos</a> · <a href="docs/ARCHITECTURE.md">Arquitetura</a>
 </p>
 
-**Versão do código-fonte: `0.5.2`.** O Kit é um scaffold executável e orientado a artefatos. Agentes capazes seguem seus arquivos, contratos e validadores; ele não é um daemon que inicia agentes ou bloqueia o sistema operacional.
+**Versão do código-fonte: `0.5.3`.** O Kit é um scaffold executável e orientado a artefatos. Agentes capazes seguem seus arquivos, contratos e validadores; ele não é um daemon que inicia agentes ou bloqueia o sistema operacional.
 
-## Áudio de explicação do projeto
+## Comece aqui
+
+Instale a CLI uma vez com o [`uv`](https://docs.astral.sh/uv/):
+
+```bash
+uv tool install agent-harness-kit-cli
+```
+
+Depois, abra o projeto que você quer organizar e execute:
+
+```bash
+agent-harness install
+```
+
+Abra um **novo contexto do agente na raiz do projeto**. O Kit se apresentará, verificará somente o estado inicial necessário e começará uma descoberta curta antes de propor implementação.
+
+> Quer apenas conferir antes? Execute `agent-harness install --dry-run`. Instruções existentes na raiz são preservadas por blocos gerenciados e coexistência com namespace.
+
+## Escolha o ritmo
+
+| Diga isto | O que acontece |
+| --- | --- |
+| “Use entrega normal” | Descoberta completa quando necessária, implementação limitada, checks e garantia independente |
+| “Use modo hackathon” | No máximo duas perguntas coesas e depois um grafo focado em demo para chegar a um MVP testável |
+| “Também quero aprender” | Adiciona estudo guiado somente após você aprovar o caminho Markdown, Obsidian, alvo/MCP do Notion ou outro destino |
+
+O modo hackathon mantém estado, leases, checks e status, mas usa review leve por padrão e corta escopo secundário antes do caminho principal da demo.
+
+## Prefere ouvir?
 
 Ouça uma explicação curta em português sobre o que o projeto faz e como seu fluxo funciona.
 
-https://github.com/user-attachments/assets/4c68f8a0-bfac-4847-b2ea-9adeae24c17c
+https://github.com/user-attachments/assets/8f5776d8-6d77-4b37-9712-004c21c3a17e
 
 [Baixar o MP3 em português](media/agent-harness-kit-overview-pt-BR.mp3) · [Ler o roteiro em português](media/overview-script-pt-BR.txt)
 
@@ -41,67 +69,23 @@ https://github.com/user-attachments/assets/4c68f8a0-bfac-4847-b2ea-9adeae24c17c
 | Vários agentes colidem | Áreas, leases de arquivos e handoffs são explícitos |
 | Notas de estudo surgem em pastas arbitrárias | O estudo só começa após aprovação do destino |
 
-## Projeto novo ou harness existente
+## O que muda no projeto
 
-Em um projeto vazio, a primeira resposta apresenta o Kit, informa que você pode escolher entre a entrega normal e o **modo hackathon**, e inicia uma descoberta curta antes de propor tecnologia, arquitetura ou direção visual. O modo hackathon encurta a descoberta e prioriza um MVP/demo testável rapidamente. Em um repositório maduro, o Kit preserva as instruções atuais e usa coexistência com namespace; ele nunca sobrescreve silenciosamente `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/` ou outra autoridade. Veja o [playbook de adoção madura](harness/playbooks/mature-harness-adoption.md).
+- `PROJECT-CONTEXT.md` registra produto, restrições, modo e decisões importantes já aprovadas.
+- `PENDING.md` responde o que ainda depende de uma pessoa e o que falta no nível do produto.
+- `TASK-GRAPH.md` controla ordem técnica, dependências, leases, progresso e o próximo trabalho pronto.
+- `AGENTS.md` e `CLAUDE.md` da raiz encaminham agentes capazes para as mesmas regras neutras contidas em `agent-harness-kit/`.
 
-## Instale em 30 segundos
+Frontend, backend, dados, infraestrutura, integração e estudo usam contextos separados quando a plataforma oferece essa capacidade. Cada nó ativo pode declarar `read_set` focado, `write_set` exclusivo, `impact_set` relacionado e revisão da fonte, reduzindo varreduras amplas sem inventar um segundo grafo.
 
-Com o [`uv`](https://docs.astral.sh/uv/) instalado, instale a CLI uma vez:
+## O ciclo de trabalho
 
-```bash
-uv tool install agent-harness-kit-cli
-```
+1. O agente lê o contexto aprovado, depois as pendências humanas/macro e por último o grafo técnico.
+2. Ele carrega somente a tarefa ativa e seu contexto direto, assume um lease exclusivo e implementa dentro do orçamento declarado.
+3. Trabalho aprovado nos checks é concluído e informado imediatamente; a próxima tarefa pronta pode começar sem aprovação cerimonial.
+4. A review independente funciona como garantia não bloqueante: uma revisão proporcional e, somente para bloqueio real, no máximo uma re-review focada. Não existe terceiro loop.
 
-Depois, execute dentro de cada projeto que receberá o Kit:
-
-```bash
-agent-harness install
-```
-
-Depois, abra um **novo contexto do agente na raiz desse projeto**. O comando instala o perfil recomendado `core`, cria a pasta contida `agent-harness-kit/` e adiciona blocos gerenciados ao `AGENTS.md` e `CLAUDE.md` da raiz sem substituir instruções existentes.
-
-```bash
-# Apenas simular
-agent-harness install --dry-run
-
-# Incluir suporte consentido ao aprendizado no projeto
-agent-harness install --profile core-learning
-```
-
-Para clone/ZIP, iniciantes, uso offline, solução de problemas e atualização contida, veja a [instalação passo a passo](docs/EMBEDDED-INSTALLATION.md). A interface original `python tools/install.py` continua suportada.
-
-## O que é instalado
-
-- Contexto, regras, capacidades e decisões aprovadas do projeto.
-- Decisões, ações humanas e lacunas macro em `harness-state/PENDING.md`.
-- Ordem técnica, dependências, leases e transições em `harness-state/TASK-GRAPH.md`.
-- Tentativas, expansão de contexto e review independente limitadas—sem terceira review automática.
-- Status obrigatório: etapa, progresso, trabalho automático, as duas visões de pendências, bloqueios, próxima ação e caminhos.
-- Contextos separados para frontend, backend, dados, infraestrutura, integração e estudo quando o host permite.
-
-## Modo hackathon
-
-Ao pedir “modo hackathon”, um MVP com prazo curto ou construção focada em demo, o Kit comprime a descoberta para no máximo duas perguntas coesas antes de propor contexto e grafo. Ele busca uma fatia vertical demonstrável, divide trabalho isolado por área/agente, integra cedo, usa review independente leve por padrão e termina com demo ensaiada, atalhos visíveis e lacunas pós-MVP. É mais rápido, mas não remove leases, checks, status ou o limite de duas reviews. Veja o [modo hackathon](docs/HACKATHON-MODE.md).
-
-## Como a execução flui
-
-```mermaid
-flowchart LR
-    S[Início ou retomada] --> C{Contexto aprovado?}
-    C -- não --> D[Descoberta curta]
-    C -- sim --> P[PENDING + TASK-GRAPH]
-    D --> P
-    P --> W[Área de trabalho focada]
-    W --> V[Checks + review limitada]
-    V --> X[Concluir + informar + próxima]
-```
-
-`PENDING.md` responde “o que você precisa de mim?” e acompanha o que falta no nível do produto. `TASK-GRAPH.md` controla a execução técnica. O agente lê os dois—nessa ordem depois do contexto—e persiste mudanças do grafo antes de informar progresso.
-
-## Um grafo de tarefas mais inteligente
-
-O `TASK-GRAPH.md` existente também carrega contexto de código focado por nó: `read_set` diz o que o agente deve abrir primeiro, `write_set` continua sendo o lease exclusivo e `impact_set` limita a review de regressões. `context_provenance` registra a revisão do código e como essas pistas foram encontradas. Uma ferramenta aprovada e atualizada como o [Graphify](https://github.com/Graphify-Labs/graphify) pode enriquecer esses campos, mas nunca cria um grafo concorrente nem altera o estado das tasks automaticamente.
+Toda atualização de progresso mostra etapa, andamento, trabalho que continuará automaticamente, pendências humanas e técnicas, bloqueios, próxima ação e caminhos inspecionáveis.
 
 ## Perfis
 
@@ -113,6 +97,10 @@ O `TASK-GRAPH.md` existente também carrega contexto de código focado por nó: 
 
 O aprendizado nunca é ativado silenciosamente. O usuário escolhe o caminho Markdown, local do Obsidian, alvo/MCP do Notion ou outro destino exato antes da criação de qualquer nota.
 
+## Projeto novo ou harness existente
+
+Em um projeto vazio, a descoberta vem antes de propostas de stack, arquitetura, marca ou funcionalidades. Em um repositório maduro, o Kit preserva as instruções existentes e usa coexistência com namespace; ele nunca sobrescreve silenciosamente `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/` ou outra autoridade. Veja o [playbook de adoção madura](harness/playbooks/mature-harness-adoption.md).
+
 ## Limites honestos
 
 - O Kit coordena agentes capazes por arquivos; não abre chats, integra branches, faz deploy ou publica notas autonomamente.
@@ -120,4 +108,4 @@ O aprendizado nunca é ativado silenciosamente. O usuário escolhe o caminho Mar
 - Threads, subagentes, worktrees, MCPs, rede e modelo dependem das capacidades e autorizações reais do host.
 - Um grafo de conhecimento pode reduzir varreduras amplas, mas apenas consultas focadas e orçamentos de execução evitam desperdício; nenhuma ferramenta garante menos tokens.
 
-Leia a [auditoria de prontidão](docs/PUBLICATION-READINESS.md), o [contrato de validação](docs/VALIDATION.md), as [decisões em aberto](OPEN-DECISIONS.md) e a [licença MIT](LICENSE).
+Quer aprofundar? Veja a [instalação passo a passo](docs/EMBEDDED-INSTALLATION.md), o [modo hackathon](docs/HACKATHON-MODE.md), a [arquitetura](docs/ARCHITECTURE.md), o [contrato de validação](docs/VALIDATION.md), a [auditoria de prontidão](docs/PUBLICATION-READINESS.md) e a [licença MIT](LICENSE).

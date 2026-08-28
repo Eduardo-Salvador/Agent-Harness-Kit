@@ -1302,8 +1302,6 @@ def validate_repository() -> list[str]:
                     if declared_revision != max(transition_revisions):
                         errors.append(f"graph.revision-log: {rel(path)} declares r{declared_revision} but log reaches r{max(transition_revisions)}")
     for readme in (ROOT / "README.md", ROOT / "README.pt-BR.md"):
-        if readme.exists() and len(re.findall(r"^```mermaid$", readme.read_text(encoding="utf-8"), re.MULTILINE)) != 1:
-            errors.append(f"markdown.mermaid: {rel(readme)} must contain exactly one Mermaid block")
         if readme.exists():
             readme_text = readme.read_text(encoding="utf-8")
             attachment_urls = re.findall(r"^https://github\.com/user-attachments/assets/[0-9a-f-]{36}$", readme_text, re.MULTILINE)
