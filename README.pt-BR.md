@@ -11,7 +11,7 @@
   <a href="README.md">English</a> · <a href="#instale-em-30-segundos">Instalação</a> · <a href="docs/ARCHITECTURE.md">Arquitetura</a> · <a href="docs/EMBEDDED-INSTALLATION.md">Atualização contida</a>
 </p>
 
-**Versão do código-fonte: `0.5.0`.** O Kit é um scaffold executável e orientado a artefatos. Agentes capazes seguem seus arquivos, contratos e validadores; ele não é um daemon que inicia agentes ou bloqueia o sistema operacional.
+**Versão do código-fonte: `0.5.1`.** O Kit é um scaffold executável e orientado a artefatos. Agentes capazes seguem seus arquivos, contratos e validadores; ele não é um daemon que inicia agentes ou bloqueia o sistema operacional.
 
 ## Áudio de explicação do projeto
 
@@ -36,7 +36,7 @@ https://github.com/user-attachments/assets/4c68f8a0-bfac-4847-b2ea-9adeae24c17c
 
 ## Projeto novo ou harness existente
 
-Em um projeto vazio, a primeira resposta apresenta o Kit e inicia uma descoberta curta antes de propor tecnologia, arquitetura ou direção visual. Em um repositório maduro, o Kit preserva as instruções atuais e usa coexistência com namespace; ele nunca sobrescreve silenciosamente `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/` ou outra autoridade. Veja o [playbook de adoção madura](harness/playbooks/mature-harness-adoption.md).
+Em um projeto vazio, a primeira resposta apresenta o Kit, informa que você pode escolher entre a entrega normal e o **modo hackathon**, e inicia uma descoberta curta antes de propor tecnologia, arquitetura ou direção visual. O modo hackathon encurta a descoberta e prioriza um MVP/demo testável rapidamente. Em um repositório maduro, o Kit preserva as instruções atuais e usa coexistência com namespace; ele nunca sobrescreve silenciosamente `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/` ou outra autoridade. Veja o [playbook de adoção madura](harness/playbooks/mature-harness-adoption.md).
 
 ## Instale em 30 segundos
 

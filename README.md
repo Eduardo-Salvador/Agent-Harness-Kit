@@ -11,7 +11,7 @@
   <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="#install-in-30-seconds">Install</a> · <a href="docs/ARCHITECTURE.md">Architecture</a> · <a href="docs/EMBEDDED-INSTALLATION.md">Contained updates</a>
 </p>
 
-**Source version: `0.5.0`.** The Kit is an executable, artifact-driven scaffold. Capable agents follow its files, contracts, and validators; it is not a daemon that launches agents or locks the operating system.
+**Source version: `0.5.1`.** The Kit is an executable, artifact-driven scaffold. Capable agents follow its files, contracts, and validators; it is not a daemon that launches agents or locks the operating system.
 
 ## Project overview audio
 
@@ -36,7 +36,7 @@ https://github.com/user-attachments/assets/8d0d1956-5199-43d2-9cf7-3a4b625553bd
 
 ## Greenfield or existing harness
 
-In an empty project, the first response introduces the Kit and starts a short discovery before proposing technology, architecture, or visual direction. In a mature repository, the Kit preserves existing instructions and uses namespaced coexistence; it never silently overwrites `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, or another authority. See the [mature-adoption playbook](harness/playbooks/mature-harness-adoption.md).
+In an empty project, the first response introduces the Kit, tells you that you can choose standard delivery or **hackathon mode**, and starts a short discovery before proposing technology, architecture, or visual direction. Hackathon mode compresses discovery and prioritizes a quickly testable MVP/demo. In a mature repository, the Kit preserves existing instructions and uses namespaced coexistence; it never silently overwrites `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, or another authority. See the [mature-adoption playbook](harness/playbooks/mature-harness-adoption.md).
 
 ## Install in 30 seconds
 

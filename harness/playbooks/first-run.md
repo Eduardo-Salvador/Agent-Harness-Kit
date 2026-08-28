@@ -19,7 +19,7 @@ At the user's request, briefly explain in plain language what the harness is, wh
 When the project is uninitialized, the first user-facing response must make activation visible and begin discovery in the same message:
 
 1. Give a brief, natural welcome that says Agent Harness Kit is active for this project and explains what it does in one short sentence: it organizes project context, pending work, and verifiable execution.
-2. State that a short discovery will establish the project context before implementation planning.
+2. State that a short discovery will establish the project context before implementation planning, and mention that the user may choose standard delivery or the faster `hackathon` mode for a time-boxed MVP/demo.
 3. Reflect any useful facts already present in the user's request or repository so the user does not repeat them.
 4. Ask the highest-leverage unanswered discovery question immediately.
 
@@ -33,7 +33,7 @@ For an empty or effectively empty greenfield directory, do not propose a product
 
 Keep the welcome to at most two short sentences before the question. Do not turn it into marketing copy, a long harness explanation, or an approval gate.
 
-Localize the wording to the user's language. A suitable opening is: “Welcome — Agent Harness Kit is active. It organizes project context, pending work, and verifiable execution; before implementation, I will run a short discovery.” Follow it immediately with the first discovery question; do not repeat this fixed wording after initialization.
+Localize the wording to the user's language. A suitable opening is: “Welcome — Agent Harness Kit is active. It organizes project context, pending work, and verifiable execution; before implementation, I will run a short discovery. You can use standard delivery or choose hackathon mode to reach a time-boxed MVP/demo faster.” Follow it immediately with the first discovery question; do not repeat this fixed wording after initialization.
 
 1. Discovery interviewer inventories files and classifies the host as `greenfield`, `existing`, or `uncertain`, with evidence.
 2. If existing harness material is mature, switch to the [mature adoption playbook](mature-harness-adoption.md), record a discovery snapshot, and preserve originals.

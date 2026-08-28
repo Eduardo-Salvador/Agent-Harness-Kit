@@ -25,7 +25,7 @@ When the user asks for a hackathon, time-boxed MVP, or demo-first build, follow 
 
 ## First-response handshake
 
-For an uninitialized project, the first response identifies that Agent Harness Kit is active, explains briefly that it organizes project context, pending work, and verifiable execution, says discovery establishes context before implementation planning, and asks the highest-leverage unanswered question immediately. The welcome is localized to the user's language, at most two short sentences, and is not marketing copy or a separate approval checkpoint.
+For an uninitialized project, the first response identifies that Agent Harness Kit is active, explains briefly that it organizes project context, pending work, and verifiable execution, says discovery establishes context before implementation planning, mentions that the user may choose standard delivery or the faster hackathon mode for a time-boxed MVP/demo, and asks the highest-leverage unanswered question immediately. The welcome is localized to the user's language, at most two short sentences, and is not marketing copy or a separate approval checkpoint.
 
 For an empty or effectively empty greenfield directory, the first question asks what the user wants to create, for whom, what problem/value it addresses, and what the first successful outcome is. The agent does not first invent or recommend product scope, features, visual direction, architecture, stack, implementation steps, or a task graph. When the initial user request already answers some of those fields, reflect and pre-fill them, then ask only for the consequential gap.
 

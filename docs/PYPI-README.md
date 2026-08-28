@@ -2,7 +2,7 @@
 
 Agent Harness Kit gives coding agents durable project context, separate human and technical pending views, dependency-aware execution, file ownership leases, bounded review, and inspectable completion.
 
-![Agent Harness Kit](https://raw.githubusercontent.com/Eduardo-Salvador/Agent-Harness-Kit/v0.5.0/docs/assets/agent-harness-kit-banner.svg)
+![Agent Harness Kit](https://raw.githubusercontent.com/Eduardo-Salvador/Agent-Harness-Kit/v0.5.1/docs/assets/agent-harness-kit-banner.svg)
 
 ## Install
 

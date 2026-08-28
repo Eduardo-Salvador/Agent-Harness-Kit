@@ -995,14 +995,14 @@ def validate_native_integration() -> list[str]:
     first_run_playbook = ROOT / "harness" / "playbooks" / "first-run.md"
     if first_run_playbook.is_file():
         first_run_text = first_run_playbook.read_text(encoding="utf-8").lower()
-        for token in ("first-response handshake", "agent harness kit is active", "organizes project context, pending work, and verifiable execution", "highest-leverage unanswered", "empty or effectively empty", "do not propose a product", "localize the wording"):
+        for token in ("first-response handshake", "agent harness kit is active", "organizes project context, pending work, and verifiable execution", "standard delivery", "hackathon mode", "time-boxed mvp/demo", "highest-leverage unanswered", "empty or effectively empty", "do not propose a product", "localize the wording"):
             if token not in first_run_text:
                 errors.append(f"native.first-run-handshake: first-run playbook lacks {token!r}")
     for item in (".agents/skills/first-run-discovery/SKILL.md", ".claude/skills/first-run-discovery/SKILL.md"):
         path = ROOT / item
         if path.is_file():
             skill_text = path.read_text(encoding="utf-8").lower()
-            for token in ("agent harness kit is active", "highest-leverage unanswered", "empty", "do not propose"):
+            for token in ("agent harness kit is active", "standard delivery", "hackathon mode", "time-boxed mvp/demo", "highest-leverage unanswered", "empty", "do not propose"):
                 if token not in skill_text:
                     errors.append(f"native.first-run-handshake-skill: {item} lacks {token!r}")
 
@@ -1346,7 +1346,7 @@ def validate_repository() -> list[str]:
             if "first-response" not in bridge_text or "first-run discovery interview automatically" not in bridge_text:
                 errors.append(f"embedded.first-run-route: {rel(bridge)} must trigger automatic discovery from the root entrypoint")
             bridge_lower = bridge_text.lower()
-            for token in ("mandatory first-response gate", "before any scan", "stop", "substantive project request", "exactly one", "prior conversations", "agent harness kit is active", "registered mentally", "path/revision"):
+            for token in ("mandatory first-response gate", "before any scan", "stop", "substantive project request", "exactly one", "prior conversations", "agent harness kit is active", "standard delivery", "hackathon mode", "time-boxed mvp/demo", "registered mentally", "path/revision"):
                 if token not in bridge_lower:
                     errors.append(f"embedded.first-response-salience: {rel(bridge)} lacks {token!r}")
     if embedded_doc.is_file():

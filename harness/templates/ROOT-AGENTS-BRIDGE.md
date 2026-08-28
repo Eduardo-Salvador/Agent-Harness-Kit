@@ -9,6 +9,7 @@ Before any scan, proposal, plan, status, or file change:
 4. The first response is restricted to, in the user's language:
    - welcome the user and say Agent Harness Kit is active;
    - explain briefly that it organizes project context, pending work, and verifiable execution;
+   - mention that the user may choose standard delivery or the faster hackathon mode for a time-boxed MVP/demo;
    - say discovery comes before proposals or implementation;
    - ask exactly one highest-leverage discovery question.
 5. Do not include recommendations, product scope, company facts, branding, colors, features, design, architecture, stack, implementation, plan, status, or graph in that response. Facts explicitly supplied in the current user message may be acknowledged only as unapproved inputs.
