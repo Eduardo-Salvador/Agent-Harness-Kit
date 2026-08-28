@@ -10,7 +10,7 @@
 <p align="center">
   <img alt="Version 0.5.3" src="https://img.shields.io/badge/version-0.5.3-4967ff">
   <img alt="Python 3.10 or newer" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
-  <img alt="Installed with uv" src="https://img.shields.io/badge/installer-uv-DE5FE9?logo=uv&amp;logoColor=white">
+  <img alt="Install with uv, pipx, or pip" src="https://img.shields.io/badge/installer-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Codex compatible" src="https://img.shields.io/badge/agent-Codex-11131a">
   <img alt="Claude Code compatible" src="https://img.shields.io/badge/agent-Claude_Code-D97757">
   <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-ffb84d">
@@ -24,11 +24,20 @@
 
 ## Start here
 
-Install the CLI once with [`uv`](https://docs.astral.sh/uv/):
+Open any terminal, including the integrated terminal in VS Code, and install the CLI once. [`uv`](https://docs.astral.sh/uv/) is the recommended isolated option:
 
 ```bash
 uv tool install agent-harness-kit-cli
 ```
+
+You can also use `pipx` or install directly from PyPI with `pip`:
+
+```bash
+pipx install agent-harness-kit-cli
+python -m pip install agent-harness-kit-cli
+```
+
+On Windows, `py -m pip install agent-harness-kit-cli` is also supported. Prefer a virtual environment when using plain `pip`; `uv` and `pipx` isolate the CLI automatically.
 
 Then open the project you want to organize and run:
 

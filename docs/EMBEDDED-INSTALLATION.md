@@ -21,12 +21,23 @@ host-project/
 
 ### Recommended: one command
 
-Install [`uv`](https://docs.astral.sh/uv/), open a terminal inside the host project, and run:
+Open a terminal inside the host project. This may be the integrated terminal in VS Code. Install the CLI with [`uv`](https://docs.astral.sh/uv/), then run the installer:
 
 ```text
 uv tool install agent-harness-kit-cli
 agent-harness install
 ```
+
+The same PyPI package can be installed with `pipx` or plain `pip`:
+
+```text
+pipx install agent-harness-kit-cli
+# or, preferably inside a virtual environment
+python -m pip install agent-harness-kit-cli
+agent-harness install
+```
+
+On Windows, `py -m pip install agent-harness-kit-cli` is equivalent. `uv` and `pipx` are preferred for a CLI because they isolate it from project dependencies automatically.
 
 The current directory and `core` profile are defaults. Add `--dry-run` to preview, `--profile core-learning` for optional project-learning support, or pass another project path after `install`. The command still performs the same contained, preflighted installation described below; it only removes the clone-and-path ceremony. `agent-harness doctor` checks the expected entrypoints after installation, and `agent-harness prompt` prints the fallback activation prompt.
 

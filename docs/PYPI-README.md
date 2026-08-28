@@ -10,6 +10,15 @@ Agent Harness Kit gives coding agents durable project context, separate human an
 uv tool install agent-harness-kit-cli
 ```
 
+Or install from the same PyPI release with `pipx` or plain `pip`, including from the integrated terminal in VS Code:
+
+```bash
+pipx install agent-harness-kit-cli
+python -m pip install agent-harness-kit-cli
+```
+
+On Windows, `py -m pip install agent-harness-kit-cli` is also supported. Prefer a virtual environment with plain `pip`.
+
 Open a terminal inside a project and run:
 
 ```bash
