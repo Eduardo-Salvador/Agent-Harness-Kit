@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
   <title id="title">Agent Harness Kit</title>
   <desc id="desc">A direct visual identity for an artifact-driven agent execution toolkit.</desc>
-  <rect width="1200" height="360" rx="28" fill="#f2f0e8"/>
-  <g transform="translate(72 69)" fill="none" stroke="#11131a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="1200" height="300" rx="28" fill="#f2f0e8"/>
+  <g transform="translate(72 39)" fill="none" stroke="#11131a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
     <path d="M22 28h118l52 82-52 82H22L-30 110z"/>
     <path d="M22 28l58 82-58 82M140 28l-60 82 60 82M-30 110h222"/>
     <circle cx="22" cy="28" r="13" fill="#4967ff" stroke="none"/>
@@ -14,12 +14,7 @@
     <circle cx="140" cy="192" r="13" fill="#4967ff" stroke="none"/>
   </g>
   <g fill="#11131a" font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif">
-    <text x="330" y="164" font-size="70" font-weight="680" letter-spacing="-3">Agent Harness Kit</text>
-    <text x="334" y="213" font-size="24" font-weight="500" fill="#4f5260">Context → tasks → checks → shipped.</text>
-  </g>
-  <g transform="translate(334 254)" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="600">
-    <rect width="148" height="38" rx="19" fill="#11131a"/><text x="22" y="25" fill="#fff">PENDING.md</text>
-    <rect x="160" width="178" height="38" rx="19" fill="#4967ff"/><text x="181" y="25" fill="#fff">TASK-GRAPH.md</text>
-    <rect x="350" width="117" height="38" rx="19" fill="#ffb84d"/><text x="373" y="25" fill="#11131a">2 reviews</text>
+    <text x="330" y="138" font-size="70" font-weight="680" letter-spacing="-3">Agent Harness Kit</text>
+    <text x="334" y="187" font-size="24" font-weight="500" fill="#4f5260">Context → tasks → checks → shipped.</text>
   </g>
 </svg>

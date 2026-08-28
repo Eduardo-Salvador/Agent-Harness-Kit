@@ -8,10 +8,19 @@
 </p>
 
 <p align="center">
+  <img alt="Version 0.5.2" src="https://img.shields.io/badge/version-0.5.2-4967ff">
+  <img alt="Python 3.10 or newer" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
+  <img alt="Installed with uv" src="https://img.shields.io/badge/installer-uv-DE5FE9?logo=uv&amp;logoColor=white">
+  <img alt="Codex compatible" src="https://img.shields.io/badge/agent-Codex-11131a">
+  <img alt="Claude Code compatible" src="https://img.shields.io/badge/agent-Claude_Code-D97757">
+  <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-ffb84d">
+</p>
+
+<p align="center">
   <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="#install-in-30-seconds">Install</a> · <a href="docs/ARCHITECTURE.md">Architecture</a> · <a href="docs/EMBEDDED-INSTALLATION.md">Contained updates</a>
 </p>
 
-**Source version: `0.5.1`.** The Kit is an executable, artifact-driven scaffold. Capable agents follow its files, contracts, and validators; it is not a daemon that launches agents or locks the operating system.
+**Source version: `0.5.2`.** The Kit is an executable, artifact-driven scaffold. Capable agents follow its files, contracts, and validators; it is not a daemon that launches agents or locks the operating system.
 
 ## Project overview audio
 
@@ -31,8 +40,6 @@ https://github.com/user-attachments/assets/8d0d1956-5199-43d2-9cf7-3a4b625553bd
 | Completion waits for ceremonial approval | Passing work is completed, reported, and advances |
 | Multiple agents collide | Workstreams, ownership leases, and handoffs are explicit |
 | Study notes land in arbitrary folders | Learning starts only after the destination is approved |
-
-![Animated Agent Harness Kit execution flow](docs/assets/harness-demo-flow.svg)
 
 ## Greenfield or existing harness
 

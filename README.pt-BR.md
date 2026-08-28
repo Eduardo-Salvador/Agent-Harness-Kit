@@ -8,10 +8,19 @@
 </p>
 
 <p align="center">
+  <img alt="Versão 0.5.2" src="https://img.shields.io/badge/vers%C3%A3o-0.5.2-4967ff">
+  <img alt="Python 3.10 ou mais recente" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
+  <img alt="Instalado com uv" src="https://img.shields.io/badge/instalador-uv-DE5FE9?logo=uv&amp;logoColor=white">
+  <img alt="Compatível com Codex" src="https://img.shields.io/badge/agente-Codex-11131a">
+  <img alt="Compatível com Claude Code" src="https://img.shields.io/badge/agente-Claude_Code-D97757">
+  <img alt="Licença MIT" src="https://img.shields.io/badge/licen%C3%A7a-MIT-ffb84d">
+</p>
+
+<p align="center">
   <a href="README.md">English</a> · <a href="#instale-em-30-segundos">Instalação</a> · <a href="docs/ARCHITECTURE.md">Arquitetura</a> · <a href="docs/EMBEDDED-INSTALLATION.md">Atualização contida</a>
 </p>
 
-**Versão do código-fonte: `0.5.1`.** O Kit é um scaffold executável e orientado a artefatos. Agentes capazes seguem seus arquivos, contratos e validadores; ele não é um daemon que inicia agentes ou bloqueia o sistema operacional.
+**Versão do código-fonte: `0.5.2`.** O Kit é um scaffold executável e orientado a artefatos. Agentes capazes seguem seus arquivos, contratos e validadores; ele não é um daemon que inicia agentes ou bloqueia o sistema operacional.
 
 ## Áudio de explicação do projeto
 
@@ -31,8 +40,6 @@ https://github.com/user-attachments/assets/4c68f8a0-bfac-4847-b2ea-9adeae24c17c
 | A conclusão espera aprovação cerimonial | O trabalho aprovado nos checks é concluído, informado e avança |
 | Vários agentes colidem | Áreas, leases de arquivos e handoffs são explícitos |
 | Notas de estudo surgem em pastas arbitrárias | O estudo só começa após aprovação do destino |
-
-![Fluxo animado de execução do Agent Harness Kit](docs/assets/harness-demo-flow.svg)
 
 ## Projeto novo ou harness existente
 
