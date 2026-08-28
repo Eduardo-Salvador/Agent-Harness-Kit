@@ -16,7 +16,7 @@ The optional project-specific learning layer is outside the delivery control pat
 
 ## First-run gate
 
-At session start, the core checks for approved `harness-state/PROJECT-CONTEXT.md`. Absence, non-approved status, or material conflict triggers the [first-run playbook](../harness/playbooks/first-run.md) before implementation planning. Discovery identifies greenfield versus existing state, fills gaps, records decisions, and selects `delivery` or `delivery+learning`. Only approved context seeds a graph. Adapters may surface this through available facilities or a session-start check; they cannot weaken it.
+At session start, the core checks for approved `harness-state/PROJECT-CONTEXT.md`. Absence, non-approved status, or material conflict triggers the [first-run playbook](../harness/playbooks/first-run.md) before implementation planning. Discovery identifies greenfield versus existing state, fills gaps, records decisions, and selects standard delivery, optional learning, or compressed hackathon delivery. Only approved context seeds a graph. Adapters may surface this through available facilities or a session-start check; they cannot weaken it.
 
 For a resumed or status-only session with approved context, the [status/resume playbook](../harness/playbooks/status-resume.md) imposes a strict read order: project context, pending-work authority, then task graph. The pending authority owns human decisions/actions and macro incomplete project areas; the graph owns technical order, dependencies, and execution. Task-local evidence follows.
 

@@ -1,0 +1,53 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agent-harness-kit-cli"
+version = "0.5.0"
+description = "Artifact-driven development harness for coding agents"
+readme = { file = "docs/PYPI-README.md", content-type = "text/markdown" }
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Eduardo Salvador" }]
+keywords = ["agents", "codex", "claude", "developer-tools", "harness"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Eduardo-Salvador/Agent-Harness-Kit"
+Repository = "https://github.com/Eduardo-Salvador/Agent-Harness-Kit"
+Issues = "https://github.com/Eduardo-Salvador/Agent-Harness-Kit/issues"
+
+[project.scripts]
+agent-harness = "agent_harness_kit.cli:main"
+ahk = "agent_harness_kit.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["agent_harness_kit"]
+
+[tool.hatch.build.targets.wheel.force-include]
+".agents" = "agent_harness_kit/assets/.agents"
+".claude" = "agent_harness_kit/assets/.claude"
+".github" = "agent_harness_kit/assets/.github"
+"adapters" = "agent_harness_kit/assets/adapters"
+"distribution" = "agent_harness_kit/assets/distribution"
+"docs" = "agent_harness_kit/assets/docs"
+"examples" = "agent_harness_kit/assets/examples"
+"harness" = "agent_harness_kit/assets/harness"
+"learning-pack" = "agent_harness_kit/assets/learning-pack"
+"media" = "agent_harness_kit/assets/media"
+"tools" = "agent_harness_kit/assets/tools"
+"validation" = "agent_harness_kit/assets/validation"
+"AGENTS.md" = "agent_harness_kit/assets/AGENTS.md"
+"CLAUDE.md" = "agent_harness_kit/assets/CLAUDE.md"
+"LICENSE" = "agent_harness_kit/assets/LICENSE"
+"OPEN-DECISIONS.md" = "agent_harness_kit/assets/OPEN-DECISIONS.md"
+"README.md" = "agent_harness_kit/assets/README.md"
+"README.pt-BR.md" = "agent_harness_kit/assets/README.pt-BR.md"
+"VERSION" = "agent_harness_kit/assets/VERSION"

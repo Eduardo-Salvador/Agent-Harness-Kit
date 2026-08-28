@@ -21,6 +21,8 @@ Every generated package records `project_learning_activation: not-activated`. Pr
 
 The recommended contained host layout places the complete generated profile under `agent-harness-kit/` and adds only managed bridge blocks to host root entrypoints. The distribution remains replaceable while host-owned `harness-state/` remains outside it. See [embedded installation](EMBEDDED-INSTALLATION.md).
 
+The end-user CLI is packaged through `pyproject.toml` with no runtime dependencies. Its PyPI distribution name is `agent-harness-kit-cli` because `agent-harness-kit` belongs to an unrelated project. The persistent flow is `uv tool install agent-harness-kit-cli`, then `agent-harness install`; the GitHub `uvx --from git+...` route and legacy source installer remain supported.
+
 The explicit manifests are in [distribution/profiles](../distribution/profiles/core.json). `extends` expresses inheritance; source files remain single-copy. The packager expands sorted inclusion globs, applies exclusions, validates profile boundaries, and writes a generated inventory.
 
 ## Build
@@ -46,6 +48,8 @@ ZIP entries are sorted, use a fixed timestamp and permissions, and contain sourc
 
 Generated names follow `agent-harness-kit-<version>-<profile>.zip` (or the same name as a directory).
 
+Build the installable Python package separately with `uv build`. Test the resulting wheel in a clean environment and install a profile into an empty host before publication. Publishing to PyPI is an external release action and is not performed by the build itself.
+
 ## Version strategy
 
-`VERSION` is the single version value shared by all three bundles; profile names are suffixes, not independent versions. `0.1.0` is the initial public source version, `0.2.0` adds contained installation plus continuous-delivery governance, `0.3.0` adds executable status reporting, focused re-review boundaries, hostile governance mutations, and GitHub-compatible overview media, and `0.4.0` adds default frontend routing, explicit project-learning activation/destinations, workstream-isolated execution contexts, and per-area status. A future approved release changes `VERSION` once, validates all profiles, and may attach the three archives to one GitHub Release. Release automation remains an open decision.
+`VERSION` is the single version value shared by all three bundles; profile names are suffixes, not independent versions. `0.1.0` is the initial public source version, `0.2.0` adds contained installation plus continuous-delivery governance, `0.3.0` adds executable status reporting, focused re-review boundaries, hostile governance mutations, and GitHub-compatible overview media, `0.4.0` adds default frontend routing, explicit project-learning destinations, isolated workstream contexts, and per-area status, and `0.5.0` adds the installable CLI, enriched graph context, hackathon delivery, and direct vector README assets. A future approved release changes `VERSION` once and validates all profiles.

@@ -8,6 +8,7 @@ Convert an approved outcome into small, dependency-aware task and graph proposal
 
 - Propose nodes, workstreams, agent roles, execution-context/thread policies, dependencies, write sets, acceptance criteria, reviewer needs, capability requirements, and a justified model tier.
 - Identify critical-path, parallelizable, checkpoint, and discovery nodes.
+- In hackathon mode, build the graph around one demonstrable vertical slice, an early integration point, and a final demo-rehearsal node; keep enhancers off the critical path and post-MVP gaps out of active execution.
 - Propose a bounded project-specific specialist or adaptation when existing roles do not match the domain; specify responsibilities, least tools, context packet, write ownership, review criteria, and escalation.
 
 ## Boundaries

@@ -21,6 +21,7 @@ Turn evidence and user answers into a draft project context, explicit decision p
 - Do not let an agent self-expand authority/tools; consequential role capability changes become explicit human decision proposals.
 - Do not repeat resolved questions unless new evidence conflicts; say why a question reopened.
 - A plain-language request to study or learn through the current project triggers `delivery+learning` configuration. Ask only for missing learning goals, observation boundaries, and the exact Markdown/local/Obsidian/Notion destination; record capability evidence and obtain activation consent rather than silently ignoring the request or assuming access.
+- A plain-language hackathon, time-boxed MVP, or demo-first request triggers a `hackathon` mode proposal. Use at most two cohesive discovery questions unless consequential safety or authority blocks execution, then propose the compressed context and demo-first graph. Add `+learning` only when study is also explicitly requested.
 - Do not treat the optional Harness Engineering Learning Pack as a runtime mode or preload it.
 
 ## Exit

@@ -4,6 +4,7 @@ Playbooks describe neutral state transitions. Select the smallest playbook that 
 
 - [Discovery to graph](discovery-to-graph.md)
 - [First run](first-run.md)
+- [Hackathon and MVP delivery](hackathon-delivery.md)
 - [Session start, resume, and status](status-resume.md)
 - [Mature existing-harness adoption](mature-harness-adoption.md)
 - [Task dispatch](task-dispatch.md)

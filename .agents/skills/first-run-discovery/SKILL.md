@@ -13,3 +13,4 @@ description: Use when project context is missing, unapproved, stale, or when an 
 6. For mature hosts, use `../../../harness/playbooks/mature-harness-adoption.md`; never overwrite existing root or platform-native authorities.
 7. Inventory actual rules and capabilities without assuming installation, authentication, secrets, network, or authorization.
 8. Produce neutral artifacts. Do not plan implementation until context is approved and the initial graph exists.
+9. Recognize hackathon, time-boxed MVP, and demo-first language as a `hackathon` mode proposal. Follow `../../../harness/playbooks/hackathon-delivery.md`: at most two cohesive discovery questions unless consequential safety or authority blocks execution, then one demo-first graph split by isolated workstream/agent/context.

@@ -1,218 +1,116 @@
 # Agent Harness Kit
 
-> A platform-neutral, artifact-driven development harness with native Codex and Claude Code entrypoints, optional project learning, and a separate harness-engineering study pack.
+![Agent Harness Kit — context, tasks, checks, shipped](docs/assets/agent-harness-kit-banner.svg)
 
-**Current source version: `0.4.1`.** This is an executable operating scaffold: capable agents follow its contracts and validators. It is not a daemon that independently launches agents or locks files at the operating-system level.
+<p align="center">
+  <strong>Give coding agents durable context, bounded execution, and a clear path to completion.</strong><br>
+  Platform-neutral contracts with native entrypoints for Codex and Claude Code.
+</p>
 
-> 🌐 **Language:** English
->
-> **[Português (Brasil)](README.pt-BR.md)** — switch language
+<p align="center">
+  <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="#install-in-30-seconds">Install</a> · <a href="docs/ARCHITECTURE.md">Architecture</a> · <a href="docs/EMBEDDED-INSTALLATION.md">Contained updates</a>
+</p>
 
-[Beginner installation](#beginner-installation) · [Contained installation](docs/EMBEDDED-INSTALLATION.md) · [How it works](#how-it-works) · [Architecture](docs/ARCHITECTURE.md) · [Status/completion](docs/STATUS-AND-COMPLETION.md) · [Packaging](docs/DISTRIBUTION.md) · [Open decisions](OPEN-DECISIONS.md)
+**Source version: `0.5.0`.** The Kit is an executable, artifact-driven scaffold. Capable agents follow its files, contracts, and validators; it is not a daemon that launches agents or locks the operating system.
 
-## Greenfield or an existing harness
+## Project overview audio
 
-Agent Harness Kit supports both new projects and repositories that already contain instructions, agents, rules, knowledge, or another harness.
-
-- **Greenfield:** discovery creates the first approved project context and task graph.
-- **Existing repository:** the kit preserves current authorities, installs through namespaced coexistence, and allows cutover only after human semantic-equivalence review.
-
-It does not silently overwrite `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, or existing configuration. See the [adoption playbook](harness/playbooks/mature-harness-adoption.md).
-
-## Project explanation audio
-
-Listen to an English overview of the purpose and workflow of Agent Harness Kit.
+Listen to a short English explanation of what the project does and how its workflow fits together.
 
 https://github.com/user-attachments/assets/8d0d1956-5199-43d2-9cf7-3a4b625553bd
 
-[Download the English MP3](media/agent-harness-kit-overview-en.mp3) · [Read the English narration script](media/overview-script-en.txt)
+[Download the English MP3](media/agent-harness-kit-overview-en.mp3) · [Read the English script](media/overview-script-en.txt)
 
-## What the harness provides
+## Why it exists
 
-| Area | Behavior |
+| Without durable coordination | With the Kit |
 | --- | --- |
-| Durable state | Approved context, decisions, human/macro `PENDING.md`, and technical `TASK-GRAPH.md` |
-| Execution | Dependencies, exclusive file ownership, handoffs, checks, and automatic next-task progress |
-| Contexts | Frontend, backend, data, infrastructure, and integration separated by task/agent when the host supports it |
-| Status | Stage, progress, pending work by area, blockers, next action, and inspectable paths |
-| Frontend | Default visual direction, mockup, image generation, and image-to-code workflow |
-| Learning | Consented study mode with notes in Markdown, a local path, Obsidian, Notion, or another destination |
-| Resource control | Two implementation attempts, two no-progress cycles, and three context expansions per goal lineage |
-| Assurance | Independent reviewer, two reviews maximum, and no bureaucratic wait after passing checks |
+| The agent rescans and guesses context | Approved context is read before broad inspection |
+| Human decisions mix with technical tasks | `PENDING.md` and `TASK-GRAPH.md` have separate authority |
+| Reviews repeat indefinitely | One review and at most one focused re-review |
+| Completion waits for ceremonial approval | Passing work is completed, reported, and advances |
+| Multiple agents collide | Workstreams, ownership leases, and handoffs are explicit |
+| Study notes land in arbitrary folders | Learning starts only after the destination is approved |
 
-Missing capabilities degrade explicitly. The harness never assumes MCP, network, secrets, authentication, worktrees, thread creation, or permissions.
+![Animated Agent Harness Kit execution flow](docs/assets/harness-demo-flow.svg)
+
+## Greenfield or existing harness
+
+In an empty project, the first response introduces the Kit and starts a short discovery before proposing technology, architecture, or visual direction. In a mature repository, the Kit preserves existing instructions and uses namespaced coexistence; it never silently overwrites `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, or another authority. See the [mature-adoption playbook](harness/playbooks/mature-harness-adoption.md).
+
+## Install in 30 seconds
+
+With [`uv`](https://docs.astral.sh/uv/) installed, install the CLI once:
+
+```bash
+uv tool install agent-harness-kit-cli
+```
+
+Then run this inside each project that should receive the Kit:
+
+```bash
+agent-harness install
+```
+
+Then open a **new agent context at that project root**. The command installs the recommended `core` profile, creates a contained `agent-harness-kit/` directory, and adds managed routing blocks to root `AGENTS.md` and `CLAUDE.md` without replacing existing instructions.
+
+```bash
+# Preview only
+agent-harness install --dry-run
+
+# Include consented project-learning support
+agent-harness install --profile core-learning
+```
+
+For clone/ZIP, beginners, offline use, troubleshooting, and contained updates, see the [step-by-step installation guide](docs/EMBEDDED-INSTALLATION.md). The original `python tools/install.py` interface remains supported.
+
+## What gets installed
+
+- Approved project context, rules, capabilities, and decisions.
+- Human decisions/actions and macro gaps in `harness-state/PENDING.md`.
+- Technical order, dependencies, leases, and transitions in `harness-state/TASK-GRAPH.md`.
+- Bounded attempts, context expansion, and independent review—with no automatic third review.
+- Mandatory status: stage, progress, automatic work, both pending views, blockers, next action, and inspectable paths.
+- Separate frontend, backend, data, infrastructure, integration, and learning contexts when the host supports them.
+
+## Hackathon mode
+
+Ask for “hackathon mode,” a time-boxed MVP, or a demo-first build and the Kit compresses discovery to at most two cohesive questions before proposing the context and graph. It targets one demonstrable vertical slice, divides isolated work by area/agent, integrates early, uses a light independent review by default, and finishes with a rehearsed demo plus visible shortcuts and post-MVP gaps. It is faster, but it does not remove leases, checks, status, or the two-review ceiling. See [hackathon mode](docs/HACKATHON-MODE.md).
+
+## How execution flows
+
+```mermaid
+flowchart LR
+    S[Start or resume] --> C{Approved context?}
+    C -- no --> D[Short discovery]
+    C -- yes --> P[PENDING + TASK-GRAPH]
+    D --> P
+    P --> W[Scoped workstream]
+    W --> V[Checks + bounded review]
+    V --> X[Complete + report + next]
+```
+
+`PENDING.md` answers “what do you need from me?” and tracks what remains at product level. `TASK-GRAPH.md` controls technical execution. The agent reads both—in that order after project context—and persists graph changes before reporting progress.
+
+## A smarter task graph
+
+The existing `TASK-GRAPH.md` also carries scoped code context per node: `read_set` tells the agent what to load first, `write_set` remains the exclusive lease, and `impact_set` bounds regression review. `context_provenance` records the source revision and how those hints were found. An approved, fresh tool such as [Graphify](https://github.com/Graphify-Labs/graphify) may enrich these fields, but it never creates a competing graph or changes task state automatically.
 
 ## Profiles
 
 | Profile | Includes | Best for |
 | --- | --- | --- |
-| `core` | Delivery, graph, status, review, and validation | Development without guided learning |
-| `core-learning` | `core` plus project learning | Guided practice and debriefs during delivery |
-| `full` | `core-learning` plus `learning-pack/` | Delivery and separate harness-engineering study |
+| `core` | Delivery, graph, status, review, validation | Most projects |
+| `core-learning` | `core` plus optional project learning | Guided practice and debriefs |
+| `full` | `core-learning` plus the separate harness study pack | Studying harness engineering itself |
 
-Installing `core-learning` or `full` does not activate observation or publication. Study mode starts only after an explicit request and consent.
+Learning support is never silently activated. The user chooses the exact Markdown path, Obsidian location, Notion target/MCP, or another destination before any note is created.
 
-## Prerequisites
+## Honest boundaries
 
-- Python 3 and a project directory.
-- Codex or Claude Code for native activation; other platforms can follow the neutral playbooks.
-- Git, multiple agents, sandboxes, MCP, and network access are optional.
+- The Kit coordinates capable agents through files; it does not autonomously open chats, merge branches, deploy, or publish notes.
+- Leases are validated contracts, not OS-level locks.
+- Threads, subagents, worktrees, MCPs, network, and model choice depend on the host's real capabilities and authorization.
+- A knowledge graph can reduce broad scans, but only scoped queries and execution budgets prevent waste; no tool guarantees lower token usage.
 
-## Beginner installation
-
-This process copies a contained version of the Kit into your project. It does not install an operating-system service or start agents by itself. The root `AGENTS.md` and `CLAUDE.md` files tell Codex or Claude Code where to find the Kit rules.
-
-### 1. Prepare
-
-- Install [Python 3](https://www.python.org/downloads/) and confirm it with `python --version` on Windows or `python3 --version` on macOS/Linux.
-- Create or locate the project directory that will receive the Kit.
-- Commit or back up important existing work before installation.
-
-### 2. Download the Kit
-
-Choose one option:
-
-- **Clone:** `git clone https://github.com/Eduardo-Salvador/Agent-Harness-Kit.git`
-- **Fork:** click **Fork** on GitHub, copy your fork URL, and run `git clone <YOUR-FORK-URL>`.
-- **Without Git:** choose **Code → Download ZIP**, extract it, and name the folder `Agent-Harness-Kit`.
-
-Keep the source/fork beside—not inside—the project that will receive the Kit:
-
-```text
-workspace/
-├── Agent-Harness-Kit/   source repository, fork, or extracted ZIP
-└── my-project/          project that will receive the Kit
-```
-
-The installer rejects the source directory itself and nested source/host layouts to prevent accidental recursive copies.
-
-### 3. Open a terminal in your project
-
-The terminal prompt should end in `my-project`. In the commands below, `.` means “the current directory” and `..` means “the parent directory” where `Agent-Harness-Kit` sits in the example.
-
-### 4. Choose a profile
-
-- `core` is recommended for most people who only want development orchestration.
-- `core-learning` adds optional study-mode support and consented note capture.
-- `full` also includes the separate harness-engineering study pack.
-
-### 5. Preview without changing files
-
-**Windows PowerShell**
-
-```powershell
-python ..\Agent-Harness-Kit\tools\install.py --profile core --host . --dry-run
-```
-
-**macOS or Linux**
-
-```bash
-python3 ../Agent-Harness-Kit/tools/install.py --profile core --host . --dry-run
-```
-
-Review the `WOULD` lines. They must point to `my-project`, not the Kit source.
-
-### 6. Install
-
-Run the same command without `--dry-run`:
-
-```powershell
-python ..\Agent-Harness-Kit\tools\install.py --profile core --host .
-```
-
-On macOS/Linux, use `python3 ../Agent-Harness-Kit/tools/install.py --profile core --host .`. If the directories are not siblings, replace the relative installer path with its full path and quote paths containing spaces.
-
-Successful `DONE` lines report the contained `agent-harness-kit/` copy and the managed root `AGENTS.md` and `CLAUDE.md` bridges. Existing root instructions remain outside the managed block.
-
-### 7. Validate
-
-```text
-python agent-harness-kit/tools/validate.py
-```
-
-Expect `VALIDATION PASSED`. Do not begin development if the validator reports errors.
-
-### 8. Open a new agent context
-
-Open a **new context at the `my-project` root** so the host reloads `AGENTS.md` or `CLAUDE.md`. An older conversation may still hold instructions loaded before installation. If the host does not load root instructions automatically, paste this fallback prompt:
-
-```text
-Agent Harness Kit is installed in this project. Before scanning, proposing, planning, reporting status, or changing files, read the applicable root AGENTS.md or CLAUDE.md, then follow the referenced instructions under agent-harness-kit/. Check harness-state/PROJECT-CONTEXT.md and run the required first-run or resume flow before answering the project request.
-```
-
-Without approved context, the correct first response briefly introduces the Kit and starts discovery. It must not propose a stack, brand, architecture, or implementation first.
-
-<details>
-<summary><strong>Common problems</strong></summary>
-
-- **Python is not recognized:** install Python 3, reopen the terminal, and retry; use `python3` on macOS/Linux.
-- **Path or file not found:** verify the source folder name/location or use the full quoted installer path.
-- **`destination already exists`:** the project already contains `agent-harness-kit/`. Preserve `harness-state/` and follow [contained updates](docs/EMBEDDED-INSTALLATION.md).
-- **`separate, non-nested directories`:** move the Kit source and project so neither contains the other.
-- **The agent skipped the welcome:** open a genuinely new context at the project root and paste the activation prompt above.
-
-</details>
-
-## How it works
-
-```mermaid
-flowchart LR
-    S[Start or resume] --> C{Approved context?}
-    C -- no --> D[Adaptive discovery]
-    C -- yes --> P[PENDING + TASK-GRAPH]
-    D --> P
-    P --> O[Orchestrator]
-    O --> T[Tasks by workstream and context]
-    T --> H[Checks + handoff]
-    H --> X[Complete + report + next task]
-    X -. non-blocking assurance .-> R[Bounded independent review]
-```
-
-### Resume and pending work
-
-On the first request in a new context window, a resume request, or a status request, the agent reads:
-
-1. `harness-state/PROJECT-CONTEXT.md`;
-2. `harness-state/PENDING.md`;
-3. `harness-state/TASK-GRAPH.md`.
-
-`PENDING.md` owns human decisions/actions and the macro completion view. `TASK-GRAPH.md` owns technical order, dependencies, leases, and execution. Every progress/step update—not only an explicit status request—shows current stage, progress, what continues without user action, human and macro pending items, active/ready/blocked graph nodes, blockers, next action, and inspectable paths. For “what do you need from me?”, human items come first.
-
-Technical movement is persisted in a new `TASK-GRAPH.md` revision before it is reported. `PENDING.md` is updated only when human action or the macro project outcome changes; it is never the sole record of task progress.
-
-### Contexts, frontend, and learning
-
-- **Contexts:** a fresh context per task is the default. Visible threads, subagents, and parallelism are used only when the host exposes and authorizes them; otherwise the harness uses a manual or serialized artifact-handoff fallback.
-- **Frontend:** screen requests use `frontend-screen` for orchestration. With approved screenshots, `image-to-code` is the primary coding skill, `frontend-screen` checks desktop/mobile fidelity, and `imagegen` creates only temporary photographs/raster assets. Design-direction skills remain available when no approved screen exists.
-- **Learning:** requests such as “enable study mode” begin setup for goals, observation boundaries, and the exact note destination. No note is created and no `docs/` or remote fallback is assumed before the user confirms a path or a connector/MCP plus target. Credentials are never stored in the profile.
-
-## Repository map
-
-```text
-AGENTS.md / CLAUDE.md   native entrypoints
-harness/                roles, templates, and playbooks
-docs/                   architecture, contracts, and policy
-adapters/               Codex, Claude, and generic mappings
-.agents/ / .claude/     on-demand skills and agents
-validation/             valid fixtures and hostile mutations
-tools/                  installation, validation, and packaging
-learning-pack/          separate harness-engineering study
-```
-
-## Principles
-
-1. Files—not chat memory—carry durable state.
-2. Human/macro `PENDING.md` and technical `TASK-GRAPH.md` are separate authorities.
-3. Tasks have exclusive ownership, progressive context, and reproducible verification.
-4. Implementer and reviewer are independent; there is no automatic third review.
-5. Passing work reports completion and continues without bureaucratic approval.
-6. Models and tools do not expand authority; capability and degradation remain explicit.
-
-## Current limitations
-
-- No separate autonomous runtime opens sessions, integrates branches, deploys, or publishes notes by itself.
-- File leases are validated graph contracts, not operating-system locks.
-- Automatic thread creation, subagents, and isolation depend on actual host capabilities.
-- Token metering, time limits, and forced termination are not yet portable across hosts.
-
-See the [readiness audit](docs/PUBLICATION-READINESS.md), [open decisions](OPEN-DECISIONS.md), and [MIT License](LICENSE).
+Read the [publication readiness audit](docs/PUBLICATION-READINESS.md), [validation contract](docs/VALIDATION.md), [open decisions](OPEN-DECISIONS.md), and [MIT License](LICENSE).

@@ -4,7 +4,7 @@
 
 Turn an initial idea into an approved [project context](contracts/PROJECT-CONTEXT.md), explicit [decisions](contracts/DECISION.md), and a valid initial [task graph](contracts/TASK-GRAPH.md)—without making the user repeat facts already present in the repository or prior approved artifacts.
 
-This interview is the mandatory first-run behavior when `harness-state/PROJECT-CONTEXT.md` is absent or not approved. Codex reaches it through root `AGENTS.md`; Claude Code reaches the same rule through root `CLAUDE.md` importing `@AGENTS.md`. Both may be present, and both use the same neutral context and graph without runtime guessing or profile switching. The interview identifies whether the host project is greenfield, existing, or uncertain; selects `delivery` or `delivery+learning`; and completes before implementation planning. See the executable [first-run playbook](../harness/playbooks/first-run.md).
+This interview is the mandatory first-run behavior when `harness-state/PROJECT-CONTEXT.md` is absent or not approved. Codex reaches it through root `AGENTS.md`; Claude Code reaches the same rule through root `CLAUDE.md` importing `@AGENTS.md`. Both may be present, and both use the same neutral context and graph without runtime guessing or profile switching. The interview identifies whether the host project is greenfield, existing, or uncertain; selects standard delivery, optional learning, or the compressed hackathon variant; and completes before implementation planning. See the executable [first-run playbook](../harness/playbooks/first-run.md).
 
 ## Operating loop
 
@@ -18,6 +18,10 @@ This interview is the mandatory first-run behavior when `harness-state/PROJECT-C
 8. **Close:** show a concise summary, unresolved non-blockers, and the proposed initial graph before asking for final approval.
 
 Questions should use the user's vocabulary and offer concrete tradeoffs when useful. The interview must not force a fixed questionnaire or ask the user to reconfirm unchanged approved facts.
+
+### Hackathon compression
+
+When the user asks for a hackathon, time-boxed MVP, or demo-first build, follow [hackathon mode](HACKATHON-MODE.md). Ask at most two cohesive discovery questions before presenting the draft context and demo-first graph unless consequential safety or authority is missing. Establish the audience, deadline, single visible outcome, must-have path, supplied assets, hard constraints, demo runtime, smallest credible checks, acceptable labeled shortcuts, and explicit post-MVP scope. Record non-blocking unknowns as assumptions instead of extending the interview.
 
 ## First-response handshake
 
@@ -52,6 +56,7 @@ Discovery should establish, to the degree relevant:
 - project-specific domains and whether existing roles suffice; when they do not, proposed specialist responsibilities, least tool access, progressive context packet, ownership boundary, independent reviewer, and verification criteria;
 - known risks, assumptions, dependencies, and open questions;
 - delivery mode and, when the user requests study/learning in plain language, learning goals, observation consent, and an exact note destination with format, capability state, retention, and write/publication policy.
+- for hackathon delivery: timebox, demo audience/environment, primary visible path, acceptable labeled shortcuts, and post-MVP exclusions.
 
 Role customization is governed discovery output, never silent agent self-modification. Consequential authority/tool expansion requires a human decision, and customization cannot remove orchestrator/reviewer independence, least capability, exclusive ownership, verification, checkpoints, or learning non-interference.
 

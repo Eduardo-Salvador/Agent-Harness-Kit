@@ -1,252 +1,116 @@
 # Agent Harness Kit
 
-> Um harness de desenvolvimento agnóstico de plataforma e orientado a artefatos, com entradas nativas para Codex e Claude Code, aprendizado opcional e um pacote separado para estudar engenharia de harness.
+![Agent Harness Kit — contexto, tasks, checks e entrega](docs/assets/agent-harness-kit-banner.svg)
 
-**Versão atual do código-fonte: `0.4.1`.** O projeto é um scaffold operacional executável: agentes capazes seguem seus contratos e validadores. Ele não é um daemon que inicia agentes sozinho ou bloqueia arquivos no sistema operacional.
+<p align="center">
+  <strong>Dê aos agentes de código contexto durável, execução limitada e um caminho claro até a conclusão.</strong><br>
+  Contratos agnósticos de plataforma com entradas nativas para Codex e Claude Code.
+</p>
 
-> 🌐 **Idioma:** Português (Brasil)
->
-> **[Ler em English →](README.md)**
+<p align="center">
+  <a href="README.md">English</a> · <a href="#instale-em-30-segundos">Instalação</a> · <a href="docs/ARCHITECTURE.md">Arquitetura</a> · <a href="docs/EMBEDDED-INSTALLATION.md">Atualização contida</a>
+</p>
 
-[Instalação passo a passo](#instalação-passo-a-passo) · [Instalação contida](docs/EMBEDDED-INSTALLATION.md) · [Como funciona](#como-funciona) · [Arquitetura](docs/ARCHITECTURE.md) · [Status e conclusão](docs/STATUS-AND-COMPLETION.md) · [Distribuição](docs/DISTRIBUTION.md) · [Decisões em aberto](OPEN-DECISIONS.md)
-
-## Projeto greenfield ou harness existente
-
-O Agent Harness Kit funciona tanto em projetos novos quanto em repositórios que já possuem instruções, agentes, regras, conhecimento ou outro harness.
-
-- **Greenfield:** a descoberta cria o primeiro contexto aprovado e o grafo de tarefas.
-- **Repositório existente:** o kit preserva as autoridades atuais, instala por coexistência com namespace e só permite cutover depois de revisão humana de equivalência.
-
-Ele não sobrescreve silenciosamente `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/` ou configurações existentes. Veja o [playbook de adoção](harness/playbooks/mature-harness-adoption.md).
+**Versão do código-fonte: `0.5.0`.** O Kit é um scaffold executável e orientado a artefatos. Agentes capazes seguem seus arquivos, contratos e validadores; ele não é um daemon que inicia agentes ou bloqueia o sistema operacional.
 
 ## Áudio de explicação do projeto
 
-Ouça uma visão geral em português sobre o propósito e o fluxo do Agent Harness Kit.
+Ouça uma explicação curta em português sobre o que o projeto faz e como seu fluxo funciona.
 
 https://github.com/user-attachments/assets/4c68f8a0-bfac-4847-b2ea-9adeae24c17c
 
 [Baixar o MP3 em português](media/agent-harness-kit-overview-pt-BR.mp3) · [Ler o roteiro em português](media/overview-script-pt-BR.txt)
 
-## O que o harness entrega
+## Por que ele existe
 
-| Área | Comportamento |
+| Sem coordenação durável | Com o Kit |
 | --- | --- |
-| Estado durável | Contexto aprovado, decisões, `PENDING.md` humano/macro e `TASK-GRAPH.md` técnico |
-| Execução | Dependências, propriedade exclusiva de arquivos, handoffs, checks e avanço automático |
-| Contextos | Frontend, backend, dados, infra e integração separados por task/agente quando o host permite |
-| Status | Etapa, progresso, pendências por área, bloqueios, próxima ação e caminhos inspecionáveis |
-| Frontend | Fluxo padrão de direção visual, mockups, geração de imagens e tradução para código |
-| Aprendizado | Modo estudo consentido com notas em Markdown, pasta local, Obsidian, Notion ou outro destino |
-| Controle | Duas tentativas de implementação, dois ciclos sem progresso e três expansões de contexto por linhagem |
-| Garantia | Revisor independente, no máximo duas reviews e nenhuma espera burocrática após checks aprovados |
+| O agente varre tudo e tenta adivinhar o contexto | O contexto aprovado é lido antes de buscas amplas |
+| Decisões humanas se misturam com tasks técnicas | `PENDING.md` e `TASK-GRAPH.md` têm autoridades separadas |
+| Reviews se repetem indefinidamente | Uma review e no máximo uma re-review focada |
+| A conclusão espera aprovação cerimonial | O trabalho aprovado nos checks é concluído, informado e avança |
+| Vários agentes colidem | Áreas, leases de arquivos e handoffs são explícitos |
+| Notas de estudo surgem em pastas arbitrárias | O estudo só começa após aprovação do destino |
 
-Capacidades ausentes degradam de forma explícita. O harness nunca presume MCP, rede, segredos, autenticação, worktrees, criação de chats ou permissões.
+![Fluxo animado de execução do Agent Harness Kit](docs/assets/harness-demo-flow.svg)
 
-## Perfis
+## Projeto novo ou harness existente
 
-| Perfil | Inclui | Indicado para |
-| --- | --- | --- |
-| `core` | Entrega, grafo, status, revisão e validação | Desenvolvimento sem aprendizado acompanhado |
-| `core-learning` | `core` + aprendizado do projeto | Prática guiada e debriefings durante o trabalho |
-| `full` | `core-learning` + `learning-pack/` | Entrega e estudo separado de engenharia de harness |
+Em um projeto vazio, a primeira resposta apresenta o Kit e inicia uma descoberta curta antes de propor tecnologia, arquitetura ou direção visual. Em um repositório maduro, o Kit preserva as instruções atuais e usa coexistência com namespace; ele nunca sobrescreve silenciosamente `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/` ou outra autoridade. Veja o [playbook de adoção madura](harness/playbooks/mature-harness-adoption.md).
 
-Instalar `core-learning` ou `full` não ativa observação nem publicação. O modo estudo só começa após pedido e consentimento explícitos.
+## Instale em 30 segundos
 
-## Pré-requisitos
-
-- Python 3 e um diretório de projeto.
-- Codex ou Claude Code para ativação nativa; outras plataformas podem seguir os playbooks neutros.
-- Git, múltiplos agentes, sandboxes, MCP e rede são opcionais.
-
-## Instalação passo a passo
-
-Este processo copia uma versão contida do Kit para dentro do seu projeto. Ele não instala um programa no Windows e não inicia agentes sozinho. Os arquivos `AGENTS.md` e `CLAUDE.md` criados na raiz dizem ao Codex ou Claude Code onde encontrar as regras do Kit.
-
-### 1. Antes de começar
-
-- Tenha o [Python 3](https://www.python.org/downloads/) instalado. No Windows, confirme com `python --version`; no macOS/Linux, tente `python3 --version`.
-- Tenha uma pasta para o seu projeto. Ela pode estar vazia ou já conter código.
-- Se o projeto já for importante, faça um commit ou backup antes da instalação.
-
-### 2. Baixe o Agent Harness Kit
-
-Escolha uma opção:
-
-- **Clone normal:** `git clone https://github.com/Eduardo-Salvador/Agent-Harness-Kit.git`
-- **Fork:** no GitHub, clique em **Fork**, copie a URL do seu fork e execute `git clone <URL-DO-SEU-FORK>`.
-- **Sem Git:** use **Code → Download ZIP**, extraia o arquivo e renomeie a pasta para `Agent-Harness-Kit`.
-
-Deixe o Kit e seu projeto em pastas separadas, uma ao lado da outra:
-
-```text
-teste-harness/
-├── Agent-Harness-Kit/   fonte oficial, fork ou ZIP extraído
-└── meu-projeto/         projeto que receberá o Kit
-```
-
-Não coloque `meu-projeto` dentro de `Agent-Harness-Kit` nem instale o Kit nele mesmo. O instalador bloqueia pastas aninhadas para evitar cópias recursivas e confusão entre a fonte e o projeto.
-
-### 3. Abra o terminal dentro do seu projeto
-
-No Windows, abra `meu-projeto` no Explorador de Arquivos, clique com o botão direito em uma área vazia e escolha **Abrir no Terminal**. O prompt deve terminar com o nome do projeto:
-
-```text
-PS C:\...\teste-harness\meu-projeto>
-```
-
-O ponto `.` usado nos comandos abaixo significa “a pasta atual”. `..` significa “a pasta anterior”, onde está `Agent-Harness-Kit` no exemplo.
-
-### 4. Escolha o perfil
-
-- Use `core` se quer apenas organizar e executar o desenvolvimento. **Esta é a escolha recomendada para a maioria das pessoas.**
-- Use `core-learning` se também pretende pedir modo estudo e guardar anotações durante o projeto.
-- Use `full` somente se, além do projeto, quiser estudar a engenharia do próprio harness.
-
-O perfil de aprendizado apenas disponibiliza o recurso. Ele não observa nem cria notas até você pedir e aprovar o destino.
-
-### 5. Faça uma simulação segura
-
-O `--dry-run` mostra o que seria criado sem alterar arquivos:
-
-```powershell
-python ..\Agent-Harness-Kit\tools\install.py --profile core --host . --dry-run
-```
-
-No macOS/Linux, use:
+Com o [`uv`](https://docs.astral.sh/uv/) instalado, instale a CLI uma vez:
 
 ```bash
-python3 ../Agent-Harness-Kit/tools/install.py --profile core --host . --dry-run
+uv tool install agent-harness-kit-cli
 ```
 
-Revise as linhas iniciadas por `WOULD`. Elas devem apontar para `meu-projeto`, nunca para a pasta-fonte `Agent-Harness-Kit`.
-
-### 6. Instale
-
-Repita o comando sem `--dry-run`:
-
-```powershell
-python ..\Agent-Harness-Kit\tools\install.py --profile core --host .
-```
-
-No macOS/Linux:
+Depois, execute dentro de cada projeto que receberá o Kit:
 
 ```bash
-python3 ../Agent-Harness-Kit/tools/install.py --profile core --host .
+agent-harness install
 ```
 
-Se as pastas não estiverem lado a lado, use o caminho completo do instalador entre aspas. Exemplo no Windows:
-
-```powershell
-python "C:\caminho\para\Agent-Harness-Kit\tools\install.py" --profile core --host .
-```
-
-Ao terminar, linhas `DONE` confirmam a criação de:
-
-- `agent-harness-kit/`, a cópia gerenciada do Kit;
-- `AGENTS.md`, ponto de entrada para Codex e agentes compatíveis;
-- `CLAUDE.md`, ponto de entrada para Claude Code.
-
-Se `AGENTS.md` ou `CLAUDE.md` já existirem, o instalador preserva o texto do projeto e gerencia apenas um bloco marcado no topo.
-
-### 7. Valide a instalação
-
-Ainda dentro de `meu-projeto`, execute:
-
-```powershell
-python agent-harness-kit\tools\validate.py
-```
-
-No macOS/Linux:
+Depois, abra um **novo contexto do agente na raiz desse projeto**. O comando instala o perfil recomendado `core`, cria a pasta contida `agent-harness-kit/` e adiciona blocos gerenciados ao `AGENTS.md` e `CLAUDE.md` da raiz sem substituir instruções existentes.
 
 ```bash
-python3 agent-harness-kit/tools/validate.py
+# Apenas simular
+agent-harness install --dry-run
+
+# Incluir suporte consentido ao aprendizado no projeto
+agent-harness install --profile core-learning
 ```
 
-O resultado esperado começa com `VALIDATION PASSED`. Se aparecer `VALIDATION FAILED`, não comece o desenvolvimento antes de corrigir os erros informados.
+Para clone/ZIP, iniciantes, uso offline, solução de problemas e atualização contida, veja a [instalação passo a passo](docs/EMBEDDED-INSTALLATION.md). A interface original `python tools/install.py` continua suportada.
 
-### 8. Abra uma conversa nova com o agente
+## O que é instalado
 
-Feche a conversa usada antes da instalação e abra um **novo contexto na raiz de `meu-projeto`**. Isso é necessário porque conversas antigas podem manter instruções carregadas antes da existência do Kit.
+- Contexto, regras, capacidades e decisões aprovadas do projeto.
+- Decisões, ações humanas e lacunas macro em `harness-state/PENDING.md`.
+- Ordem técnica, dependências, leases e transições em `harness-state/TASK-GRAPH.md`.
+- Tentativas, expansão de contexto e review independente limitadas—sem terceira review automática.
+- Status obrigatório: etapa, progresso, trabalho automático, as duas visões de pendências, bloqueios, próxima ação e caminhos.
+- Contextos separados para frontend, backend, dados, infraestrutura, integração e estudo quando o host permite.
 
-Normalmente o agente lerá `AGENTS.md` ou `CLAUDE.md` automaticamente. Se ele ignorar o Kit, cole este prompt:
+## Modo hackathon
 
-```text
-O Agent Harness Kit está instalado neste projeto. Antes de varrer, propor, planejar, informar status ou alterar arquivos, leia o AGENTS.md ou CLAUDE.md aplicável na raiz e siga as instruções referenciadas dentro de agent-harness-kit/. Verifique harness-state/PROJECT-CONTEXT.md e execute o fluxo obrigatório de primeira execução ou retomada antes de responder ao pedido do projeto.
-```
+Ao pedir “modo hackathon”, um MVP com prazo curto ou construção focada em demo, o Kit comprime a descoberta para no máximo duas perguntas coesas antes de propor contexto e grafo. Ele busca uma fatia vertical demonstrável, divide trabalho isolado por área/agente, integra cedo, usa review independente leve por padrão e termina com demo ensaiada, atalhos visíveis e lacunas pós-MVP. É mais rápido, mas não remove leases, checks, status ou o limite de duas reviews. Veja o [modo hackathon](docs/HACKATHON-MODE.md).
 
-Em um projeto sem contexto aprovado, a primeira resposta correta apresenta brevemente o Kit e inicia a entrevista. O agente não deve propor stack, marca, arquitetura ou implementação antes dessa descoberta.
-
-<details>
-<summary><strong>Problemas comuns</strong></summary>
-
-- **`python` não foi reconhecido:** instale o Python 3, reabra o terminal e tente `python --version`; no macOS/Linux use `python3`.
-- **`can't open file` ou caminho não encontrado:** confira o nome e a localização de `Agent-Harness-Kit`; use o caminho completo entre aspas se necessário.
-- **`destination already exists`:** o projeto já possui `agent-harness-kit/`. Não apague `harness-state/`; siga o processo de atualização em [Instalação contida](docs/EMBEDDED-INSTALLATION.md).
-- **`separate, non-nested directories`:** a fonte do Kit e o projeto são a mesma pasta ou uma está dentro da outra. Mova-as para ficarem lado a lado.
-- **O agente não apresentou o Kit:** confirme que abriu uma conversa nova na raiz de `meu-projeto` e use o prompt de ativação acima.
-
-</details>
-
-## Como funciona
+## Como a execução flui
 
 ```mermaid
 flowchart LR
     S[Início ou retomada] --> C{Contexto aprovado?}
-    C -- não --> D[Descoberta adaptativa]
+    C -- não --> D[Descoberta curta]
     C -- sim --> P[PENDING + TASK-GRAPH]
     D --> P
-    P --> O[Orquestrador]
-    O --> T[Tasks por área e contexto]
-    T --> H[Checks + handoff]
-    H --> X[Concluir + informar + próxima task]
-    X -. garantia não bloqueante .-> R[Review independente limitada]
+    P --> W[Área de trabalho focada]
+    W --> V[Checks + review limitada]
+    V --> X[Concluir + informar + próxima]
 ```
 
-### Retomada e pendências
+`PENDING.md` responde “o que você precisa de mim?” e acompanha o que falta no nível do produto. `TASK-GRAPH.md` controla a execução técnica. O agente lê os dois—nessa ordem depois do contexto—e persiste mudanças do grafo antes de informar progresso.
 
-Na primeira chamada de uma nova janela, em pedidos de retomada ou de status, o agente lê nesta ordem:
+## Um grafo de tarefas mais inteligente
 
-1. `harness-state/PROJECT-CONTEXT.md`;
-2. `harness-state/PENDING.md`;
-3. `harness-state/TASK-GRAPH.md`.
+O `TASK-GRAPH.md` existente também carrega contexto de código focado por nó: `read_set` diz o que o agente deve abrir primeiro, `write_set` continua sendo o lease exclusivo e `impact_set` limita a review de regressões. `context_provenance` registra a revisão do código e como essas pistas foram encontradas. Uma ferramenta aprovada e atualizada como o [Graphify](https://github.com/Graphify-Labs/graphify) pode enriquecer esses campos, mas nunca cria um grafo concorrente nem altera o estado das tasks automaticamente.
 
-`PENDING.md` guarda decisões, ações humanas e a visão macro do que falta. `TASK-GRAPH.md` guarda ordem, dependências, leases e execução técnica. Toda atualização de progresso/etapa — não apenas um pedido explícito de status — mostra etapa atual, progresso, o que continua sem ação do usuário, pendências humanas e macro, nós ativos/prontos/bloqueados do grafo, bloqueios, próxima ação e caminhos inspecionáveis. Ao perguntar “quais são minhas pendências?”, os itens humanos vêm primeiro.
+## Perfis
 
-Todo movimento técnico é persistido em uma nova revisão de `TASK-GRAPH.md` antes de ser informado. `PENDING.md` só é atualizado quando muda uma ação humana ou o resultado macro do projeto; nunca pode ser o único registro do progresso de uma task.
+| Perfil | Inclui | Melhor uso |
+| --- | --- | --- |
+| `core` | Entrega, grafo, status, review e validação | Maioria dos projetos |
+| `core-learning` | `core` mais aprendizado opcional do projeto | Prática guiada e debriefings |
+| `full` | `core-learning` mais o pacote separado de estudo do harness | Estudar a própria engenharia de harness |
 
-### Contextos, frontend e estudo
+O aprendizado nunca é ativado silenciosamente. O usuário escolhe o caminho Markdown, local do Obsidian, alvo/MCP do Notion ou outro destino exato antes da criação de qualquer nota.
 
-- **Contextos:** um contexto novo por task é o padrão. Chats visíveis, subagentes e paralelismo só são usados quando o host oferece e autoriza essas capacidades; caso contrário, há fallback manual ou sequencial com handoff.
-- **Frontend:** pedidos de tela usam `frontend-screen` para orquestração. Com screenshots aprovados, `image-to-code` é a skill principal de código, `frontend-screen` confere fidelidade entre desktop e mobile, e `imagegen` cria apenas fotografias/recursos raster temporários. Skills de direção visual continuam disponíveis quando ainda não existe tela aprovada.
-- **Estudo:** pedidos como “ativa modo estudo” iniciam a configuração de objetivos, limites de observação e destino exato das notas. Nenhuma nota é criada e nenhum fallback em `docs/` ou serviço remoto é presumido antes de o usuário confirmar um caminho ou um conector/MCP e alvo. Credenciais nunca são gravadas no perfil.
+## Limites honestos
 
-## Mapa do repositório
+- O Kit coordena agentes capazes por arquivos; não abre chats, integra branches, faz deploy ou publica notas autonomamente.
+- Leases são contratos validados, não locks do sistema operacional.
+- Threads, subagentes, worktrees, MCPs, rede e modelo dependem das capacidades e autorizações reais do host.
+- Um grafo de conhecimento pode reduzir varreduras amplas, mas apenas consultas focadas e orçamentos de execução evitam desperdício; nenhuma ferramenta garante menos tokens.
 
-```text
-AGENTS.md / CLAUDE.md   entradas nativas
-harness/                papéis, templates e playbooks
-docs/                   arquitetura, contratos e políticas
-adapters/               mapeamentos Codex, Claude e genérico
-.agents/ / .claude/     skills e agentes carregados sob demanda
-validation/             fixtures válidas e mutações hostis
-tools/                  instalação, validação e empacotamento
-learning-pack/          estudo separado de engenharia de harness
-```
-
-## Princípios
-
-1. Arquivos, não memória de chat, carregam o estado durável.
-2. `PENDING.md` humano/macro e `TASK-GRAPH.md` técnico são autoridades diferentes.
-3. Tasks têm ownership exclusivo, contexto progressivo e verificação reproduzível.
-4. Implementador e revisor são independentes; não existe terceira review automática.
-5. Conclusão aprovada nos checks informa o resultado e segue sem aprovação burocrática.
-6. Modelos e ferramentas não ampliam autoridade; capacidades e degradações são explícitas.
-
-## Limitações atuais
-
-- Não há um runtime autônomo separado que abra sessões, integre branches, faça deploy ou publique notas sozinho.
-- Leases são contratos validados no grafo, não locks do sistema operacional.
-- Criação automática de chats, subagentes e isolamento depende das capacidades reais do host.
-- Medição de tokens, limites de tempo e encerramento forçado ainda não são portáveis entre plataformas.
-
-Consulte a [auditoria de prontidão](docs/PUBLICATION-READINESS.md), as [decisões em aberto](OPEN-DECISIONS.md) e a [licença MIT](LICENSE).
+Leia a [auditoria de prontidão](docs/PUBLICATION-READINESS.md), o [contrato de validação](docs/VALIDATION.md), as [decisões em aberto](OPEN-DECISIONS.md) e a [licença MIT](LICENSE).

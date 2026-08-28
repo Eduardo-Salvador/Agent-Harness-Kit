@@ -36,6 +36,15 @@ pending_authority: harness-state/PENDING.md
 
 - Replace with an observable measure.
 
+## Delivery shape
+
+- Pace: standard / hackathon.
+- Deadline/timebox: none / replace.
+- Primary demo path: none / replace.
+- Demo audience/environment: none / replace.
+- Acceptable shortcuts: none / replace with visible fixtures, mocks, seed data, flags, or manual setup.
+- Post-MVP: none / replace.
+
 ## Constraints
 
 - Replace with technical, product, security, or permission constraints.

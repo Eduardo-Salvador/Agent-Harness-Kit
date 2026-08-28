@@ -19,11 +19,11 @@ source_references: migration-main@1
 ```markdown
 # Task graph
 
-| ID | Workstream | Goal | Depends on | Status | Agent/context | Paths | Checkpoint | Assurance requires |
+| ID | Workstream | Goal | Depends on | Status | Agent/context | Read / write / impact paths | Checkpoint | Assurance requires |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-001 | backend | Add contract validator | — | active | builder-1 / isolated task context | `src/contracts/**`, `tests/contracts/**` | no | — |
-| TASK-002 | integration | Integrate validator with runtime | TASK-001 | pending | unassigned / pending | `src/runtime/**`, `tests/runtime/**` | no | TASK-001 |
-| TASK-003 | governance | Select license | — | blocked | human:owner | `LICENSE` | yes: DEC-004 | — |
+| TASK-001 | backend | Add contract validator | — | active | builder-1 / isolated task context | read `src/contracts/schema.ts`; write `src/contracts/**`; impact `tests/contracts/**` | no | — |
+| TASK-002 | integration | Integrate validator with runtime | TASK-001 | pending | unassigned / pending | read `src/contracts/**`; write `src/runtime/**`; impact `tests/runtime/**` | no | TASK-001 |
+| TASK-003 | governance | Select license | — | blocked | human:owner | write `LICENSE` | yes: DEC-004 | — |
 
 ## Transition log
 - r7: TASK-001 ready → active; ownership lease `lease-001` granted.
@@ -37,6 +37,9 @@ source_references: migration-main@1
 - Only the orchestrator changes lifecycle or topology, using the expected prior revision.
 - Every technical event is a graph transaction: dispatch/start, material progress evidence, dependency discovery, block/unblock, remediation, completion, lease/context change, and newly ready dependents increment the graph revision and enter the transition log before user-facing communication. A `PENDING.md` write never satisfies this requirement.
 - Active ownership path sets must not overlap (including parent/child or equivalent normalized paths).
+- `write_set` alone grants an exclusive ownership lease. Optional `read_set` identifies the smallest source context to load; optional `impact_set` identifies related consumers/tests for regression analysis. Their paths are safe and repository-relative, but overlap is allowed because they grant no write authority.
+- When `read_set` or `impact_set` is derived from repository analysis, `context_provenance` names the evidence method and pinned source revision, such as `source-inspection@git:<sha>` or `graphify@git:<sha>`. Generated relationships are navigation hints until verified in the actual source.
+- A repository graph tool enriches nodes in this task graph; it never creates a second operational authority, infers lifecycle transitions, or changes dependencies automatically. If unavailable or stale, use scoped source search and record that provenance.
 - Every implementation node links to a task brief; completion requires objective acceptance evidence. Independent review remains automatic and bounded. It is non-blocking for ordinary execution; only predeclared consumers of `assurance_gate: affected-actions` wait for accepted assurance.
 - Every machine-readable node records `assurance_status` (`not-required`, `pending`, `accepted`, `changes-requested`, or `blocked`) and an `assurance_requires` list. A `ready` or `active` node cannot reference a task whose assurance is not `accepted`.
 - New implementation nodes record `workstream`, `agent_role`, `execution_context`, `thread_policy`, and `thread_ref`. Different workstreams cannot reuse one active execution context; cross-area work is an explicit `integration` node.

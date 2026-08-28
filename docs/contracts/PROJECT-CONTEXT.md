@@ -8,7 +8,7 @@ schema: harness.project-context/v1
 id: project-context
 revision: 3
 status: approved                 # draft | awaiting-approval | approved | superseded
-mode: delivery                   # delivery | delivery+learning
+mode: delivery                   # delivery | delivery+learning | hackathon | hackathon+learning
 updated_at: 2026-08-20T14:00:00Z
 approved_by: human:owner
 supersedes: project-context@2
@@ -39,6 +39,14 @@ pending_authority: harness-state/PENDING.md
 ## Success measures
 - The interruption-recovery fixture passes on every supported adapter.
 
+## Delivery shape
+- Pace: standard.
+- Deadline/timebox: none.
+- Primary demo path: not applicable.
+- Demo audience/environment: not applicable.
+- Acceptable shortcuts: none.
+- Post-MVP: none.
+
 ## Constraints
 - Platform-neutral core; human approval for elevated permissions.
 
@@ -65,7 +73,8 @@ pending_authority: harness-state/PENDING.md
 - Only one revision may be `approved`; approval identifies a human authority.
 - Project state/evidence, problem, users, outcome, scope, success measures, constraints, rules/capabilities, and assumptions/unknowns are present.
 - Every unknown has an owner and resolution condition; assumptions are visibly labeled.
-- `mode: delivery+learning` requires an approved learning profile; `delivery` must not require one.
+- `delivery+learning` and `hackathon+learning` require an approved learning profile; `delivery` and `hackathon` must not require one.
+- `hackathon` modes record a deadline/timebox, one primary demo path, audience/environment, acceptable shortcuts, and post-MVP exclusions. They use the same graph, ownership, status, verification, and review authorities as standard delivery.
 - Graphs reference an exact approved revision and cannot silently follow later edits.
 - `pending_authority` names the canonical human-action and macro project completion source; technical ordering remains in the task graph.
 - Approval is invalid if the discovery snapshot selectors or source identities are stale.

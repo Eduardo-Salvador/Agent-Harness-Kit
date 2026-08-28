@@ -22,20 +22,21 @@ NODE_FIELDS = {
     "write_set", "checkpoint", "task_brief", "assurance_status", "assurance_requires",
 }
 NODE_CONTEXT_FIELDS = {"workstream", "agent_role", "execution_context", "thread_policy", "thread_ref"}
+NODE_ENRICHMENT_FIELDS = {"read_set", "impact_set", "context_provenance"}
 
 REQUIRED_FILES = [
-    "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "LICENSE", "media/agent-harness-kit-overview-en.mp3", "media/agent-harness-kit-overview-pt-BR.mp3", "media/agent-harness-kit-overview-en.mp4", "media/agent-harness-kit-overview-pt-BR.mp4",
+    "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "LICENSE", "docs/assets/agent-harness-kit-banner.svg", "docs/assets/harness-demo-flow.svg", "media/agent-harness-kit-overview-en.mp3", "media/agent-harness-kit-overview-pt-BR.mp3", "media/agent-harness-kit-overview-en.mp4", "media/agent-harness-kit-overview-pt-BR.mp4",
     "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
-    "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md",
+    "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/PYPI-README.md",
     "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md",
-    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
+    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/HACKATHON-MODE.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
     "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
     "adapters/README.md", "adapters/generic.md", "adapters/codex.md", "adapters/claude.md",
     "harness/roles/README.md", "harness/roles/discovery-interviewer.md",
     "harness/roles/orchestrator-po.md", "harness/roles/task-decomposer.md",
     "harness/roles/generic-specialist.md", "harness/roles/reviewer-integrator.md",
     "harness/roles/learning-assessor.md", "harness/roles/learning-debriefer-publisher.md",
-    "harness/playbooks/README.md", "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md",
+    "harness/playbooks/README.md", "harness/playbooks/first-run.md", "harness/playbooks/hackathon-delivery.md", "harness/playbooks/status-resume.md",
     "harness/playbooks/discovery-to-graph.md", "harness/playbooks/task-dispatch.md",
     "harness/playbooks/contract-changes.md", "harness/playbooks/parallel-execution.md",
     "harness/playbooks/review-integration.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/context-routing.md", "harness/playbooks/frontend-screen.md", "harness/playbooks/learning-capture-publication.md",
@@ -78,7 +79,7 @@ REQUIRED_FILES = [
     "validation/budget-fixtures/invalid/lineage-reset.json",
     "validation/budget-fixtures/invalid/task-only-scope.json",
     "validation/budget-fixtures/invalid/path-traversal.json",
-    "VERSION", "docs/DISTRIBUTION.md", "docs/PUBLICATION-READINESS.md", "tools/package.py", "tools/install.py", "validation/test_install.py",
+    "VERSION", "docs/DISTRIBUTION.md", "docs/PUBLICATION-READINESS.md", "pyproject.toml", "agent_harness_kit/__init__.py", "agent_harness_kit/__main__.py", "agent_harness_kit/cli.py", "tools/package.py", "tools/install.py", "validation/test_install.py", "validation/test_cli.py",
     "distribution/project.json", "distribution/profiles/core.json", "distribution/profiles/core-learning.json", "distribution/profiles/full.json",
     "docs/contracts/MIGRATION-MANIFEST.md", "docs/contracts/COEXISTENCE.md", "docs/contracts/ADAPTER-BINDING.md",
     "harness/templates/MIGRATION-MANIFEST.md", "harness/templates/COEXISTENCE.md", "harness/templates/ADAPTER-BINDING.md",
@@ -100,7 +101,7 @@ REQUIRED_FILES = [
 TEMPLATE_RULES = {
     "PROJECT-CONTEXT.md": (
         {"schema", "id", "revision", "status", "mode", "updated_at", "approved_by", "supersedes", "discovery_snapshot", "source_references", "capability_manifest", "rules_map", "pending_authority"},
-        {"Project state", "Intent", "Scope", "Success measures", "Constraints", "Rules and capabilities", "Assumptions and unknowns", "Verification environment", "References"},
+        {"Project state", "Intent", "Scope", "Success measures", "Delivery shape", "Constraints", "Rules and capabilities", "Assumptions and unknowns", "Verification environment", "References"},
     ),
     "TASK-GRAPH.md": (
         {"schema", "id", "revision", "status", "project_context", "updated_at", "updated_by", "discovery_snapshot", "source_references"},
@@ -292,6 +293,9 @@ def validate_graph(data: dict, source: str) -> list[str]:
         present_context = NODE_CONTEXT_FIELDS & set(node)
         if present_context and present_context != NODE_CONTEXT_FIELDS:
             errors.append(f"graph.context-fields: {source} {node.get('id', index)} missing {sorted(NODE_CONTEXT_FIELDS - set(node))}")
+        present_enrichment = NODE_ENRICHMENT_FIELDS & set(node)
+        if present_enrichment and present_enrichment != NODE_ENRICHMENT_FIELDS:
+            errors.append(f"graph.enrichment-fields: {source} {node.get('id', index)} missing {sorted(NODE_ENRICHMENT_FIELDS - set(node))}")
     for node_id, node in by_id.items():
         dependencies = node.get("depends_on", [])
         if not isinstance(dependencies, list):
@@ -307,6 +311,18 @@ def validate_graph(data: dict, source: str) -> list[str]:
             normalized, reason = normalize_owned_path(str(owned))
             if reason:
                 errors.append(f"graph.invalid-path: {source} {node_id} {owned!r} ({reason})")
+        if NODE_ENRICHMENT_FIELDS <= set(node):
+            for field in ("read_set", "impact_set"):
+                scoped_paths = node.get(field)
+                if not isinstance(scoped_paths, list):
+                    errors.append(f"graph.{field.replace('_', '-')}-shape: {source} {node_id}")
+                    continue
+                for scoped in scoped_paths:
+                    normalized, reason = normalize_owned_path(str(scoped))
+                    if reason:
+                        errors.append(f"graph.invalid-path: {source} {node_id} {scoped!r} ({reason})")
+            if not isinstance(node.get("context_provenance"), str) or not node["context_provenance"].strip():
+                errors.append(f"graph.context-provenance: {source} {node_id}")
         if node.get("assignee") not in {None, "unassigned"} and node.get("assignee") == node.get("reviewer"):
             errors.append(f"graph.reviewer-independence: {source} {node_id}")
         if NODE_CONTEXT_FIELDS <= set(node):
@@ -920,6 +936,24 @@ def validate_native_integration() -> list[str]:
         learning_tokens = ("delivery+learning", "learning-profile", "destination")
         if any(token not in agents_text.lower() for token in learning_tokens):
             errors.append("native.learning-activation-routing: AGENTS.md must recognize learning requests and collect a note destination")
+        hackathon_tokens = ("hackathon", "time-boxed mvp", "demo-first", "harness/playbooks/hackathon-delivery.md")
+        if any(token not in agents_text.lower() for token in hackathon_tokens):
+            errors.append("native.hackathon-routing: AGENTS.md must route time-boxed MVP and demo-first requests")
+
+    hackathon_playbook = ROOT / "harness" / "playbooks" / "hackathon-delivery.md"
+    hackathon_doc = ROOT / "docs" / "HACKATHON-MODE.md"
+    if hackathon_playbook.is_file() and hackathon_doc.is_file():
+        hackathon_text = (hackathon_playbook.read_text(encoding="utf-8") + hackathon_doc.read_text(encoding="utf-8")).lower()
+        for token in ("at most two", "vertical slice", "demo-rehearsal", "frontend", "backend", "write_set", "light independent review", "no third loop", "post-mvp"):
+            if token not in hackathon_text:
+                errors.append(f"native.hackathon-contract: hackathon workflow lacks {token!r}")
+    for item in (".agents/skills/first-run-discovery/SKILL.md", ".claude/skills/first-run-discovery/SKILL.md"):
+        path = ROOT / item
+        if path.is_file():
+            skill_text = path.read_text(encoding="utf-8").lower()
+            for token in ("hackathon", "at most two", "demo-first graph", "workstream/agent/context"):
+                if token not in skill_text:
+                    errors.append(f"native.hackathon-discovery-skill: {item} lacks {token!r}")
 
     frontend_playbook = ROOT / "harness" / "playbooks" / "frontend-screen.md"
     if frontend_playbook.is_file():
@@ -1205,6 +1239,15 @@ def validate_repository() -> list[str]:
         errors.extend(validate_markdown(path))
         text = path.read_text(encoding="utf-8")
         header = frontmatter(text)
+        if header.get("schema") == "harness.project-context/v1":
+            mode = header.get("mode")
+            if mode not in {"delivery", "delivery+learning", "hackathon", "hackathon+learning"}:
+                errors.append(f"project-context.mode: {rel(path)}")
+            if mode in {"hackathon", "hackathon+learning"}:
+                delivery_shape = re.search(r"^## Delivery shape\s*$([\s\S]*?)(?=^## |\Z)", text, re.MULTILINE)
+                required_hackathon = ("deadline/timebox", "primary demo path", "demo audience/environment", "acceptable shortcuts", "post-mvp")
+                if not delivery_shape or any(token not in delivery_shape.group(1).lower() for token in required_hackathon):
+                    errors.append(f"project-context.hackathon-shape: {rel(path)}")
         if header.get("schema") == "harness.task/v1":
             if header.get("review_profile") not in {"light", "standard", "critical"}:
                 errors.append(f"review.profile: {rel(path)}")

@@ -2,7 +2,7 @@
 
 ## One core, two modes
 
-There is one delivery graph, one orchestrator, one set of task contracts, and one verification path. `delivery+learning` activates project-specific observers around that same core; it is not a fork, alternate prompt stack, or duplicate harness.
+There is one delivery graph, one orchestrator, one set of task contracts, and one verification path. `delivery+learning` and `hackathon+learning` activate project-specific observers around that same core; neither is a fork, alternate prompt stack, or duplicate harness. Hackathon pace changes prioritization, not learning authority.
 
 The Harness Engineering Learning Pack (`learning-pack/README.md` in the `full` profile) is static, project-independent study material. It is not a runtime mode, owns no project state, and is excluded from operational context unless explicitly requested.
 
@@ -23,7 +23,7 @@ Delivery review judges the software and acceptance evidence. Learning review dis
 
 Learning is active only when all are true:
 
-1. the user explicitly selects `delivery+learning`;
+1. the user explicitly selects a learning mode (`delivery+learning` or `hackathon+learning`);
 2. a [learning profile](contracts/LEARNING-PROFILE.md) exists with consent and visibility settings;
 3. the selected learning activities do not require an unavailable or unapproved capability;
 4. any external publication destination has separate human approval.

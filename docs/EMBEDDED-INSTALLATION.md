@@ -19,6 +19,21 @@ host-project/
 
 ## Installation
 
+### Recommended: one command
+
+Install [`uv`](https://docs.astral.sh/uv/), open a terminal inside the host project, and run:
+
+```text
+uv tool install agent-harness-kit-cli
+agent-harness install
+```
+
+The current directory and `core` profile are defaults. Add `--dry-run` to preview, `--profile core-learning` for optional project-learning support, or pass another project path after `install`. The command still performs the same contained, preflighted installation described below; it only removes the clone-and-path ceremony. `agent-harness doctor` checks the expected entrypoints after installation, and `agent-harness prompt` prints the fallback activation prompt.
+
+The distribution name is `agent-harness-kit-cli` because the shorter `agent-harness-kit` name is owned by an unrelated PyPI project. The installed commands are still `agent-harness` and `ahk`. To run directly from GitHub without a persistent tool installation, use `uvx --from git+https://github.com/Eduardo-Salvador/Agent-Harness-Kit.git agent-harness install`.
+
+### Clone, fork, ZIP, or offline installation
+
 Downloading or cloning the Kit does not modify a host project. Run the bundled installer to create the contained directory and bridges:
 
 ```text
