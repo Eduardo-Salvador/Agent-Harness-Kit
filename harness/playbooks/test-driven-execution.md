@@ -1,6 +1,10 @@
 # Test-driven execution
 
-Use this playbook for every behavior-changing implementation task after its executable spec is dispatched. A request that passes the `direct-trivial` gate in [writing plans](writing-plans.md) has no executable spec and does not enter this playbook.
+Use this playbook for every behavior-changing `full-harness` implementation task after its executable spec is dispatched. A request routed to `direct-trivial` or `vibe` by [request routing](request-routing.md) has no executable spec and does not enter this playbook.
+
+## Vibe boundary
+
+An eligible `vibe` request may change small local behavior without a mandatory RED phase only when it stays in one workstream and ownership area, has low blast radius, no hard full trigger, and a focused deterministic check. Vibe never means unverified: run that focused check and report it in the concise closeout. If the check is unavailable, ambiguous, or failing, or inspection reveals broader scope, stop further edits and promote to `full-harness`; the promoted behavior then follows the normal RED → GREEN contract.
 
 ## Strategy selection
 
@@ -8,9 +12,9 @@ Use this playbook for every behavior-changing implementation task after its exec
 - `characterization`: behavior-preserving refactor; establish the current contract with passing focused coverage before and after the change. Do not invent a failing test when no behavior delta is intended.
 - `verification-only`: non-code/artifact/configuration work where no meaningful automated behavior test applies. The task spec names the exact reason and the reproducible alternative check.
 
-Missing test infrastructure is not a silent exception. If adding the smallest harness is within approved scope, specify it as the first bounded unit. Otherwise return `needs-replan` with the unavailable capability or scope decision. `inline-simple` engineering tasks and hackathon tasks follow the same strategy boundary.
+Missing test infrastructure is not a silent exception inside graph/full work. If adding the smallest harness is within approved scope, specify it as the first bounded unit. Otherwise return `needs-replan` with the unavailable capability or scope decision. `inline-simple` graph tasks and hackathon tasks follow the same strategy boundary.
 
-A localized presentation/static-content edit such as a color, spacing value, typo, static label, or asset reference is not a behavior task when it adds no logic, interaction/state, accessibility behavior, rule, contract, data flow, dependency, or risk. Handle it through `direct-trivial` with the smallest useful check and no manufactured RED. If inspection reveals any of those concerns, promote it before editing.
+A localized presentation/static-content edit such as a color, spacing value, typo, static label, or asset reference is not a behavior task when it adds no logic, interaction/state, accessibility behavior, rule, contract, data flow, dependency, or risk. Handle it through `direct-trivial` with the smallest useful check and no manufactured RED. A small local behavior request may use `vibe` only under the router's stricter eligibility and focused-check rules. Any hard trigger promotes it before further editing.
 
 ## RED → GREEN → REFACTOR
 

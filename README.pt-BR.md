@@ -22,6 +22,8 @@
 
 **Versão do código-fonte: `0.6.0`.** O Kit é um scaffold executável e orientado a artefatos. Ele não mantém um daemon em segundo plano nem bloqueia o sistema operacional. Enquanto um agente orquestrador está ativo, pode disparar em paralelo subtasks independentes e prontas quando a plataforma comprova essa capacidade.
 
+> **Um harness maduro o bastante para saber quando sair do caminho.** O router nativo não trata todo prompt como um grande projeto: gates determinísticos de segurança separam edições estáticas imediatas, pequenas mudanças verificadas em modo “vibe”, trabalho gerenciado pelo grafo e engenharia completa. A IA só é consultada diante de ambiguidade real; risco, checks com falha ou crescimento de escopo promovem automaticamente o trabalho, sem deixar a velocidade furar a segurança.
+
 ## Comece aqui
 
 Abra qualquer terminal, inclusive o terminal integrado do VS Code em **Terminal > New Terminal**, e instale a CLI uma vez. O [`uv`](https://docs.astral.sh/uv/) é a opção isolada recomendada:
@@ -79,6 +81,7 @@ https://github.com/user-attachments/assets/d89fe815-da49-452e-bcd4-18f33f728f18
 | Vários agentes colidem | Áreas, leases de arquivos e handoffs são explícitos |
 | Trabalho independente espera em fila linear | O orquestrador ativo ocupa a capacidade paralela comprovada e repõe a primeira vaga liberada |
 | Uma troca mínima de CSS/texto aciona o harness inteiro | Edições `direct-trivial` vão direto ao arquivo, sem entrevista, SPEC, grafo, TDD ou review |
+| Uma pequena correção local de comportamento aciona toda a cerimônia | `vibe` altera diretamente um workstream de baixo risco, não cria artefatos e precisa passar em um check focado |
 | Notas de estudo surgem em pastas arbitrárias | O estudo só começa após aprovação do destino |
 | Ideias de feature viram código cedo demais | A descoberta automática compara caminhos e registra primeiro um brief aprovado |
 | Tasks vagas fazem o agente improvisar e reler tudo | Trabalho não trivial recebe um writing plan conciso e pequenas specs executáveis |
@@ -100,7 +103,11 @@ Conversas longas ficam naturalmente mais lentas e consomem mais tokens em todas 
 
 ## O ciclo de trabalho
 
-Nem toda mudança entra no ciclo. Uma edição visual ou de conteúdo estático claramente localizada — como trocar a cor de um botão, um espaçamento, corrigir um texto ou substituir um label — usa o caminho `direct-trivial` quando não envolve lógica, estado, regra, contrato, dados, dependência, comportamento de acessibilidade ou risco. O agente edita diretamente, roda o menor check útil e responde de forma curta. Se a inspeção revelar comportamento real ou impacto maior, ele promove o trabalho antes de alterar o código.
+Toda solicitação é roteada antes de o Harness carregar o contexto do projeto ou iniciar cerimônias. Regras determinísticas escolhem primeiro entre quatro caminhos: `direct-trivial` para edições estáticas/mecânicas, `vibe` para uma pequena mudança local de comportamento já decidida com check focado e zero artefatos, `graph-only` para trabalho de baixo risco que realmente precisa de agendamento/ownership e `full-harness` para trabalho consequente ou ambíguo. Um classificador de IA econômico só é usado quando o caminho continua ambíguo e classificar custa menos que fazer o trabalho.
+
+Um pedido explícito de Harness completo sempre vence. Autenticação, segurança/privacidade, contratos de dados/schema/API, dependências, migrações, permissões/acessibilidade, efeitos externos, integrações, vários workstreams, decisões consequentes, ambiguidade não resolvida ou verificação com falha forçam `full-harness`, mesmo quando foi pedido um caminho rápido. Se o escopo crescer durante uma edição rápida, o agente para e promove antes de novas mudanças.
+
+Você pode inspecionar a mesma pré-classificação no terminal com `agent-harness route "seu pedido"`. Use `--mode vibe` ou `--mode full` para declarar uma preferência, `--workstreams 2` quando houver mais de uma área e `--graph-bound --graph-only-eligible` para trabalho de baixo risco já especificado no grafo. O comando sempre devolve um dos quatro caminhos em JSON; diante de ambiguidade, usa `full-harness` com segurança e sinaliza que um classificador de IA econômico pode refinar a decisão.
 
 1. O agente lê o contexto aprovado, depois as pendências humanas/macro e por último o grafo técnico.
 2. Uma feature nova com decisões de produto abertas entra automaticamente em um brainstorm focado: o contexto conhecido é reaproveitado, caminhos viáveis são comparados e você aprova um brief antes de o grafo mudar.
@@ -110,7 +117,7 @@ Nem toda mudança entra no ciclo. Uma edição visual ou de conteúdo estático 
 6. Trabalho aprovado nos checks é concluído e informado imediatamente; a próxima tarefa pronta pode começar sem aprovação cerimonial. Uma task `graph-only` inline-simple elegível roda seu check determinístico e avança somente o grafo — sem handoff, pacote de review, artefato de review ou logs copiados. Comportamento, TDD, contratos, risco, integrações, checks falhos e assurance continuam no fluxo completo de handoff/review.
 7. Para `handoff-review`, depois da verificação o orquestrador lança um revisor independente em contexto novo — de preferência um subagente quando disponível. Ele recebe a SPEC versionada, diff relevante, handoff e evidências de teste, reconstrói a aceitação antes de ler o código e nunca depende do prompt original ou da memória do implementador. A garantia segue não bloqueante: uma review proporcional e, apenas para bloqueio real, no máximo uma re-review focada. Não existe terceiro loop.
 
-No trabalho gerenciado pelo grafo, toda atualização mostra etapa, andamento, trabalho automático, pendências humanas e técnicas, bloqueios, próxima ação e caminhos inspecionáveis. `direct-trivial` retorna apenas um resumo curto da edição e do check.
+No trabalho gerenciado pelo grafo, toda atualização mostra etapa, andamento, trabalho automático, pendências humanas e técnicas, bloqueios, próxima ação e caminhos inspecionáveis. `direct-trivial` e `vibe` retornam apenas um resumo curto da edição e do check; vibe sempre informa sua verificação focada aprovada.
 
 ## Perfis
 

@@ -22,6 +22,8 @@
 
 **Source version: `0.6.0`.** The Kit is an executable, artifact-driven scaffold. It has no unattended background daemon and does not lock the operating system. While an orchestrator agent is active, it can safely launch independent ready subtasks in parallel when the host proves that capability.
 
+> **A harness mature enough to know when to get out of the way.** Its built-in request router does not treat every prompt like a major project: deterministic safety gates separate instant static edits, small verified “vibe” changes, graph-managed work, and full engineering. AI is consulted only for genuine ambiguity; risk, failed checks, or growing scope automatically promote the work instead of letting speed bypass safety.
+
 ## Start here
 
 Open any terminal, including the integrated terminal in VS Code, and install the CLI once. [`uv`](https://docs.astral.sh/uv/) is the recommended isolated option:
@@ -79,6 +81,7 @@ https://github.com/user-attachments/assets/1affd407-4d32-4f66-8386-0bdc3666df2e
 | Multiple agents collide | Workstreams, ownership leases, and handoffs are explicit |
 | Independent work waits in a single-file queue | The active orchestrator fills proven parallel capacity, then refills the first freed slot |
 | A tiny CSS/copy edit triggers the whole harness | `direct-trivial` edits go straight to the file, with no interview, SPEC, graph, TDD, or review |
+| A small local behavior fix triggers full ceremony | `vibe` changes one low-risk workstream directly, creates zero artifacts, and must pass a focused check |
 | Study notes land in arbitrary folders | Learning starts only after the destination is approved |
 | New feature ideas jump straight into code | Automatic feature discovery compares directions and records an approved brief first |
 | Vague tasks make agents improvise and rescan | Non-trivial work gets one concise writing plan and small executable task specs |
@@ -100,7 +103,11 @@ Long conversations naturally become slower and more token-intensive across model
 
 ## The working loop
 
-Not every change enters the loop. A clearly localized presentation or static-content edit—such as changing one button color, spacing value, typo, or label—uses the `direct-trivial` fast path when it has no logic, state, rule, contract, data, dependency, accessibility behavior, or risk. The agent edits it directly, runs the smallest useful check, and reports briefly. If inspection reveals real behavior or broader impact, it promotes the work before changing code.
+Every request is routed before the Harness loads project context or starts ceremony. Deterministic rules choose among four lanes first: `direct-trivial` for static/mechanical edits, `vibe` for one decided small local behavior change with a focused check and zero artifacts, `graph-only` for low-risk work that genuinely needs scheduling/ownership, and `full-harness` for consequential or ambiguous work. An economical AI classifier is used only when the lane remains ambiguous and classification costs less than the work.
+
+Explicit full Harness always wins. Authentication, security/privacy, data/schema/API contracts, dependencies, migrations, permissions/accessibility, external side effects, integrations, multiple workstreams, consequential choices, unresolved ambiguity, or failed verification force `full-harness`, even when a fast lane was requested. If scope grows during a fast edit, the agent stops and promotes before further changes.
+
+You can inspect the same preflight from the terminal with `agent-harness route "your request"`. Use `--mode vibe` or `--mode full` for an explicit preference, `--workstreams 2` when more than one area is involved, and `--graph-bound --graph-only-eligible` for already specified low-risk graph work. The command always returns one of the four lanes as JSON; ambiguity safely falls back to `full-harness` while signaling that an economical AI classifier may refine it.
 
 1. The agent reads approved context, then human/macro pending work, then the technical graph.
 2. A new feature with open product choices automatically enters a focused brainstorm: known context is reused, credible options are compared, and you approve a feature brief before the graph changes.
@@ -110,7 +117,7 @@ Not every change enters the loop. A clearly localized presentation or static-con
 6. Passing work is completed and reported immediately; the next ready task can start without ceremonial approval. An eligible `graph-only` inline-simple task runs its deterministic check and advances only the graph—no handoff, review packet, review artifact, or copied logs. Behavior, TDD, contracts, risk, integrations, failed checks, and assurance still use the full handoff/review path.
 7. For `handoff-review`, after verification the orchestrator launches an independent reviewer in a fresh context—preferably a subagent when supported. It receives the versioned SPEC, relevant diff, handoff, and test evidence, reconstructs acceptance before reading the code, and never relies on the original prompt or implementer memory. Assurance stays non-blocking: one proportional review and, only for a real blocker, at most one focused re-review. There is no third loop.
 
-For graph-managed work, every progress update includes stage, progress, work continuing automatically, human and technical pending items, blockers, next action, and inspectable paths. `direct-trivial` returns only a short edit/check summary.
+For graph-managed work, every progress update includes stage, progress, work continuing automatically, human and technical pending items, blockers, next action, and inspectable paths. `direct-trivial` and `vibe` return only a short edit/check summary; vibe always names its passing focused verification.
 
 ## Profiles
 

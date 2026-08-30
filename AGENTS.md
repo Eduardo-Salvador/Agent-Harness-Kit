@@ -2,11 +2,19 @@
 
 Codex loads this file before work. Claude Code imports it from `CLAUDE.md`. This is the shared, platform-neutral policy map; load details progressively and do not preload the repository.
 
-## Direct-trivial fast path
+## Request-routing gate — before all Harness ceremony
 
-Before first-run, status, feature discovery, planning, graph, TDD, or review routing, classify an explicit edit as `direct-trivial` only when all are true: the requested result is already decided and localized; it changes only presentation/static content or an equally mechanical value; the target area is clear; it introduces no product behavior, business rule, interaction/state flow, data/schema/API contract, dependency, authentication/authorization, security/privacy/accessibility behavior, migration, permission, or cross-workstream coordination; and it is expected to take only a few minutes. Examples include changing one button color, correcting a typo, adjusting spacing, or replacing a static label.
+Before first-run, status/resume loading, feature discovery, planning, graph, TDD, review, or full status ceremony, automatically load `.agents/skills/request-router/SKILL.md` and follow [request routing](harness/playbooks/request-routing.md). Classify every request into exactly one lane: `direct-trivial`, `vibe`, `graph-only`, or `full-harness`.
 
-For `direct-trivial`, read only the target and nearest scoped instructions, respect any existing conflicting lease, make the edit directly, run the smallest useful check when one exists, and report the result concisely. Do not start discovery/interview, create a feature brief, implementation plan, SPEC/TASK, graph node, lease artifact, TDD cycle, handoff, independent review, or full status ceremony. Do not spend more effort classifying than editing. If inspection exposes behavior, ambiguity, broader impact, risk, or any excluded condition, stop the fast path and promote the work to the smallest applicable normal route; never use `direct-trivial` to bypass necessary engineering.
+Route deterministically first. Use an available economical AI classifier only when genuine ambiguity remains and classification costs less than the work; never add a provider dependency, invent credentials, hardcode a model ID, or claim a silent same-context model switch. Explicit `full-harness` always wins. A user-requested fast lane is honored only when eligible; authentication/authorization, security/privacy, data/schema/API contracts, dependencies, migrations, permissions/accessibility behavior, external side effects, integrations, multiple workstreams, destructive actions, consequential product/architecture choices, conflicting ownership, unresolved ambiguity, unavailable or failed verification, or material scope growth force `full-harness`.
+
+### Direct-trivial fast path
+
+A request is `direct-trivial` only when the decided, localized change is presentation/static content or an equally mechanical value, introduces no product behavior or hard trigger, and should take only a few minutes—for example changing one button color, correcting a typo, adjusting spacing, or replacing a static label. Read only the target and nearest scoped instructions, make the edit directly, run the smallest useful check when one exists, and return a concise closeout. Do not start discovery/interview or create a feature brief, plan, SPEC/TASK, graph, lease, TDD, handoff, review, or full status ceremony.
+
+### Vibe fast path
+
+`vibe` may implement one decided, small local behavior change in one workstream and ownership area when blast radius is low, no hard trigger applies, and one focused deterministic check can prove completion. It has zero artifacts: no route record, feature brief, plan, SPEC/TASK, graph, lease, TDD evidence, handoff, review, or full status artifact. RED is not mandatory, but focused verification is. Before every further edit, re-check scope; failed verification or broader impact stops the fast path and promotes the work to `full-harness` before more changes.
 
 ## Context pressure and graph-only tasks
 

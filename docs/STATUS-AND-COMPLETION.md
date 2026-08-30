@@ -2,9 +2,11 @@
 
 The harness distinguishes the project-level completion overview and actions that require a human from technical execution state. A task graph is not a substitute for the pending-work authority, and an internal handoff is not a substitute for telling the user what happened.
 
-## Direct-trivial exception
+## Fast-route exception
 
-A request that satisfies the `direct-trivial` gate in [writing plans](../harness/playbooks/writing-plans.md) never becomes a task or graph event. Do not emit an intermediate status update or render `harness.status/v1` for it unless the edit becomes blocked or must be promoted. Make the edit and return a concise closeout naming what changed and the smallest check run, or `not run` when no meaningful check exists. This exception is for presentation/static-content mechanics only; it cannot hide human pending items requested by the user or bypass status/resume questions.
+A request classified by [request routing](../harness/playbooks/request-routing.md) as `direct-trivial` or `vibe` never becomes a task or graph event. Do not emit an intermediate status update or render `harness.status/v1` unless the edit becomes blocked or must be promoted. Make the edit and return a concise closeout naming what changed and the smallest check run. `direct-trivial` may report `not run` when no meaningful check exists for a purely static edit; `vibe` must always report a passing focused deterministic check.
+
+Fast routes cannot hide human pending items requested by the user or bypass an explicit status/resume question. Any scope growth, hard trigger, unavailable/ambiguous check, or failed vibe verification stops further edits and promotes to `full-harness`; subsequent updates follow the mandatory status shape.
 
 ## Graph-only closeout
 
@@ -12,7 +14,7 @@ An `inline-simple` task may declare `evidence_profile: graph-only` when it is de
 
 ## Mandatory step update
 
-Outside `direct-trivial`, this contract applies to every user-facing progress or step update, not only replies to the word “status.” Emit a compact update at task start, meaningful progress, task/phase completion, a blocker, and before or after a lengthy phase. Do not emit prose-only “working on it,” checklist, or handoff messages that omit the status shape.
+Outside `direct-trivial` and `vibe`, this contract applies to every user-facing progress or step update, not only replies to the word “status.” Emit a compact update at task start, meaningful progress, task/phase completion, a blocker, and before or after a lengthy phase. Do not emit prose-only “working on it,” checklist, or handoff messages that omit the status shape.
 
 Each update explicitly labels: **Current stage**, **Progress**, **Continuing without your action**, **Human pending and macro gaps (`PENDING.md`)**, **Technical graph (`TASK-GRAPH.md`)**, **Blockers**, **Next action**, and **Inspectable paths**. Localize those labels to the user's language (for example, **Etapa atual** and **Continua sem sua ação**) without dropping or merging sections. “Continuing without your action” names automatic work already authorized or says `None`. The pending section lists human actions plus incomplete macro areas, even when empty. The graph section summarizes active, ready, and blocked nodes plus relevant dependencies; it never substitutes for `PENDING.md`.
 

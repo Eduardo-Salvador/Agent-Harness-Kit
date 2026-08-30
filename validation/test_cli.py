@@ -14,6 +14,73 @@ from agent_harness_kit import cli
 
 
 class CliTests(unittest.TestCase):
+    def test_route_prints_machine_readable_preflight_decision(self) -> None:
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(
+                cli.main(
+                    [
+                        "route",
+                        "Fix the button label typo",
+                        "--mode",
+                        "auto",
+                        "--graph-bound",
+                        "--workstreams",
+                        "1",
+                    ]
+                ),
+                0,
+            )
+        payload = json.loads(output.getvalue())
+        self.assertEqual(payload["route"], "full-harness")
+        self.assertEqual(payload["reason"], "graph-bound-work-not-graph-only-eligible")
+
+    def test_route_can_select_eligible_graph_only_work(self) -> None:
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(
+                cli.main(
+                    [
+                        "route",
+                        "Execute a tarefa já especificada",
+                        "--graph-bound",
+                        "--graph-only-eligible",
+                    ]
+                ),
+                0,
+            )
+        payload = json.loads(output.getvalue())
+        self.assertEqual(payload["route"], "graph-only")
+
+    def test_route_explicit_vibe_is_forwarded_to_the_engine(self) -> None:
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(cli.main(["route", "Polish this interaction", "--mode", "vibe"]), 0)
+        payload = json.loads(output.getvalue())
+        self.assertEqual(payload["route"], "vibe")
+        self.assertEqual(payload["durable_artifacts"], [])
+
+    def test_route_explicit_full_and_multiple_workstreams_force_full_harness(self) -> None:
+        for arguments, expected_reason in (
+            (["route", "Polish this interaction", "--mode", "full"], "explicit-full"),
+            (["route", "Fix the typo", "--workstreams", "2"], "hard-trigger"),
+        ):
+            with self.subTest(arguments=arguments):
+                output = io.StringIO()
+                with contextlib.redirect_stdout(output):
+                    self.assertEqual(cli.main(arguments), 0)
+                payload = json.loads(output.getvalue())
+                self.assertEqual(payload["route"], "full-harness")
+                self.assertEqual(payload["reason"], expected_reason)
+
+    def test_route_rejects_non_positive_workstream_count(self) -> None:
+        error = io.StringIO()
+        with contextlib.redirect_stderr(error):
+            with self.assertRaises(SystemExit) as raised:
+                cli.main(["route", "Fix the typo", "--workstreams", "0"])
+        self.assertEqual(raised.exception.code, 2)
+        self.assertIn("positive integer", error.getvalue())
+
     def test_install_defaults_to_current_directory_and_core(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             installer = type(

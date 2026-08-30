@@ -36,6 +36,9 @@ The installer creates a contained `agent-harness-kit/` directory and managed roo
 - `TASK-GRAPH.md` for dependencies, leases, progress, and execution;
 - automatic feature discovery plus optimized writing plans: non-trivial work becomes small executable task specs, while truly simple work stays inline;
 - a `direct-trivial` fast path for localized color, spacing, typo, and static-label edits without SPEC, graph, TDD, or review ceremony;
+- a deterministic-first request router with `direct-trivial`, `vibe`, `graph-only`, and `full-harness` lanes; AI classifies only genuine ambiguity;
+- a zero-artifact `vibe` path for one low-risk local behavior change, with mandatory focused verification and automatic promotion when scope grows;
+- a machine-readable `agent-harness route "request"` preflight that always returns one of the four lanes and safely marks unresolved ambiguity for AI refinement;
 - test-driven code tasks with meaningful RED before production changes, minimal GREEN, and proportional regression evidence;
 - scoped `read_set`, exclusive `write_set`, related `impact_set`, and source provenance to avoid unnecessary repository rescans;
 - isolated workstreams and context-aware frontend/backend/integration routing;

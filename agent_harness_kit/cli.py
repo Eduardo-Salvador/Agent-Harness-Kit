@@ -11,6 +11,7 @@ from types import ModuleType
 
 from . import __version__
 from . import codex_dispatch
+from . import request_router
 from . import scheduler
 
 
@@ -34,6 +35,16 @@ def installer_module() -> ModuleType:
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def positive_integer(value: str) -> int:
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("must be a positive integer") from exc
+    if parsed < 1:
+        raise argparse.ArgumentTypeError("must be a positive integer")
+    return parsed
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -63,6 +74,16 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch = commands.add_parser("codex-dispatch", help="prepare or record one native Codex agent dispatch")
     dispatch.add_argument("request", type=Path, help="JSON dispatch request or previously prepared plan")
     dispatch.add_argument("--response", type=Path, help="JSON adapter response to record")
+    route = commands.add_parser("route", help="classify a request before workflow selection")
+    route.add_argument("request", help="request text to classify")
+    route.add_argument("--mode", choices=("auto", "vibe", "full"), default="auto", help="explicit routing mode")
+    route.add_argument("--graph-bound", action="store_true", help="classify as graph-bound work")
+    route.add_argument(
+        "--graph-only-eligible",
+        action="store_true",
+        help="allow eligible graph-bound work to use the graph-only lane",
+    )
+    route.add_argument("--workstreams", type=positive_integer, default=1, help="positive workstream count")
     return parser
 
 
@@ -84,6 +105,19 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.command is None:
         parser.print_help()
+        return 0
+    if args.command == "route":
+        if not args.request.strip():
+            print("ERROR: request must not be empty", file=sys.stderr)
+            return 2
+        decision = request_router.classify_request(
+            args.request,
+            graph_bound=args.graph_bound,
+            graph_only_eligible=args.graph_only_eligible,
+            explicit_mode=args.mode,
+            workstream_count=args.workstreams,
+        )
+        print(json.dumps(decision, indent=2, ensure_ascii=False))
         return 0
     if args.command == "schedule":
         try:

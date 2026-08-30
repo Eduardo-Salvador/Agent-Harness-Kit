@@ -10,7 +10,8 @@ The validator uses only the Python 3 standard library and does not modify files.
 
 - required root entrypoints, native Codex skills, native Claude Code skills/subagents, roles, templates, playbooks, adapters, examples, and learning-pack modules;
 - required YAML-header keys and Markdown sections in every operational template;
-- `direct-trivial` routing that bypasses discovery/SDD/TDD/review/status only for bounded presentation/static-content mechanics, plus writing-plan and executable-task-spec routing for all promoted engineering work;
+- a pre-ceremony request-router contract/playbook/template and matching Codex/Claude skills with all four lanes, deterministic-first and AI-only-on-ambiguity behavior, user-override precedence, hard full triggers, full-harness fallback, and automatic promotion;
+- `direct-trivial` routing for bounded presentation/static-content mechanics and zero-artifact `vibe` routing for small local behavior changes only when a focused deterministic check is available and passes;
 - proportional `evidence_profile` routing: only inline-simple verification-only tasks may use `graph-only`, with no reviewer, zero rounds, no assurance gate, and a concise graph transition instead of handoff/review artifacts; hostile tests reject TDD or assurance bypasses;
 - test-strategy declarations, meaningful RED/GREEN task specs, explicit non-TDD exceptions, handoff evidence sections, and native Codex/Claude TDD routing;
 - model-routing tier/reason fields plus executable `harness.model-dispatch/v1` evidence: selected runtime model, supported reasoning effort, override surface, returned context, and adapter confirmation;
@@ -27,7 +28,7 @@ The validator uses only the Python 3 standard library and does not modify files.
 - hostile budget mutations that bypass attempt, no-progress, or context-expansion ceilings, roll counters backward, narrow scope to one task, or escape evidence paths;
 - relative Markdown links and fragment targets, balanced fenced-code blocks, and one Mermaid block in each README;
 - the language boundary using a documented Portuguese-marker heuristic outside `README.pt-BR.md`;
-- root routing: `CLAUDE.md` imports `@AGENTS.md`, both routes converge on neutral state, context remains concise, and safe defaults add no live MCP/settings/hooks;
+- root routing: `CLAUDE.md` imports `@AGENTS.md`, both routes invoke the neutral request router before all Harness ceremony, context remains concise, and safe defaults add no live MCP/settings/hooks;
 - default frontend-screen routing through the same neutral playbook on Codex and Claude, with explicit checks for design-taste, responsive image direction, image generation, and image-to-code capabilities;
 - project-learning activation routing from plain-language study requests, including explicit local/Obsidian/Notion destination discovery and capability-manifest evidence;
 - portable workstream/context routing, separate visible-thread versus subagent capabilities, context-collision checks, and per-area status payloads;

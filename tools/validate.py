@@ -56,17 +56,17 @@ REQUIRED_FILES = [
     "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/PYPI-README.md",
     "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md",
     "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/TDD.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/HACKATHON-MODE.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
-    "docs/contracts/FEATURE-BRIEF.md", "docs/contracts/IMPLEMENTATION-PLAN.md", "docs/contracts/MODEL-DISPATCH.md", "docs/contracts/CODEX-AGENT-DISPATCH.md", "docs/contracts/PARALLEL-DISPATCH.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
+    "docs/contracts/REQUEST-ROUTE.md", "docs/contracts/FEATURE-BRIEF.md", "docs/contracts/IMPLEMENTATION-PLAN.md", "docs/contracts/MODEL-DISPATCH.md", "docs/contracts/CODEX-AGENT-DISPATCH.md", "docs/contracts/PARALLEL-DISPATCH.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
     "adapters/README.md", "adapters/generic.md", "adapters/codex.md", "adapters/claude.md",
     "harness/roles/README.md", "harness/roles/discovery-interviewer.md",
     "harness/roles/orchestrator-po.md", "harness/roles/task-decomposer.md",
     "harness/roles/generic-specialist.md", "harness/roles/reviewer-integrator.md",
     "harness/roles/learning-assessor.md", "harness/roles/learning-debriefer-publisher.md",
-    "harness/playbooks/README.md", "harness/playbooks/first-run.md", "harness/playbooks/feature-discovery.md", "harness/playbooks/writing-plans.md", "harness/playbooks/test-driven-execution.md", "harness/playbooks/hackathon-delivery.md", "harness/playbooks/status-resume.md",
+    "harness/playbooks/README.md", "harness/playbooks/request-routing.md", "harness/playbooks/first-run.md", "harness/playbooks/feature-discovery.md", "harness/playbooks/writing-plans.md", "harness/playbooks/test-driven-execution.md", "harness/playbooks/hackathon-delivery.md", "harness/playbooks/status-resume.md",
     "harness/playbooks/discovery-to-graph.md", "harness/playbooks/task-dispatch.md",
     "harness/playbooks/contract-changes.md", "harness/playbooks/parallel-execution.md",
     "harness/playbooks/review-integration.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/context-routing.md", "harness/playbooks/frontend-screen.md", "harness/playbooks/learning-capture-publication.md",
-    "harness/templates/README.md", "harness/templates/PROJECT-CONTEXT.md", "harness/templates/FEATURE-BRIEF.md", "harness/templates/IMPLEMENTATION-PLAN.md",
+    "harness/templates/README.md", "harness/templates/REQUEST-ROUTE.md", "harness/templates/PROJECT-CONTEXT.md", "harness/templates/FEATURE-BRIEF.md", "harness/templates/IMPLEMENTATION-PLAN.md",
     "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/TASK.md", "harness/templates/EXECUTION-BUDGET.md",
     "harness/templates/HANDOFF.md", "harness/templates/MODEL-DISPATCH.md", "harness/templates/CODEX-AGENT-DISPATCH.md", "harness/templates/PARALLEL-DISPATCH.md", "harness/templates/REVIEW.md", "harness/templates/STATUS.md",
     "harness/templates/DECISION.md", "harness/templates/LEARNING-PROFILE.md",
@@ -132,9 +132,9 @@ REQUIRED_FILES = [
     "docs/contracts/CAPABILITY-MANIFEST.md", "docs/contracts/RULES-MAP.md",
     "harness/templates/CAPABILITY-MANIFEST.md", "harness/templates/RULES-MAP.md",
     "validation/native-integration.json",
-    ".agents/skills/first-run-discovery/SKILL.md", ".agents/skills/feature-discovery/SKILL.md", ".agents/skills/writing-plans/SKILL.md", ".agents/skills/test-driven-task/SKILL.md", ".agents/skills/graph-execution/SKILL.md",
+    ".agents/skills/request-router/SKILL.md", ".agents/skills/first-run-discovery/SKILL.md", ".agents/skills/feature-discovery/SKILL.md", ".agents/skills/writing-plans/SKILL.md", ".agents/skills/test-driven-task/SKILL.md", ".agents/skills/graph-execution/SKILL.md",
     ".agents/skills/governed-review/SKILL.md", ".agents/skills/codex-agent-dispatch/SKILL.md", ".agents/skills/parallel-dispatch/SKILL.md", ".agents/skills/frontend-screen/SKILL.md", ".agents/skills/project-learning/SKILL.md",
-    ".claude/skills/first-run-discovery/SKILL.md", ".claude/skills/feature-discovery/SKILL.md", ".claude/skills/writing-plans/SKILL.md", ".claude/skills/test-driven-task/SKILL.md", ".claude/skills/graph-execution/SKILL.md",
+    ".claude/skills/request-router/SKILL.md", ".claude/skills/first-run-discovery/SKILL.md", ".claude/skills/feature-discovery/SKILL.md", ".claude/skills/writing-plans/SKILL.md", ".claude/skills/test-driven-task/SKILL.md", ".claude/skills/graph-execution/SKILL.md",
     ".claude/skills/governed-review/SKILL.md", ".claude/skills/parallel-dispatch/SKILL.md", ".claude/skills/frontend-screen/SKILL.md", ".claude/skills/project-learning/SKILL.md",
     ".claude/agents/discovery-interviewer.md", ".claude/agents/task-specialist.md",
     ".claude/agents/independent-reviewer.md", ".claude/agents/learning-assessor.md",
@@ -1299,6 +1299,10 @@ def validate_native_integration() -> list[str]:
         if ".claude/skills/" not in claude_text or "adapters/claude.md" not in claude_text:
             errors.append("native.claude-routing: CLAUDE.md does not route Claude Code")
 
+        router_tokens = ("request-routing gate", "before all harness ceremony", ".agents/skills/request-router/skill.md", "direct-trivial", "vibe", "graph-only", "full-harness", "deterministically first", "explicit `full-harness` always wins", "focused verification", "promotes")
+        if any(token not in agents_text.lower() for token in router_tokens):
+            errors.append("native.request-router-root: AGENTS.md must route all requests before Harness ceremony")
+
         if "frontend-screen" not in agents_text or "harness/playbooks/frontend-screen.md" not in agents_text:
             errors.append("native.frontend-routing: AGENTS.md must route screen requests through the frontend workflow")
         learning_tokens = ("delivery+learning", "learning-profile", "destination")
@@ -1316,7 +1320,7 @@ def validate_native_integration() -> list[str]:
         tdd_tokens = ("test-driven-task", "meaningful red", "minimum production code", "identical focused command", "proportional regression", "do not waive tdd")
         if any(token not in agents_text.lower() for token in tdd_tokens):
             errors.append("native.tdd-routing: AGENTS.md must require RED-GREEN evidence for behavior-changing code tasks")
-        direct_tokens = ("direct-trivial fast path", "before first-run", "changing one button color", "no product behavior", "do not start discovery/interview", "full status ceremony", "promote the work")
+        direct_tokens = ("direct-trivial fast path", "before first-run", "changing one button color", "no product behavior", "do not start discovery/interview", "full status ceremony")
         if any(token not in agents_text.lower() for token in direct_tokens):
             errors.append("native.direct-trivial-routing: AGENTS.md must bypass SDD only for bounded mechanical edits")
         model_dispatch_tokens = ("human-approved routing artifact", "actual task, message, or subagent dispatch", "harness.model-dispatch/v1", "same-context mid-turn switch", "manual-required")
@@ -1348,6 +1352,32 @@ def validate_native_integration() -> list[str]:
             if token not in dispatch_text:
                 errors.append(f"native.model-dispatch-contract: MODEL-DISPATCH.md lacks {token!r}")
 
+    request_contract = ROOT / "docs" / "contracts" / "REQUEST-ROUTE.md"
+    request_playbook = ROOT / "harness" / "playbooks" / "request-routing.md"
+    request_template = ROOT / "harness" / "templates" / "REQUEST-ROUTE.md"
+    request_surfaces = (request_contract, request_playbook, request_template)
+    for surface in request_surfaces:
+        if not surface.is_file():
+            errors.append(f"native.request-router-surface: missing {rel(surface)}")
+    if all(surface.is_file() for surface in request_surfaces):
+        combined = "\n".join(surface.read_text(encoding="utf-8").lower() for surface in request_surfaces)
+        for token in ("harness.request-route/v1", "direct-trivial", "vibe", "graph-only", "full-harness", "deterministic", "ai", "hard full trigger", "explicit full", "focused", "promotion"):
+            if token not in combined:
+                errors.append(f"native.request-router-contract: neutral surfaces lack {token!r}")
+        template_header = frontmatter(request_template.read_text(encoding="utf-8"))
+        required_route_fields = {"schema", "route", "classification", "user_override", "hard_triggers", "reason", "verification", "promotion_trigger"}
+        if template_header.get("schema") != "harness.request-route/v1" or not required_route_fields <= set(template_header):
+            errors.append("native.request-router-template: invalid request-route header")
+    for item in (".agents/skills/request-router/SKILL.md", ".claude/skills/request-router/SKILL.md"):
+        path = ROOT / item
+        if not path.is_file():
+            errors.append(f"native.request-router-skill: missing {item}")
+            continue
+        skill_text = path.read_text(encoding="utf-8").lower()
+        for token in ("automatically classify every request", "before first-run", "deterministically first", "ai classifier only", "direct-trivial", "vibe", "graph-only", "full-harness", "explicit full always wins", "focused deterministic check", "promotes"):
+            if token not in skill_text:
+                errors.append(f"native.request-router-skill: {item} lacks {token!r}")
+
     feature_playbook = ROOT / "harness" / "playbooks" / "feature-discovery.md"
     if feature_playbook.is_file():
         feature_text = feature_playbook.read_text(encoding="utf-8").lower()
@@ -1371,9 +1401,9 @@ def validate_native_integration() -> list[str]:
 
     if claude_path.is_file():
         claude_text = claude_path.read_text(encoding="utf-8").lower()
-        for token in ("direct-trivial", "before any harness workflow", "no interview, spec, graph, tdd, review, or full status ceremony"):
+        for token in ("request-router", "before any harness workflow", "direct-trivial", "vibe", "graph-only", "full-harness", "focused check", "promotes"):
             if token not in claude_text:
-                errors.append(f"native.claude-direct-trivial-routing: CLAUDE.md lacks {token!r}")
+                errors.append(f"native.claude-request-routing: CLAUDE.md lacks {token!r}")
         for token in (".claude/skills/feature-discovery/skill.md", "automatically load", "need not name it", "failure/recovery", "before pending or graph changes"):
             if token not in claude_text:
                 errors.append(f"native.claude-feature-discovery-routing: CLAUDE.md lacks {token!r}")
@@ -1417,16 +1447,16 @@ def validate_native_integration() -> list[str]:
             for token in ("automatically use", "before observing red", "fails for the wrong reason", "minimum behavior required for green", "same small task", "completion is invalid", "simplicity, deadline, hackathon mode"):
                 if token not in skill_text:
                     errors.append(f"native.tdd-skill: {item} lacks {token!r}")
-            for token in ("direct-trivial", "localized color", "no logic", "smallest useful check", "leave the fast path"):
+            for token in ("direct-trivial", "vibe", "small local behavior", "focused deterministic check", "leave the fast path", "full-harness"):
                 if token not in skill_text:
-                    errors.append(f"native.direct-trivial-tdd-skill: {item} lacks {token!r}")
+                    errors.append(f"native.fast-route-tdd-skill: {item} lacks {token!r}")
 
     status_doc = ROOT / "docs" / "STATUS-AND-COMPLETION.md"
     if status_doc.is_file():
         status_text = status_doc.read_text(encoding="utf-8").lower()
-        for token in ("direct-trivial exception", "never becomes a task or graph event", "do not emit an intermediate status update", "concise closeout"):
+        for token in ("fast-route exception", "direct-trivial", "vibe", "never becomes a task or graph event", "do not emit an intermediate status update", "concise closeout", "passing focused deterministic check", "promotes"):
             if token not in status_text:
-                errors.append(f"native.direct-trivial-status: status policy lacks {token!r}")
+                errors.append(f"native.fast-route-status: status policy lacks {token!r}")
     for adapter_name in ("generic.md", "codex.md", "claude.md"):
         adapter_text = (ROOT / "adapters" / adapter_name).read_text(encoding="utf-8").lower()
         if "direct-trivial" not in adapter_text or "no" not in adapter_text:
@@ -1663,9 +1693,10 @@ def validate_repository() -> list[str]:
             "media/agent-harness-kit-overview-en.mp4",
             "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
             "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/VALIDATION.md", "docs/DISTRIBUTION.md",
-            "docs/TDD.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/FEATURE-BRIEF.md", "docs/contracts/IMPLEMENTATION-PLAN.md", "docs/contracts/MODEL-DISPATCH.md", "docs/contracts/CODEX-AGENT-DISPATCH.md", "docs/contracts/PARALLEL-DISPATCH.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
-            "harness/playbooks/first-run.md", "harness/playbooks/feature-discovery.md", "harness/playbooks/writing-plans.md", "harness/playbooks/test-driven-execution.md", "harness/playbooks/status-resume.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/context-routing.md", "harness/playbooks/frontend-screen.md", "harness/templates/PROJECT-CONTEXT.md", "harness/templates/FEATURE-BRIEF.md", "harness/templates/IMPLEMENTATION-PLAN.md",
+            "docs/TDD.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/REQUEST-ROUTE.md", "docs/contracts/FEATURE-BRIEF.md", "docs/contracts/IMPLEMENTATION-PLAN.md", "docs/contracts/MODEL-DISPATCH.md", "docs/contracts/CODEX-AGENT-DISPATCH.md", "docs/contracts/PARALLEL-DISPATCH.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
+            "harness/playbooks/request-routing.md", "harness/playbooks/first-run.md", "harness/playbooks/feature-discovery.md", "harness/playbooks/writing-plans.md", "harness/playbooks/test-driven-execution.md", "harness/playbooks/status-resume.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/context-routing.md", "harness/playbooks/frontend-screen.md", "harness/templates/REQUEST-ROUTE.md", "harness/templates/PROJECT-CONTEXT.md", "harness/templates/FEATURE-BRIEF.md", "harness/templates/IMPLEMENTATION-PLAN.md",
             "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/STATUS.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/MODEL-DISPATCH.md", "harness/templates/CODEX-AGENT-DISPATCH.md", "harness/templates/PARALLEL-DISPATCH.md", "harness/templates/EXECUTION-BUDGET.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "tools/validate.py", "tools/package.py", "tools/install.py", "validation/test_install.py", "validation/test_model_dispatch.py", "validation/test_scheduler.py", "validation/test_parallel_dispatch.py", "validation/test_codex_dispatch.py", "validation/test_codex_agent_dispatch_validation.py", "validation/budget-fixtures/valid.json", "validation/model-dispatch-fixtures/valid.json", "validation/parallel-dispatch-fixtures/valid.json", "validation/codex-agent-dispatch-fixtures/valid.json",
+            ".agents/skills/request-router/SKILL.md",
             ".agents/skills/first-run-discovery/SKILL.md",
             ".agents/skills/feature-discovery/SKILL.md",
             ".agents/skills/writing-plans/SKILL.md",
@@ -1675,6 +1706,7 @@ def validate_repository() -> list[str]:
             ".agents/skills/codex-agent-dispatch/SKILL.md",
             ".agents/skills/parallel-dispatch/SKILL.md",
             ".agents/skills/frontend-screen/SKILL.md",
+            ".claude/skills/request-router/SKILL.md",
             ".claude/skills/first-run-discovery/SKILL.md",
             ".claude/skills/feature-discovery/SKILL.md",
             ".claude/skills/writing-plans/SKILL.md",
@@ -2015,7 +2047,7 @@ def main() -> int:
     print("Review mutation fixtures: SPEC authority, fresh context, prompt-memory exclusion, and focused round-two boundaries")
     print("Execution budget fixtures: attempt, no-progress, context-expansion, lineage, and path ceilings")
     print("Host fixtures: namespaced adoption, missing backlink, silent omission, stale snapshot, and premature cutover")
-    print("Native integration: Codex executable-agent dispatch plus Codex/Claude entrypoints, direct-trivial/feature/planning/TDD/SPEC-led review/frontend/learning/context routing, safe defaults, and profile boundaries")
+    print("Native integration: pre-ceremony four-lane request routing plus Codex/Claude dispatch, feature/planning/TDD/SPEC-led review/frontend/learning/context routing, safe defaults, and profile boundaries")
     print("Language boundary: README.pt-BR.md is the only Portuguese-content exception")
     return 0
 

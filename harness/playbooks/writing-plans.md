@@ -1,6 +1,10 @@
 # Writing plans
 
-Use this playbook after the relevant product context or feature brief is approved and before graph creation or dispatch. Its result is an execution packet: a plan for non-trivial work plus one concise task spec per executable unit.
+Use this playbook only after [request routing](request-routing.md) selects `graph-only` or `full-harness` and the relevant product context or feature brief is approved. `direct-trivial` and `vibe` stop before planning. The result is an execution packet: a plan for non-trivial work plus one concise task spec per executable unit.
+
+## Fast-route boundary
+
+The request router owns pre-Harness classification. `direct-trivial` remains the static/mechanical path below. `vibe` additionally permits one decided, small local behavior change in one workstream when it has low blast radius, no hard full trigger, and a focused deterministic check. Vibe creates no plan, inline spec, task, graph, TDD evidence, handoff, or review artifact. It must promote to `full-harness` before further edits if scope grows, verification fails or becomes ambiguous, or any hard trigger appears.
 
 ## Direct-trivial gate — no SDD
 
@@ -18,7 +22,7 @@ If any condition is uncertain or inspection reveals logic, state, ambiguity, bro
 
 ## Simple-task gate
 
-For engineering work that does not qualify as `direct-trivial`, a task is `inline-simple` only when every condition is true:
+For graph/full engineering work that was not routed to `direct-trivial` or `vibe`, a task is `inline-simple` only when every condition is true:
 
 - it has one directly requested, already-decided outcome;
 - it stays within one local ownership area and requires no cross-workstream coordination;
@@ -44,7 +48,7 @@ The agent still runs the declared verification. On success, the orchestrator rec
 6. Validate dependency order, path leases, capability availability, acceptance, and integration coverage. Mark the plan `ready`; no ceremonial human approval is required unless planning exposes a consequential product, architecture, risk, permission, budget, or scope decision.
 7. Dispatch only a node with a complete spec. The implementer executes the stated change and checks; it does not redesign the plan while coding.
 
-For test strategy and evidence, follow [test-driven execution](test-driven-execution.md). An `inline-simple` engineering task is exempt from the separate plan, not from TDD when it changes behavior. A `direct-trivial` presentation/static-content edit never enters TDD. Hackathon pace narrows the test and regression scope but does not permit implementation before meaningful RED.
+For test strategy and evidence, follow [test-driven execution](test-driven-execution.md). An `inline-simple` graph/full task is exempt from the separate plan, not from TDD when it changes behavior. A `direct-trivial` edit never enters TDD; an eligible `vibe` behavior change also stays outside TDD but still requires focused verification. Hackathon pace narrows the test and regression scope but does not permit implementation before meaningful RED inside `full-harness`.
 
 ## No-improvisation boundary
 
