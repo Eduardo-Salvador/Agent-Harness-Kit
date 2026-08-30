@@ -24,6 +24,7 @@ source_references: none
       "reviewer": "agent:reviewer",
       "write_set": ["tests/parser/**"],
       "checkpoint": null,
+      "evidence_profile": "handoff-review",
       "assurance_status": "accepted",
       "assurance_requires": [],
       "task_brief": "TASK-101.md"

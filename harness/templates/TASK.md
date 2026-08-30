@@ -10,6 +10,7 @@ plan_step: STEP-001
 target_minutes: 5
 test_strategy: tdd
 tdd_exception: none
+evidence_profile: handoff-review
 assigned_to: unassigned
 reviewer: unassigned
 workstream: replace-area
@@ -94,4 +95,4 @@ Replace with one bounded result.
 
 ## Exit
 
-Write a handoff with criterion-level evidence; do not self-accept.
+For `handoff-review`, write a handoff with criterion-level evidence. For an eligible `graph-only` task, return only the concise outcome and verification result so the orchestrator can advance the graph. Do not self-accept.

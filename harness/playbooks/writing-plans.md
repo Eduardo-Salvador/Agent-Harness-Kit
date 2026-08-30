@@ -28,13 +28,19 @@ For engineering work that does not qualify as `direct-trivial`, a task is `inlin
 
 If uncertain, classify it as `planned`. An `inline-simple` task skips the separate plan file but still receives a compact task spec containing exact change, paths, non-goals, acceptance, verification, and replan triggers. It is intentionally different from `direct-trivial`, which creates no spec. Do not spend more context proving simplicity than planning the work would cost.
 
+### Graph-only evidence profile
+
+After a task passes the `inline-simple` gate, it may use `evidence_profile: graph-only` only when verification is deterministic and the task changes no product behavior, security/privacy/authentication boundary, data/schema/API contract, dependency, migration, external side effect, integration boundary, cross-workstream ownership, or assurance-gated outcome. It must use `test_strategy: verification-only`, `review_profile: none`, `max_review_rounds: 0`, `reviewer: not-required`, and `assurance_gate: none`.
+
+The agent still runs the declared verification. On success, the orchestrator records a concise result and check outcome in the graph transition, completes the node, releases the lease, and unlocks dependents. It creates no handoff, review packet, review artifact, copied log, or separate evidence file. Any ambiguous/failed check, behavior/TDD work, consequential risk, remediation, or discovered broader impact promotes the task to `evidence_profile: handoff-review` before completion. Graph-only reduces durable artifacts; it never turns an unverified claim into completion.
+
 ## Non-trivial planning flow
 
 1. Pin the approved project context and feature brief/decision when applicable. Load only scoped source evidence required to identify paths and dependencies.
 2. Write `harness-state/plans/PLAN-<id>.md` from the implementation-plan template. Keep product choices out of the plan; unresolved consequential behavior returns to discovery.
 3. Decompose the outcome into ordered units targeting two to five minutes of active agent work. Tool runtime, dependency download, CI wait, and independent assurance are not implementation time.
 4. Each unit declares one observable result, exact change, dependencies, `read_set`, exclusive `write_set`, `impact_set`, non-goals, acceptance criteria, verification, test strategy, and stop/replan triggers. Behavior changes and bug fixes declare a focused RED test/expected failure, minimum GREEN implementation, and proportional regression command. If these cannot remain concise, split the unit without separating RED from GREEN.
-5. Map each unit to a graph node and generate a self-contained `TASK.md`. The task pins `planning_mode`, plan revision, plan step, and target minutes. Copy only executable facts into the task spec; do not make the implementer reread the full plan.
+5. Map each unit to a graph node and generate a self-contained `TASK.md`. The task pins `planning_mode`, plan revision, plan step, target minutes, and `evidence_profile`. Planned units always use `handoff-review`. Copy only executable facts into the task spec; do not make the implementer reread the full plan.
 6. Validate dependency order, path leases, capability availability, acceptance, and integration coverage. Mark the plan `ready`; no ceremonial human approval is required unless planning exposes a consequential product, architecture, risk, permission, budget, or scope decision.
 7. Dispatch only a node with a complete spec. The implementer executes the stated change and checks; it does not redesign the plan while coding.
 
@@ -52,4 +58,4 @@ The orchestrator revises the plan/spec, graph, and budget evidence in one operat
 - One task brief is the unit's executable spec. Do not create a second spec document.
 - The implementer loads its task brief and pinned source paths first; it does not need to load the whole implementation plan during normal execution. The plan is provenance and is opened only for a reported contradiction or replan.
 - Prefer the smallest coherent number of units. Two-to-five minutes is a decomposition target, not a reason to split a single atomic edit into ceremony.
-- Review remains proportional: use the declared profile and evidence; do not add approval gates between correctly specified units.
+- Evidence and review remain proportional: eligible inline-simple work may close through one graph transition; all planned, behavior, risky, ambiguous, or assurance-relevant work uses `handoff-review`. Do not add approval gates between correctly specified units.

@@ -1,6 +1,8 @@
 # Playbook: Review and integration
 
-1. The task declares `review_profile: light|standard|critical` and `max_review_rounds: 2`. A lower or larger automatic budget is invalid unless the project adopts a stricter one-review policy.
+Do not enter this playbook for a task that validly declares `evidence_profile: graph-only`, `review_profile: none`, `max_review_rounds: 0`, and `assurance_gate: none`. Its deterministic check and concise completion transition are the entire durable closeout. Any failed/ambiguous check or discovered behavior, risk, contract, dependency, migration, integration, cross-workstream impact, remediation, or assurance need first promotes it to `handoff-review`.
+
+1. A `handoff-review` task declares `review_profile: light|standard|critical` and `max_review_rounds: 1|2`. A larger automatic budget is invalid.
 2. Implementer writes an immutable `completed` handoff with acceptance evidence.
 3. When declared checks pass, the orchestrator transitions the node to `completed`, releases the lease, reports the result, and dispatches the next ready task. Nodes with an `assurance_requires` checkpoint remain pending until the referenced assurance is accepted; unrelated nodes continue. The orchestrator then launches the predeclared independent reviewer automatically; no human completion or review approval is requested.
 4. Create a fresh review context under a different identity with no implementer conversation history. Prefer an internal review subagent when `spawn_subagent` is proven; otherwise use a new visible task/chat or a manually opened clean context. The implementer's context and a same-context sequential pass are invalid review routes. If no fresh-context route is available, record `blocked` assurance and the missing capability instead of fabricating independence.

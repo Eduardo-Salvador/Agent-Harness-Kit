@@ -2,6 +2,8 @@
 
 Every completed implementation task receives automatic independent assurance, but review depth and repetition are proportional to risk. Completion is based on declared acceptance checks and an orchestrator transition; review does not require human approval, does not hold the completed node, and does not stop unrelated ready work. The default budget is two rounds total: one initial review and, only when blocking findings exist, one focused remediation review.
 
+The sole task-level exception is an eligible `evidence_profile: graph-only` node: it is inline-simple, verification-only, low risk, and explicitly excluded from behavior, contracts, security/privacy/authentication, data, dependencies, migration, integration, cross-workstream impact, remediation, and assurance gates. It uses `review_profile: none` and `max_review_rounds: 0`; its deterministic check result is recorded only in the completion transition. Any uncertainty or broader impact promotes it to `handoff-review` before completion.
+
 ## Fresh-context, SPEC-led review
 
 The orchestrator automatically launches round 1 under a different identity in a newly created context with no implementer conversation history. A review subagent is preferred when the host proves that capability; a new visible task/chat or manually opened clean context is the fallback. Reusing the implementer's context is not independent review.
@@ -12,6 +14,7 @@ The reviewer receives a minimal immutable packet: the exact executable task SPEC
 
 | Profile | Suitable work | Initial review |
 | --- | --- | --- |
+| `none` | Only a task that satisfies every `graph-only` eligibility rule | No review; graph transition is the complete durable closeout |
 | `light` | Narrow, low-risk, deterministic change with objective checks | Inspect diff, acceptance evidence, declared checks, ownership, and obvious regression risk |
 | `standard` | Normal bounded implementation | Evaluate every acceptance criterion, relevant diff, verification, risks, and integration boundary |
 | `critical` | Security/privacy/data, architecture, destructive behavior, release-critical or high-impact integration | Standard scope plus domain-specific risk evidence; it may gate the affected integration/release action but does not add automatic rounds or human approval without a genuine decision boundary |

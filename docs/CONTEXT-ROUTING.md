@@ -2,6 +2,12 @@
 
 Separate contexts are a default engineering practice for substantial agent work. Frontend, backend, data, infrastructure, integration, and learning have different evidence and tool needs; mixing them in one growing conversation wastes context and increases accidental cross-area edits.
 
+## Context pressure is normal
+
+Every model family has a finite context window. As a conversation accumulates prompts, tool output, diffs, and reasoning, later turns must process more material and can become slower and more token-intensive. That is normal context pressure, not proof that the Harness or model has stalled. Do not preserve a heavy window merely to preserve memory: durable state belongs in project context, pending state, the graph, scoped specs, and decisions.
+
+When a window becomes heavy, finish or checkpoint the current atomic action, persist the graph transition, and start a fresh context. The new context follows `PROJECT-CONTEXT.md` → `PENDING.md` → `TASK-GRAPH.md`, then loads only the active node and its direct neighborhood. It must be able to identify completed, active, ready, blocked, and next work without reading the previous conversation.
+
 ## Neutral contract
 
 Every new implementation task declares:
@@ -25,6 +31,7 @@ The neutral core requests an execution context; adapters decide whether it is a 
 7. Record numeric implementation capacity, review-reserved capacity, the evidence source, and whether first-event waiting is supported. A boolean `parallel_contexts` claim is insufficient.
 8. When at least two safe nodes are ready, automatically use the parallel-dispatch workflow: select to capacity, reserve distinct contexts and leases, launch all selected tasks before waiting, then refill after the first completion or attention event.
 9. Complete or archive a task context after its handoff is durable; resume it only when the same task revision or linked remediation requires it.
+10. For a task explicitly classified `evidence_profile: graph-only`, the completed graph transition is the durable continuation boundary; no separate handoff is created.
 
 ## Capability vocabulary
 

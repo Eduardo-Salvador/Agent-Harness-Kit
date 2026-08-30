@@ -1,7 +1,7 @@
 {
   "expected_errors": ["graph.cycle"],
   "nodes": [
-    {"id": "TASK-A", "goal": "A", "depends_on": ["TASK-B"], "status": "pending", "assignee": "unassigned", "reviewer": "unassigned", "write_set": ["a/**"], "checkpoint": null, "assurance_status": "not-required", "assurance_requires": [], "task_brief": "A.md"},
-    {"id": "TASK-B", "goal": "B", "depends_on": ["TASK-A"], "status": "pending", "assignee": "unassigned", "reviewer": "unassigned", "write_set": ["b/**"], "checkpoint": null, "assurance_status": "not-required", "assurance_requires": [], "task_brief": "B.md"}
+    {"id": "TASK-A", "goal": "A", "depends_on": ["TASK-B"], "status": "pending", "assignee": "unassigned", "reviewer": "unassigned", "write_set": ["a/**"], "checkpoint": null, "evidence_profile": "handoff-review", "assurance_status": "not-required", "assurance_requires": [], "task_brief": "A.md"},
+    {"id": "TASK-B", "goal": "B", "depends_on": ["TASK-A"], "status": "pending", "assignee": "unassigned", "reviewer": "unassigned", "write_set": ["b/**"], "checkpoint": null, "evidence_profile": "handoff-review", "assurance_status": "not-required", "assurance_requires": [], "task_brief": "B.md"}
   ]
 }

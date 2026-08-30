@@ -1,6 +1,6 @@
 {
   "expected_errors": ["graph.invalid-path"],
   "nodes": [
-    {"id": "TASK-A", "goal": "A", "depends_on": [], "status": "ready", "assignee": "agent:a", "reviewer": "agent:r", "read_set": ["src/a.ts"], "write_set": ["src/a/**"], "impact_set": ["../outside/**"], "context_provenance": "source-inspection@git:fixture", "checkpoint": null, "assurance_status": "not-required", "assurance_requires": [], "task_brief": "A.md"}
+    {"id": "TASK-A", "goal": "A", "depends_on": [], "status": "ready", "assignee": "agent:a", "reviewer": "agent:r", "read_set": ["src/a.ts"], "write_set": ["src/a/**"], "impact_set": ["../outside/**"], "context_provenance": "source-inspection@git:fixture", "checkpoint": null, "evidence_profile": "handoff-review", "assurance_status": "not-required", "assurance_requires": [], "task_brief": "A.md"}
   ]
 }

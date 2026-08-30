@@ -15,6 +15,7 @@
       "write_set": ["frontend/**"],
       "checkpoint": null,
       "task_brief": "tasks/TASK-FRONTEND.md",
+      "evidence_profile": "handoff-review",
       "assurance_status": "pending",
       "assurance_requires": []
     },
@@ -33,6 +34,7 @@
       "write_set": ["backend/**"],
       "checkpoint": null,
       "task_brief": "tasks/TASK-BACKEND.md",
+      "evidence_profile": "handoff-review",
       "assurance_status": "pending",
       "assurance_requires": []
     }

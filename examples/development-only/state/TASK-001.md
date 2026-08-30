@@ -10,6 +10,7 @@ plan_step: inline
 target_minutes: 5
 test_strategy: verification-only
 tdd_exception: Test-only fixture task; no production behavior changes.
+evidence_profile: handoff-review
 assigned_to: agent:specialist
 reviewer: agent:reviewer
 ownership_lease: lease:TASK-001

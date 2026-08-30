@@ -6,6 +6,10 @@ The harness distinguishes the project-level completion overview and actions that
 
 A request that satisfies the `direct-trivial` gate in [writing plans](../harness/playbooks/writing-plans.md) never becomes a task or graph event. Do not emit an intermediate status update or render `harness.status/v1` for it unless the edit becomes blocked or must be promoted. Make the edit and return a concise closeout naming what changed and the smallest check run, or `not run` when no meaningful check exists. This exception is for presentation/static-content mechanics only; it cannot hide human pending items requested by the user or bypass status/resume questions.
 
+## Graph-only closeout
+
+An `inline-simple` task may declare `evidence_profile: graph-only` when it is deterministic, low risk, verification-only, and excluded from behavior, TDD, security/privacy/authentication, data/schema/API contracts, dependencies, migrations, external side effects, integration, cross-workstream ownership, remediation, and assurance gates. It remains a real graph task, so the compact status shape still applies. After the check passes, complete it with one graph transition containing the concise outcome and check result. Do not create a handoff, review packet, review artifact, copied log, or separate evidence file. Failed or ambiguous verification promotes it to `handoff-review` instead of recording completion.
+
 ## Mandatory step update
 
 Outside `direct-trivial`, this contract applies to every user-facing progress or step update, not only replies to the word “status.” Emit a compact update at task start, meaningful progress, task/phase completion, a blocker, and before or after a lengthy phase. Do not emit prose-only “working on it,” checklist, or handoff messages that omit the status shape.
@@ -46,12 +50,12 @@ Do not expose only an internal artifact path or say that review is pending witho
 
 ## Continue within granted authority
 
-Local validation, completion transitions, independent assurance review, proportional remediation review, and next-task dispatch already declared by an approved graph are normal execution steps. Perform them without asking the user to approve the workflow again. Announce material results and continue.
+Local validation, completion transitions, and next-task dispatch already declared by an approved graph are normal execution steps. For `handoff-review`, independent assurance and proportional remediation review are also automatic. Perform them without asking the user to approve the workflow again. Announce material results and continue.
 
 Do not request approval merely to:
 
 - run the task's declared local checks;
-- dispatch its predeclared independent reviewer;
+- dispatch a `handoff-review` task's predeclared independent reviewer;
 - record an evidence-backed graph transition;
 - apply corrections inside the existing outcome, lease, paths, capabilities, and review budget; or
 - report completion.
@@ -65,6 +69,6 @@ Before asking, consolidate related approvals and state the exact proposed action
 ## Terminal behavior
 
 - Completed: after declared acceptance checks pass, close the task, release its lease, report completion, and dispatch the next dependency-ready task. Do not wait for human approval or assurance review.
-- Post-completion review: run automatically and non-blockingly. A predeclared critical assurance checkpoint keeps only listed affected actions pending until acceptance. A blocking finding creates a linked remediation task; it does not reopen the completed node or stop unrelated ready work.
+- Post-completion review: run automatically and non-blockingly for `handoff-review`; `graph-only` has no review step. A predeclared critical assurance checkpoint keeps only listed affected actions pending until acceptance. A blocking finding creates a linked remediation task; it does not reopen the completed node or stop unrelated ready work.
 - Human-blocked: record one actionable human pending item and ask the concrete decision once.
 - Review budget exhausted: report blockers and escalation/decomposition on the remediation/integration path; do not keep the project in an unnamed review loop.

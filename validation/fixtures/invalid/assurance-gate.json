@@ -10,6 +10,7 @@
       "reviewer": "agent:reviewer",
       "write_set": ["contracts/security/**"],
       "checkpoint": null,
+      "evidence_profile": "handoff-review",
       "assurance_status": "pending",
       "assurance_requires": [],
       "task_brief": "tasks/TASK-SECURITY.md"
@@ -23,6 +24,7 @@
       "reviewer": "agent:release-reviewer",
       "write_set": ["release/**"],
       "checkpoint": null,
+      "evidence_profile": "handoff-review",
       "assurance_status": "pending",
       "assurance_requires": ["TASK-SECURITY"],
       "task_brief": "tasks/TASK-RELEASE.md"
@@ -36,6 +38,7 @@
       "reviewer": "agent:docs-reviewer",
       "write_set": ["docs/unrelated/**"],
       "checkpoint": null,
+      "evidence_profile": "handoff-review",
       "assurance_status": "not-required",
       "assurance_requires": [],
       "task_brief": "tasks/TASK-UNRELATED.md"

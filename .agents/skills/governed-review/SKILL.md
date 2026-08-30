@@ -5,6 +5,8 @@ description: Use for independent acceptance review, objective verification, and 
 
 # Governed review
 
+Do not load or run review for a task that validly declares `evidence_profile: graph-only`; its deterministic completion transition is final. If the task no longer satisfies that boundary, promote it to `handoff-review` before closeout.
+
 Follow `../../../harness/playbooks/review-integration.md` and the completed task's `review_profile`/`max_review_rounds`. Assurance is automatic and non-blocking: never request human approval, reopen the historical completed node, or stop unrelated ready work.
 
 Round 1 must run under a different identity in a fresh context with no implementer conversation history. When the capability manifest proves `spawn_subagent`, automatically launch a review subagent; otherwise use a new visible task/chat or manually opened clean context. Never review in the implementer's context or pretend isolation exists. Send only the review packet: pinned executable task SPEC, its explicitly referenced approved authorities, changed paths/diff, immutable handoff, verification/TDD evidence, scoped rules, and read/impact sets. Exclude the original prompt, conversational memory, implementation reasoning, and proposed verdict.

@@ -13,6 +13,7 @@
       "impact_set": ["tests/a/**"],
       "context_provenance": "source-inspection@git:fixture",
       "checkpoint": null,
+      "evidence_profile": "handoff-review",
       "assurance_status": "accepted",
       "assurance_requires": [],
       "task_brief": "tasks/TASK-A.md"
@@ -26,6 +27,7 @@
       "reviewer": "agent:reviewer-b",
       "write_set": ["src/b/**"],
       "checkpoint": null,
+      "evidence_profile": "handoff-review",
       "assurance_status": "accepted",
       "assurance_requires": [],
       "task_brief": "tasks/TASK-B.md"
@@ -39,6 +41,7 @@
       "reviewer": "unassigned",
       "write_set": ["src/integration/**"],
       "checkpoint": null,
+      "evidence_profile": "handoff-review",
       "assurance_status": "pending",
       "assurance_requires": ["TASK-A", "TASK-B"],
       "task_brief": "tasks/TASK-C.md"

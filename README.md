@@ -72,6 +72,7 @@ https://github.com/user-attachments/assets/1affd407-4d32-4f66-8386-0bdc3666df2e
 | Without durable coordination | With the Kit |
 | --- | --- |
 | The agent rescans and guesses context | Approved context is read before broad inspection |
+| A long context window becomes slow and expensive | Durable graph state lets a fresh window resume from the active neighborhood instead of chat history |
 | Human decisions mix with technical tasks | `PENDING.md` and `TASK-GRAPH.md` have separate authority |
 | Reviews repeat indefinitely or echo the implementer | A fresh reviewer context judges the SPEC once, with at most one focused re-review |
 | Completion waits for ceremonial approval | Passing work is completed, reported, and advances |
@@ -82,6 +83,7 @@ https://github.com/user-attachments/assets/1affd407-4d32-4f66-8386-0bdc3666df2e
 | New feature ideas jump straight into code | Automatic feature discovery compares directions and records an approved brief first |
 | Vague tasks make agents improvise and rescan | Non-trivial work gets one concise writing plan and small executable task specs |
 | Tests are added only after implementation | Behavior tasks prove RED first, reach GREEN minimally, then run proportional regression |
+| Small graph tasks generate piles of evidence files | Eligible deterministic `graph-only` tasks store just the outcome/check in the graph transition |
 
 ## What changes in your project
 
@@ -94,6 +96,8 @@ https://github.com/user-attachments/assets/1affd407-4d32-4f66-8386-0bdc3666df2e
 
 Frontend, backend, data, infrastructure, integration, and learning use separate contexts when the host supports them. Every active node can declare a focused `read_set`, exclusive `write_set`, related `impact_set`, and source revision, reducing broad rescans without inventing a second graph.
 
+Long conversations naturally become slower and more token-intensive across model families because every turn must process more accumulated material. The Kit treats that as normal: project context, pending state, the graph, specs, and decisions are durable memory. Open a fresh context, follow the resume order, and load only the active graph neighborhood; the new window can see what is complete, active, ready, blocked, and next without replaying the old chat.
+
 ## The working loop
 
 Not every change enters the loop. A clearly localized presentation or static-content edit—such as changing one button color, spacing value, typo, or label—uses the `direct-trivial` fast path when it has no logic, state, rule, contract, data, dependency, accessibility behavior, or risk. The agent edits it directly, runs the smallest useful check, and reports briefly. If inspection reveals real behavior or broader impact, it promotes the work before changing code.
@@ -103,8 +107,8 @@ Not every change enters the loop. A clearly localized presentation or static-con
 3. Approved non-trivial work becomes one writing plan with independently checkable units targeting roughly two to five minutes; truly simple work keeps only a compact inline spec.
 4. In Codex, the native dispatcher selects the neutral role, builds only the scoped context packet, resolves model/reasoning, and creates a fresh executable subagent with `fork_turns: none`. It records the returned identity/context/response; without subagents, implementation degrades explicitly to sequential execution while review still requires a separate fresh context. The agent then executes its self-contained SPEC without inventing missing behavior. Code follows RED → GREEN → REFACTOR; a contradiction or invalid RED returns to planning.
 5. When two or more collision-free nodes are ready and the host reports numeric capacity, the orchestrator reserves distinct leases and contexts, launches the whole safe batch without waiting between launches, then refills a slot after the first completion or attention event. Dependent branches join through an explicit integration node.
-6. Passing work is completed and reported immediately; the next ready task can start without ceremonial approval.
-7. After verification, the orchestrator launches an independent reviewer in a fresh context—preferably a subagent when supported. It receives the versioned SPEC, relevant diff, handoff, and test evidence, reconstructs acceptance before reading the code, and never relies on the original prompt or implementer memory. Assurance stays non-blocking: one proportional review and, only for a real blocker, at most one focused re-review. There is no third loop.
+6. Passing work is completed and reported immediately; the next ready task can start without ceremonial approval. An eligible `graph-only` inline-simple task runs its deterministic check and advances only the graph—no handoff, review packet, review artifact, or copied logs. Behavior, TDD, contracts, risk, integrations, failed checks, and assurance still use the full handoff/review path.
+7. For `handoff-review`, after verification the orchestrator launches an independent reviewer in a fresh context—preferably a subagent when supported. It receives the versioned SPEC, relevant diff, handoff, and test evidence, reconstructs acceptance before reading the code, and never relies on the original prompt or implementer memory. Assurance stays non-blocking: one proportional review and, only for a real blocker, at most one focused re-review. There is no third loop.
 
 For graph-managed work, every progress update includes stage, progress, work continuing automatically, human and technical pending items, blockers, next action, and inspectable paths. `direct-trivial` returns only a short edit/check summary.
 

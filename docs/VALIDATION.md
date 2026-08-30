@@ -11,12 +11,13 @@ The validator uses only the Python 3 standard library and does not modify files.
 - required root entrypoints, native Codex skills, native Claude Code skills/subagents, roles, templates, playbooks, adapters, examples, and learning-pack modules;
 - required YAML-header keys and Markdown sections in every operational template;
 - `direct-trivial` routing that bypasses discovery/SDD/TDD/review/status only for bounded presentation/static-content mechanics, plus writing-plan and executable-task-spec routing for all promoted engineering work;
+- proportional `evidence_profile` routing: only inline-simple verification-only tasks may use `graph-only`, with no reviewer, zero rounds, no assurance gate, and a concise graph transition instead of handoff/review artifacts; hostile tests reject TDD or assurance bypasses;
 - test-strategy declarations, meaningful RED/GREEN task specs, explicit non-TDD exceptions, handoff evidence sections, and native Codex/Claude TDD routing;
 - model-routing tier/reason fields plus executable `harness.model-dispatch/v1` evidence: selected runtime model, supported reasoning effort, override surface, returned context, and adapter confirmation;
 - hostile model-dispatch fixtures that reject recorded-tier-only routing, silent host-default fallback, and impossible same-context mid-turn switch claims;
 - native Codex agent-dispatch tests and hostile records that reject context leakage, missing adapter responses, model/reasoning mismatch, and implementer/reviewer identity or context reuse;
 - executable goal-lineage budgets in templates, fixtures, and discovered `harness-state/` artifacts, with positive ceilings, stable lineage, monotonic attempt/no-progress/context counters, mandatory stop-and-replan behavior, and safe evidence paths;
-- review-profile and two-round-budget fields in task templates, plus fresh-context identity, SPEC-only authority, immutable packet provenance, and auditable prior blockers/correction delta/regression scope for focused round-two reviews;
+- review-profile and bounded-round fields in task templates, including the zero-review graph-only exception, plus fresh-context identity, SPEC-only authority, immutable packet provenance, and auditable prior blockers/correction delta/regression scope for focused round-two reviews;
 - JSON task-graph blocks for node shape, unique IDs, existing dependencies, acyclicity, repository-relative write sets, and collisions among active ownership leases;
 - built-in valid and invalid graph fixtures, including missing dependencies, cycles, write-set collisions, self-review, and path traversal;
 - deterministic scheduler tests for dependency/assurance eligibility, numeric capacity, active-slot accounting, collision deferral, and dependency fan-in;

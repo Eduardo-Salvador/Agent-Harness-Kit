@@ -20,7 +20,7 @@ READY_STATES = {"ready", "active"}
 ACTIVE_STATES = {"active"}
 NODE_FIELDS = {
     "id", "goal", "depends_on", "status", "assignee", "reviewer",
-    "write_set", "checkpoint", "task_brief", "assurance_status", "assurance_requires",
+    "write_set", "checkpoint", "task_brief", "evidence_profile", "assurance_status", "assurance_requires",
 }
 NODE_CONTEXT_FIELDS = {"workstream", "agent_role", "execution_context", "thread_policy", "thread_ref"}
 NODE_ENRICHMENT_FIELDS = {"read_set", "impact_set", "context_provenance"}
@@ -31,6 +31,24 @@ def content_sha256(data: bytes, *, normalize_text: bool = False) -> str:
         text = data.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
         data = text.encode("utf-8")
     return hashlib.sha256(data).hexdigest()
+
+
+def validate_task_evidence_profile(header: dict[str, str], source: str) -> list[str]:
+    """Validate the bounded no-artifact closeout profile for task briefs."""
+    errors: list[str] = []
+    evidence_profile = header.get("evidence_profile")
+    if evidence_profile not in {"handoff-review", "graph-only"}:
+        return [f"task.evidence-profile: {source}"]
+    if evidence_profile == "graph-only":
+        if header.get("planning_mode") != "inline-simple" or header.get("test_strategy") != "verification-only":
+            errors.append(f"task.graph-only-scope: {source} must be inline-simple and verification-only")
+        if header.get("reviewer") != "not-required" or header.get("review_profile") != "none":
+            errors.append(f"task.graph-only-review: {source} must use reviewer not-required and review profile none")
+        if header.get("max_review_rounds") != "0" or header.get("assurance_gate") != "none":
+            errors.append(f"task.graph-only-assurance: {source} must use zero review rounds and no assurance gate")
+    elif header.get("reviewer") == "not-required":
+        errors.append(f"task.handoff-review-reviewer: {source} must assign or reserve an independent reviewer")
+    return errors
 
 REQUIRED_FILES = [
     "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "LICENSE", "docs/assets/agent-harness-kit-banner.svg", "docs/assets/harness-demo-flow.svg", "media/agent-harness-kit-overview-en.mp3", "media/agent-harness-kit-overview-pt-BR.mp3", "media/agent-harness-kit-overview-en.mp4", "media/agent-harness-kit-overview-pt-BR.mp4",
@@ -144,7 +162,7 @@ TEMPLATE_RULES = {
         {"Human action required", "Project completion overview", "Recently resolved"},
     ),
     "TASK.md": (
-        {"schema", "id", "graph", "revision", "status", "planning_mode", "implementation_plan", "plan_step", "target_minutes", "test_strategy", "tdd_exception", "assigned_to", "reviewer", "workstream", "agent_role", "execution_context", "thread_policy", "thread_ref", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "model_dispatch", "execution_budget", "review_profile", "max_review_rounds", "assurance_gate"},
+        {"schema", "id", "graph", "revision", "status", "planning_mode", "implementation_plan", "plan_step", "target_minutes", "test_strategy", "tdd_exception", "evidence_profile", "assigned_to", "reviewer", "workstream", "agent_role", "execution_context", "thread_policy", "thread_ref", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "model_dispatch", "execution_budget", "review_profile", "max_review_rounds", "assurance_gate"},
         {"Outcome", "Executable spec", "Context to load", "Owned paths", "Constraints", "Non-goals", "Rules to load", "Required capabilities", "Acceptance criteria", "Test-first cycle", "Verification", "Stop and replan", "Exit"},
     ),
     "HANDOFF.md": (
@@ -341,6 +359,16 @@ def validate_graph(data: dict, source: str) -> list[str]:
         if present_enrichment and present_enrichment != NODE_ENRICHMENT_FIELDS:
             errors.append(f"graph.enrichment-fields: {source} {node.get('id', index)} missing {sorted(NODE_ENRICHMENT_FIELDS - set(node))}")
     for node_id, node in by_id.items():
+        evidence_profile = node.get("evidence_profile")
+        if evidence_profile not in {"handoff-review", "graph-only"}:
+            errors.append(f"graph.evidence-profile: {source} {node_id}")
+        elif evidence_profile == "graph-only":
+            if node.get("reviewer") != "not-required":
+                errors.append(f"graph.graph-only-reviewer: {source} {node_id}")
+            if node.get("assurance_status") != "not-required" or node.get("assurance_requires") != []:
+                errors.append(f"graph.graph-only-assurance: {source} {node_id}")
+        elif node.get("reviewer") == "not-required":
+            errors.append(f"graph.handoff-review-reviewer: {source} {node_id}")
         dependencies = node.get("depends_on", [])
         if not isinstance(dependencies, list):
             errors.append(f"graph.dependencies-shape: {source} {node_id}")
@@ -1787,9 +1815,11 @@ def validate_repository() -> list[str]:
                 required_tdd = ("red test/path:", "red command:", "expected red:", "green change:", "green command:", "refactor boundary:", "proportional regression:")
                 if not test_first or any(token not in test_first.group(1).lower() for token in required_tdd):
                     errors.append(f"task.tdd-spec: {rel(path)} lacks RED/GREEN/refactor/regression specification")
-            if header.get("review_profile") not in {"light", "standard", "critical"}:
+            evidence_profile = header.get("evidence_profile")
+            errors.extend(validate_task_evidence_profile(header, rel(path)))
+            if evidence_profile != "graph-only" and header.get("review_profile") not in {"light", "standard", "critical"}:
                 errors.append(f"review.profile: {rel(path)}")
-            if header.get("max_review_rounds") not in {"1", "2"}:
+            if evidence_profile != "graph-only" and header.get("max_review_rounds") not in {"1", "2"}:
                 errors.append(f"review.round-budget: {rel(path)} must be 1 or 2")
             if header.get("assurance_gate") not in {"none", "affected-actions"}:
                 errors.append(f"review.assurance-gate: {rel(path)}")

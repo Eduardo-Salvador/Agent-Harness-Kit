@@ -1,7 +1,7 @@
 {
   "expected_errors": ["graph.write-collision"],
   "nodes": [
-    {"id": "TASK-A", "goal": "A", "depends_on": [], "status": "active", "assignee": "agent:a", "reviewer": "agent:ra", "write_set": ["src/shared/**"], "checkpoint": null, "assurance_status": "not-required", "assurance_requires": [], "task_brief": "A.md"},
-    {"id": "TASK-B", "goal": "B", "depends_on": [], "status": "active", "assignee": "agent:b", "reviewer": "agent:rb", "write_set": ["src/shared/file.txt"], "checkpoint": null, "assurance_status": "not-required", "assurance_requires": [], "task_brief": "B.md"}
+    {"id": "TASK-A", "goal": "A", "depends_on": [], "status": "active", "assignee": "agent:a", "reviewer": "agent:ra", "write_set": ["src/shared/**"], "checkpoint": null, "evidence_profile": "handoff-review", "assurance_status": "not-required", "assurance_requires": [], "task_brief": "A.md"},
+    {"id": "TASK-B", "goal": "B", "depends_on": [], "status": "active", "assignee": "agent:b", "reviewer": "agent:rb", "write_set": ["src/shared/file.txt"], "checkpoint": null, "evidence_profile": "handoff-review", "assurance_status": "not-required", "assurance_requires": [], "task_brief": "B.md"}
   ]
 }

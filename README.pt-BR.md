@@ -72,6 +72,7 @@ https://github.com/user-attachments/assets/d89fe815-da49-452e-bcd4-18f33f728f18
 | Sem coordenação durável | Com o Kit |
 | --- | --- |
 | O agente varre tudo e tenta adivinhar o contexto | O contexto aprovado é lido antes de buscas amplas |
+| Uma context window longa fica lenta e cara | O estado durável do grafo permite retomar em uma janela nova somente pelo entorno ativo, sem depender do histórico do chat |
 | Decisões humanas se misturam com tasks técnicas | `PENDING.md` e `TASK-GRAPH.md` têm autoridades separadas |
 | Reviews se repetem ou ecoam o implementador | Um contexto novo revisa a SPEC uma vez, com no máximo uma re-review focada |
 | A conclusão espera aprovação cerimonial | O trabalho aprovado nos checks é concluído, informado e avança |
@@ -82,6 +83,7 @@ https://github.com/user-attachments/assets/d89fe815-da49-452e-bcd4-18f33f728f18
 | Ideias de feature viram código cedo demais | A descoberta automática compara caminhos e registra primeiro um brief aprovado |
 | Tasks vagas fazem o agente improvisar e reler tudo | Trabalho não trivial recebe um writing plan conciso e pequenas specs executáveis |
 | Testes aparecem somente depois do código | Tasks de comportamento provam RED primeiro, chegam ao GREEN mínimo e rodam regressão proporcional |
+| Tasks pequenas do grafo criam pilhas de evidências | Tasks determinísticas elegíveis como `graph-only` registram apenas resultado/check na transição do grafo |
 
 ## O que muda no projeto
 
@@ -94,6 +96,8 @@ https://github.com/user-attachments/assets/d89fe815-da49-452e-bcd4-18f33f728f18
 
 Frontend, backend, dados, infraestrutura, integração e estudo usam contextos separados quando a plataforma oferece essa capacidade. Cada nó ativo pode declarar `read_set` focado, `write_set` exclusivo, `impact_set` relacionado e revisão da fonte, reduzindo varreduras amplas sem inventar um segundo grafo.
 
+Conversas longas ficam naturalmente mais lentas e consomem mais tokens em todas as famílias de modelos, porque cada turno precisa processar mais material acumulado. O Kit trata isso como algo normal: contexto do projeto, pendências, grafo, specs e decisões são a memória durável. Abra uma context window nova, siga a ordem de retomada e carregue apenas o entorno do nó ativo; a nova janela enxerga o que está concluído, ativo, pronto, bloqueado e qual é o próximo passo sem reler o chat anterior.
+
 ## O ciclo de trabalho
 
 Nem toda mudança entra no ciclo. Uma edição visual ou de conteúdo estático claramente localizada — como trocar a cor de um botão, um espaçamento, corrigir um texto ou substituir um label — usa o caminho `direct-trivial` quando não envolve lógica, estado, regra, contrato, dados, dependência, comportamento de acessibilidade ou risco. O agente edita diretamente, roda o menor check útil e responde de forma curta. Se a inspeção revelar comportamento real ou impacto maior, ele promove o trabalho antes de alterar o código.
@@ -103,8 +107,8 @@ Nem toda mudança entra no ciclo. Uma edição visual ou de conteúdo estático 
 3. Trabalho não trivial já aprovado vira um writing plan com unidades verificáveis de aproximadamente dois a cinco minutos; trabalho realmente simples mantém apenas uma spec inline curta.
 4. No Codex, o dispatcher nativo escolhe a role neutra, monta somente o pacote de contexto focado, resolve modelo/raciocínio e cria um subagente executável novo com `fork_turns: none`. Ele registra identidade, contexto e resposta retornados; sem subagentes, a implementação degrada explicitamente para execução sequencial, enquanto a revisão ainda exige outro contexto novo. Depois, o agente executa sua SPEC autocontida sem inventar comportamento. Código segue RED → GREEN → REFACTOR; contradição ou RED inválido volta ao planejamento.
 5. Quando dois ou mais nós sem colisão estão prontos e a plataforma informa capacidade numérica, o orquestrador reserva leases e contextos distintos, dispara todo o lote seguro sem esperar entre chamadas e repõe uma vaga após o primeiro evento de conclusão ou atenção. Ramos dependentes convergem por um nó explícito de integração.
-6. Trabalho aprovado nos checks é concluído e informado imediatamente; a próxima tarefa pronta pode começar sem aprovação cerimonial.
-7. Depois da verificação, o orquestrador lança um revisor independente em contexto novo — de preferência um subagente quando disponível. Ele recebe a SPEC versionada, diff relevante, handoff e evidências de teste, reconstrói a aceitação antes de ler o código e nunca depende do prompt original ou da memória do implementador. A garantia segue não bloqueante: uma review proporcional e, apenas para bloqueio real, no máximo uma re-review focada. Não existe terceiro loop.
+6. Trabalho aprovado nos checks é concluído e informado imediatamente; a próxima tarefa pronta pode começar sem aprovação cerimonial. Uma task `graph-only` inline-simple elegível roda seu check determinístico e avança somente o grafo — sem handoff, pacote de review, artefato de review ou logs copiados. Comportamento, TDD, contratos, risco, integrações, checks falhos e assurance continuam no fluxo completo de handoff/review.
+7. Para `handoff-review`, depois da verificação o orquestrador lança um revisor independente em contexto novo — de preferência um subagente quando disponível. Ele recebe a SPEC versionada, diff relevante, handoff e evidências de teste, reconstrói a aceitação antes de ler o código e nunca depende do prompt original ou da memória do implementador. A garantia segue não bloqueante: uma review proporcional e, apenas para bloqueio real, no máximo uma re-review focada. Não existe terceiro loop.
 
 No trabalho gerenciado pelo grafo, toda atualização mostra etapa, andamento, trabalho automático, pendências humanas e técnicas, bloqueios, próxima ação e caminhos inspecionáveis. `direct-trivial` retorna apenas um resumo curto da edição e do check.
 

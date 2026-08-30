@@ -15,6 +15,7 @@ plan_step: STEP-001                 # exact unit, or inline
 target_minutes: 5                   # active agent work; 1-5 inline, 2-5 planned
 test_strategy: tdd                  # tdd | characterization | verification-only
 tdd_exception: none                 # required reason unless tdd
+evidence_profile: handoff-review    # handoff-review | graph-only
 assigned_to: agent:builder-1
 reviewer: agent:reviewer-1
 workstream: backend
@@ -30,8 +31,8 @@ rules_map: rules-map@1
 model_tier: balanced
 model_reason: Bounded implementation with deterministic checks and no frontier trigger.
 model_dispatch: model-dispatch-TASK-001@1
-review_profile: standard
-max_review_rounds: 2
+review_profile: standard              # none | light | standard | critical
+max_review_rounds: 2                  # 0 only for graph-only; otherwise 1 | 2
 assurance_gate: none
 ---
 ```
@@ -95,18 +96,19 @@ Write a handoff; do not self-accept the task.
 - Outcome, bounded owned paths, scoped durable rules, capability states, constraints, acceptance criteria, verification, and exit rule are explicit.
 - Every task brief is its executable spec. It declares `planning_mode`, exact plan/step provenance or `inline-simple`, active-work target, exact change, non-goals, and stop/replan triggers.
 - Every task declares `test_strategy`. New/changed behavior and bug fixes require `tdd`; behavior-preserving refactors may use `characterization`; `verification-only` requires an exact non-code/no-meaningful-automated-test reason.
+- Every task declares `evidence_profile`. `handoff-review` is the default and is mandatory for planned work, behavior/TDD, risk, contracts, dependencies, migration, integrations, cross-workstream work, remediation, or assurance. `graph-only` is limited to inline-simple verification-only work that passes every exclusion, uses reviewer `not-required`, `review_profile: none`, `max_review_rounds: 0`, and `assurance_gate: none`, and closes with only a concise graph transition after the check passes.
 - A TDD spec declares the focused RED test and intended failure, minimum GREEN behavior using the same focused command, refactor boundary, and proportional regression set. RED and GREEN stay in one task.
 - Simplicity, hackathon mode, deadline, or an absent test suite is not by itself a TDD exception.
 - Planned units target two to five minutes of active agent work. An `inline-simple` task targets at most five minutes and passes every simple-task criterion; tool/CI wait and independent review are excluded.
 - Non-simple dispatch requires a ready implementation plan. Implementers normally load the self-contained task spec rather than the full plan.
 - The implementer may make ordinary local coding choices but cannot improvise observable behavior, contracts, scope, dependencies, permissions, risk, owned paths, acceptance, or verification.
 - Dependencies and graph/context references are pinned to revisions.
-- Assignee and reviewer are distinct identities.
+- Assignee and reviewer are distinct identities for `handoff-review`; `graph-only` uses `reviewer: not-required` and creates no review.
 - Every new task declares a workstream, bounded agent role, execution-context type, thread policy, and adapter-owned reference. Different workstreams do not share one context except an explicit bounded integration task.
 - A visible chat, internal subagent, or manual context is adapter execution evidence, never canonical project memory or additional authority.
 - Owned paths match the graph lease and do not overlap another active task.
 - The task requires no context outside its declared references unless a discovery is recorded in the handoff.
-- The implementer cannot mutate graph completion or change baseline scope; it writes a `completed` handoff and the orchestrator performs the graph transition after checking evidence.
+- The implementer cannot mutate graph completion or change baseline scope. For `handoff-review`, it writes a completed handoff; for `graph-only`, it returns the concise verification result. The orchestrator performs the graph transition after checking the declared result.
 - Temporary task context cannot become a durable rule; consequential capability/rule changes require human approval and validation.
 - `model_tier` is `economical`, `balanced`, or `frontier`; `model_reason` names task-specific evidence and any trigger considered.
 - `model_dispatch` pins a resolved `harness.model-dispatch/v1` record before the task becomes active. A tier written without an adapter-confirmed model override is not routed execution.
