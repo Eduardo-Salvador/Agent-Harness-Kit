@@ -19,6 +19,8 @@ approved_by: pending
 - For frontend-screen work, inventory `design-taste-frontend`, `imagegen-frontend-web`, `imagegen`, and `image-to-code` separately; the router must degrade visibly when any phase capability is absent. For approved screenshots, record `image-to-code` as the primary coding capability, `frontend-screen` as desktop/mobile orchestration and verification, and `imagegen` as temporary raster-asset generation only.
 - For project-learning destinations, inventory exact filesystem access for local/Obsidian paths or the connector/MCP, authentication state, and target evidence for Notion/other systems. Never record credentials.
 - For context routing, inventory `spawn_subagent`, `create_thread`, `resume_thread`, `message_thread`, `close_thread`, and `parallel_contexts` separately. Internal agents do not prove user-visible chat creation.
+- For `parallel_contexts`, record the numeric implementation capacity, whether review contexts share that quota, the host evidence timestamp, wait/attention-event capability, and safe sequential fallback. A boolean availability claim cannot size a dispatch batch.
+- For effective model routing, inventory the current model catalog, per-model reasoning efforts, and model/reasoning overrides on `create_thread`, `send_message_to_thread`, and `spawn_subagent` separately. A selected UI model or tier label does not prove that a delegated task received an override.
 
 ## Change gate
 

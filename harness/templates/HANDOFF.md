@@ -11,6 +11,9 @@ execution_context: isolated
 thread_ref: adapter-owned-or-manual
 created_at: 2000-01-01T00:00:00Z
 model_tier_used: balanced
+model_id_used: replace-runtime-model-id
+reasoning_effort_used: replace-supported-effort
+model_dispatch: model-dispatch-TASK-001@1
 model_route_changes: none
 execution_budget: execution-budget-TASK-001@2
 ---
@@ -45,6 +48,14 @@ Replace with the bounded result or blocker.
 - Outcome: Replace.
 - Environment/adapter: Replace.
 
+## Test-first evidence
+
+- Strategy: `tdd` / `characterization` / `verification-only` with task-declared exception.
+- RED: command, observed failure, intended-failure explanation, and durable evidence pointer; `not-applicable` only when the task spec permits it.
+- GREEN: identical focused command, passing outcome, and evidence pointer.
+- Refactor: concise change or none; focused test outcome after refactor.
+- Regression: proportional command/check and outcome.
+
 ## Execution budget
 
 - Goal lineage: Replace.
@@ -59,6 +70,8 @@ Replace with the bounded result or blocker.
 ## Routing and authority
 
 - Tier used and reason: Replace.
+- Runtime model and reasoning: Replace with the exact adapter-confirmed values.
+- Dispatch evidence: Replace with the pinned `harness.model-dispatch/v1` artifact and adapter response identity.
 - Escalation/decomposition: None, or record prior tier, trigger, and resulting route.
 - Routing granted no additional permissions and removed no review or verification gate.
 

@@ -1,0 +1,4 @@
+{
+  "mutation": {"action": "remove", "field": "spec_authority"},
+  "expected_errors": ["review.spec-authority"]
+}

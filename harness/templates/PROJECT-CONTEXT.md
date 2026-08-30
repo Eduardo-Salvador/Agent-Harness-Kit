@@ -53,6 +53,7 @@ pending_authority: harness-state/PENDING.md
 
 - Durable rules: `rules-map@1`; temporary task context is separate.
 - Detected/required capabilities: `capability-manifest@1`; unavailable/optional/approval-required states remain explicit.
+- Automatic model routing: enabled / disabled / pending; approved artifact: `harness-state/MODEL-ROUTING.md@1`. Pending or disabled routing remains advisory/manual.
 
 ## Assumptions and unknowns
 

@@ -1,4 +1,9 @@
 {
+  "spec_authority": "TASK-001@1",
+  "review_packet": "REVIEW-PACKET-TASK-001-02",
+  "review_context": "isolated-fresh",
+  "review_context_ref": "adapter:review-02",
+  "prompt_source": "task-spec-only",
   "round": 2,
   "scope": "focused-rereview",
   "prior_review": "REVIEW-TASK-001-01",

@@ -7,6 +7,9 @@ status: completed
 author: agent:specialist
 created_at: 2026-08-20T10:30:00Z
 model_tier_used: balanced
+model_id_used: example-balanced
+reasoning_effort_used: medium
+model_dispatch: model-dispatch-TASK-001@1
 model_route_changes: none
 ---
 
@@ -38,6 +41,12 @@ Added deterministic valid/invalid fixture checks.
 
 - Command/check: repository-local validator.
 - Outcome: pass.
+
+## Test-first evidence
+
+- Strategy: verification-only; task added fixtures without production behavior.
+- RED/GREEN: not applicable under the task-declared exception.
+- Regression: focused validator run passed.
 - Environment/adapter: generic serialized example.
 
 ## Discoveries and risks

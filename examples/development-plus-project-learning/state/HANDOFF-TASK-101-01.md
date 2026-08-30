@@ -7,6 +7,9 @@ status: completed
 author: agent:specialist
 created_at: 2026-08-20T11:30:00Z
 model_tier_used: balanced
+model_id_used: example-balanced
+reasoning_effort_used: medium
+model_dispatch: model-dispatch-TASK-101@1
 model_route_changes: none
 ---
 
@@ -37,6 +40,12 @@ Added both boundary-case tests.
 
 - Command/check: parser local test command.
 - Outcome: pass.
+
+## Test-first evidence
+
+- Strategy: verification-only; task added assertions without production behavior.
+- RED/GREEN: not applicable under the task-declared exception.
+- Regression: focused parser boundary tests passed.
 - Environment/adapter: generic serialized example.
 
 ## Discoveries and risks

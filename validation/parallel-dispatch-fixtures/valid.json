@@ -1,0 +1,18 @@
+{
+  "schema": "harness.parallel-dispatch/v1",
+  "id": "parallel-dispatch-001",
+  "graph": "graph-main@7",
+  "status": "completed",
+  "capacity": 3,
+  "active_before": 1,
+  "capability_evidence": "capability-manifest@2",
+  "selected": [
+    {"task": "TASK-A", "write_set": ["src/a/**"]},
+    {"task": "TASK-B", "write_set": ["src/b/**"]}
+  ],
+  "dispatches": [
+    {"task": "TASK-A", "context_ref": "codex:agent-a", "lease_ref": "lease-a", "adapter_evidence": "spawn:a", "model_dispatch": "model-dispatch-A@1"},
+    {"task": "TASK-B", "context_ref": "codex:agent-b", "lease_ref": "lease-b", "adapter_evidence": "spawn:b", "model_dispatch": "model-dispatch-B@1"}
+  ],
+  "expected_errors": []
+}

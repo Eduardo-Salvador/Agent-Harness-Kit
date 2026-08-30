@@ -1,0 +1,20 @@
+{
+  "schema": "harness.model-dispatch/v1",
+  "id": "model-dispatch-TASK-001",
+  "revision": 1,
+  "task": "TASK-001@1",
+  "status": "resolved",
+  "tier": "balanced",
+  "tier_reason": "Bounded implementation with deterministic acceptance.",
+  "adapter": "codex-app",
+  "capability_evidence": "capability-manifest@2",
+  "available_models": ["example-economical", "example-balanced", "example-frontier"],
+  "selected_model": "example-balanced",
+  "reasoning_effort": "medium",
+  "dispatch_surface": "create_thread",
+  "override_requested": true,
+  "override_confirmed": true,
+  "execution_context_ref": "adapter:thread-001",
+  "dispatch_evidence": "adapter-response:create-thread-001",
+  "expected_errors": []
+}

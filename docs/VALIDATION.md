@@ -10,13 +10,19 @@ The validator uses only the Python 3 standard library and does not modify files.
 
 - required root entrypoints, native Codex skills, native Claude Code skills/subagents, roles, templates, playbooks, adapters, examples, and learning-pack modules;
 - required YAML-header keys and Markdown sections in every operational template;
-- model-routing tier/reason fields in task and handoff templates, plus the provider-neutral routing template;
+- `direct-trivial` routing that bypasses discovery/SDD/TDD/review/status only for bounded presentation/static-content mechanics, plus writing-plan and executable-task-spec routing for all promoted engineering work;
+- test-strategy declarations, meaningful RED/GREEN task specs, explicit non-TDD exceptions, handoff evidence sections, and native Codex/Claude TDD routing;
+- model-routing tier/reason fields plus executable `harness.model-dispatch/v1` evidence: selected runtime model, supported reasoning effort, override surface, returned context, and adapter confirmation;
+- hostile model-dispatch fixtures that reject recorded-tier-only routing, silent host-default fallback, and impossible same-context mid-turn switch claims;
+- native Codex agent-dispatch tests and hostile records that reject context leakage, missing adapter responses, model/reasoning mismatch, and implementer/reviewer identity or context reuse;
 - executable goal-lineage budgets in templates, fixtures, and discovered `harness-state/` artifacts, with positive ceilings, stable lineage, monotonic attempt/no-progress/context counters, mandatory stop-and-replan behavior, and safe evidence paths;
-- review-profile and two-round-budget fields in task templates, plus auditable prior blockers, correction delta, and regression scope for focused round-two reviews;
-- JSON task-graph blocks for node shape, unique IDs, existing dependencies, acyclicity, repository-relative write sets, and collisions among ready/active nodes;
+- review-profile and two-round-budget fields in task templates, plus fresh-context identity, SPEC-only authority, immutable packet provenance, and auditable prior blockers/correction delta/regression scope for focused round-two reviews;
+- JSON task-graph blocks for node shape, unique IDs, existing dependencies, acyclicity, repository-relative write sets, and collisions among active ownership leases;
 - built-in valid and invalid graph fixtures, including missing dependencies, cycles, write-set collisions, self-review, and path traversal;
+- deterministic scheduler tests for dependency/assurance eligibility, numeric capacity, active-slot accounting, collision deferral, and dependency fan-in;
+- hostile parallel-dispatch fixtures that reject over-capacity batches, duplicate contexts, and claims of dispatch without adapter runtime evidence;
 - hostile status mutations that remove mandatory fields, omit human-pending provenance, or escape repository-relative inspectable paths;
-- hostile review mutation that removes the correction delta from a focused second-round payload;
+- hostile review mutations that remove the correction delta or SPEC authority, substitute prompt memory, or reuse the implementer context;
 - hostile budget mutations that bypass attempt, no-progress, or context-expansion ceilings, roll counters backward, narrow scope to one task, or escape evidence paths;
 - relative Markdown links and fragment targets, balanced fenced-code blocks, and one Mermaid block in each README;
 - the language boundary using a documented Portuguese-marker heuristic outside `README.pt-BR.md`;
@@ -27,7 +33,7 @@ The validator uses only the Python 3 standard library and does not modify files.
 - first-run and learning-pack exclusion statements in root entry points;
 - overview-audio integrity, inline bilingual README players, versioned script links, and manifest hashes/status so narration drift is visible;
 - distribution-profile boundaries (`core`, `core-learning`, `full`) through dependency-free packaging dry runs.
-- bounded-review invariants: supported profiles, a hard two-round maximum, initial scope for round one, and focused scope with a prior-review reference for round two;
+- bounded-review invariants: supported profiles, mandatory clean reviewer context, task-SPEC authority instead of prompt memory, a hard two-round maximum, initial scope for round one, and focused scope with a prior-review reference for round two;
 - pending-work schema separation between human actions, macro project gaps, and technical graph execution;
 - mandatory user-facing progress/status fields—stage, progress, automatic work, human and macro pending items, active/ready/blocked graph snapshot, blockers, next action, and inspectable paths—with hostile field-removal mutations, automatic completion/next-task routing, and non-blocking assurance references across Codex and Claude entrypoints;
 - executable assurance checkpoints: critical results can gate only explicitly affected graph actions while unrelated ready work continues;

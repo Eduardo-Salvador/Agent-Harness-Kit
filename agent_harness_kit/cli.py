@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import json
 import sys
 from pathlib import Path
 from types import ModuleType
 
 from . import __version__
+from . import codex_dispatch
+from . import scheduler
 
 
 def source_root() -> Path:
@@ -54,6 +57,12 @@ def build_parser() -> argparse.ArgumentParser:
     commands.add_parser("prompt", help="print the fallback activation prompt")
     doctor = commands.add_parser("doctor", help="check whether a project has the expected entrypoints")
     doctor.add_argument("path", nargs="?", type=Path, default=Path.cwd(), help="project directory (default: current directory)")
+    schedule = commands.add_parser("schedule", help="compute the next safe parallel task batch")
+    schedule.add_argument("graph", type=Path, help="TASK-GRAPH.md or graph JSON path")
+    schedule.add_argument("--capacity", type=int, required=True, help="host-proven maximum concurrent implementation contexts")
+    dispatch = commands.add_parser("codex-dispatch", help="prepare or record one native Codex agent dispatch")
+    dispatch.add_argument("request", type=Path, help="JSON dispatch request or previously prepared plan")
+    dispatch.add_argument("--response", type=Path, help="JSON adapter response to record")
     return parser
 
 
@@ -76,12 +85,38 @@ def main(argv: list[str] | None = None) -> int:
     if args.command is None:
         parser.print_help()
         return 0
+    if args.command == "schedule":
+        try:
+            graph = scheduler.load_graph(args.graph.expanduser().resolve())
+            plan = scheduler.schedule_ready(graph, capacity=args.capacity)
+        except (OSError, json.JSONDecodeError, scheduler.ScheduleError) as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 2
+        print(json.dumps(plan, indent=2, ensure_ascii=False))
+        return 0
+    if args.command == "codex-dispatch":
+        try:
+            request = json.loads(args.request.expanduser().resolve().read_text(encoding="utf-8"))
+            if not isinstance(request, dict):
+                raise codex_dispatch.DispatchError("dispatch input must be a JSON object")
+            if args.response:
+                response = json.loads(args.response.expanduser().resolve().read_text(encoding="utf-8"))
+                if not isinstance(response, dict):
+                    raise codex_dispatch.DispatchError("adapter response must be a JSON object")
+                result = codex_dispatch.record_dispatch(request, response)
+            else:
+                result = codex_dispatch.build_dispatch(request)
+        except (OSError, json.JSONDecodeError, codex_dispatch.DispatchError) as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 2
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        return 0
+    if args.command == "doctor":
+        return doctor(args.path)
     installer = installer_module()
     if args.command == "prompt":
         print(installer.ACTIVATION_PROMPT)
         return 0
-    if args.command == "doctor":
-        return doctor(args.path)
     try:
         actions = installer.install(args.profile, args.path, args.dry_run)
     except installer.InstallError as exc:

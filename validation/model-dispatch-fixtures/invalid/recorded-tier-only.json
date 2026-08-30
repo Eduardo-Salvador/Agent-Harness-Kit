@@ -1,0 +1,20 @@
+{
+  "schema": "harness.model-dispatch/v1",
+  "id": "model-dispatch-TASK-001",
+  "revision": 1,
+  "task": "TASK-001@1",
+  "status": "resolved",
+  "tier": "balanced",
+  "tier_reason": "Balanced was written into the task.",
+  "adapter": "codex-app",
+  "capability_evidence": "capability-manifest@2",
+  "available_models": ["example-balanced"],
+  "selected_model": "pending",
+  "reasoning_effort": "host-default",
+  "dispatch_surface": "create_thread",
+  "override_requested": false,
+  "override_confirmed": false,
+  "execution_context_ref": "adapter:thread-001",
+  "dispatch_evidence": "none",
+  "expected_errors": ["model-dispatch.unresolved-model", "model-dispatch.override-not-confirmed", "model-dispatch.missing-evidence"]
+}

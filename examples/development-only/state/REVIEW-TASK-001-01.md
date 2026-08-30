@@ -3,6 +3,11 @@ schema: harness.review/v1
 id: REVIEW-TASK-001-01
 task: TASK-001@1
 handoff: HANDOFF-TASK-001-01
+spec_authority: TASK-001@1
+review_packet: REVIEW-PACKET-TASK-001-01
+review_context: isolated-fresh
+review_context_ref: example:review-task-001
+prompt_source: task-spec-only
 revision: 1
 round: 1
 scope: initial
@@ -21,6 +26,19 @@ created_at: 2026-08-20T10:40:00Z
 ## Independence
 
 - Reviewer is distinct from implementer: yes.
+- Fresh context has no implementer conversation history: yes.
+
+## Spec authority
+
+- Operative SPEC: `TASK-001@1`; no prompt or conversation memory was used.
+
+## Fresh-context evidence
+
+- Packet `REVIEW-PACKET-TASK-001-01`; context `example:review-task-001`.
+
+## Independent reconstruction
+
+- Derived the two fixture acceptance criteria from the SPEC before inspecting the change.
 
 ## Review profile and scope
 

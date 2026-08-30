@@ -28,14 +28,16 @@ decision: pending
 
 ## Adapter mappings
 
-| Adapter | Economical | Balanced | Frontier | Evidence/date |
-| --- | --- | --- | --- | --- |
-| replace | replace | replace | replace | replace |
+| Adapter | Economical model / effort | Balanced model / effort | Frontier model / effort | Override surfaces | Evidence/date |
+| --- | --- | --- | --- | --- | --- |
+| replace | replace / replace | replace / replace | replace / replace | replace | replace |
 
 ## Dispatch record
 
 - Every task records `model_tier` and `model_reason`.
-- Every handoff records the tier used and any route changes.
+- Before activation, every task pins a resolved `harness.model-dispatch/v1` record with selected model, supported effort, override surface, returned context reference, and adapter evidence.
+- Every handoff records the tier/model/effort actually used and any route changes.
+- A tier annotation without confirmed runtime override remains advisory; never silently accept the host default.
 
 ## Context efficiency
 

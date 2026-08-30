@@ -1,0 +1,16 @@
+{
+  "schema": "harness.codex-agent-dispatch/v1",
+  "status": "dispatched",
+  "task": "TASK-042@3",
+  "purpose": "implementation",
+  "agent_identity": "agent:implementer:TASK-042:attempt-1",
+  "role": {"requested": "role:backend-specialist", "executor": "role:generic-specialist", "role_file": "harness/roles/generic-specialist.md"},
+  "context_packet": {"task_spec": "tasks/TASK-042.md"},
+  "execution_context_ref": "pending",
+  "model": {"requested": "gpt-5.6-terra", "accepted": "host-default", "reasoning_effort_requested": "medium", "reasoning_effort_accepted": "host-default", "dispatch_ref": "model-42@1"},
+  "adapter_operation": "spawn_agent",
+  "adapter_response_identity": "none",
+  "adapter_response": {},
+  "separation": {"implementer_identity": "unassigned", "implementer_context_ref": "unassigned", "fresh_context_required": false},
+  "expected_errors": ["codex-dispatch.missing-response", "codex-dispatch.model-mismatch", "codex-dispatch.reasoning-mismatch"]
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "harness.model-dispatch/v1",
+  "id": "model-dispatch-TASK-003",
+  "revision": 1,
+  "task": "TASK-003@1",
+  "status": "resolved",
+  "tier": "economical",
+  "tier_reason": "Mechanical deterministic edit.",
+  "adapter": "codex-app",
+  "capability_evidence": "capability-manifest@2",
+  "available_models": ["example-economical"],
+  "selected_model": "example-economical",
+  "reasoning_effort": "low",
+  "dispatch_surface": "current_context",
+  "override_requested": true,
+  "override_confirmed": true,
+  "execution_context_ref": "adapter:current-thread",
+  "dispatch_evidence": "self-asserted",
+  "expected_errors": ["model-dispatch.same-context-claim", "model-dispatch.missing-evidence"]
+}

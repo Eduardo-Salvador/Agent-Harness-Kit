@@ -15,9 +15,13 @@ Agent Harness Kit helps developers deliver real software through a disciplined m
 
 ## Modes
 
+### Direct-trivial fast path
+
+Localized, already-decided presentation or static-content mechanics bypass delivery orchestration entirely when they introduce no product behavior, business rule, state, contract, data, dependency, accessibility behavior, risk, or cross-workstream impact. The agent edits the target directly, performs the smallest meaningful check, and reports concisely. No discovery, feature brief, plan, SPEC/TASK, graph event, TDD, handoff, review, or full status ceremony is created. Any discovered ambiguity or broader impact promotes the work before implementation.
+
 ### Standard delivery
 
-The required mode. Discovery creates approved project context and an initial task graph. A PO/orchestrator schedules ready nodes, assigns exclusive ownership and isolation, and completes work when declared objective checks pass. It reports the result and advances immediately. Independent review runs automatically as non-blocking assurance, bounded to one initial round plus at most one focused remediation review; blockers create linked remediation and may gate only affected integration/release work.
+The required mode. Discovery creates approved project context and an initial task graph. A PO/orchestrator schedules ready nodes, assigns exclusive ownership and isolation, and completes work when declared objective checks pass. It reports the result and advances immediately. Independent review then launches automatically in a fresh context, preferably a proven subagent, and reconstructs acceptance from the versioned task SPEC rather than prompt or implementer memory. Assurance is non-blocking and bounded to one initial round plus at most one focused remediation review; blockers create linked remediation and may gate only affected integration/release work.
 
 ### Standard delivery + learning
 
@@ -42,6 +46,9 @@ The Harness Engineering Learning Pack (`learning-pack/README.md` in the `full` p
 The harness owns:
 
 - discovery and approval boundaries;
+- automatic new-feature discovery that compares viable directions and produces an approved feature brief before decomposition;
+- optimized writing plans that decompose approved non-trivial outcomes into small self-contained executable specs while keeping simple work inline;
+- test-driven behavior delivery that requires meaningful RED, minimal GREEN, and proportional regression evidence inside each code task;
 - layered context and durable artifact contracts;
 - dependency-aware orchestration and task lifecycle;
 - scoped graph execution through focused read paths, exclusive write leases, bounded impact paths, and source provenance;
@@ -57,12 +64,17 @@ The harness does not own the user's product strategy, source-control provider, m
 1. A developer can run discovery and obtain a complete, approved `PROJECT-CONTEXT` plus a valid initial `TASK-GRAPH`.
 2. The orchestrator schedules only dependency-ready tasks and prevents overlapping file ownership.
 3. A task runs in a declared isolation mode and produces a concise, traceable handoff.
-4. Objective checks make completion admissible; a different reviewer records non-blocking assurance and can trigger linked remediation.
+4. Objective checks make completion admissible; a different reviewer in a fresh context independently verifies code against the pinned SPEC, records non-blocking assurance, and can trigger linked remediation.
 5. An interrupted run can reconstruct current state from versioned files without relying on chat history.
 6. The same fixture completes through Codex and Claude adapters, with declared degradation where capabilities differ.
 7. Disabling learning changes no delivery artifact except an explicit mode/configuration record.
 8. A new user can follow the documented example without prior harness-engineering knowledge.
 9. A user can install the published CLI, create the contained profile plus root bridges in an empty host, and validate that installation without using the source checkout.
+10. A new feature request with unresolved product choices automatically produces a reviewable `FEATURE-BRIEF` before pending state or graph topology changes.
+11. Non-trivial implementation is dispatched only from a ready implementation plan and complete two-to-five-minute task specs; simple work avoids a separate plan but remains explicitly bounded.
+12. Behavior-changing code and bug fixes cannot complete without valid RED/GREEN evidence and proportional regression, while non-code exceptions remain explicit and reproducible.
+13. Every initial review proves a fresh reviewer context, excludes prompt/conversation memory, and records a criterion-by-criterion verdict derived from the task SPEC before implementation inspection.
+14. When the host proves numeric capacity and actual subtask operations, independent ready nodes are launched as one collision-safe batch, the first freed slot is refilled, and dependent branches converge through an explicit integration node.
 
 ## Human checkpoints
 
@@ -80,4 +92,4 @@ Human approval is mandatory for consequential product intent, architecture direc
 
 ## Status and scope gate
 
-The current public scope includes native activation for both Codex and Claude Code through documented root entrypoints and small progressive extensions. Version `0.5.3` is distributed through PyPI as `agent-harness-kit-cli`; a profile may also be copied into an intentionally empty root or installed under `agent-harness-kit/` with minimal root bridges. It does not include a separate autonomous runtime that independently calls APIs, dispatches sessions, provisions isolation, integrates branches, or publishes notes. Remaining capability and automation decisions are tracked in [OPEN-DECISIONS.md](../OPEN-DECISIONS.md).
+The current public source scope is version `0.6.0` and includes native activation for both Codex and Claude Code through documented root entrypoints and small progressive extensions. The latest previously verified PyPI publication is `0.5.3` under `agent-harness-kit-cli`; a profile may also be copied into an intentionally empty root or installed under `agent-harness-kit/` with minimal root bridges. It does not include an unattended daemon. During an active orchestration session, its deterministic selector and native adapters can dispatch supported internal subtasks to distinct contexts, refill capacity, and record evidence; it still does not independently provision credentials, integrate branches, deploy, or publish notes. Remaining capability and automation decisions are tracked in [OPEN-DECISIONS.md](../OPEN-DECISIONS.md).

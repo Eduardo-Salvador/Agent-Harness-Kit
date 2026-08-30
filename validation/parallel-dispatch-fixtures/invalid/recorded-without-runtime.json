@@ -1,0 +1,12 @@
+{
+  "schema": "harness.parallel-dispatch/v1",
+  "id": "parallel-dispatch-002",
+  "graph": "graph-main@8",
+  "status": "completed",
+  "capacity": 2,
+  "active_before": 0,
+  "capability_evidence": "capability-manifest@2",
+  "selected": [{"task": "TASK-A", "write_set": ["src/a/**"]}],
+  "dispatches": [{"task": "TASK-A", "context_ref": "pending", "lease_ref": "lease-a", "adapter_evidence": "none", "model_dispatch": "pending"}],
+  "expected_errors": ["parallel-dispatch.missing-evidence"]
+}

@@ -16,6 +16,9 @@ execution_context: isolated
 thread_ref: adapter:task-001
 created_at: 2026-08-20T14:45:00Z
 model_tier_used: balanced
+model_id_used: adapter-model-id
+reasoning_effort_used: medium
+model_dispatch: model-dispatch-TASK-001@1
 model_route_changes: none
 ---
 ```
@@ -48,11 +51,20 @@ Implemented graph-cycle and ownership-overlap validation.
 - Outcome: pass (12 checks)
 - Environment: `worktree:task-001`, adapter `example@1`
 
+## Test-first evidence
+- Strategy: `tdd`.
+- RED: focused invalid-graph test failed because the missing invariant accepted the fixture; run `run-017`.
+- GREEN: the identical focused command passed after the minimal invariant check; run `run-018`.
+- Refactor: none.
+- Regression: contract suite passed, 12 checks; run `run-018`.
+
 ## Discoveries and risks
 - Symlink-normalized paths need an explicit Phase 2 policy.
 
 ## Routing and authority
 - Tier used and reason: balanced; bounded implementation with deterministic fixtures.
+- Runtime model and reasoning: `adapter-model-id`, `medium`, confirmed by `model-dispatch-TASK-001@1`.
+- Dispatch evidence: `adapter-response:create-thread-001`.
 - Escalation/decomposition: none.
 - Routing changed no capability or lifecycle authority.
 
@@ -78,8 +90,10 @@ Implemented graph-cycle and ownership-overlap validation.
 - Every acceptance criterion has a result and durable evidence pointer, including failures/not-run reasons.
 - Changed paths stay within ownership or link to an approved lease change.
 - Claims summarize reproducible checks; they do not treat agent confidence as verification.
+- TDD handoffs prove meaningful RED before production behavior, GREEN with the identical focused command, and proportional regression. Characterization/verification-only evidence must match the task-declared strategy and exception.
 - `completed` means declared implementation checks passed and the orchestrator may unlock dependents. Independent assurance remains separate and may create remediation without reopening historical completion.
 - Blockers name the missing decision, capability, dependency, or external condition.
-- The actual model tier and route changes are recorded; a stronger model is never presented as evidence.
+- The actual model tier, model ID, supported reasoning effort, dispatch record, and route changes are recorded; a stronger model is never presented as evidence.
+- A self-asserted model or unconfirmed host default is invalid dispatch evidence.
 - The coherent change unit and commit/integration/push/deploy/publication authority states are explicit and independent.
 - The user-facing closeout explains outcome, stage, progress, work continuing without user action, human/macro pending items, active/ready/blocked graph nodes, material changes, verification, lifecycle state, blockers, next action, and inspectable paths before a review or approval boundary.

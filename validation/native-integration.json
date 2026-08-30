@@ -4,10 +4,18 @@
   "codex": {
     "entrypoint": "AGENTS.md",
     "adapter": "adapters/codex.md",
+    "model_dispatch_contract": "docs/contracts/MODEL-DISPATCH.md",
+    "codex_agent_dispatch_contract": "docs/contracts/CODEX-AGENT-DISPATCH.md",
+    "parallel_dispatch_contract": "docs/contracts/PARALLEL-DISPATCH.md",
     "core_skills": [
       ".agents/skills/first-run-discovery/SKILL.md",
+      ".agents/skills/feature-discovery/SKILL.md",
+      ".agents/skills/writing-plans/SKILL.md",
+      ".agents/skills/test-driven-task/SKILL.md",
       ".agents/skills/graph-execution/SKILL.md",
       ".agents/skills/governed-review/SKILL.md",
+      ".agents/skills/codex-agent-dispatch/SKILL.md",
+      ".agents/skills/parallel-dispatch/SKILL.md",
       ".agents/skills/frontend-screen/SKILL.md"
     ],
     "learning_extension": ".agents/skills/project-learning/SKILL.md"
@@ -18,8 +26,12 @@
     "adapter": "adapters/claude.md",
     "core_skills": [
       ".claude/skills/first-run-discovery/SKILL.md",
+      ".claude/skills/feature-discovery/SKILL.md",
+      ".claude/skills/writing-plans/SKILL.md",
+      ".claude/skills/test-driven-task/SKILL.md",
       ".claude/skills/graph-execution/SKILL.md",
       ".claude/skills/governed-review/SKILL.md",
+      ".claude/skills/parallel-dispatch/SKILL.md",
       ".claude/skills/frontend-screen/SKILL.md"
     ],
     "learning_extension": ".claude/skills/project-learning/SKILL.md",

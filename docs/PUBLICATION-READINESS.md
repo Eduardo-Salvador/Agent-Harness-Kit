@@ -4,7 +4,7 @@ This audit applies to the Agent Harness Kit repository, generated profiles, and 
 
 ## Current assessment
 
-Version `0.5.3` is publicly installable and suitable for use as a native Codex/Claude Code operating scaffold. It is not a standalone autonomous runtime. Every profile contains both documented platform entrypoints and small native extensions while durable policy and state remain platform-neutral. No profile silently enables an external service, MCP, hook, credential, network permission, or destructive permission.
+Source version `0.6.0` is validated and suitable for use as a native Codex/Claude Code operating scaffold; the latest previously verified PyPI publication remains `0.5.3` until the new package is published and smoke-tested from the public index. It is not an unattended standalone daemon. While an orchestrator session is active, native adapters can launch collision-safe internal subtasks up to proven capacity and persist dispatch evidence. Every profile contains both documented platform entrypoints and small native extensions while durable policy and state remain platform-neutral. No profile silently enables an external service, MCP, hook, credential, network permission, or destructive permission.
 
 The public package has been built as wheel and source distribution, uploaded to PyPI, downloaded through the public index, installed into an empty Windows host, and validated from the installed copy. That smoke test created the contained `agent-harness-kit/` directory and managed root `AGENTS.md` and `CLAUDE.md` bridges.
 
@@ -14,7 +14,7 @@ The public package has been built as wheel and source distribution, uploaded to 
 - Each generated directory profile can run its own bundled validator using the generated `PACKAGE-MANIFEST.json`.
 - Host-integration validation covers a sanitized namespaced mature-harness fixture plus missing-backlink, silent-omission, stale-snapshot, and premature-cutover failures.
 - Graph validation covers focused `read_set`, exclusive `write_set`, related `impact_set`, pinned `context_provenance`, and the boundary that repository indexes such as Graphify enrich rather than replace the operational task graph.
-- Packaging uses standard-library Python, fixed ZIP metadata, sorted files, hashes, and the shared project version `0.5.3`.
+- Packaging uses standard-library Python, fixed ZIP metadata, sorted files, hashes, and the shared source version `0.6.0`.
 - The PyPI smoke test installed 168 packaged files and passed the bundled validation suite from the installed profile.
 
 ## Package usability and boundaries

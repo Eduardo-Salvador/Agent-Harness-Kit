@@ -20,23 +20,31 @@ At session start, the core checks for approved `harness-state/PROJECT-CONTEXT.md
 
 For a resumed or status-only session with approved context, the [status/resume playbook](../harness/playbooks/status-resume.md) imposes a strict read order: project context, pending-work authority, then task graph. The pending authority owns human decisions/actions and macro incomplete project areas; the graph owns technical order, dependencies, and execution. Task-local evidence follows.
 
+After project context is approved, an unresolved new capability request invokes [feature discovery](../harness/playbooks/feature-discovery.md) automatically. It reuses project evidence, compares credible directions, and stores `harness.feature-brief/v1` under `harness-state/features/`. The brief must be approved before macro pending state or technical graph topology changes; routine fixes and already-approved implementation do not pass through this gate.
+
+Approved implementation then invokes [writing plans](../harness/playbooks/writing-plans.md). Non-trivial work is captured once under `harness-state/plans/` and decomposed into small executable units; each graph node receives a self-contained task spec so the implementer does not reload the full plan. A strict simple-task gate avoids the separate plan for localized, already-decided work. Missing decisions return to discovery, while contradictory or underspecified execution returns `needs-replan` instead of being improvised.
+
+Every code-behavior or bug-fix unit then follows [test-driven execution](TDD.md). RED and GREEN are evidence phases inside one graph node: the focused test must fail for the intended missing behavior before production edits, pass with the minimum change, and remain passing through bounded refactor and proportional regression. This preserves small task isolation without handing off a deliberately failing baseline.
+
 ### Mature existing harnesses
 
 Existing root instructions, role systems, path rules, knowledge, decisions, pending work, and verification sources remain authoritative during namespaced coexistence. A [migration manifest](contracts/MIGRATION-MANIFEST.md) records selector expansion, identities, classification, destinations, backlinks, and semantic status; the [coexistence contract](contracts/COEXISTENCE.md) records precedence. Structural coverage cannot authorize cutover. Human semantic-equivalence review and separate cutover authorization are required before deleting originals or transition duplicates.
 
 ## Runtime flow
 
+Before this flow, the `direct-trivial` gate handles atomic presentation/static-content edits outside the runtime graph. It reads only the target and nearest scoped rules, changes it directly, runs a minimal check, and creates no durable harness artifact. Discovery of logic, state, contracts, data, dependencies, accessibility behavior, risk, ownership conflict, or wider impact promotes the request into the normal flow before editing.
+
 1. First-run/resume detection pins approved context or invokes discovery. Discovery updates a draft [project context](contracts/PROJECT-CONTEXT.md), avoiding questions already answered by evidence.
-2. Consequential choices pause at a human checkpoint and become [decision artifacts](contracts/DECISION.md).
-3. Approval freezes a context revision and creates the initial [task graph](contracts/TASK-GRAPH.md).
-4. The orchestrator finds nodes whose dependencies are satisfied, proposed paths do not overlap active ownership, and required capabilities are available.
-5. It follows [capability-based model routing](MODEL-ROUTING.md), records the least costly safe tier and task-specific reason, then assigns one [task brief](contracts/TASK.md), an exclusive ownership set, and an isolation boundary. Each node may carry a focused `read_set`, exclusive `write_set`, related `impact_set`, and pinned `context_provenance` under [scoped graph execution](SCOPED-GRAPH-EXECUTION.md).
+2. Consequential choices pause at a human checkpoint and become [decision artifacts](contracts/DECISION.md). New capabilities with unresolved product choices first produce an approved [feature brief](contracts/FEATURE-BRIEF.md).
+3. Approval freezes a context or feature-brief revision; [writing plans](../harness/playbooks/writing-plans.md) creates complete task specs and then creates or updates the [task graph](contracts/TASK-GRAPH.md).
+4. The orchestrator finds specified nodes whose dependencies are satisfied, proposed paths do not overlap active ownership, and required capabilities are available. With two or more safe ready nodes, it runs the deterministic `agent-harness schedule` selector against proven numeric capacity, atomically reserves the batch, and records `harness.parallel-dispatch/v1`.
+5. It follows [capability-based model routing](MODEL-ROUTING.md), records the least costly safe tier and task-specific reason, and resolves that tier against the current host catalog. On Codex, the executable [native agent dispatch](contracts/CODEX-AGENT-DISPATCH.md) selects the neutral role, constructs a minimal packet from the task SPEC/scoped references, and emits the exact `spawn_agent`/`spawn_subagent` call with resolved model/reasoning and `fork_turns: none`. [`harness.model-dispatch/v1`](contracts/MODEL-DISPATCH.md) stores routing authority; `harness.codex-agent-dispatch/v1` stores the returned identity, context, and adapter response before activation. It then assigns one [task brief](contracts/TASK.md), an exclusive ownership set, and an isolation boundary. Each node may carry a focused `read_set`, exclusive `write_set`, related `impact_set`, and pinned `context_provenance` under [scoped graph execution](SCOPED-GRAPH-EXECUTION.md).
    It also applies [context routing](CONTEXT-ROUTING.md): each task receives a workstream, agent role, execution-context policy, and adapter-owned thread reference. Different workstreams use different contexts unless an explicit integration node owns the crossing.
-6. A specialized agent loops inside that node: inspect → act → check → update its task artifact. It cannot mutate graph topology.
+6. The adapter launches every selected task/subagent without waiting between calls. Each receives a distinct context, lease/isolation reference, task SPEC, and confirmed model-dispatch record. The orchestrator waits for the first completion or attention event, reconciles it, and immediately schedules a refill. A specialized agent loops inside its node: inspect → act → check → update its task artifact. It cannot mutate graph topology.
 7. The agent emits a [handoff](contracts/HANDOFF.md) with changes, evidence, and a plain-language closeout. When checks pass, the orchestrator marks the node completed, reports the outcome, releases ownership, and unlocks dependents.
-8. A reviewer other than the implementer automatically evaluates the completed work as non-blocking assurance using a `light`, `standard`, or `critical` profile. One initial review and at most one focused remediation review are allowed.
+8. A reviewer other than the implementer is launched automatically in a fresh context—preferably a subagent when capability evidence permits it. A minimal packet supplies the pinned SPEC, its referenced authorities, relevant diff, handoff, and verification/TDD evidence while excluding prompt and conversation history. The reviewer derives its criterion matrix from the SPEC before inspecting code, then evaluates the completed work as non-blocking `light`, `standard`, or `critical` assurance. One initial review and at most one fresh focused remediation review are allowed.
 9. A blocking finding creates a linked remediation node and may gate affected integration/release work; it does not reopen historical completion or stop unrelated ready nodes. Integration follows the [coherent change policy](CHANGE-INTEGRATION.md) and separate action authorities.
-10. Versioned files allow recovery. If project learning is enabled, its observer reads consented artifacts and updates learning-owned state separately.
+10. Parallel branches converge only through an explicit integration node after all declared dependencies pass. Versioned files allow recovery. If project learning is enabled, its observer reads consented artifacts and updates learning-owned state separately.
 
 ## Graph above loops
 
@@ -52,7 +60,7 @@ A fresh, approved repository index such as Graphify may enrich navigation and re
 - Every user-facing progress/step message follows `harness.status/v1`: stage, progress, automatic work, human/macro pending items, active/ready/blocked graph nodes, blockers, next action, and inspectable paths are explicit; outcome, changes, verification, and lifecycle remain in closeout evidence.
 - Large logs remain external or generated; artifacts retain the command, result summary, and durable evidence pointer.
 
-The Phase 2 [review template](../harness/templates/REVIEW.md) defines the independent immutable result referenced by graph state. It is distinct from the implementer's handoff and cannot be authored by the implementer.
+The Phase 2 [review template](../harness/templates/REVIEW.md) defines the independent immutable result referenced by graph state. It is distinct from the implementer's handoff, records the fresh-context reference and packet identity, and cannot be authored in the implementer's context.
 
 ## Progressive context
 
@@ -60,7 +68,7 @@ Context is loaded from least to most specific:
 
 1. harness principles and active policies;
 2. approved project context and relevant decisions;
-3. the capability manifest, approved model-routing revision, plus only approved durable rules whose scope intersects the role/task/paths;
+3. the capability manifest, approved model-routing revision, resolved model-dispatch evidence, plus only approved durable rules whose scope intersects the role/task/paths;
 4. graph neighborhood: the task, dependencies, dependents, and ownership map;
 5. the node's `read_set`, followed only when necessary by evidence-backed context expansion; its `impact_set` bounds proportional regression checks while `write_set` remains the sole ownership lease;
 6. task-local temporary context, checks, and prior handoff/review evidence;
@@ -108,7 +116,7 @@ Core code speaks in capabilities such as `isolate`, `read`, `write`, `execute_ch
 
 The first-version adapter layer provides a [generic contract](../adapters/generic.md), native [Codex](../adapters/codex.md) routing through `.agents/skills/`, and native [Claude Code](../adapters/claude.md) routing through `.claude/skills/` and bounded `.claude/agents/`. Both read and write the same neutral `harness-state/`, contracts, rules, capability manifest, and playbooks. A repository may be used with Codex and Claude Code at different times without changing profiles or creating competing state.
 
-These native files activate guidance inside capable installed tools; they are not an external autonomous runtime. No entrypoint enables hooks, MCP, network, secrets, settings, or destructive permissions. Mature hosts preserve colliding platform files through namespaced coexistence and human-approved cutover.
+These native files activate guidance inside capable installed tools; they are not an unattended external daemon. An active orchestrator may invoke the host's supported subagent/task operations and refill parallel capacity, but no entrypoint enables hooks, MCP, network, secrets, settings, or destructive permissions. Mature hosts preserve colliding platform files through namespaced coexistence and human-approved cutover.
 
 For contained installation, a generated profile may live under host `agent-harness-kit/` while minimal managed blocks in root `AGENTS.md` and `CLAUDE.md` route to it. Host-owned operational state remains in root `harness-state/`, outside the replaceable distribution. Nested native-extension discovery is capability evidence, not an assumption; degraded hosts follow neutral playbooks by explicit path. See [embedded installation](EMBEDDED-INSTALLATION.md).
 

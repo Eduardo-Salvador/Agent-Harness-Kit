@@ -1,0 +1,17 @@
+---
+name: feature-discovery
+description: Automatically use when a user wants to brainstorm, explore, shape, or add a new product feature, workflow, integration, or user-facing capability and consequential product choices are not yet approved. Do not use for bugs, maintenance, tiny copy/style changes, or straightforward implementation from an approved feature brief or acceptance criteria.
+---
+
+# Feature discovery
+
+1. Read `../../../harness/playbooks/feature-discovery.md` and follow it before creating or changing technical graph nodes.
+2. Require approved project context. If it is missing, stale, or unapproved, route to `first-run-discovery` instead; do not run two interviews at once.
+3. Activate without requiring the user to name this skill when the request introduces a new product capability and leaves consequential choices open. Explicit brainstorming, ideation, "what if", "how could we", and feature exploration always qualify.
+4. Do not activate for a bug fix, maintenance/refactor, dependency update, direct implementation of an approved brief, or a `direct-trivial` copy/style/static-content edit. The fast path precedes project discovery and creates no feature artifact.
+5. Start by reflecting known project evidence and ask exactly one highest-leverage unanswered feature question. Never repeat the Harness welcome or ask the user to restate approved context.
+6. Analyze the feature for consequential gaps before proposing implementation: intended and excluded actors, eligibility and permissions, entry/onboarding, the happy path, alternate paths, failure states, cancellation, recovery, empty states, data lifecycle, integrations, privacy/security, and observable success. Ask only the branches that apply. For authentication, for example, resolve email versus federated login, verification, forgotten-password recovery, account conflicts, provider failure, session/logout behavior, and who may access what.
+7. Present two to four credible directions with tradeoffs and one recommendation. Do not silently select scope, UX, data, integration, architecture, or risk decisions for the user. A feature is not closed while a consequential journey, failure, recovery path, or acceptance outcome remains unresolved.
+8. Persist the result in `../../../harness-state/features/FEATURE-<id>.md` using `../../../harness/templates/FEATURE-BRIEF.md`. Keep it `draft` until the user explicitly approves the selected direction.
+9. Do not mutate `PENDING.md` or `TASK-GRAPH.md` before feature approval. After approval, update macro scope in pending state when applicable; when planning or implementation was requested, route through `writing-plans` before graph creation.
+10. In hackathon mode, ask at most two cohesive feature questions before offering directions and converge on one demonstrable vertical slice; record deferred edge cases and shortcuts explicitly instead of pretending they were solved.

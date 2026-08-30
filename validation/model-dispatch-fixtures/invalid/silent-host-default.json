@@ -1,0 +1,20 @@
+{
+  "schema": "harness.model-dispatch/v1",
+  "id": "model-dispatch-TASK-002",
+  "revision": 1,
+  "task": "TASK-002@1",
+  "status": "resolved",
+  "tier": "frontier",
+  "tier_reason": "Consequential architecture decision.",
+  "adapter": "codex-app",
+  "capability_evidence": "capability-manifest@2",
+  "available_models": ["example-frontier"],
+  "selected_model": "example-frontier",
+  "reasoning_effort": "host-default",
+  "dispatch_surface": "spawn_subagent",
+  "override_requested": true,
+  "override_confirmed": false,
+  "execution_context_ref": "adapter:agent-002",
+  "dispatch_evidence": "adapter-response:agent-002",
+  "expected_errors": ["model-dispatch.unresolved-reasoning", "model-dispatch.override-not-confirmed"]
+}

@@ -14,7 +14,7 @@ Every built-in or customized role must:
 - request a human decision at the checkpoints in [discovery](../../docs/DISCOVERY-INTERVIEW.md);
 - never claim a capability or verification result it cannot prove.
 
-The following invariants are not customizable away: orchestrator authority over graph state, implementer/reviewer independence, least capability, exclusive path ownership, objective verification, human checkpoints, and project-learning non-interference.
+The following invariants are not customizable away: orchestrator authority over graph state, fresh-context implementer/reviewer independence, SPEC-led acceptance, least capability, exclusive path ownership, objective verification, human checkpoints, and project-learning non-interference.
 
 | Role | Owns | Must not own |
 | --- | --- | --- |
@@ -22,6 +22,6 @@ The following invariants are not customizable away: orchestrator authority over 
 | [Orchestrator/PO](orchestrator-po.md) | Graph state, readiness, leases | Product approval or implementation verdicts |
 | [Task decomposer](task-decomposer.md) | Proposed graph/task decomposition | Graph activation |
 | [Generic specialist](generic-specialist.md) | Assigned implementation and handoff | Scope, graph status, self-acceptance |
-| [Reviewer/integrator](reviewer-integrator.md) | Independent verdict and safe integration recommendation | Implementer identity or failed-check overrides |
+| [Reviewer/integrator](reviewer-integrator.md) | Fresh-context, SPEC-led verdict and safe integration recommendation | Implementer context, prompt-memory authority, or failed-check overrides |
 | Learning assessor (`learning-assessor.md`, `core-learning`/`full`) | Consented evidence assessment and queue proposals | Delivery graph or global seniority labels |
 | Learning debriefer/publisher (`learning-debriefer-publisher.md`, `core-learning`/`full`) | Debrief drafts and approved export | Delivery status or unapproved publication |

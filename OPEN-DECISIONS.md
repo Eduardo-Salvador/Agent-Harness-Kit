@@ -48,6 +48,7 @@ This ledger contains real unresolved choices. An unchecked item is not permissio
 - [x] **Initial public version** — `0.1.0`; approved tag: `v0.1.0` from the validated canonical source.
 - [x] **Contained installation and continuous delivery release** — `0.2.0`; approved tag: `v0.2.0` from the validated canonical source.
 - [x] **Installable public CLI release** — `0.5.3` was built as wheel and source distribution, published to PyPI as `agent-harness-kit-cli`, downloaded publicly, installed into an empty host, and accepted by the bundled validator.
+- [x] **Executable orchestration source release** — `0.6.0` adds feature discovery, short executable specifications, TDD, native Codex/model dispatch, safe parallel scheduling, and SPEC-led independent review; PyPI publication remains a separate verified release action.
 - [ ] **Release automation and GitHub attachments** — owner: maintainers/security; block: automated release. Validate provenance, checksums, and permissions before enabling.
 - [x] Keep one canonical, profile-aware README pair; copied-profile validation confirms all remaining relative links resolve without profile-specific rendering.
 - [x] **Overview audio 0.3.0 refresh** — bilingual tracks were re-rendered with the current scripts, including executable goal-lineage budgets, approved by the user, published as GitHub attachments, and bound by manifest hashes.

@@ -1,5 +1,7 @@
 # Playbook: First run
 
+An explicit request that satisfies the `direct-trivial` gate in [writing plans](writing-plans.md) is handled before initialization and creates no context, graph, or other harness artifact. If targeted inspection disqualifies it, stop before editing and resume this first-run flow.
+
 This neutral policy is evaluated whenever the harness is added to or resumed in a host project. Codex reaches it through root `AGENTS.md`; Claude Code reaches the same rule through root `CLAUDE.md` importing `@AGENTS.md`. Both entrypoints may coexist and share neutral state, so no runtime platform guess or manual profile switch is required.
 
 In a mature host, do not copy over an existing entrypoint or native extension directory. Use namespaced coexistence and migration classification before proposing a merge or cutover.
@@ -38,7 +40,7 @@ Localize the wording to the user's language. A suitable opening is: “Welcome �
 1. Discovery interviewer inventories files and classifies the host as `greenfield`, `existing`, or `uncertain`, with evidence.
 2. If existing harness material is mature, switch to the [mature adoption playbook](mature-harness-adoption.md), record a discovery snapshot, and preserve originals.
 3. Pre-fill known context; ask only questions that close consequential gaps or conflicts.
-4. Record product, architecture, scope, permission, and publication choices as decision proposals for human confirmation.
+4. Record product, architecture, scope, permission, publication, and automatic model-routing choices as decision proposals for human confirmation. Draft `harness-state/MODEL-ROUTING.md` with tier policy, current adapter mapping evidence, supported reasoning efforts, and override surfaces. Include “automatic model routing enabled/disabled” in the consolidated context approval; do not require a separate interview question when the user can approve it with the context.
 5. Ask the user to select exactly one runtime mode. A plain-language request for a hackathon, time-boxed MVP, or demo-first build selects `hackathon`; a request to study, learn through the project, receive guided practice, or keep learning notes adds the learning variant. Do not require internal labels:
    - `delivery` — Development Core only;
    - `delivery+learning` — the same core plus consented project-specific learning;
@@ -47,9 +49,10 @@ Localize the wording to the user's language. A suitable opening is: “Welcome �
 6. If a hackathon mode is selected, follow `harness/playbooks/hackathon-delivery.md`. Ask at most two cohesive discovery questions before the context/graph proposal unless a consequential safety, credential, permission, destructive-action, publication, or product ambiguity blocks execution.
 7. If a learning variant is selected, follow `harness/playbooks/learning-capture-publication.md` when the extension is installed: ask only for missing goals, observation boundaries, and the exact note destination; verify local/Obsidian filesystem access or ask which Notion/other connector/MCP and target to use; then create and approve the learning profile. Never create notes or assume `docs/` or another fallback before that destination is confirmed. Installing `core-learning` never performs this activation. The Harness Engineering Learning Pack is a separate study resource and is never a mode.
 8. Revalidate discovery snapshot identities and selector expansion immediately before approval.
-9. Obtain explicit approval of project context and consequential decisions.
+9. Obtain explicit approval of project context and consequential decisions, including whether the approved model-routing artifact authorizes automatic model/reasoning overrides on future task dispatches. Without that explicit disposition, keep routing advisory/manual.
 10. Create `harness-state/PENDING.md` from the approved context: human decisions/actions plus a macro project completion overview. Do not put technical order or dependencies there.
-11. Only then decompose work into `harness-state/TASK-GRAPH.md`, validate the initial graph, and create briefs for ready nodes.
+11. Only then follow `harness/playbooks/writing-plans.md`: classify simple work for a compact inline spec or create a ready implementation plan with two-to-five-minute executable units and self-contained task specs.
+12. Map those specified units into `harness-state/TASK-GRAPH.md`, validate the initial graph, and dispatch only ready nodes with complete specs.
 
 ## Resume behavior
 

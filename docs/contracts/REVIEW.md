@@ -8,6 +8,11 @@ schema: harness.review/v1
 id: REVIEW-TASK-001-01
 task: TASK-001@1
 handoff: HANDOFF-TASK-001-01
+spec_authority: TASK-001@1
+review_packet: REVIEW-PACKET-TASK-001-01
+review_context: isolated-fresh
+review_context_ref: adapter:review-42
+prompt_source: task-spec-only
 revision: 1
 round: 1
 scope: initial
@@ -27,6 +32,19 @@ created_at: 2026-08-21T12:00:00Z
 
 ## Independence
 - Reviewer differs from implementer: yes.
+- Fresh context has no implementer conversation history: yes.
+
+## Spec authority
+- Operative SPEC: `TASK-001@1`.
+- Original prompt, conversation memory, implementation reasoning, and proposed verdict were excluded.
+
+## Fresh-context evidence
+- Review packet: `REVIEW-PACKET-TASK-001-01`.
+- Context reference: `adapter:review-42`.
+- Packet contains only the pinned SPEC and its named authorities, relevant diff/paths, handoff, verification/TDD evidence, scoped rules, and read/impact sets.
+
+## Independent reconstruction
+- Expected behavior and acceptance matrix derived from the SPEC before implementation inspection.
 
 ## Review profile and scope
 - Profile: standard.
@@ -57,7 +75,11 @@ created_at: 2026-08-21T12:00:00Z
 ## Invariants
 
 - Reviewer identity differs from implementer identity.
+- Round 1 and any focused round 2 run in a newly created reviewer context with no implementer conversation history. Same-context review is invalid.
 - The review pins exact task and handoff revisions.
+- `spec_authority` equals the task revision under review, `prompt_source` is `task-spec-only`, and the review records an immutable packet ID plus adapter-owned context reference.
+- The packet excludes the original prompt, conversation transcript, implementation reasoning, suspected findings, and proposed verdict. Only the SPEC and authorities it explicitly references may define expected behavior.
+- The reviewer derives the acceptance matrix from the SPEC before inspecting the implementation and independently verifies code and evidence. A SPEC conflict becomes a spec-revision finding; memory never resolves it.
 - Round 1 uses `scope: initial`; round 2 uses `scope: focused-rereview` and pins `prior_review`.
 - Round 2 also pins non-empty `blocking_findings`, `correction_delta`, and `regression_scope`; these are the auditable boundary of the re-review.
 - `changes-requested` requires at least one evidence-backed blocking finding.

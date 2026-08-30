@@ -17,6 +17,7 @@ from urllib.parse import unquote
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED_PARTS = {"work", "outputs", ".git", "__pycache__"}
 READY_STATES = {"ready", "active"}
+ACTIVE_STATES = {"active"}
 NODE_FIELDS = {
     "id", "goal", "depends_on", "status", "assignee", "reviewer",
     "write_set", "checkpoint", "task_brief", "assurance_status", "assurance_requires",
@@ -29,20 +30,20 @@ REQUIRED_FILES = [
     "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
     "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/PYPI-README.md",
     "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md",
-    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/HACKATHON-MODE.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
-    "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
+    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/TDD.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/HACKATHON-MODE.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
+    "docs/contracts/FEATURE-BRIEF.md", "docs/contracts/IMPLEMENTATION-PLAN.md", "docs/contracts/MODEL-DISPATCH.md", "docs/contracts/CODEX-AGENT-DISPATCH.md", "docs/contracts/PARALLEL-DISPATCH.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
     "adapters/README.md", "adapters/generic.md", "adapters/codex.md", "adapters/claude.md",
     "harness/roles/README.md", "harness/roles/discovery-interviewer.md",
     "harness/roles/orchestrator-po.md", "harness/roles/task-decomposer.md",
     "harness/roles/generic-specialist.md", "harness/roles/reviewer-integrator.md",
     "harness/roles/learning-assessor.md", "harness/roles/learning-debriefer-publisher.md",
-    "harness/playbooks/README.md", "harness/playbooks/first-run.md", "harness/playbooks/hackathon-delivery.md", "harness/playbooks/status-resume.md",
+    "harness/playbooks/README.md", "harness/playbooks/first-run.md", "harness/playbooks/feature-discovery.md", "harness/playbooks/writing-plans.md", "harness/playbooks/test-driven-execution.md", "harness/playbooks/hackathon-delivery.md", "harness/playbooks/status-resume.md",
     "harness/playbooks/discovery-to-graph.md", "harness/playbooks/task-dispatch.md",
     "harness/playbooks/contract-changes.md", "harness/playbooks/parallel-execution.md",
     "harness/playbooks/review-integration.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/context-routing.md", "harness/playbooks/frontend-screen.md", "harness/playbooks/learning-capture-publication.md",
-    "harness/templates/README.md", "harness/templates/PROJECT-CONTEXT.md",
+    "harness/templates/README.md", "harness/templates/PROJECT-CONTEXT.md", "harness/templates/FEATURE-BRIEF.md", "harness/templates/IMPLEMENTATION-PLAN.md",
     "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/TASK.md", "harness/templates/EXECUTION-BUDGET.md",
-    "harness/templates/HANDOFF.md", "harness/templates/REVIEW.md", "harness/templates/STATUS.md",
+    "harness/templates/HANDOFF.md", "harness/templates/MODEL-DISPATCH.md", "harness/templates/CODEX-AGENT-DISPATCH.md", "harness/templates/PARALLEL-DISPATCH.md", "harness/templates/REVIEW.md", "harness/templates/STATUS.md",
     "harness/templates/DECISION.md", "harness/templates/LEARNING-PROFILE.md",
     "harness/templates/LEARNING-QUEUE.md", "harness/templates/MODEL-ROUTING.md",
     "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md",
@@ -61,6 +62,19 @@ REQUIRED_FILES = [
     "validation/fixtures/invalid/reviewer-self-review.json",
     "validation/fixtures/invalid/path-traversal.json",
     "validation/fixtures/invalid/context-collision.json",
+    "validation/model-dispatch-fixtures/valid.json",
+    "validation/model-dispatch-fixtures/invalid/recorded-tier-only.json",
+    "validation/model-dispatch-fixtures/invalid/silent-host-default.json",
+    "validation/model-dispatch-fixtures/invalid/same-context-autoswitch.json",
+    "validation/test_model_dispatch.py",
+    "validation/test_scheduler.py", "validation/test_parallel_dispatch.py", "validation/test_codex_dispatch.py", "validation/test_codex_agent_dispatch_validation.py",
+    "validation/parallel-dispatch-fixtures/valid.json",
+    "validation/parallel-dispatch-fixtures/invalid/recorded-without-runtime.json",
+    "validation/parallel-dispatch-fixtures/invalid/over-capacity.json",
+    "validation/parallel-dispatch-fixtures/invalid/duplicate-context.json",
+    "validation/codex-agent-dispatch-fixtures/valid.json",
+    "validation/codex-agent-dispatch-fixtures/invalid/same-review-context.json",
+    "validation/codex-agent-dispatch-fixtures/invalid/missing-response.json",
     "validation/status-fixtures/valid.json",
     "validation/status-fixtures/invalid/missing-progress.json",
     "validation/status-fixtures/invalid/path-traversal.json",
@@ -71,6 +85,9 @@ REQUIRED_FILES = [
     "validation/status-fixtures/invalid/technical-transition-without-graph-update.json",
     "validation/review-fixtures/round-two-valid.json",
     "validation/review-fixtures/invalid/missing-correction-delta.json",
+    "validation/review-fixtures/invalid/missing-spec-authority.json",
+    "validation/review-fixtures/invalid/prompt-memory-source.json",
+    "validation/review-fixtures/invalid/same-context.json",
     "validation/budget-fixtures/valid.json",
     "validation/budget-fixtures/invalid/attempt-ceiling-bypass.json",
     "validation/budget-fixtures/invalid/no-progress-ceiling-bypass.json",
@@ -90,15 +107,23 @@ REQUIRED_FILES = [
     "docs/contracts/CAPABILITY-MANIFEST.md", "docs/contracts/RULES-MAP.md",
     "harness/templates/CAPABILITY-MANIFEST.md", "harness/templates/RULES-MAP.md",
     "validation/native-integration.json",
-    ".agents/skills/first-run-discovery/SKILL.md", ".agents/skills/graph-execution/SKILL.md",
-    ".agents/skills/governed-review/SKILL.md", ".agents/skills/frontend-screen/SKILL.md", ".agents/skills/project-learning/SKILL.md",
-    ".claude/skills/first-run-discovery/SKILL.md", ".claude/skills/graph-execution/SKILL.md",
-    ".claude/skills/governed-review/SKILL.md", ".claude/skills/frontend-screen/SKILL.md", ".claude/skills/project-learning/SKILL.md",
+    ".agents/skills/first-run-discovery/SKILL.md", ".agents/skills/feature-discovery/SKILL.md", ".agents/skills/writing-plans/SKILL.md", ".agents/skills/test-driven-task/SKILL.md", ".agents/skills/graph-execution/SKILL.md",
+    ".agents/skills/governed-review/SKILL.md", ".agents/skills/codex-agent-dispatch/SKILL.md", ".agents/skills/parallel-dispatch/SKILL.md", ".agents/skills/frontend-screen/SKILL.md", ".agents/skills/project-learning/SKILL.md",
+    ".claude/skills/first-run-discovery/SKILL.md", ".claude/skills/feature-discovery/SKILL.md", ".claude/skills/writing-plans/SKILL.md", ".claude/skills/test-driven-task/SKILL.md", ".claude/skills/graph-execution/SKILL.md",
+    ".claude/skills/governed-review/SKILL.md", ".claude/skills/parallel-dispatch/SKILL.md", ".claude/skills/frontend-screen/SKILL.md", ".claude/skills/project-learning/SKILL.md",
     ".claude/agents/discovery-interviewer.md", ".claude/agents/task-specialist.md",
     ".claude/agents/independent-reviewer.md", ".claude/agents/learning-assessor.md",
 ]
 
 TEMPLATE_RULES = {
+    "IMPLEMENTATION-PLAN.md": (
+        {"schema", "id", "revision", "status", "project_context", "feature_brief", "updated_at", "updated_by", "source_references"},
+        {"Outcome and authority", "Planning classification", "Scoped context and constraints", "Task units", "Integration and verification", "Replan triggers"},
+    ),
+    "FEATURE-BRIEF.md": (
+        {"schema", "id", "revision", "status", "project_context", "owner", "updated_at", "approved_by", "supersedes", "source_references"},
+        {"Problem and user", "Actors, access, and permissions", "Current behavior and evidence", "Desired outcome and success", "Options explored", "Selected direction", "Scope", "Non-goals", "User journey", "Alternate, failure, and recovery paths", "Data and integrations", "Constraints and risks", "Deferred cases", "Acceptance criteria", "Open questions", "Graph handoff"},
+    ),
     "PROJECT-CONTEXT.md": (
         {"schema", "id", "revision", "status", "mode", "updated_at", "approved_by", "supersedes", "discovery_snapshot", "source_references", "capability_manifest", "rules_map", "pending_authority"},
         {"Project state", "Intent", "Scope", "Success measures", "Delivery shape", "Constraints", "Rules and capabilities", "Assumptions and unknowns", "Verification environment", "References"},
@@ -112,16 +137,28 @@ TEMPLATE_RULES = {
         {"Human action required", "Project completion overview", "Recently resolved"},
     ),
     "TASK.md": (
-        {"schema", "id", "graph", "revision", "status", "assigned_to", "reviewer", "workstream", "agent_role", "execution_context", "thread_policy", "thread_ref", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "execution_budget", "review_profile", "max_review_rounds", "assurance_gate"},
-        {"Outcome", "Context to load", "Owned paths", "Constraints", "Rules to load", "Required capabilities", "Acceptance criteria", "Verification", "Exit"},
+        {"schema", "id", "graph", "revision", "status", "planning_mode", "implementation_plan", "plan_step", "target_minutes", "test_strategy", "tdd_exception", "assigned_to", "reviewer", "workstream", "agent_role", "execution_context", "thread_policy", "thread_ref", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "model_dispatch", "execution_budget", "review_profile", "max_review_rounds", "assurance_gate"},
+        {"Outcome", "Executable spec", "Context to load", "Owned paths", "Constraints", "Non-goals", "Rules to load", "Required capabilities", "Acceptance criteria", "Test-first cycle", "Verification", "Stop and replan", "Exit"},
     ),
     "HANDOFF.md": (
-        {"schema", "id", "task", "attempt", "status", "author", "workstream", "agent_role", "execution_context", "thread_ref", "created_at", "model_tier_used", "model_route_changes", "execution_budget"},
-        {"Result", "Changes", "Change unit and authority", "Acceptance evidence", "Verification run", "Execution budget", "Discoveries and risks", "Routing and authority", "Review request", "User-facing closeout"},
+        {"schema", "id", "task", "attempt", "status", "author", "workstream", "agent_role", "execution_context", "thread_ref", "created_at", "model_tier_used", "model_id_used", "reasoning_effort_used", "model_dispatch", "model_route_changes", "execution_budget"},
+        {"Result", "Changes", "Change unit and authority", "Acceptance evidence", "Verification run", "Test-first evidence", "Execution budget", "Discoveries and risks", "Routing and authority", "Review request", "User-facing closeout"},
+    ),
+    "MODEL-DISPATCH.md": (
+        {"schema", "id", "revision", "task", "status", "tier", "tier_reason", "adapter", "capability_evidence", "available_models", "selected_model", "reasoning_effort", "dispatch_surface", "override_requested", "override_confirmed", "execution_context_ref", "dispatch_evidence", "created_at", "created_by"},
+        {"Resolution", "Dispatch evidence", "Degradation and recovery"},
+    ),
+    "PARALLEL-DISPATCH.md": (
+        {"schema", "id", "revision", "status", "graph", "capacity", "active_before", "capability_evidence", "scheduler_plan", "created_at", "created_by"},
+        {"Selection", "Reservation transaction", "Adapter dispatch evidence", "Refill and fan-in", "Recovery"},
+    ),
+    "CODEX-AGENT-DISPATCH.md": (
+        {"schema", "id", "revision", "status", "task", "purpose", "agent_identity", "role", "execution_context_ref", "model_dispatch", "adapter_operation", "adapter_response_identity", "created_at", "created_by"},
+        {"Role resolution", "Minimal context packet", "Native call", "Dispatch evidence", "Separation and fallback"},
     ),
     "REVIEW.md": (
-        {"schema", "id", "task", "handoff", "revision", "round", "scope", "prior_review", "blocking_findings", "correction_delta", "regression_scope", "status", "reviewer", "verdict", "created_at"},
-        {"Independence", "Review profile and scope", "Criterion verdicts", "Findings", "Integration recommendation", "Verification", "Next review boundary"},
+        {"schema", "id", "task", "handoff", "spec_authority", "review_packet", "review_context", "review_context_ref", "prompt_source", "revision", "round", "scope", "prior_review", "blocking_findings", "correction_delta", "regression_scope", "status", "reviewer", "verdict", "created_at"},
+        {"Independence", "Spec authority", "Fresh-context evidence", "Independent reconstruction", "Review profile and scope", "Criterion verdicts", "Findings", "Integration recommendation", "Verification", "Next review boundary"},
     ),
     "STATUS.md": (
         {"schema", "id", "revision", "generated_at", "generated_by", "project_context", "pending_authority", "task_graph"},
@@ -373,7 +410,7 @@ def validate_graph(data: dict, source: str) -> list[str]:
                 if required and required.get("assurance_status") != "accepted":
                     errors.append(f"graph.assurance-gate: {source} {node_id} waits for accepted assurance of {required_id}")
 
-    concurrent = [node for node in by_id.values() if node.get("status") in READY_STATES]
+    concurrent = [node for node in by_id.values() if node.get("status") in ACTIVE_STATES]
     for index, left in enumerate(concurrent):
         left_paths = [normalize_owned_path(str(p))[0] for p in left.get("write_set", [])]
         for right in concurrent[index + 1:]:
@@ -418,6 +455,292 @@ def validate_fixtures() -> list[str]:
             errors.append(f"fixture.no-expectation: {rel(path)}")
         elif path.parent.name == "invalid" and not expected.issubset(actual_codes):
             errors.append(f"fixture.expected-error: {rel(path)} expected {sorted(expected)}, got {sorted(actual_codes)}")
+    return errors
+
+
+PARALLEL_DISPATCH_FIELDS = {
+    "schema", "id", "graph", "status", "capacity", "active_before",
+    "capability_evidence", "selected", "dispatches",
+}
+
+
+def validate_parallel_dispatch_payload(data: dict, source: str) -> list[str]:
+    """Require runtime evidence for every task claimed as parallel-dispatched."""
+    errors: list[str] = []
+    if not isinstance(data, dict):
+        return [f"parallel-dispatch.shape: {source}"]
+    if missing := PARALLEL_DISPATCH_FIELDS - set(data):
+        errors.append(f"parallel-dispatch.missing-field: {source} {sorted(missing)}")
+    if data.get("schema") != "harness.parallel-dispatch/v1":
+        errors.append(f"parallel-dispatch.schema: {source}")
+    if data.get("status") not in {"completed", "partial", "blocked"}:
+        errors.append(f"parallel-dispatch.status: {source}")
+    capacity = data.get("capacity")
+    active_before = data.get("active_before")
+    if not isinstance(capacity, int) or isinstance(capacity, bool) or capacity < 1:
+        errors.append(f"parallel-dispatch.capacity: {source}")
+        capacity = 0
+    if not isinstance(active_before, int) or isinstance(active_before, bool) or active_before < 0:
+        errors.append(f"parallel-dispatch.active-count: {source}")
+        active_before = 0
+    selected = data.get("selected")
+    dispatches = data.get("dispatches")
+    if not isinstance(selected, list):
+        errors.append(f"parallel-dispatch.selected-shape: {source}")
+        selected = []
+    if not isinstance(dispatches, list):
+        errors.append(f"parallel-dispatch.dispatch-shape: {source}")
+        dispatches = []
+    if active_before + len(dispatches) > capacity:
+        errors.append(f"parallel-dispatch.capacity: {source}")
+
+    selected_ids: list[str] = []
+    selected_paths: list[tuple[str, list[str]]] = []
+    for item in selected:
+        if not isinstance(item, dict) or not item.get("task") or not isinstance(item.get("write_set"), list):
+            errors.append(f"parallel-dispatch.selected-shape: {source}")
+            continue
+        task_id = str(item["task"])
+        if task_id in selected_ids:
+            errors.append(f"parallel-dispatch.duplicate-task: {source} {task_id}")
+        selected_ids.append(task_id)
+        normalized: list[str] = []
+        for raw in item["write_set"]:
+            path, reason = normalize_owned_path(str(raw))
+            if reason or not path:
+                errors.append(f"parallel-dispatch.invalid-path: {source} {task_id} {raw!r}")
+            else:
+                normalized.append(path)
+        for owner_id, owner_paths in selected_paths:
+            if any(paths_collide(left, right) for left in normalized for right in owner_paths):
+                errors.append(f"parallel-dispatch.write-collision: {source} {owner_id} <> {task_id}")
+        selected_paths.append((task_id, normalized))
+
+    dispatch_ids: list[str] = []
+    context_refs: list[str] = []
+    lease_refs: list[str] = []
+    placeholders = {"", "none", "pending", "unknown", "unavailable", "self-asserted"}
+    for item in dispatches:
+        if not isinstance(item, dict):
+            errors.append(f"parallel-dispatch.dispatch-shape: {source}")
+            continue
+        task_id = str(item.get("task", ""))
+        dispatch_ids.append(task_id)
+        context_ref = str(item.get("context_ref", "")).strip()
+        lease_ref = str(item.get("lease_ref", "")).strip()
+        evidence = str(item.get("adapter_evidence", "")).strip()
+        model_dispatch = str(item.get("model_dispatch", "")).strip()
+        if any(value.lower() in placeholders for value in (context_ref, lease_ref, evidence, model_dispatch)):
+            errors.append(f"parallel-dispatch.missing-evidence: {source} {task_id}")
+        if context_ref in context_refs:
+            errors.append(f"parallel-dispatch.duplicate-context: {source} {context_ref}")
+        if lease_ref in lease_refs:
+            errors.append(f"parallel-dispatch.duplicate-lease: {source} {lease_ref}")
+        context_refs.append(context_ref)
+        lease_refs.append(lease_ref)
+    if data.get("status") == "completed" and sorted(selected_ids) != sorted(dispatch_ids):
+        errors.append(f"parallel-dispatch.incomplete-batch: {source}")
+    return errors
+
+
+def validate_parallel_dispatch_fixtures() -> list[str]:
+    errors: list[str] = []
+    root = ROOT / "validation" / "parallel-dispatch-fixtures"
+    valid_path = root / "valid.json"
+    try:
+        valid = json.loads(valid_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"parallel-dispatch.fixture-baseline: {exc}"]
+    if actual := validate_parallel_dispatch_payload(valid, rel(valid_path)):
+        errors.append(f"parallel-dispatch.fixture-valid-failed: {actual}")
+    for path in sorted((root / "invalid").glob("*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        actual = validate_parallel_dispatch_payload(payload, rel(path))
+        actual_codes = {item.split(":", 1)[0] for item in actual}
+        expected = set(payload.get("expected_errors", []))
+        if not expected:
+            errors.append(f"parallel-dispatch.fixture-no-expectation: {rel(path)}")
+        elif not expected.issubset(actual_codes):
+            errors.append(
+                f"parallel-dispatch.fixture-expected-error: {rel(path)} "
+                f"expected {sorted(expected)}, got {sorted(actual_codes)}"
+            )
+    return errors
+
+
+MODEL_DISPATCH_FIELDS = {
+    "schema", "id", "revision", "task", "status", "tier", "tier_reason",
+    "adapter", "capability_evidence", "available_models", "selected_model",
+    "reasoning_effort", "dispatch_surface", "override_requested",
+    "override_confirmed", "execution_context_ref", "dispatch_evidence",
+}
+MODEL_OVERRIDE_SURFACES = {"create_thread", "send_message_to_thread", "spawn_subagent", "manual-selection"}
+MODEL_PLACEHOLDERS = {"", "none", "pending", "unknown", "default", "host-default", "unavailable"}
+MODEL_EVIDENCE_PLACEHOLDERS = MODEL_PLACEHOLDERS | {"self-asserted"}
+
+
+def validate_model_dispatch_payload(data: dict, source: str) -> list[str]:
+    """Reject routing records that describe a tier without proving the runtime override."""
+    errors: list[str] = []
+    if not isinstance(data, dict):
+        return [f"model-dispatch.shape: {source}"]
+    missing = MODEL_DISPATCH_FIELDS - set(data)
+    if missing:
+        errors.append(f"model-dispatch.missing-field: {source} {sorted(missing)}")
+    if data.get("schema") != "harness.model-dispatch/v1":
+        errors.append(f"model-dispatch.schema: {source}")
+    if data.get("status") not in {"resolved", "manual-required", "blocked"}:
+        errors.append(f"model-dispatch.status: {source}")
+    if data.get("tier") not in {"economical", "balanced", "frontier"}:
+        errors.append(f"model-dispatch.tier: {source}")
+    if not str(data.get("tier_reason", "")).strip():
+        errors.append(f"model-dispatch.tier-reason: {source}")
+    available = data.get("available_models")
+    if not isinstance(available, list) or not available:
+        errors.append(f"model-dispatch.catalog: {source}")
+        available = []
+    selected = str(data.get("selected_model", "")).strip()
+    if data.get("status") == "resolved" and (
+        selected.lower() in MODEL_PLACEHOLDERS or selected not in available
+    ):
+        errors.append(f"model-dispatch.unresolved-model: {source}")
+    reasoning = str(data.get("reasoning_effort", "")).strip().lower()
+    if data.get("status") == "resolved" and reasoning in MODEL_PLACEHOLDERS:
+        errors.append(f"model-dispatch.unresolved-reasoning: {source}")
+    surface = data.get("dispatch_surface")
+    if data.get("status") == "resolved" and surface not in MODEL_OVERRIDE_SURFACES:
+        errors.append(f"model-dispatch.same-context-claim: {source}")
+    if data.get("status") == "resolved" and (
+        data.get("override_requested") is not True or data.get("override_confirmed") is not True
+    ):
+        errors.append(f"model-dispatch.override-not-confirmed: {source}")
+    evidence = str(data.get("dispatch_evidence", "")).strip().lower()
+    context_ref = str(data.get("execution_context_ref", "")).strip().lower()
+    if data.get("status") == "resolved" and (
+        evidence in MODEL_EVIDENCE_PLACEHOLDERS or context_ref in MODEL_PLACEHOLDERS
+    ):
+        errors.append(f"model-dispatch.missing-evidence: {source}")
+    return errors
+
+
+def validate_model_dispatch_fixtures() -> list[str]:
+    errors: list[str] = []
+    root = ROOT / "validation" / "model-dispatch-fixtures"
+    valid_path = root / "valid.json"
+    try:
+        valid = json.loads(valid_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"model-dispatch.fixture-baseline: {exc}"]
+    if actual := validate_model_dispatch_payload(valid, rel(valid_path)):
+        errors.append(f"model-dispatch.fixture-valid-failed: {actual}")
+    for path in sorted((root / "invalid").glob("*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        actual = validate_model_dispatch_payload(payload, rel(path))
+        actual_codes = {item.split(":", 1)[0] for item in actual}
+        expected = set(payload.get("expected_errors", []))
+        if not expected:
+            errors.append(f"model-dispatch.fixture-no-expectation: {rel(path)}")
+        elif not expected.issubset(actual_codes):
+            errors.append(
+                f"model-dispatch.fixture-expected-error: {rel(path)} "
+                f"expected {sorted(expected)}, got {sorted(actual_codes)}"
+            )
+    return errors
+
+
+CODEX_DISPATCH_FIELDS = {
+    "schema", "status", "task", "purpose", "agent_identity", "role",
+    "context_packet", "execution_context_ref", "model", "adapter_operation",
+    "adapter_response_identity", "adapter_response", "separation",
+}
+CODEX_CONTEXT_FORBIDDEN = {"conversation", "conversation_history", "prompt_history", "implementation_plan"}
+
+
+def validate_codex_agent_dispatch_payload(data: dict, source: str) -> list[str]:
+    """Validate adapter-owned proof that a native Codex agent was actually dispatched."""
+    errors: list[str] = []
+    if not isinstance(data, dict):
+        return [f"codex-dispatch.shape: {source}"]
+    missing = CODEX_DISPATCH_FIELDS - set(data)
+    if missing:
+        errors.append(f"codex-dispatch.missing-field: {source} {sorted(missing)}")
+    if data.get("schema") != "harness.codex-agent-dispatch/v1":
+        errors.append(f"codex-dispatch.schema: {source}")
+    if data.get("status") != "dispatched":
+        errors.append(f"codex-dispatch.status: {source}")
+    if data.get("purpose") not in {"implementation", "review"}:
+        errors.append(f"codex-dispatch.purpose: {source}")
+
+    role = data.get("role")
+    if not isinstance(role, dict) or any(not str(role.get(key, "")).strip() for key in ("requested", "executor", "role_file")):
+        errors.append(f"codex-dispatch.role: {source}")
+    context_packet = data.get("context_packet")
+    if not isinstance(context_packet, dict) or not str(context_packet.get("task_spec", "")).strip():
+        errors.append(f"codex-dispatch.context-packet: {source}")
+    elif CODEX_CONTEXT_FORBIDDEN & set(context_packet):
+        errors.append(f"codex-dispatch.context-leak: {source}")
+
+    response = data.get("adapter_response")
+    response_identity = str(data.get("adapter_response_identity", "")).strip().lower()
+    context_ref = str(data.get("execution_context_ref", "")).strip().lower()
+    if (
+        not isinstance(response, dict)
+        or not response
+        or response_identity in MODEL_EVIDENCE_PLACEHOLDERS
+        or context_ref in MODEL_PLACEHOLDERS
+        or not (response.get("agent_id") or response.get("context_ref"))
+    ):
+        errors.append(f"codex-dispatch.missing-response: {source}")
+
+    model = data.get("model")
+    if not isinstance(model, dict):
+        errors.append(f"codex-dispatch.model: {source}")
+    else:
+        if model.get("requested") != model.get("accepted") or str(model.get("accepted", "")).lower() in MODEL_PLACEHOLDERS:
+            errors.append(f"codex-dispatch.model-mismatch: {source}")
+        if (
+            model.get("reasoning_effort_requested") != model.get("reasoning_effort_accepted")
+            or str(model.get("reasoning_effort_accepted", "")).lower() in MODEL_PLACEHOLDERS
+        ):
+            errors.append(f"codex-dispatch.reasoning-mismatch: {source}")
+
+    separation = data.get("separation")
+    if not isinstance(separation, dict):
+        errors.append(f"codex-dispatch.separation: {source}")
+    elif data.get("purpose") == "review":
+        if data.get("agent_identity") == separation.get("implementer_identity"):
+            errors.append(f"codex-dispatch.reviewer-identity: {source}")
+        if data.get("execution_context_ref") == separation.get("implementer_context_ref"):
+            errors.append(f"codex-dispatch.reviewer-context: {source}")
+        if separation.get("fresh_context_required") is not True:
+            errors.append(f"codex-dispatch.reviewer-freshness: {source}")
+        if isinstance(role, dict) and role.get("executor") != "role:reviewer-integrator":
+            errors.append(f"codex-dispatch.reviewer-role: {source}")
+    return errors
+
+
+def validate_codex_agent_dispatch_fixtures() -> list[str]:
+    errors: list[str] = []
+    root = ROOT / "validation" / "codex-agent-dispatch-fixtures"
+    valid_path = root / "valid.json"
+    try:
+        valid = json.loads(valid_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"codex-dispatch.fixture-baseline: {exc}"]
+    if actual := validate_codex_agent_dispatch_payload(valid, rel(valid_path)):
+        errors.append(f"codex-dispatch.fixture-valid-failed: {actual}")
+    for path in sorted((root / "invalid").glob("*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        actual = validate_codex_agent_dispatch_payload(payload, rel(path))
+        actual_codes = {item.split(":", 1)[0] for item in actual}
+        expected = set(payload.get("expected_errors", []))
+        if not expected:
+            errors.append(f"codex-dispatch.fixture-no-expectation: {rel(path)}")
+        elif not expected.issubset(actual_codes):
+            errors.append(
+                f"codex-dispatch.fixture-expected-error: {rel(path)} "
+                f"expected {sorted(expected)}, got {sorted(actual_codes)}"
+            )
     return errors
 
 
@@ -518,6 +841,14 @@ def validate_status_fixtures() -> list[str]:
 
 def validate_round_two_payload(data: dict, source: str) -> list[str]:
     errors: list[str] = []
+    if not data.get("spec_authority"):
+        errors.append(f"review.spec-authority: {source}")
+    if not data.get("review_packet") or not data.get("review_context_ref"):
+        errors.append(f"review.context-evidence: {source}")
+    if data.get("review_context") != "isolated-fresh":
+        errors.append(f"review.fresh-context: {source}")
+    if data.get("prompt_source") != "task-spec-only":
+        errors.append(f"review.prompt-source: {source}")
     if data.get("round") != 2 or data.get("scope") != "focused-rereview":
         errors.append(f"review.fixture-scope: {source}")
     for field in ("prior_review", "blocking_findings", "correction_delta", "regression_scope"):
@@ -543,6 +874,8 @@ def validate_review_fixtures() -> list[str]:
         mutation = scenario.get("mutation", {})
         if mutation.get("action") == "remove":
             candidate.pop(mutation.get("field"), None)
+        elif mutation.get("action") == "set":
+            candidate[mutation.get("field")] = mutation.get("value")
         else:
             errors.append(f"review.fixture-mutation: {rel(path)}")
             continue
@@ -939,6 +1272,130 @@ def validate_native_integration() -> list[str]:
         hackathon_tokens = ("hackathon", "time-boxed mvp", "demo-first", "harness/playbooks/hackathon-delivery.md")
         if any(token not in agents_text.lower() for token in hackathon_tokens):
             errors.append("native.hackathon-routing: AGENTS.md must route time-boxed MVP and demo-first requests")
+        feature_tokens = ("feature-discovery", "never needs to know its name", "highest-leverage unanswered question", "access/authentication", "failure/recovery paths", "harness-state/features/feature-<id>.md")
+        if any(token not in agents_text.lower() for token in feature_tokens):
+            errors.append("native.feature-discovery-routing: AGENTS.md must automatically route unresolved new feature requests")
+        plan_tokens = ("writing-plans", "two to five minutes", "compact inline spec", "needs-replan", "never improvise", "harness.implementation-plan/v1")
+        if any(token not in agents_text.lower() for token in plan_tokens):
+            errors.append("native.writing-plans-routing: AGENTS.md must require optimized spec-driven planning before implementation")
+        tdd_tokens = ("test-driven-task", "meaningful red", "minimum production code", "identical focused command", "proportional regression", "do not waive tdd")
+        if any(token not in agents_text.lower() for token in tdd_tokens):
+            errors.append("native.tdd-routing: AGENTS.md must require RED-GREEN evidence for behavior-changing code tasks")
+        direct_tokens = ("direct-trivial fast path", "before first-run", "changing one button color", "no product behavior", "do not start discovery/interview", "full status ceremony", "promote the work")
+        if any(token not in agents_text.lower() for token in direct_tokens):
+            errors.append("native.direct-trivial-routing: AGENTS.md must bypass SDD only for bounded mechanical edits")
+        model_dispatch_tokens = ("human-approved routing artifact", "actual task, message, or subagent dispatch", "harness.model-dispatch/v1", "same-context mid-turn switch", "manual-required")
+        if any(token not in agents_text.lower() for token in model_dispatch_tokens):
+            errors.append("native.model-dispatch-routing: AGENTS.md must require confirmed runtime model overrides")
+        parallel_tokens = ("parallel-dispatch", "two or more", "numeric parallel capacity", "without waiting", "first completion or attention event", "integration nodes")
+        if any(token not in agents_text.lower() for token in parallel_tokens):
+            errors.append("native.parallel-dispatch-routing: AGENTS.md must automatically fan out and refill safe ready work")
+        codex_agent_tokens = ("codex-agent-dispatch", "minimal request", "fork_turns: none", "harness.codex-agent-dispatch/v1", "implementer and reviewer", "manual context")
+        if any(token not in agents_text.lower() for token in codex_agent_tokens):
+            errors.append("native.codex-agent-dispatch-routing: AGENTS.md must create and evidence native Codex agents")
+
+    codex_adapter = ROOT / "adapters" / "codex.md"
+    if codex_adapter.is_file():
+        codex_text = codex_adapter.read_text(encoding="utf-8").lower()
+        for token in ("effective codex app model dispatch", "create_thread", "send_message_to_thread", "spawn_subagent", "model` and `thinking", "adapter-owned evidence", "cannot claim that it changed its own model"):
+            if token not in codex_text:
+                errors.append(f"native.codex-model-dispatch: adapters/codex.md lacks {token!r}")
+        for token in ("effective codex app parallel dispatch", "agent-harness schedule", "without waiting", "first-completion", "refill", "sequential"):
+            if token not in codex_text:
+                errors.append(f"native.codex-parallel-dispatch: adapters/codex.md lacks {token!r}")
+        for token in ("effective codex app agent dispatch", "agent-harness codex-dispatch", "fork_turns", "adapter response", "reviewer-integrator", "fresh manual context"):
+            if token not in codex_text:
+                errors.append(f"native.codex-agent-dispatch: adapters/codex.md lacks {token!r}")
+    dispatch_contract = ROOT / "docs" / "contracts" / "MODEL-DISPATCH.md"
+    if dispatch_contract.is_file():
+        dispatch_text = dispatch_contract.read_text(encoding="utf-8").lower()
+        for token in ("override_confirmed", "adapter evidence", "already-running context", "never silently accept the host default", "selected_model"):
+            if token not in dispatch_text:
+                errors.append(f"native.model-dispatch-contract: MODEL-DISPATCH.md lacks {token!r}")
+
+    feature_playbook = ROOT / "harness" / "playbooks" / "feature-discovery.md"
+    if feature_playbook.is_file():
+        feature_text = feature_playbook.read_text(encoding="utf-8").lower()
+        for token in ("activate automatically", "feature-completeness analysis", "people and access", "failure and recovery", "forgotten-password recovery", "two to four credible directions", "explicitly approved", "at most two cohesive feature questions", "do not activate for bug fixes"):
+            if token not in feature_text:
+                errors.append(f"native.feature-discovery-contract: feature workflow lacks {token!r}")
+    for item in (".agents/skills/feature-discovery/SKILL.md", ".claude/skills/feature-discovery/SKILL.md"):
+        path = ROOT / item
+        if path.is_file():
+            skill_text = path.read_text(encoding="utf-8").lower()
+            for token in ("automatically use", "first-run-discovery", "exactly one highest-leverage", "forgotten-password recovery", "failure, recovery path", "two to four credible directions", "do not mutate `pending.md` or `task-graph.md`"):
+                if token not in skill_text:
+                    errors.append(f"native.feature-discovery-skill: {item} lacks {token!r}")
+
+    first_run_playbook = ROOT / "harness" / "playbooks" / "first-run.md"
+    if first_run_playbook.is_file():
+        first_run_text = first_run_playbook.read_text(encoding="utf-8").lower()
+        for token in ("harness-state/model-routing.md", "automatic model routing enabled/disabled", "consolidated context approval", "advisory/manual"):
+            if token not in first_run_text:
+                errors.append(f"native.first-run-model-routing: first-run.md lacks {token!r}")
+
+    if claude_path.is_file():
+        claude_text = claude_path.read_text(encoding="utf-8").lower()
+        for token in ("direct-trivial", "before any harness workflow", "no interview, spec, graph, tdd, review, or full status ceremony"):
+            if token not in claude_text:
+                errors.append(f"native.claude-direct-trivial-routing: CLAUDE.md lacks {token!r}")
+        for token in (".claude/skills/feature-discovery/skill.md", "automatically load", "need not name it", "failure/recovery", "before pending or graph changes"):
+            if token not in claude_text:
+                errors.append(f"native.claude-feature-discovery-routing: CLAUDE.md lacks {token!r}")
+        for token in ("writing-plans", "two-to-five-minute", "replan instead of improvising"):
+            if token not in claude_text:
+                errors.append(f"native.claude-writing-plans-routing: CLAUDE.md lacks {token!r}")
+        for token in ("test-driven-task", "meaningful red", "green with the same focused test", "proportional regression", "faking red"):
+            if token not in claude_text:
+                errors.append(f"native.claude-tdd-routing: CLAUDE.md lacks {token!r}")
+
+    plan_playbook = ROOT / "harness" / "playbooks" / "writing-plans.md"
+    if plan_playbook.is_file():
+        plan_text = plan_playbook.read_text(encoding="utf-8").lower()
+        for token in ("simple-task gate", "two to five minutes", "self-contained `task.md`", "needs-replan", "does not need to load the whole implementation plan", "do not create a plan file per unit", "no ceremonial human approval"):
+            if token not in plan_text:
+                errors.append(f"native.writing-plans-contract: writing plans lacks {token!r}")
+        for token in ("direct-trivial gate", "no sdd", "one color", "no product behavior", "do not create a feature brief", "no spec", "promote"):
+            if token not in plan_text:
+                errors.append(f"native.direct-trivial-contract: writing plans lacks {token!r}")
+    for item in (".agents/skills/writing-plans/SKILL.md", ".claude/skills/writing-plans/SKILL.md"):
+        path = ROOT / item
+        if path.is_file():
+            skill_text = path.read_text(encoding="utf-8").lower()
+            for token in ("automatically use", "simple-task gate", "two to five minutes", "self-contained `task.md` spec", "does not need to", "request spec revision"):
+                if token not in skill_text:
+                    errors.append(f"native.writing-plans-skill: {item} lacks {token!r}")
+            for token in ("direct-trivial", "without loading planning artifacts", "spec/task", "tdd", "review"):
+                if token not in skill_text:
+                    errors.append(f"native.direct-trivial-planning-skill: {item} lacks {token!r}")
+
+    tdd_playbook = ROOT / "harness" / "playbooks" / "test-driven-execution.md"
+    if tdd_playbook.is_file():
+        tdd_text = tdd_playbook.read_text(encoding="utf-8").lower()
+        for token in ("red → green → refactor", "meaningful failure", "identical focused command", "not valid red", "needs-replan", "inside one task", "full suite only when"):
+            if token not in tdd_text:
+                errors.append(f"native.tdd-contract: TDD workflow lacks {token!r}")
+    for item in (".agents/skills/test-driven-task/SKILL.md", ".claude/skills/test-driven-task/SKILL.md"):
+        path = ROOT / item
+        if path.is_file():
+            skill_text = path.read_text(encoding="utf-8").lower()
+            for token in ("automatically use", "before observing red", "fails for the wrong reason", "minimum behavior required for green", "same small task", "completion is invalid", "simplicity, deadline, hackathon mode"):
+                if token not in skill_text:
+                    errors.append(f"native.tdd-skill: {item} lacks {token!r}")
+            for token in ("direct-trivial", "localized color", "no logic", "smallest useful check", "leave the fast path"):
+                if token not in skill_text:
+                    errors.append(f"native.direct-trivial-tdd-skill: {item} lacks {token!r}")
+
+    status_doc = ROOT / "docs" / "STATUS-AND-COMPLETION.md"
+    if status_doc.is_file():
+        status_text = status_doc.read_text(encoding="utf-8").lower()
+        for token in ("direct-trivial exception", "never becomes a task or graph event", "do not emit an intermediate status update", "concise closeout"):
+            if token not in status_text:
+                errors.append(f"native.direct-trivial-status: status policy lacks {token!r}")
+    for adapter_name in ("generic.md", "codex.md", "claude.md"):
+        adapter_text = (ROOT / "adapters" / adapter_name).read_text(encoding="utf-8").lower()
+        if "direct-trivial" not in adapter_text or "no" not in adapter_text:
+            errors.append(f"native.direct-trivial-adapter: adapters/{adapter_name}")
 
     hackathon_playbook = ROOT / "harness" / "playbooks" / "hackathon-delivery.md"
     hackathon_doc = ROOT / "docs" / "HACKATHON-MODE.md"
@@ -1037,6 +1494,33 @@ def validate_native_integration() -> list[str]:
             text = path.read_text(encoding="utf-8")
             if "REVIEW-ROUNDS.md" not in text and "max_review_rounds" not in text and "two-round review budget" not in text and "bounded review profile" not in text:
                 errors.append(f"native.bounded-review-routing: {item} does not route to the shared review budget")
+
+    spec_review_surfaces = (
+        "AGENTS.md",
+        "CLAUDE.md",
+        "adapters/codex.md",
+        "adapters/claude.md",
+        ".agents/skills/governed-review/SKILL.md",
+        ".claude/skills/governed-review/SKILL.md",
+        ".claude/agents/independent-reviewer.md",
+        "harness/playbooks/review-integration.md",
+        "harness/roles/reviewer-integrator.md",
+    )
+    for item in spec_review_surfaces:
+        path = ROOT / item
+        if not path.is_file():
+            continue
+        review_text = path.read_text(encoding="utf-8").lower()
+        if "fresh" not in review_text or "spec" not in review_text:
+            errors.append(f"native.spec-review-routing: {item} must require fresh-context SPEC-led review")
+        if "prompt" not in review_text and "conversation" not in review_text:
+            errors.append(f"native.review-memory-boundary: {item} must reject prompt/conversation memory as review authority")
+    review_playbook = ROOT / "harness" / "playbooks" / "review-integration.md"
+    if review_playbook.is_file():
+        review_text = review_playbook.read_text(encoding="utf-8").lower()
+        for token in ("spawn_subagent", "same-context", "minimal immutable review packet", "before inspecting implementation", "original user prompt", "another fresh, focused review context"):
+            if token not in review_text:
+                errors.append(f"native.spec-review-contract: review integration lacks {token!r}")
 
     status_completion_surfaces = (
         "AGENTS.md",
@@ -1144,16 +1628,25 @@ def validate_repository() -> list[str]:
             "media/agent-harness-kit-overview-en.mp4",
             "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
             "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/VALIDATION.md", "docs/DISTRIBUTION.md",
-            "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
-            "harness/playbooks/first-run.md", "harness/playbooks/status-resume.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/context-routing.md", "harness/playbooks/frontend-screen.md", "harness/templates/PROJECT-CONTEXT.md",
-            "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/STATUS.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/EXECUTION-BUDGET.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "tools/validate.py", "tools/package.py", "tools/install.py", "validation/test_install.py", "validation/budget-fixtures/valid.json",
+            "docs/TDD.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/FEATURE-BRIEF.md", "docs/contracts/IMPLEMENTATION-PLAN.md", "docs/contracts/MODEL-DISPATCH.md", "docs/contracts/CODEX-AGENT-DISPATCH.md", "docs/contracts/PARALLEL-DISPATCH.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
+            "harness/playbooks/first-run.md", "harness/playbooks/feature-discovery.md", "harness/playbooks/writing-plans.md", "harness/playbooks/test-driven-execution.md", "harness/playbooks/status-resume.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/context-routing.md", "harness/playbooks/frontend-screen.md", "harness/templates/PROJECT-CONTEXT.md", "harness/templates/FEATURE-BRIEF.md", "harness/templates/IMPLEMENTATION-PLAN.md",
+            "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/STATUS.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/MODEL-DISPATCH.md", "harness/templates/CODEX-AGENT-DISPATCH.md", "harness/templates/PARALLEL-DISPATCH.md", "harness/templates/EXECUTION-BUDGET.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "tools/validate.py", "tools/package.py", "tools/install.py", "validation/test_install.py", "validation/test_model_dispatch.py", "validation/test_scheduler.py", "validation/test_parallel_dispatch.py", "validation/test_codex_dispatch.py", "validation/test_codex_agent_dispatch_validation.py", "validation/budget-fixtures/valid.json", "validation/model-dispatch-fixtures/valid.json", "validation/parallel-dispatch-fixtures/valid.json", "validation/codex-agent-dispatch-fixtures/valid.json",
             ".agents/skills/first-run-discovery/SKILL.md",
+            ".agents/skills/feature-discovery/SKILL.md",
+            ".agents/skills/writing-plans/SKILL.md",
+            ".agents/skills/test-driven-task/SKILL.md",
             ".agents/skills/graph-execution/SKILL.md",
             ".agents/skills/governed-review/SKILL.md",
+            ".agents/skills/codex-agent-dispatch/SKILL.md",
+            ".agents/skills/parallel-dispatch/SKILL.md",
             ".agents/skills/frontend-screen/SKILL.md",
             ".claude/skills/first-run-discovery/SKILL.md",
+            ".claude/skills/feature-discovery/SKILL.md",
+            ".claude/skills/writing-plans/SKILL.md",
+            ".claude/skills/test-driven-task/SKILL.md",
             ".claude/skills/graph-execution/SKILL.md",
             ".claude/skills/governed-review/SKILL.md",
+            ".claude/skills/parallel-dispatch/SKILL.md",
             ".claude/skills/frontend-screen/SKILL.md",
             ".claude/agents/discovery-interviewer.md",
             ".claude/agents/task-specialist.md",
@@ -1249,6 +1742,44 @@ def validate_repository() -> list[str]:
                 if not delivery_shape or any(token not in delivery_shape.group(1).lower() for token in required_hackathon):
                     errors.append(f"project-context.hackathon-shape: {rel(path)}")
         if header.get("schema") == "harness.task/v1":
+            required_planning = {"planning_mode", "implementation_plan", "plan_step", "target_minutes"}
+            if missing := required_planning - set(header):
+                errors.append(f"task.spec-planning-fields: {rel(path)} missing {sorted(missing)}")
+            planning_mode = header.get("planning_mode")
+            try:
+                target_minutes = int(header.get("target_minutes", "0"))
+            except ValueError:
+                target_minutes = 0
+            if planning_mode == "planned":
+                if header.get("implementation_plan") in {None, "", "none"} or header.get("plan_step") in {None, "", "inline"}:
+                    errors.append(f"task.plan-provenance: {rel(path)} planned work must pin plan revision and step")
+                if not 2 <= target_minutes <= 5:
+                    errors.append(f"task.plan-duration: {rel(path)} planned unit must target 2-5 active minutes")
+            elif planning_mode == "inline-simple":
+                if header.get("implementation_plan") != "none" or header.get("plan_step") != "inline":
+                    errors.append(f"task.simple-provenance: {rel(path)} inline-simple must use none/inline provenance")
+                if not 1 <= target_minutes <= 5:
+                    errors.append(f"task.simple-duration: {rel(path)} inline-simple unit must target at most 5 active minutes")
+            else:
+                errors.append(f"task.planning-mode: {rel(path)}")
+            required_spec_sections = {"Executable spec", "Non-goals", "Stop and replan", "Acceptance criteria", "Verification"}
+            if not required_spec_sections <= headings(text):
+                errors.append(f"task.executable-spec: {rel(path)} lacks complete executable spec sections")
+            test_strategy = header.get("test_strategy")
+            tdd_exception = header.get("tdd_exception")
+            if test_strategy not in {"tdd", "characterization", "verification-only"}:
+                errors.append(f"task.test-strategy: {rel(path)}")
+            if test_strategy == "tdd" and tdd_exception != "none":
+                errors.append(f"task.tdd-exception: {rel(path)} TDD must use exception none")
+            if test_strategy in {"characterization", "verification-only"} and tdd_exception in {None, "", "none"}:
+                errors.append(f"task.tdd-exception: {rel(path)} non-TDD strategy requires an exact reason")
+            if "Test-first cycle" not in headings(text):
+                errors.append(f"task.test-first-cycle: {rel(path)}")
+            if test_strategy == "tdd":
+                test_first = re.search(r"^## Test-first cycle\s*$([\s\S]*?)(?=^## |\Z)", text, re.MULTILINE)
+                required_tdd = ("red test/path:", "red command:", "expected red:", "green change:", "green command:", "refactor boundary:", "proportional regression:")
+                if not test_first or any(token not in test_first.group(1).lower() for token in required_tdd):
+                    errors.append(f"task.tdd-spec: {rel(path)} lacks RED/GREEN/refactor/regression specification")
             if header.get("review_profile") not in {"light", "standard", "critical"}:
                 errors.append(f"review.profile: {rel(path)}")
             if header.get("max_review_rounds") not in {"1", "2"}:
@@ -1257,6 +1788,15 @@ def validate_repository() -> list[str]:
                 errors.append(f"review.assurance-gate: {rel(path)}")
             if header.get("review_profile") == "critical" and header.get("assurance_gate") != "affected-actions":
                 errors.append(f"review.critical-gate: {rel(path)} critical work must gate affected actions")
+            if header.get("status") == "active" and header.get("model_dispatch") in {None, "", "none", "pending", "unknown", "host-default"}:
+                errors.append(f"task.model-dispatch: {rel(path)} active task must pin resolved dispatch evidence")
+        if header.get("schema") == "harness.implementation-plan/v1":
+            if header.get("status") not in {"draft", "ready", "superseded"}:
+                errors.append(f"plan.status: {rel(path)}")
+            plan_text = text.lower()
+            for token in ("target active work: 2–5 minutes", "exact change:", "write set:", "acceptance:", "verification:", "stop/replan if:"):
+                if token not in plan_text:
+                    errors.append(f"plan.unit-spec: {rel(path)} lacks {token!r}")
         if header.get("schema") == "harness.review/v1":
             round_value = header.get("round")
             scope = header.get("scope")
@@ -1269,6 +1809,14 @@ def validate_repository() -> list[str]:
             focused_fields = ("blocking_findings", "correction_delta", "regression_scope")
             if round_value == "2" and any(header.get(field) in {None, "", "none"} for field in focused_fields):
                 errors.append(f"review.focused-evidence: {rel(path)} round 2 must pin blockers, correction delta, and regression scope")
+            if header.get("spec_authority") != header.get("task"):
+                errors.append(f"review.spec-authority: {rel(path)} must equal the pinned task revision")
+            if header.get("review_context") != "isolated-fresh":
+                errors.append(f"review.fresh-context: {rel(path)}")
+            if header.get("prompt_source") != "task-spec-only":
+                errors.append(f"review.prompt-source: {rel(path)}")
+            if any(header.get(field) in {None, "", "none"} for field in ("review_packet", "review_context_ref")):
+                errors.append(f"review.context-evidence: {rel(path)}")
         if header.get("schema") == "harness.handoff/v1":
             if header.get("status") not in {"completed", "blocked", "failed"}:
                 errors.append(f"handoff.status: {rel(path)} must be completed, blocked, or failed")
@@ -1276,6 +1824,23 @@ def validate_repository() -> list[str]:
             required_labels = ("Stage:", "Progress:", "Blockers:", "Next action:", "Inspectable paths:", "Human action required:")
             if not closeout or any(label not in closeout.group(1) for label in required_labels):
                 errors.append(f"handoff.closeout-fields: {rel(path)}")
+            if "Test-first evidence" not in headings(text):
+                errors.append(f"handoff.test-first-evidence: {rel(path)}")
+            for field in ("model_id_used", "reasoning_effort_used", "model_dispatch"):
+                if header.get(field) in {None, "", "none", "pending", "unknown", "host-default"}:
+                    errors.append(f"handoff.model-dispatch: {rel(path)} missing {field}")
+        if header.get("schema") == "harness.model-dispatch/v1" and "harness/templates" not in rel(path):
+            required = MODEL_DISPATCH_FIELDS | {"created_at", "created_by"}
+            if missing := required - set(header):
+                errors.append(f"model-dispatch.markdown-fields: {rel(path)} missing {sorted(missing)}")
+            if header.get("status") == "resolved":
+                for field in ("selected_model", "reasoning_effort", "execution_context_ref", "dispatch_evidence"):
+                    if str(header.get(field, "")).strip().lower() in MODEL_EVIDENCE_PLACEHOLDERS:
+                        errors.append(f"model-dispatch.markdown-evidence: {rel(path)} unresolved {field}")
+                if header.get("dispatch_surface") not in MODEL_OVERRIDE_SURFACES:
+                    errors.append(f"model-dispatch.markdown-surface: {rel(path)}")
+                if header.get("override_requested") != "true" or header.get("override_confirmed") != "true":
+                    errors.append(f"model-dispatch.markdown-confirmation: {rel(path)}")
         if header.get("schema") == "harness.pending/v1":
             required_pending_sections = {"Human action required", "Project completion overview", "Recently resolved"}
             if not required_pending_sections <= headings(text):
@@ -1361,6 +1926,9 @@ def validate_repository() -> list[str]:
             errors.append(f"identity.readme-title: {rel(readme)}")
     errors.extend(validate_templates())
     errors.extend(validate_fixtures())
+    errors.extend(validate_parallel_dispatch_fixtures())
+    errors.extend(validate_model_dispatch_fixtures())
+    errors.extend(validate_codex_agent_dispatch_fixtures())
     errors.extend(validate_status_fixtures())
     errors.extend(validate_review_fixtures())
     errors.extend(validate_budget_fixtures())
@@ -1403,11 +1971,14 @@ def main() -> int:
     required_count = 17 if (ROOT / "PACKAGE-MANIFEST.json").exists() else len(REQUIRED_FILES)
     print(f"VALIDATION PASSED: {len(markdown_files())} Markdown files, {required_count} required files")
     print("Graph fixtures: valid, missing dependency, cycle, write/context collision, self-review, and path traversal")
+    print("Parallel dispatch fixtures: capacity, runtime evidence, distinct contexts, and collision-safe batches")
+    print("Model dispatch fixtures: resolved override evidence, recorded-tier-only, silent default, and same-context claim")
+    print("Codex agent dispatch fixtures: minimal context, runtime response, resolved model, and reviewer separation")
     print("Status mutation fixtures: required fields, human-source provenance, and safe inspectable paths")
-    print("Review mutation fixtures: focused round-two blocker, correction-delta, and regression boundaries")
+    print("Review mutation fixtures: SPEC authority, fresh context, prompt-memory exclusion, and focused round-two boundaries")
     print("Execution budget fixtures: attempt, no-progress, context-expansion, lineage, and path ceilings")
     print("Host fixtures: namespaced adoption, missing backlink, silent omission, stale snapshot, and premature cutover")
-    print("Native integration: Codex and Claude Code entrypoints, frontend/learning/context routing, safe defaults, and profile boundaries")
+    print("Native integration: Codex executable-agent dispatch plus Codex/Claude entrypoints, direct-trivial/feature/planning/TDD/SPEC-led review/frontend/learning/context routing, safe defaults, and profile boundaries")
     print("Language boundary: README.pt-BR.md is the only Portuguese-content exception")
     return 0
 

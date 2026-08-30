@@ -2,6 +2,12 @@
 
 Every completed implementation task receives automatic independent assurance, but review depth and repetition are proportional to risk. Completion is based on declared acceptance checks and an orchestrator transition; review does not require human approval, does not hold the completed node, and does not stop unrelated ready work. The default budget is two rounds total: one initial review and, only when blocking findings exist, one focused remediation review.
 
+## Fresh-context, SPEC-led review
+
+The orchestrator automatically launches round 1 under a different identity in a newly created context with no implementer conversation history. A review subagent is preferred when the host proves that capability; a new visible task/chat or manually opened clean context is the fallback. Reusing the implementer's context is not independent review.
+
+The reviewer receives a minimal immutable packet: the exact executable task SPEC, only the approved authorities named by that SPEC, relevant diff or changed paths, completed handoff, verification/TDD evidence, scoped rules, and read/impact sets. The original prompt, chat transcript, implementation reasoning, suspected defects, and intended verdict are excluded. Before reading the implementation, the reviewer reconstructs expected behavior and an acceptance matrix from the SPEC. The loop is therefore `SPEC → code/TDD → verification → independent review`, not prompt-memory comparison.
+
 ## Profiles
 
 | Profile | Suitable work | Initial review |

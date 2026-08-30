@@ -1,0 +1,15 @@
+{
+  "schema": "harness.codex-agent-dispatch/v1",
+  "status": "dispatched",
+  "task": "TASK-042@3",
+  "purpose": "review",
+  "agent_identity": "agent:reviewer:TASK-042:round-1",
+  "role": {"requested": "role:backend-specialist", "executor": "role:reviewer-integrator", "role_file": "harness/roles/reviewer-integrator.md"},
+  "context_packet": {"role": {}, "task": "TASK-042@3", "task_spec": "tasks/TASK-042.md", "approved_authorities": ["context.md@4"], "scoped_rules": [], "read_set": ["src/api.py"], "impact_set": ["tests/test_api.py"], "model_dispatch": "model-42@1"},
+  "execution_context_ref": "codex:review-agent-42",
+  "model": {"requested": "gpt-5.6-terra", "accepted": "gpt-5.6-terra", "reasoning_effort_requested": "medium", "reasoning_effort_accepted": "medium", "dispatch_ref": "model-42@1"},
+  "adapter_operation": "spawn_agent",
+  "adapter_response_identity": "spawn-op-42",
+  "adapter_response": {"agent_id": "review-agent-42", "operation_id": "spawn-op-42", "accepted_model": "gpt-5.6-terra", "accepted_reasoning_effort": "medium"},
+  "separation": {"implementer_identity": "agent:implementer:TASK-042:attempt-1", "implementer_context_ref": "codex:impl-agent-42", "fresh_context_required": true}
+}

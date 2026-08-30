@@ -1,0 +1,4 @@
+{
+  "mutation": {"action": "set", "field": "prompt_source", "value": "conversation-memory"},
+  "expected_errors": ["review.prompt-source"]
+}

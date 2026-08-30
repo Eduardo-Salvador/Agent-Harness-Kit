@@ -28,9 +28,13 @@ After decomposition, deterministic child tasks may return to balanced or economi
 
 Canonical artifacts store tiers and reasons, not model names. Each adapter maps tiers to models actually available in the current host. A mapping is evidence about availability, latency, cost, and capability at that time; it is not permanent product policy.
 
+Runtime dispatch is separate from durable policy. Immediately before dispatch, the adapter inventories the host catalog and override surfaces, resolves the tier, applies the exact model/reasoning override when creating or delegating the execution context, and writes [`harness.model-dispatch/v1`](contracts/MODEL-DISPATCH.md). A tier label without confirmed adapter evidence is advisory only and cannot activate a task.
+
 ## Dispatch and handoff
 
-Every task records `model_tier` and `model_reason`. The handoff records `model_tier_used` and `model_route_changes`, including why an escalation or decomposition occurred. Reviewers check that a lower tier did not bypass a trigger.
+Every task records `model_tier`, `model_reason`, and a resolved `model_dispatch` reference. The dispatch record stores the runtime model ID, supported reasoning effort, override surface, returned context reference, and adapter evidence. The handoff repeats the model actually used and any route changes, including why an escalation or decomposition occurred. Reviewers check that a lower tier did not bypass a trigger and that the recorded tier was actually applied.
+
+An already-running context must not claim a mid-turn self-switch. Prefer an override on a fresh task/subagent; otherwise record `manual-required` or `blocked`. Never silently continue on the host default.
 
 ## Context efficiency
 
