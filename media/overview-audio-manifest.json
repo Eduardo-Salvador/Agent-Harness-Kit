@@ -1,6 +1,6 @@
 {
   "schema": "agent-harness-kit.overview-audio/v1",
-  "updated_at": "2026-08-27",
+  "updated_at": "2026-08-30",
   "tracks": [
     {
       "language": "en",
@@ -8,13 +8,13 @@
       "github_player": "media/agent-harness-kit-overview-en.mp4",
       "github_attachment": "https://github.com/user-attachments/assets/8f5776d8-6d77-4b37-9712-004c21c3a17e",
       "script": "media/overview-script-en.txt",
-      "audio_sha256": "4f7adb88750ea4072d05cece5921363bd914a4119d1d63535a56a142ae2af114",
-      "script_sha256": "aee8c3ab30ca82dd0dc14201c6bb46947776bc56f1144551a0c7f22df348a417",
-      "github_player_sha256": "1128da5ba8f344ec54345291fd901a2e4043fe710cbb1dcd54575c1a9438aa31",
+      "audio_sha256": "fca9422c259b202f36b6fc0757aee4a4dde2a019a50f3fd12a7644207af482ae",
+      "script_sha256": "68b02723339f9b60dedd03c143bdc6e5124ed7df2b2c655ec68367e86a1df45a",
+      "github_player_sha256": "cc1ad56875effeb993020609eb0ee5b02d832b9c3aafe2d892f8d5973940b65c",
       "voice": "en-US-EmmaMultilingualNeural",
       "status": "candidate-awaiting-audition",
       "script_synced": true,
-      "note": "Version 0.5.3 narration reflects the installable CLI, first-run mode choice, scoped workstreams, learning destination gate, bounded execution, and honest platform limits; human listening approval remains pending."
+      "note": "The current narration covers feature discovery, the direct-trivial fast path, executable specifications, TDD, native model and Codex-agent dispatch, safe parallel execution, bounded independent review, learning, hackathon delivery, and honest platform limits; human listening approval remains pending."
     },
     {
       "language": "pt-BR",
@@ -22,13 +22,13 @@
       "github_player": "media/agent-harness-kit-overview-pt-BR.mp4",
       "github_attachment": "https://github.com/user-attachments/assets/e3cf95a9-2615-41bc-aec1-f68ffce7df18",
       "script": "media/overview-script-pt-BR.txt",
-      "audio_sha256": "3ff8379eb4188f83fc60724e63ab5e938f9569fa774c686be33459ab16279539",
-      "script_sha256": "9824537850253153f891d0c0882fa0828b4d396b305bb888c9c979b28f818129",
-      "github_player_sha256": "11e7c0acbaf76203b1a19845b12abc0e5959b7a3870bd4a06ed6bc2182b564f9",
+      "audio_sha256": "91a7e62cf54574584b5dc0b8bce4c30dcec713f6d741523360a1c9a24bd10a0d",
+      "script_sha256": "f53c8a685e1c9d078861e45ead5d5f23901e8a2772df6c3095f0310728012d61",
+      "github_player_sha256": "3599e4e14804714fc9570a764b21c96459122b0a353459c62cf20eee22935343",
       "voice": "pt-BR-FranciscaNeural",
       "status": "candidate-awaiting-audition",
       "script_synced": true,
-      "note": "A narração da versão 0.5.3 cobre a CLI instalável, escolha de modo na primeira resposta, contextos por área, destino obrigatório de estudo, execução limitada e limites reais da plataforma; a aprovação humana por audição ainda está pendente."
+      "note": "A narração atual cobre descoberta de funcionalidades, caminho direto para mudanças triviais, especificações executáveis, TDD, dispatch nativo de modelos e agentes Codex, execução paralela segura, revisão independente limitada, aprendizado, modo hackathon e limites reais da plataforma; a aprovação humana por audição ainda está pendente."
     }
   ]
 }
