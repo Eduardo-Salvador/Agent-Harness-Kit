@@ -25,6 +25,13 @@ NODE_FIELDS = {
 NODE_CONTEXT_FIELDS = {"workstream", "agent_role", "execution_context", "thread_policy", "thread_ref"}
 NODE_ENRICHMENT_FIELDS = {"read_set", "impact_set", "context_provenance"}
 
+
+def content_sha256(data: bytes, *, normalize_text: bool = False) -> str:
+    if normalize_text:
+        text = data.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
+        data = text.encode("utf-8")
+    return hashlib.sha256(data).hexdigest()
+
 REQUIRED_FILES = [
     "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "LICENSE", "docs/assets/agent-harness-kit-banner.svg", "docs/assets/harness-demo-flow.svg", "media/agent-harness-kit-overview-en.mp3", "media/agent-harness-kit-overview-pt-BR.mp3", "media/agent-harness-kit-overview-en.mp4", "media/agent-harness-kit-overview-pt-BR.mp4",
     "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
@@ -66,7 +73,7 @@ REQUIRED_FILES = [
     "validation/model-dispatch-fixtures/invalid/recorded-tier-only.json",
     "validation/model-dispatch-fixtures/invalid/silent-host-default.json",
     "validation/model-dispatch-fixtures/invalid/same-context-autoswitch.json",
-    "validation/test_model_dispatch.py",
+    "validation/test_model_dispatch.py", "validation/test_media_manifest.py",
     "validation/test_scheduler.py", "validation/test_parallel_dispatch.py", "validation/test_codex_dispatch.py", "validation/test_codex_agent_dispatch_validation.py",
     "validation/parallel-dispatch-fixtures/valid.json",
     "validation/parallel-dispatch-fixtures/invalid/recorded-without-runtime.json",
@@ -1723,7 +1730,7 @@ def validate_repository() -> list[str]:
                         errors.append(f"media.manifest-missing: {language} {field}")
                         continue
                     expected = track.get(f"{field}_sha256")
-                    actual = hashlib.sha256(path.read_bytes()).hexdigest()
+                    actual = content_sha256(path.read_bytes(), normalize_text=field == "script")
                     if expected != actual:
                         errors.append(f"media.manifest-hash: {language} {field}")
                 if track.get("status") in {"candidate-awaiting-audition", "approved"} and track.get("script_synced") is not True:

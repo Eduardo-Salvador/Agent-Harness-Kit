@@ -63,7 +63,7 @@ O modo hackathon mantém estado, leases, checks e status, mas usa review leve po
 
 Ouça uma explicação curta em português sobre o que o projeto faz e como seu fluxo funciona.
 
-https://github.com/user-attachments/assets/e3cf95a9-2615-41bc-aec1-f68ffce7df18
+https://github.com/user-attachments/assets/d89fe815-da49-452e-bcd4-18f33f728f18
 
 [Baixar o MP3 em português](media/agent-harness-kit-overview-pt-BR.mp3) · [Ler o roteiro em português](media/overview-script-pt-BR.txt)
 

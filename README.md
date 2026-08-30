@@ -63,7 +63,7 @@ Hackathon mode keeps state, file leases, checks, and status, but uses light revi
 
 Listen to a short English explanation of what the project does and how its workflow fits together.
 
-https://github.com/user-attachments/assets/8f5776d8-6d77-4b37-9712-004c21c3a17e
+https://github.com/user-attachments/assets/1affd407-4d32-4f66-8386-0bdc3666df2e
 
 [Download the English MP3](media/agent-harness-kit-overview-en.mp3) · [Read the English script](media/overview-script-en.txt)
 

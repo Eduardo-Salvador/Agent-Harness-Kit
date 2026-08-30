@@ -59,6 +59,6 @@ The YAML reader is deliberately bounded: it validates top-level scalar fields us
 
 Language detection cannot prove that prose is English. The validator rejects a maintained set of unambiguous Portuguese markers outside the allowed README and also checks the removed Portuguese filename. Human review remains necessary for style and semantics.
 
-Audio hash validation proves that the declared scripts and MP3 assets match the manifest bytes; it cannot independently recognize speech. A newly rendered track remains `candidate-awaiting-audition` until a human approves listening quality and semantic fidelity.
+Audio hash validation proves that the declared scripts and media assets match the manifest. Binary MP3/MP4 hashes are byte-exact; UTF-8 script hashes normalize CRLF and CR line endings to LF so Git checkout policy cannot create false drift. It cannot independently recognize speech. A newly rendered track remains `candidate-awaiting-audition` until a human approves listening quality and semantic fidelity.
 
 If Python 3 is unavailable, an adapter or human runner must implement these same checks and record durable evidence. Lack of a validator is explicit degradation, never a passing result.
