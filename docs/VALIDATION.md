@@ -39,6 +39,7 @@ The validator uses only the Python 3 standard library and does not modify files.
 - pending-work schema separation between human actions, macro project gaps, and technical graph execution;
 - mandatory user-facing progress/status fields—stage, progress, automatic work, human and macro pending items, active/ready/blocked graph snapshot, blockers, next action, and inspectable paths—with hostile field-removal mutations, automatic completion/next-task routing, and non-blocking assurance references across Codex and Claude entrypoints;
 - executable assurance checkpoints: critical results can gate only explicitly affected graph actions while unrelated ready work continues;
+- shared graph-local readiness semantics: structural validation and scheduling both reject false `ready`/`active` dependency, assurance, and checkpoint state using already-loaded graph data only;
 - embedded installer dry-run, content preservation, marker safety, existing-destination refusal, profile selection, and packaged hash verification;
 - embedded-installation documentation and stable managed bridge markers for root `AGENTS.md` and `CLAUDE.md`;
 - migration coverage, classifications, selector expansion, source identities, destinations/backlinks, unresolved ownership, semantic reviewers, and cutover authority.

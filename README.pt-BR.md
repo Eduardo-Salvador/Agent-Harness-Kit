@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Versão 0.6.0" src="https://img.shields.io/badge/vers%C3%A3o-0.6.0-4967ff">
+  <img alt="Versão 0.6.1" src="https://img.shields.io/badge/vers%C3%A3o-0.6.1-4967ff">
   <img alt="Python 3.10 ou mais recente" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Instale com uv, pipx ou pip" src="https://img.shields.io/badge/instalador-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Compatível com Codex" src="https://img.shields.io/badge/agente-Codex-11131a">
@@ -20,7 +20,7 @@
   <a href="README.md">English</a> · <a href="#comece-aqui">Comece aqui</a> · <a href="#escolha-o-ritmo">Modos</a> · <a href="docs/ARCHITECTURE.md">Arquitetura</a>
 </p>
 
-**Versão do código-fonte: `0.6.0`.** O Kit é um scaffold executável e orientado a artefatos. Ele não mantém um daemon em segundo plano nem bloqueia o sistema operacional. Enquanto um agente orquestrador está ativo, pode disparar em paralelo subtasks independentes e prontas quando a plataforma comprova essa capacidade.
+**Versão do código-fonte: `0.6.1`.** Antes do dispatch, a prontidão do grafo é validada a partir dos dados já carregados, detectando estados falsamente prontos de dependência, assurance e checkpoint. Isso não custa chamadas de IA nem varredura do repositório, não afeta `direct-trivial` ou `vibe`, e não valida capacidades ao vivo nem o conteúdo das SPECs. O Kit continua sendo um scaffold executável e orientado a artefatos: não mantém um daemon autônomo nem bloqueia o sistema operacional.
 
 > **Um harness maduro o bastante para saber quando sair do caminho.** O router nativo não trata todo prompt como um grande projeto: gates determinísticos de segurança separam edições estáticas imediatas, pequenas mudanças verificadas em modo “vibe”, trabalho gerenciado pelo grafo e engenharia completa. A IA só é consultada diante de ambiguidade real; risco, checks com falha ou crescimento de escopo promovem automaticamente o trabalho, sem deixar a velocidade furar a segurança.
 
@@ -113,7 +113,7 @@ Você pode inspecionar a mesma pré-classificação no terminal com `agent-harne
 2. Uma feature nova com decisões de produto abertas entra automaticamente em um brainstorm focado: o contexto conhecido é reaproveitado, caminhos viáveis são comparados e você aprova um brief antes de o grafo mudar.
 3. Trabalho não trivial já aprovado vira um writing plan com unidades verificáveis de aproximadamente dois a cinco minutos; trabalho realmente simples mantém apenas uma spec inline curta.
 4. No Codex, o dispatcher nativo escolhe a role neutra, monta somente o pacote de contexto focado, resolve modelo/raciocínio e cria um subagente executável novo com `fork_turns: none`. Ele registra identidade, contexto e resposta retornados; sem subagentes, a implementação degrada explicitamente para execução sequencial, enquanto a revisão ainda exige outro contexto novo. Depois, o agente executa sua SPEC autocontida sem inventar comportamento. Código segue RED → GREEN → REFACTOR; contradição ou RED inválido volta ao planejamento.
-5. Quando dois ou mais nós sem colisão estão prontos e a plataforma informa capacidade numérica, o orquestrador reserva leases e contextos distintos, dispara todo o lote seguro sem esperar entre chamadas e repõe uma vaga após o primeiro evento de conclusão ou atenção. Ramos dependentes convergem por um nó explícito de integração.
+5. Um gate compartilhado e em memória rejeita nodes marcados falsamente como `ready` ou `active` quando dependências, assurance ou checkpoints locais do grafo não passaram. Depois, quando dois ou mais nós sem colisão estão prontos e a plataforma informa capacidade numérica, o orquestrador reserva leases e contextos distintos, dispara todo o lote seguro sem esperar entre chamadas e repõe a primeira vaga liberada. Ramos dependentes convergem por um nó explícito de integração.
 6. Trabalho aprovado nos checks é concluído e informado imediatamente; a próxima tarefa pronta pode começar sem aprovação cerimonial. Uma task `graph-only` inline-simple elegível roda seu check determinístico e avança somente o grafo — sem handoff, pacote de review, artefato de review ou logs copiados. Comportamento, TDD, contratos, risco, integrações, checks falhos e assurance continuam no fluxo completo de handoff/review.
 7. Para `handoff-review`, depois da verificação o orquestrador lança um revisor independente em contexto novo — de preferência um subagente quando disponível. Ele recebe a SPEC versionada, diff relevante, handoff e evidências de teste, reconstrói a aceitação antes de ler o código e nunca depende do prompt original ou da memória do implementador. A garantia segue não bloqueante: uma review proporcional e, apenas para bloqueio real, no máximo uma re-review focada. Não existe terceiro loop.
 

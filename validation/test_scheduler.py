@@ -13,6 +13,7 @@ def node(
     status: str = "ready",
     depends_on: list[str] | None = None,
     write_set: list[str] | None = None,
+    checkpoint: object = None,
     assurance_status: str = "accepted",
     assurance_requires: list[str] | None = None,
 ) -> dict:
@@ -21,6 +22,7 @@ def node(
         "status": status,
         "depends_on": depends_on or [],
         "write_set": write_set or [f"src/{task_id.lower()}/**"],
+        "checkpoint": checkpoint,
         "assurance_status": assurance_status,
         "assurance_requires": assurance_requires or [],
     }
@@ -59,6 +61,14 @@ class SchedulerTests(unittest.TestCase):
                 {"id": "RISK", "reason": "assurance:BASE"},
             ],
         )
+
+    def test_defers_a_ready_node_with_an_unresolved_checkpoint(self) -> None:
+        graph = {"nodes": [node("GATED", checkpoint="DEC-001")]}
+
+        plan = schedule_ready(graph, capacity=1)
+
+        self.assertEqual(plan["selected"], [])
+        self.assertEqual(plan["deferred"], [{"id": "GATED", "reason": "checkpoint"}])
 
     def test_never_selects_a_write_collision(self) -> None:
         graph = {

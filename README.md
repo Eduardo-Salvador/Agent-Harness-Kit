@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version 0.6.0" src="https://img.shields.io/badge/version-0.6.0-4967ff">
+  <img alt="Version 0.6.1" src="https://img.shields.io/badge/version-0.6.1-4967ff">
   <img alt="Python 3.10 or newer" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Install with uv, pipx, or pip" src="https://img.shields.io/badge/installer-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Codex compatible" src="https://img.shields.io/badge/agent-Codex-11131a">
@@ -20,7 +20,7 @@
   <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="#start-here">Start here</a> · <a href="#choose-your-pace">Modes</a> · <a href="docs/ARCHITECTURE.md">Architecture</a>
 </p>
 
-**Source version: `0.6.0`.** The Kit is an executable, artifact-driven scaffold. It has no unattended background daemon and does not lock the operating system. While an orchestrator agent is active, it can safely launch independent ready subtasks in parallel when the host proves that capability.
+**Source version: `0.6.1`.** Before dispatch, graph readiness is validated from already-loaded graph data, catching false-ready dependency, assurance, and checkpoint state. This costs no AI call or repository scan, does not affect `direct-trivial` or `vibe`, and does not validate live capabilities or task SPEC contents. The Kit remains an executable, artifact-driven scaffold: it has no unattended background daemon and does not lock the operating system.
 
 > **A harness mature enough to know when to get out of the way.** Its built-in request router does not treat every prompt like a major project: deterministic safety gates separate instant static edits, small verified “vibe” changes, graph-managed work, and full engineering. AI is consulted only for genuine ambiguity; risk, failed checks, or growing scope automatically promote the work instead of letting speed bypass safety.
 
@@ -113,7 +113,7 @@ You can inspect the same preflight from the terminal with `agent-harness route "
 2. A new feature with open product choices automatically enters a focused brainstorm: known context is reused, credible options are compared, and you approve a feature brief before the graph changes.
 3. Approved non-trivial work becomes one writing plan with independently checkable units targeting roughly two to five minutes; truly simple work keeps only a compact inline spec.
 4. In Codex, the native dispatcher selects the neutral role, builds only the scoped context packet, resolves model/reasoning, and creates a fresh executable subagent with `fork_turns: none`. It records the returned identity/context/response; without subagents, implementation degrades explicitly to sequential execution while review still requires a separate fresh context. The agent then executes its self-contained SPEC without inventing missing behavior. Code follows RED → GREEN → REFACTOR; a contradiction or invalid RED returns to planning.
-5. When two or more collision-free nodes are ready and the host reports numeric capacity, the orchestrator reserves distinct leases and contexts, launches the whole safe batch without waiting between launches, then refills a slot after the first completion or attention event. Dependent branches join through an explicit integration node.
+5. A shared in-memory readiness gate rejects nodes falsely marked `ready` or `active` when graph-local dependencies, assurance, or checkpoints have not passed. Then, when two or more collision-free nodes are ready and the host reports numeric capacity, the orchestrator reserves distinct leases and contexts, launches the whole safe batch without waiting between launches, and refills the first released slot. Dependent branches join through an explicit integration node.
 6. Passing work is completed and reported immediately; the next ready task can start without ceremonial approval. An eligible `graph-only` inline-simple task runs its deterministic check and advances only the graph—no handoff, review packet, review artifact, or copied logs. Behavior, TDD, contracts, risk, integrations, failed checks, and assurance still use the full handoff/review path.
 7. For `handoff-review`, after verification the orchestrator launches an independent reviewer in a fresh context—preferably a subagent when supported. It receives the versioned SPEC, relevant diff, handoff, and test evidence, reconstructs acceptance before reading the code, and never relies on the original prompt or implementer memory. Assurance stays non-blocking: one proportional review and, only for a real blocker, at most one focused re-review. There is no third loop.
 

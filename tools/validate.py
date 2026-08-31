@@ -13,8 +13,13 @@ import sys
 from pathlib import Path, PurePosixPath
 from urllib.parse import unquote
 
-
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from agent_harness_kit.readiness import readiness_blocker
+
+
 EXCLUDED_PARTS = {"work", "outputs", ".git", "__pycache__"}
 READY_STATES = {"ready", "active"}
 ACTIVE_STATES = {"active"}
@@ -439,11 +444,18 @@ def validate_graph(data: dict, source: str) -> list[str]:
         errors.append(f"graph.cycle: {source}")
 
     for node_id, node in by_id.items():
-        if node.get("status") in READY_STATES:
-            for required_id in node.get("assurance_requires", []):
-                required = by_id.get(required_id)
-                if required and required.get("assurance_status") != "accepted":
-                    errors.append(f"graph.assurance-gate: {source} {node_id} waits for accepted assurance of {required_id}")
+        if node.get("status") not in READY_STATES:
+            continue
+        blocker = readiness_blocker(node, by_id)
+        if blocker is None:
+            continue
+        gate, _, required_id = blocker.partition(":")
+        if gate == "dependency":
+            errors.append(f"graph.dependency-gate: {source} {node_id} waits for completed dependency {required_id}")
+        elif gate == "assurance":
+            errors.append(f"graph.assurance-gate: {source} {node_id} waits for accepted assurance of {required_id}")
+        else:
+            errors.append(f"graph.checkpoint-gate: {source} {node_id} has an unresolved checkpoint")
 
     concurrent = [node for node in by_id.values() if node.get("status") in ACTIVE_STATES]
     for index, left in enumerate(concurrent):

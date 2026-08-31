@@ -6,6 +6,8 @@ import json
 import re
 from pathlib import Path, PurePosixPath
 
+from .readiness import readiness_blocker
+
 
 class ScheduleError(ValueError):
     """Raised when a graph cannot produce a safe dispatch plan."""
@@ -91,27 +93,9 @@ def schedule_ready(graph: dict, *, capacity: int) -> dict:
         if node.get("status") != "ready":
             continue
         node_id = node["id"]
-        dependency_blocker = next(
-            (
-                str(dependency)
-                for dependency in node.get("depends_on", [])
-                if dependency not in by_id or by_id[dependency].get("status") != "completed"
-            ),
-            None,
-        )
-        if dependency_blocker:
-            deferred.append({"id": node_id, "reason": f"dependency:{dependency_blocker}"})
-            continue
-        assurance_blocker = next(
-            (
-                str(required)
-                for required in node.get("assurance_requires", [])
-                if required not in by_id or by_id[required].get("assurance_status") != "accepted"
-            ),
-            None,
-        )
-        if assurance_blocker:
-            deferred.append({"id": node_id, "reason": f"assurance:{assurance_blocker}"})
+        blocker = readiness_blocker(node, by_id)
+        if blocker:
+            deferred.append({"id": node_id, "reason": blocker})
             continue
         owned_paths = _owned_paths(node)
         collision = _collision(owned_paths, active_owners + selected_owners)
