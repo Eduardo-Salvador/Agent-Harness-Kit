@@ -10,7 +10,7 @@ In a mature host, do not copy over an existing entrypoint or native extension di
 
 1. Look for `harness-state/PROJECT-CONTEXT.md` in the host-project root. Templates and examples do not count.
 2. Treat the project as uninitialized when the file is absent, unreadable, not `harness.project-context/v1`, not `approved`, or contradicted by material repository evidence.
-3. If initialized, pin its revision and continue to graph reconciliation. If not, do not plan or dispatch implementation.
+3. If initialized, pin its revision, do not emit the first-run welcome or restart discovery, and continue through status/resume to graph reconciliation. If not, do not plan or dispatch implementation.
 
 ## Adaptive initialization
 

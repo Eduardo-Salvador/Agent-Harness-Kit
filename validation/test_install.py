@@ -40,6 +40,15 @@ class InstallerTests(unittest.TestCase):
         self.assertIn("first-run discovery interview automatically", (host / "AGENTS.md").read_text(encoding="utf-8"))
         self.assertIn("first-run discovery interview automatically", (host / "CLAUDE.md").read_text(encoding="utf-8"))
 
+    def test_approved_context_branch_precedes_and_forbids_first_run_welcome(self) -> None:
+        for entrypoint in ("AGENTS.md", "CLAUDE.md"):
+            with self.subTest(entrypoint=entrypoint):
+                bridge = INSTALLER.ENTRYPOINTS[entrypoint].read_text(encoding="utf-8")
+                approved = "status: approved"
+                uninitialized = "first-run discovery interview automatically"
+                self.assertIn("do not emit the first-run welcome", bridge)
+                self.assertLess(bridge.index(approved), bridge.index(uninitialized))
+
     def test_creates_missing_entrypoints(self) -> None:
         temporary, host = self.host()
         self.addCleanup(temporary.cleanup)
@@ -110,7 +119,7 @@ class InstallerTests(unittest.TestCase):
 
     def test_activation_prompt_routes_through_root_and_embedded_kit(self) -> None:
         prompt = INSTALLER.ACTIVATION_PROMPT
-        for expected in ("root AGENTS.md or CLAUDE.md", "agent-harness-kit/", "PROJECT-CONTEXT.md", "first-run or resume"):
+        for expected in ("root AGENTS.md or CLAUDE.md", "agent-harness-kit/", "PROJECT-CONTEXT.md", "approved context resumes without a first-run welcome", "only missing or unapproved context starts first-run discovery"):
             self.assertIn(expected, prompt)
 
 

@@ -80,7 +80,7 @@ After installation:
 If the host does not load root instructions automatically, paste the same activation prompt printed by the installer:
 
 ```text
-Agent Harness Kit is installed in this project. Before scanning, proposing, planning, reporting status, or changing files, read the applicable root AGENTS.md or CLAUDE.md, then follow the referenced instructions under agent-harness-kit/. Check harness-state/PROJECT-CONTEXT.md and run the required first-run or resume flow before answering the project request.
+Agent Harness Kit is installed in this project. Before scanning, proposing, planning, reporting status, or changing files, read the applicable root AGENTS.md or CLAUDE.md, then follow the referenced instructions under agent-harness-kit/. Check harness-state/PROJECT-CONTEXT.md first: approved context resumes without a first-run welcome; only missing or unapproved context starts first-run discovery.
 ```
 
 Manual installation remains available: copy the complete generated profile to `agent-harness-kit/`, then add exactly one block from the [AGENTS bridge template](../harness/templates/ROOT-AGENTS-BRIDGE.md) and [Claude bridge template](../harness/templates/ROOT-CLAUDE-BRIDGE.md), preserving all surrounding content.
