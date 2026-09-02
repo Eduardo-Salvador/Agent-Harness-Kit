@@ -48,7 +48,7 @@ ZIP entries are sorted, use a fixed timestamp and permissions, and contain sourc
 
 Generated names follow `agent-harness-kit-<version>-<profile>.zip` (or the same name as a directory).
 
-Build the installable Python package separately with `uv build`. Before each release, test the resulting wheel in a clean environment and install a profile into an empty host. Publishing to PyPI is an external release action and is not performed by the build itself. Version `0.7.0` was published as `agent-harness-kit-cli` through the GitHub Actions Trusted Publishing workflow, then downloaded from PyPI without a local package cache and smoke-tested through a clean contained `core` installation, root bridges, `doctor`, and its bundled validator.
+Build the installable Python package separately with `uv build`. Before each release, test the resulting wheel in a clean environment and install a profile into an empty host. Publishing to PyPI is an external release action and is not performed by the build itself. Version `0.7.1` was published as `agent-harness-kit-cli` through the GitHub Actions Trusted Publishing workflow, then downloaded from PyPI without a local package cache and smoke-tested through adaptive project-shape discovery, a clean contained `core` installation, root bridges, `doctor`, and its bundled validator.
 
 ## Version strategy
 
