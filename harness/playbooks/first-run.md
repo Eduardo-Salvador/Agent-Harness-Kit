@@ -37,6 +37,18 @@ Keep the welcome to at most two short sentences before the question. Do not turn
 
 Localize the wording to the user's language. A suitable opening is: “Welcome — Agent Harness Kit is active. It organizes project context, pending work, and verifiable execution; before implementation, I will run a short discovery. You can use standard delivery or choose hackathon mode to reach a time-boxed MVP/demo faster.” Follow it immediately with the first discovery question; do not repeat this fixed wording after initialization.
 
+### Architecture and organization closure
+
+After the first product-intent answer, inspect the repository and briefing before asking about technical shape. Build evidence for the architecture decision and folder organization as `known`, `inferred`, `conflicting`, or `unknown`:
+
+- When current approved context already records both decisions and repository evidence does not conflict, reuse them and do not ask again.
+- In an existing project with strong evidence, preserve the current architecture and folder organization by default. Record the inference with its source and ask only for correction or consolidated approval; never turn installation into an unsolicited restructure.
+- When either decision is absent or ambiguous, ask one cohesive question that lets the user specify it, choose among two or three evidence-based options with tradeoffs, or answer **“recommend for me.”** A delegated recommendation remains a proposal until the user approves it.
+- Coding conventions are optional. Detect formatter, linter, language, framework, tests, and existing rules first. When no convention is established, ask whether the user has preferences or wants the normal defaults for the detected stack; `no preference` or `use stack defaults` closes the field without inventing a custom standard.
+- Resolve architecture and folder organization before context approval. Record coding conventions as detected, user-specified, stack-defaults-approved, or none. Reopen any of these fields only when new evidence conflicts or the user requests a change.
+
+These are adaptive discovery decisions, not a fixed three-question form. Keep one highest-leverage question at a time, bundle tightly related project-shape choices when useful, and count them inside the two-question hackathon limit.
+
 1. Discovery interviewer inventories files and classifies the host as `greenfield`, `existing`, or `uncertain`, with evidence.
 2. If existing harness material is mature, switch to the [mature adoption playbook](mature-harness-adoption.md), record a discovery snapshot, and preserve originals.
 3. Pre-fill known context; ask only questions that close consequential gaps or conflicts.

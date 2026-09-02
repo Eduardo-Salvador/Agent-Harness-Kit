@@ -36,6 +36,13 @@ pending_authority: state/PENDING.md
 
 - Delivery criteria pass; learning remains removable and non-blocking.
 
+## Architecture and project organization
+
+- Architecture: existing-confirmed; the parser remains isolated from the learning observer.
+- Folder organization: existing-confirmed; delivery and learning artifacts remain in their existing separate paths.
+- Coding conventions: detected; preserve the example's current Python and Markdown conventions.
+- Evidence: existing parser/tests and the approved learning non-interference rule.
+
 ## Constraints
 
 - No network; local artifacts only; learning cannot edit delivery state.

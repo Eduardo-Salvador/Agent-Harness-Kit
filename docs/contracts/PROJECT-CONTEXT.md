@@ -39,6 +39,12 @@ pending_authority: harness-state/PENDING.md
 ## Success measures
 - The interruption-recovery fixture passes on every supported adapter.
 
+## Architecture and project organization
+- Architecture: existing-confirmed; artifact-driven, platform-neutral core with native adapters.
+- Folder organization: existing-confirmed; neutral contracts/playbooks under `harness/`, native routing under `.agents/` and `.claude/`, runtime state under `harness-state/`.
+- Coding conventions: detected; repository formatter, validator, and language-specific rules.
+- Evidence: repository layout, approved architecture decisions, and scoped rules map.
+
 ## Delivery shape
 - Pace: standard.
 - Deadline/timebox: none.
@@ -71,7 +77,8 @@ pending_authority: harness-state/PENDING.md
 
 - `id` is stable; `revision` increases on every content change.
 - Only one revision may be `approved`; approval identifies a human authority.
-- Project state/evidence, problem, users, outcome, scope, success measures, constraints, rules/capabilities, and assumptions/unknowns are present.
+- Project state/evidence, problem, users, outcome, scope, success measures, architecture, folder organization, coding-convention disposition, constraints, rules/capabilities, and assumptions/unknowns are present.
+- Architecture and folder organization are approved before planning. Existing evidence is preserved by default; absent or ambiguous choices may be user-specified, selected from bounded options, or agent-recommended and approved. Coding conventions are optional and may explicitly use detected stack defaults or none.
 - Every unknown has an owner and resolution condition; assumptions are visibly labeled.
 - `delivery+learning` and `hackathon+learning` require an approved learning profile; `delivery` and `hackathon` must not require one.
 - `hackathon` modes record a deadline/timebox, one primary demo path, audience/environment, acceptable shortcuts, and post-MVP exclusions. They use the same graph, ownership, status, verification, and review authorities as standard delivery.

@@ -36,6 +36,13 @@ pending_authority: harness-state/PENDING.md
 
 - Replace with an observable measure.
 
+## Architecture and project organization
+
+- Architecture: existing-confirmed / user-specified / agent-recommended-and-approved / unknown.
+- Folder organization: existing-confirmed / user-specified / agent-recommended-and-approved / unknown.
+- Coding conventions: detected / user-specified / stack-defaults-approved / none.
+- Evidence: Replace with approved artifact, repository paths, or human decision references.
+
 ## Delivery shape
 
 - Pace: standard / hackathon.

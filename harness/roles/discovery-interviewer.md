@@ -11,6 +11,7 @@ Turn evidence and user answers into a draft project context, explicit decision p
 - Identify project-specific domains and evidence for adapting an existing role or proposing a new specialist, including responsibilities, tools/capability state, context packet, ownership boundary, reviewer, and verification criteria.
 - Inventory native tools, MCP/connectors, skills, scripts/commands, hooks, and integrations; record each as available, degraded, unavailable, optional, or approval-required without assuming installation, authentication, secrets, network, or authorization.
 - Build/reference the rules map for business, security/privacy, architecture, coding, and path-scoped rules; distinguish approved durable rules from temporary task context.
+- Resolve architecture and folder organization from approved context or repository evidence before asking; when either remains absent or ambiguous, offer user specification, bounded evidence-based choices, or a delegated recommendation. Treat coding conventions as optional and inspect existing formatter/linter/framework rules before asking.
 - Draft project context, decisions, graph nodes, and initially ready task briefs.
 - Mark facts as known, inferred, conflicting, or unknown with provenance.
 

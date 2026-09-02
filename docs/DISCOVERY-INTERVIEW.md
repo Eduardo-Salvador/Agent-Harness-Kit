@@ -31,6 +31,18 @@ For an empty or effectively empty greenfield directory, the first question asks 
 
 The handshake is a first-response firewall. Before it is sent, the agent does not answer the substantive request, scan broadly, recommend, or output a proposal, plan, status, or graph. It contains exactly one discovery question. A pre-send check replaces any draft that includes a recommendation or a second question. Model memory, summaries, and prior conversations are unverified and cannot establish company facts, brand direction, product scope, technical decisions, or approval; only the current user message and approved project artifacts can do so.
 
+## Architecture, folders, and coding conventions
+
+After intent is known, the interviewer resolves the project's technical shape adaptively rather than presenting a generic questionnaire:
+
+1. Read approved context and inspect existing structure, manifests, framework markers, formatter/linter configuration, tests, and scoped rules.
+2. If architecture and folder organization are already approved and current evidence agrees, reuse them without another question.
+3. If an existing repository clearly expresses them, preserve that shape by default, record the inference and evidence, and ask only for correction or consolidated approval.
+4. If either is missing or ambiguous, let the user describe it, select from two or three relevant directions with tradeoffs, or ask the agent to recommend one. A recommendation is recorded as proposed until explicitly approved.
+5. Coding conventions are optional. Existing rules win; when none exist, the user may state preferences, approve normal stack defaults, or choose no additional convention.
+
+Architecture and folder organization must be resolved before project-context approval. The three fields reopen only for conflicting evidence or an explicit user change. Hackathon mode may bundle them into one cohesive project-shape question within its two-question limit.
+
 “Recorded” means persisted in a draft artifact with an inspectable path and revision. The interviewer never says it registered a briefing mentally. When a briefing is already available, it writes or updates the draft `harness-state/PROJECT-CONTEXT.md`, cites that draft, and keeps its status unapproved until the human checkpoint.
 
 ## Optional onboarding explanation
@@ -48,11 +60,13 @@ Discovery should establish, to the degree relevant:
 - in-scope and out-of-scope behavior;
 - functional slices and priority;
 - architecture constraints, existing systems, and data boundaries;
+- approved architecture, intended folder organization, and their repository or human evidence;
 - quality attributes, security/privacy needs, and permission limits;
 - delivery environment, verification commands, and definition of done;
 - platform capabilities and acceptable degradation;
 - native platform tools, MCP servers/connectors, skills, scripts/commands, hooks, and external integrations, including evidence and `available`/`degraded`/`unavailable`/`optional`/`approval-required` state; never assume installation, authentication, secrets, network, or authorization;
 - user-defined business rules, security/privacy constraints, architectural invariants, coding conventions, and path-scoped rules, indexed in/referenced by a rules map with authority, scope, precedence, approval, and validation;
+- optional coding conventions, recorded as detected, user-specified, stack-defaults-approved, or none rather than silently invented;
 - project-specific domains and whether existing roles suffice; when they do not, proposed specialist responsibilities, least tool access, progressive context packet, ownership boundary, independent reviewer, and verification criteria;
 - known risks, assumptions, dependencies, and open questions;
 - whether automatic model routing is enabled, disabled, or pending, with the current host catalog/override evidence stored in `harness-state/MODEL-ROUTING.md`; include it in consolidated context approval rather than adding a ceremonial question;
@@ -93,12 +107,13 @@ Stop asking discovery questions when all are true:
 1. every required project-context field is approved or explicitly marked `unknown` with owner and resolution plan;
 2. no unresolved conflict blocks the first delivery slice;
 3. success criteria are testable enough to create acceptance criteria;
-4. platform and permission constraints are known enough to choose safe isolation and verification;
-5. non-simple implementation has a ready writing plan; every graph node has a complete executable task spec and targets a bounded unit;
-6. the initial graph is acyclic, traceable to outcomes, and has at least one ready node;
-7. consequential decisions have explicit human dispositions;
-8. the user approves the context revision and only consequential graph/topology choices;
-9. the discovery snapshot still matches every expanded selector and source identity; drift forces refresh before approval.
+4. architecture and folder organization are approved, and optional coding conventions have an explicit disposition;
+5. platform and permission constraints are known enough to choose safe isolation and verification;
+6. non-simple implementation has a ready writing plan; every graph node has a complete executable task spec and targets a bounded unit;
+7. the initial graph is acyclic, traceable to outcomes, and has at least one ready node;
+8. consequential decisions have explicit human dispositions;
+9. the user approves the context revision and only consequential graph/topology choices;
+10. the discovery snapshot still matches every expanded selector and source identity; drift forces refresh before approval.
 
 More questions are not inherently better. Stop when additional answers would not change safe initial execution.
 

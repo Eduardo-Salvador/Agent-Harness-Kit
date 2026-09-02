@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version 0.7.0" src="https://img.shields.io/badge/version-0.7.0-4967ff">
+  <img alt="Version 0.7.1" src="https://img.shields.io/badge/version-0.7.1-4967ff">
   <img alt="Python 3.10 or newer" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Install with uv, pipx, or pip" src="https://img.shields.io/badge/installer-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Codex compatible" src="https://img.shields.io/badge/agent-Codex-11131a">
@@ -20,7 +20,7 @@
   <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="#start-here">Start here</a> · <a href="#choose-your-pace">Modes</a> · <a href="docs/ARCHITECTURE.md">Architecture</a>
 </p>
 
-**Source version: `0.7.0`.** Execution is now adaptive: four stable lanes, independent `none|light|full` assurance, compact/complete artifact shapes, evidence-first resume, mandatory preflight, consumer-driven handoffs, a proportional test ladder, maximum-cardinality parallel scheduling, atomic graph transitions, and append-only events/metrics. The Kit remains an executable, artifact-driven scaffold: it has no unattended background daemon and does not lock the operating system.
+**Source version: `0.7.1`.** First-run discovery now resolves architecture and folder organization from approved context or repository evidence, asks only when either remains unclear, and treats coding conventions as optional. Execution remains adaptive: four stable lanes, independent `none|light|full` assurance, compact/complete artifact shapes, evidence-first resume, mandatory preflight, consumer-driven handoffs, a proportional test ladder, maximum-cardinality parallel scheduling, atomic graph transitions, and append-only events/metrics.
 
 > **A harness mature enough to know when to get out of the way.** Four execution lanes stay separate from `none|light|full` assurance. Failed checks trigger bounded recovery; full orchestration is reserved for real coordination, human governance, required audit, model insufficiency, or unresolved consequential ambiguity.
 
@@ -31,6 +31,8 @@ Open any terminal, including the integrated terminal in VS Code, and install the
 ```bash
 uv tool install agent-harness-kit-cli
 ```
+
+Already installed? `uv tool install` does not upgrade an existing tool automatically. Run `uv tool upgrade agent-harness-kit-cli`, then confirm `agent-harness --version` before installing into another project.
 
 You can also use `pipx` or install directly from PyPI with `pip`:
 
@@ -67,6 +69,7 @@ Agent Harness Kit is a local execution-governance layer for coding agents. Codex
 - `route` selects the lightest safe execution lane and an independent assurance level.
 - `preflight` verifies declared files, scripts, environment names, commands, validator, browser/sandbox needs, and worker capacity before decomposition.
 - Durable project context and graph state let a fresh conversation resume from current repository/runtime evidence instead of reconstructing work from chat history.
+- First-run discovery reuses proven project decisions, resolves architecture and folder organization before planning, and asks about optional coding conventions only when the repository has not already established them. Users may specify a shape, choose from relevant options, or ask the agent to recommend one.
 - Ownership leases and `schedule` select a maximum-size collision-free batch from ready graph nodes.
 - `transition` advances graph state atomically and records hash-chained events; `metrics` reports ceremony, implementation, gate, review, and remediation signals.
 - A proportional test ladder and consumer-driven review keep small work small while preserving independent assurance when it is actually required.
@@ -151,7 +154,7 @@ Learning support is never silently activated. The user chooses the exact Markdow
 
 ## New project or existing harness
 
-In an empty project, discovery comes before stack, architecture, branding, or feature proposals. In a mature repository, the Kit preserves existing instructions and uses namespaced coexistence; it never silently overwrites `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, or another authority. See the [mature-adoption playbook](harness/playbooks/mature-harness-adoption.md).
+In an empty project, discovery comes before stack, architecture, branding, or feature proposals. After product intent is known, the agent asks for architecture and folder organization only when they cannot be recovered from approved context or project evidence; optional coding conventions may be supplied, delegated to normal stack defaults, or omitted. In a mature repository, the Kit preserves the proven project shape and existing instructions; it never silently overwrites or reorganizes `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, or another authority. See the [mature-adoption playbook](harness/playbooks/mature-harness-adoption.md).
 
 ## Honest boundaries
 

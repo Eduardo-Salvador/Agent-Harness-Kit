@@ -138,6 +138,14 @@ class InstalledHostSmokeTests(unittest.TestCase):
                 self.assertTrue(embedded_skill.is_file())
                 self.assertIn("name: request-router", embedded_skill.read_text(encoding="utf-8"))
 
+                first_run_skill = installed / ".agents/skills/first-run-discovery/SKILL.md"
+                first_run_text = first_run_skill.read_text(encoding="utf-8").lower()
+                self.assertIn("architecture and folder organization", first_run_text)
+                self.assertIn("coding conventions are optional", first_run_text)
+                project_context_template = (installed / "harness/templates/PROJECT-CONTEXT.md").read_text(encoding="utf-8").lower()
+                self.assertIn("## architecture and project organization", project_context_template)
+                self.assertIn("- folder organization:", project_context_template)
+
                 active_task = next(
                     line.removeprefix("active_task: ").strip()
                     for line in context_text.splitlines()

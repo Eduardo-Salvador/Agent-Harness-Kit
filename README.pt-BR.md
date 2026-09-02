@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Versão 0.7.0" src="https://img.shields.io/badge/vers%C3%A3o-0.7.0-4967ff">
+  <img alt="Versão 0.7.1" src="https://img.shields.io/badge/vers%C3%A3o-0.7.1-4967ff">
   <img alt="Python 3.10 ou mais recente" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Instale com uv, pipx ou pip" src="https://img.shields.io/badge/instalador-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Compatível com Codex" src="https://img.shields.io/badge/agente-Codex-11131a">
@@ -20,7 +20,7 @@
   <a href="README.md">English</a> · <a href="#comece-aqui">Comece aqui</a> · <a href="#escolha-o-ritmo">Modos</a> · <a href="docs/ARCHITECTURE.md">Arquitetura</a>
 </p>
 
-**Versão do código-fonte: `0.7.0`.** A execução agora é adaptativa: quatro lanes estáveis, assurance independente `none|light|full`, formatos compacto/completo, resume guiado por evidência real, preflight obrigatório, handoffs apenas com consumidor, escada proporcional de testes, agendamento paralelo de cardinalidade máxima, transições atômicas e eventos/métricas append-only. O Kit continua sendo um scaffold executável e orientado a artefatos: não mantém um daemon autônomo nem bloqueia o sistema operacional.
+**Versão do código-fonte: `0.7.1`.** A descoberta inicial agora resolve arquitetura e organização de pastas pelo contexto aprovado ou pelas evidências do repositório, pergunta somente quando algo continua incerto e trata convenções de código como opcionais. A execução continua adaptativa: quatro lanes estáveis, assurance independente `none|light|full`, formatos compacto/completo, resume guiado por evidência real, preflight obrigatório, handoffs apenas com consumidor e uma escada proporcional de testes.
 
 > **Um harness maduro o bastante para saber quando sair do caminho.** O router nativo não trata todo prompt como um grande projeto: gates determinísticos de segurança separam edições estáticas imediatas, pequenas mudanças verificadas em modo “vibe”, trabalho gerenciado pelo grafo e engenharia completa. A IA só é consultada diante de ambiguidade real; risco, checks com falha ou crescimento de escopo promovem automaticamente o trabalho, sem deixar a velocidade furar a segurança.
 
@@ -31,6 +31,8 @@ Abra qualquer terminal, inclusive o terminal integrado do VS Code em **Terminal 
 ```bash
 uv tool install agent-harness-kit-cli
 ```
+
+Já instalou antes? `uv tool install` não atualiza automaticamente uma ferramenta existente. Execute `uv tool upgrade agent-harness-kit-cli` e confirme com `agent-harness --version` antes de instalar em outro projeto.
 
 Também é possível usar `pipx` ou instalar diretamente do PyPI com `pip`:
 
@@ -67,6 +69,7 @@ O Agent Harness Kit é uma camada local de governança de execução para agente
 - `route` seleciona o caminho de execução mais leve e seguro e um nível de assurance independente.
 - `preflight` verifica arquivos, scripts, nomes de ambiente, comandos, validador, necessidades de navegador/sandbox e capacidade de workers antes da decomposição.
 - Contexto e estado de grafo duráveis permitem que uma conversa nova retome a partir da evidência atual do repositório/runtime, sem reconstruir o trabalho pelo histórico do chat.
+- Na primeira execução, o agente reaproveita decisões comprovadas, resolve arquitetura e organização de pastas antes do planejamento e só pergunta sobre convenções de código opcionais quando o repositório ainda não as definiu. O usuário pode especificar a estrutura, escolher opções relevantes ou pedir uma recomendação.
 - Leases de ownership e `schedule` selecionam o maior lote sem colisões entre os nós prontos do grafo.
 - `transition` avança o grafo atomicamente e registra eventos encadeados por hash; `metrics` relata sinais de cerimônia, implementação, gates, review e remediação.
 - Uma escada proporcional de testes e reviews criadas apenas para consumidores reais mantêm trabalho pequeno realmente pequeno sem perder garantia independente quando ela é necessária.
@@ -151,7 +154,7 @@ O aprendizado nunca é ativado silenciosamente. O usuário escolhe o caminho Mar
 
 ## Projeto novo ou harness existente
 
-Em um projeto vazio, a descoberta vem antes de propostas de stack, arquitetura, marca ou funcionalidades. Em um repositório maduro, o Kit preserva as instruções existentes e usa coexistência com namespace; ele nunca sobrescreve silenciosamente `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/` ou outra autoridade. Veja o [playbook de adoção madura](harness/playbooks/mature-harness-adoption.md).
+Em um projeto vazio, a descoberta vem antes de propostas de stack, arquitetura, marca ou funcionalidades. Depois de entender a intenção do produto, o agente pergunta pela arquitetura e organização de pastas somente quando não consegue recuperá-las do contexto aprovado ou das evidências do projeto; convenções de código opcionais podem ser informadas, delegadas aos padrões normais da stack ou omitidas. Em um repositório maduro, o Kit preserva a estrutura comprovada e as instruções existentes; ele nunca sobrescreve nem reorganiza silenciosamente `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/` ou outra autoridade. Veja o [playbook de adoção madura](harness/playbooks/mature-harness-adoption.md).
 
 ## Limites honestos
 

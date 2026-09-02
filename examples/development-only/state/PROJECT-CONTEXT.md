@@ -36,6 +36,13 @@ pending_authority: state/PENDING.md
 
 - Valid and invalid local fixtures produce deterministic results.
 
+## Architecture and project organization
+
+- Architecture: user-specified; one local standard-library validator.
+- Folder organization: agent-recommended-and-approved; validator code under `tools/` and fixtures under the example state.
+- Coding conventions: stack-defaults-approved; standard Python conventions with no additional formatter requirement.
+- Evidence: `DEC-001@1` and the approved example layout.
+
 ## Constraints
 
 - Standard runtime only; repository-scoped writes; no network.

@@ -1592,6 +1592,24 @@ def validate_native_integration() -> list[str]:
         for token in ("harness-state/model-routing.md", "automatic model routing enabled/disabled", "consolidated context approval", "advisory/manual"):
             if token not in first_run_text:
                 errors.append(f"native.first-run-model-routing: first-run.md lacks {token!r}")
+        for token in ("architecture and organization closure", "architecture decision", "folder organization", "coding conventions are optional", "recommend for me", "do not ask again"):
+            if token not in first_run_text:
+                errors.append(f"native.first-run-project-shape: first-run.md lacks {token!r}")
+    for item in (".agents/skills/first-run-discovery/SKILL.md", ".claude/skills/first-run-discovery/SKILL.md"):
+        path = ROOT / item
+        if path.is_file():
+            skill_text = path.read_text(encoding="utf-8").lower()
+            for token in ("architecture and folder organization", "coding conventions", "optional", "recommend"):
+                if token not in skill_text:
+                    errors.append(f"native.first-run-project-shape-skill: {item} lacks {token!r}")
+
+    for item in ("harness/templates/PROJECT-CONTEXT.md", "docs/contracts/PROJECT-CONTEXT.md"):
+        path = ROOT / item
+        if path.is_file():
+            context_text = path.read_text(encoding="utf-8").lower()
+            for token in ("## architecture and project organization", "- architecture:", "- folder organization:", "- coding conventions:", "- evidence:"):
+                if token not in context_text:
+                    errors.append(f"native.project-context-project-shape: {item} lacks {token!r}")
 
     if claude_path.is_file():
         claude_text = claude_path.read_text(encoding="utf-8").lower()

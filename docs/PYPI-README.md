@@ -2,13 +2,15 @@
 
 Agent Harness Kit is a local execution-governance layer for coding agents. It gives Codex and Claude Code durable project context, adaptive workflow selection, dependency-aware execution, ownership leases, proportional verification, and inspectable completion.
 
-![Agent Harness Kit](https://raw.githubusercontent.com/Eduardo-Salvador/Agent-Harness-Kit/v0.7.0/docs/assets/agent-harness-kit-banner.svg)
+![Agent Harness Kit](https://raw.githubusercontent.com/Eduardo-Salvador/Agent-Harness-Kit/v0.7.1/docs/assets/agent-harness-kit-banner.svg)
 
 ## Install
 
 ```bash
 uv tool install agent-harness-kit-cli
 ```
+
+For an existing installation, run `uv tool upgrade agent-harness-kit-cli` and verify `agent-harness --version`; repeating `uv tool install` does not upgrade an already installed tool.
 
 Or install from the same PyPI release with `pipx` or plain `pip`, including from the integrated terminal in VS Code:
 
@@ -33,6 +35,7 @@ The installer creates a contained `agent-harness-kit/` directory **plus root `AG
 
 - four execution lanes (`direct-trivial`, `vibe`, `graph-only`, `full-harness`) independent from `none|light|full` assurance;
 - evidence-first resume: probe current repository/runtime/check state, then read durable artifacts only to fill gaps;
+- adaptive first-run project-shape discovery: reuse approved evidence, resolve architecture and folder organization before planning, and ask about optional coding conventions only when they are not already established;
 - executable preflight for declared paths, scripts, environment names, commands, validator, browser/sandbox requirements, and worker capacity;
 - `PENDING.md` for human decisions and macro gaps;
 - `TASK-GRAPH.md` for dependencies, leases, progress, and execution;
