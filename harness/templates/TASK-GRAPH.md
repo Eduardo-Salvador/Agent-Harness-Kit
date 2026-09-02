@@ -15,7 +15,7 @@ source_references: none
 The JSON block is the executable graph view. `write_set` contains exclusively leased paths. `read_set` narrows the source context to load, while `impact_set` bounds related regression analysis; neither grants write ownership. All sets use repository-relative paths or directory globs ending in `/**`. `context_provenance` records how those hints were established and the source revision used.
 This artifact owns technical order, dependencies, readiness, leases, remediation, and execution. Human decisions/actions and the macro view of unfinished project areas belong in `harness-state/PENDING.md`, not here.
 Revise this artifact in the same operational step as every technical event and before announcing it. The transition log records dispatch/start, material progress evidence, dependency changes, block/unblock, remediation, completion, lease/context changes, and newly ready nodes.
-For an eligible `evidence_profile: graph-only` node, the completion transition stores only the concise outcome and deterministic check result. It is the complete durable closeout: do not create a handoff, review packet, review artifact, copied log, or separate evidence file. Any failed/ambiguous check or broader impact promotes the task to `handoff-review` before completion.
+For a same-context node with `assurance: none`, the completion transition stores the concise outcome and highest sufficient test-ladder rung. It is the complete durable closeout: do not create a handoff, review packet, copied log, or separate evidence file. Create transfer/review artifacts only when `light|full` assurance or a human handoff supplies an actual separate consumer.
 Ready nodes do not own files or contexts. When more than one is eligible, use the parallel scheduler to defer write collisions, reserve a safe batch up to proven numeric capacity, and link the resulting `harness.parallel-dispatch/v1` artifact in the transition log. Parallel branches converge through an explicit integration node.
 
 ```json
@@ -40,8 +40,12 @@ Ready nodes do not own files or contexts. When more than one is eligible, use th
       "planning_mode": "planned",
       "implementation_plan": "plans/PLAN-001.md@1",
       "plan_step": "STEP-001",
-      "target_minutes": 5,
+      "target_minutes": 20,
       "evidence_profile": "handoff-review",
+      "assurance": "full",
+      "artifact_policy": "transfer",
+      "handoff_consumer": "reviewer",
+      "test_ladder": "focused-unit",
       "checkpoint": null,
       "assurance_status": "pending",
       "assurance_requires": [],

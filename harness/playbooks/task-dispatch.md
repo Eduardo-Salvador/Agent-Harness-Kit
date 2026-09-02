@@ -2,7 +2,7 @@
 
 1. Orchestrator selects one or more nodes whose dependencies are completed and checkpoint/capability requirements pass. When at least two nodes are ready and numeric parallel capacity is proven, automatically run [parallel execution](parallel-execution.md); otherwise dispatch one node. Reject dispatch when a task brief is not a complete executable spec, when non-simple work lacks a ready implementation plan and pinned plan step, or when its test strategy/TDD cycle is absent or unjustifiably bypassed.
 2. Compare normalized write sets with active leases and the candidate batch. Defer, serialize, or repartition collisions; collision-free selected nodes launch together.
-3. Select an implementer and distinct reviewer. Reserve a fresh reviewer route—prefer `spawn_subagent`, otherwise a new task/chat or clean manual context—so post-verification review cannot reuse implementer history. Classify the workstream and follow [execution-context routing](context-routing.md); negotiate the adapter capability manifest before creating a chat, task, subagent, or manual context.
+3. Assign `assurance: none|light|full` independently from lane. Select a distinct fresh reviewer only for `light|full`; `none` uses executor verification. Create task/handoff packets only for actual separate consumers.
 4. Initialize or inherit the executable goal-lineage budget before dispatch. The same outcome keeps cumulative counters across model, agent, task, remediation, decomposition, review, and session changes.
 5. Follow [capability-based model routing](model-routing.md): choose the least costly safe tier, record `model_tier` and `model_reason`, inventory the active host catalog/override capabilities, and resolve a provider model plus supported reasoning effort.
 6. Create the declared fresh context through an override-capable adapter operation, passing the resolved model/reasoning values in the actual call. Persist `harness.model-dispatch/v1` with returned context and adapter-response evidence. A tier annotation, self-asserted model, unconfirmed host default, or claimed same-context mid-turn switch cannot activate a task. If no override surface is available, record `manual-required` or `blocked` instead of pretending routing succeeded.
@@ -12,7 +12,7 @@
 
 Before each new implementation cycle or context expansion, reconcile the linked [`harness.execution-budget/v1`](../../docs/contracts/EXECUTION-BUDGET.md) state. At any ceiling, stop that lineage and replan; do not hide a retry behind a stronger model or a new task ID.
 
-Local checks, completion, post-completion review, focused remediation, and graph transitions declared by an approved task are part of its execution authority. Announce material results and continue; do not turn each one into a fresh human approval request. Use [task closeout](task-closeout.md) and dispatch the next ready node after completion.
+Local checks, bounded diagnosis/correction, completion, declared review, and graph transitions are part of execution authority. Continue while outcome, scope, cost, ownership, and experimental integrity remain unchanged. Ask before changing product behavior, scope, material cost, permission/external authority, or experimental integrity. Use [task closeout](task-closeout.md) after completion.
 
 Dispatch fails closed if permissions, ownership, isolation, model-tier availability, model-override confirmation, or evidence facilities are ambiguous.
 

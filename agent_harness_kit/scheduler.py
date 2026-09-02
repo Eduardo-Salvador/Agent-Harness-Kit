@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+from itertools import combinations
 from pathlib import Path, PurePosixPath
 
 from .readiness import readiness_blocker
@@ -64,7 +65,7 @@ def _collision(paths: list[str], owners: list[tuple[str, list[str]]]) -> str | N
 
 
 def schedule_ready(graph: dict, *, capacity: int) -> dict:
-    """Select the largest safe ready batch in stable graph order.
+    """Select a maximum-cardinality safe ready batch in stable graph order.
 
     The caller supplies host-proven parallel capacity. This function plans dispatch;
     the orchestrator still reserves leases and invokes the host's subagent API.
@@ -85,9 +86,8 @@ def schedule_ready(graph: dict, *, capacity: int) -> dict:
     active = [node for node in nodes if node.get("status") == "active"]
     active_owners = [(node["id"], _owned_paths(node)) for node in active]
     available_slots = max(capacity - len(active), 0)
-    selected: list[str] = []
     deferred: list[dict[str, str]] = []
-    selected_owners: list[tuple[str, list[str]]] = []
+    candidates: list[tuple[str, list[str]]] = []
 
     for node in nodes:
         if node.get("status") != "ready":
@@ -98,21 +98,52 @@ def schedule_ready(graph: dict, *, capacity: int) -> dict:
             deferred.append({"id": node_id, "reason": blocker})
             continue
         owned_paths = _owned_paths(node)
-        collision = _collision(owned_paths, active_owners + selected_owners)
+        collision = _collision(owned_paths, active_owners)
         if collision:
             deferred.append({"id": node_id, "reason": f"write-collision:{collision}"})
             continue
-        if len(selected) >= available_slots:
-            deferred.append({"id": node_id, "reason": "capacity"})
+        candidates.append((node_id, owned_paths))
+
+    maximum_safe: list[tuple[str, list[str]]] = []
+    for size in range(len(candidates), -1, -1):
+        for indexes in combinations(range(len(candidates)), size):
+            batch = [candidates[index] for index in indexes]
+            if all(
+                not any(paths_collide(left, right) for left in left_paths for right in right_paths)
+                for offset, (_, left_paths) in enumerate(batch)
+                for _, right_paths in batch[offset + 1 :]
+            ):
+                maximum_safe = batch
+                break
+        if maximum_safe or size == 0:
+            break
+
+    selected_owners = maximum_safe[:available_slots]
+
+    selected = [node_id for node_id, _ in selected_owners]
+    selected_ids = set(selected)
+    already_deferred = {item["id"] for item in deferred}
+    for node_id, owned_paths in candidates:
+        if node_id in selected_ids or node_id in already_deferred:
             continue
-        selected.append(node_id)
-        selected_owners.append((node_id, owned_paths))
+        collision = _collision(owned_paths, selected_owners)
+        deferred.append({
+            "id": node_id,
+            "reason": f"write-collision:{collision}" if collision else "capacity",
+        })
+
+    ready_count = len(candidates)
+    collision_free_count = len(maximum_safe)
 
     return {
         "schema": "harness.parallel-dispatch-plan/v1",
         "capacity": capacity,
         "active_count": len(active),
         "available_slots": available_slots,
+        "graph_revision": graph.get("revision"),
+        "ready_count": ready_count,
+        "ready_without_collision_count": collision_free_count,
         "selected": selected,
         "deferred": deferred,
+        "announcement": f"{collision_free_count} collision-free ready nodes, capacity {available_slots}: dispatching {len(selected)} now",
     }

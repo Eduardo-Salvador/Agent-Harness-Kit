@@ -12,10 +12,14 @@ status: active
 planning_mode: planned              # planned | inline-simple
 implementation_plan: PLAN-001@1     # exact revision, or none for inline-simple
 plan_step: STEP-001                 # exact unit, or inline
-target_minutes: 5                   # active agent work; 1-5 inline, 2-5 planned
+target_minutes: 20                  # active agent work; <=5 inline, 15-30 planned
 test_strategy: tdd                  # tdd | characterization | verification-only
 tdd_exception: none                 # required reason unless tdd
 evidence_profile: handoff-review    # handoff-review | graph-only
+assurance: full                     # none | light | full
+artifact_policy: transfer           # inline | transfer; transfer only with a separate consumer/context
+handoff_consumer: reviewer          # reviewer | human | none
+test_ladder: focused-unit           # focused-edit | focused-unit | workspace | integration | global-checkpoint | release-full
 assigned_to: agent:builder-1
 reviewer: agent:reviewer-1
 workstream: backend
@@ -99,7 +103,10 @@ Write a handoff; do not self-accept the task.
 - Every task declares `evidence_profile`. `handoff-review` is the default and is mandatory for planned work, behavior/TDD, risk, contracts, dependencies, migration, integrations, cross-workstream work, remediation, or assurance. `graph-only` is limited to inline-simple verification-only work that passes every exclusion, uses reviewer `not-required`, `review_profile: none`, `max_review_rounds: 0`, and `assurance_gate: none`, and closes with only a concise graph transition after the check passes.
 - A TDD spec declares the focused RED test and intended failure, minimum GREEN behavior using the same focused command, refactor boundary, and proportional regression set. RED and GREEN stay in one task.
 - Simplicity, hackathon mode, deadline, or an absent test suite is not by itself a TDD exception.
-- Planned units target two to five minutes of active agent work. An `inline-simple` task targets at most five minutes and passes every simple-task criterion; tool/CI wait and independent review are excluded.
+- Planned units target 15 to 30 minutes of active agent work and one observable result. An `inline-simple` task targets at most five minutes; tool/CI wait and independent review are excluded.
+- `assurance` is orthogonal to lane and artifact shape. `none` uses focused deterministic verification, `light` adds proportional checks/review only when a consumer exists, and `full` applies the declared independent assurance gates.
+- `artifact_policy: inline` keeps the spec in the graph/plan transition when the same context executes it. `transfer` and a separate `TASK.md` are required only when another context or human consumes the task. Handoff/review artifacts follow the same consumer rule.
+- `test_ladder` prevents redundant global runs: focused after an edit, workspace after a unit, integration after a block, global at a checkpoint, and the complete suite before release. Escalate earlier only for declared impact/risk or a failing lower rung.
 - Non-simple dispatch requires a ready implementation plan. Implementers normally load the self-contained task spec rather than the full plan.
 - The implementer may make ordinary local coding choices but cannot improvise observable behavior, contracts, scope, dependencies, permissions, risk, owned paths, acceptance, or verification.
 - Dependencies and graph/context references are pinned to revisions.

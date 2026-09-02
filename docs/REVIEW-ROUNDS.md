@@ -1,8 +1,8 @@
 # Bounded review rounds
 
-Every completed implementation task receives automatic independent assurance, but review depth and repetition are proportional to risk. Completion is based on declared acceptance checks and an orchestrator transition; review does not require human approval, does not hold the completed node, and does not stop unrelated ready work. The default budget is two rounds total: one initial review and, only when blocking findings exist, one focused remediation review.
+Assurance is orthogonal to the execution lane. Tasks with `assurance: none` close on executor verification and create no review packet. `light` and `full` require automatic independent assurance from an actual separate reviewer; review depth is proportional to risk. Completion remains based on declared checks and an orchestrator transition. The maximum budget is one initial review plus one focused remediation review.
 
-The sole task-level exception is an eligible `evidence_profile: graph-only` node: it is inline-simple, verification-only, low risk, and explicitly excluded from behavior, contracts, security/privacy/authentication, data, dependencies, migration, integration, cross-workstream impact, remediation, and assurance gates. It uses `review_profile: none` and `max_review_rounds: 0`; its deterministic check result is recorded only in the completion transition. Any uncertainty or broader impact promotes it to `handoff-review` before completion.
+An eligible `evidence_profile: graph-only` node normally uses `assurance: none`, `review_profile: none`, and `max_review_rounds: 0`. Lane and assurance remain separate decisions: when independent assurance is required, create a packet for the actual reviewer consumer. A same-context node with no reviewer uses only its inline spec and completion transition.
 
 ## Fresh-context, SPEC-led review
 

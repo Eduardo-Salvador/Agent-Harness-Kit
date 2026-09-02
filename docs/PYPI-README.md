@@ -1,8 +1,8 @@
 # Agent Harness Kit
 
-Agent Harness Kit gives coding agents durable project context, separate human and technical pending views, dependency-aware execution, file ownership leases, bounded review, and inspectable completion.
+Agent Harness Kit is a local execution-governance layer for coding agents. It gives Codex and Claude Code durable project context, adaptive workflow selection, dependency-aware execution, ownership leases, proportional verification, and inspectable completion.
 
-![Agent Harness Kit](https://raw.githubusercontent.com/Eduardo-Salvador/Agent-Harness-Kit/v0.6.1/docs/assets/agent-harness-kit-banner.svg)
+![Agent Harness Kit](https://raw.githubusercontent.com/Eduardo-Salvador/Agent-Harness-Kit/v0.7.0/docs/assets/agent-harness-kit-banner.svg)
 
 ## Install
 
@@ -27,28 +27,25 @@ agent-harness install
 
 The recommended `core` profile is installed by default. Use `--dry-run` to preview or `--profile core-learning` to include optional, consented project-learning support.
 
-The installer creates a contained `agent-harness-kit/` directory and managed root `AGENTS.md` and `CLAUDE.md` bridge blocks without replacing existing project instructions.
+The installer creates a contained `agent-harness-kit/` directory **plus root `AGENTS.md` and `CLAUDE.md` entrypoints**. Missing root files are created; existing instructions are preserved outside one managed bridge block. Open a new agent context at the project root after installation, then use `agent-harness doctor` to verify the entrypoints.
 
-## What it coordinates
+## What it does
 
-- approved project context before broad inspection;
+- four execution lanes (`direct-trivial`, `vibe`, `graph-only`, `full-harness`) independent from `none|light|full` assurance;
+- evidence-first resume: probe current repository/runtime/check state, then read durable artifacts only to fill gaps;
+- executable preflight for declared paths, scripts, environment names, commands, validator, browser/sandbox requirements, and worker capacity;
 - `PENDING.md` for human decisions and macro gaps;
 - `TASK-GRAPH.md` for dependencies, leases, progress, and execution;
-- automatic feature discovery plus optimized writing plans: non-trivial work becomes small executable task specs, while truly simple work stays inline;
-- a `direct-trivial` fast path for localized color, spacing, typo, and static-label edits without SPEC, graph, TDD, or review ceremony;
-- a deterministic-first request router with `direct-trivial`, `vibe`, `graph-only`, and `full-harness` lanes; AI classifies only genuine ambiguity;
-- a zero-artifact `vibe` path for one low-risk local behavior change, with mandatory focused verification and automatic promotion when scope grows;
-- a machine-readable `agent-harness route "request"` preflight that always returns one of the four lanes and safely marks unresolved ambiguity for AI refinement;
-- test-driven code tasks with meaningful RED before production changes, minimal GREEN, and proportional regression evidence;
+- compact same-context specs and consumer-driven handoff/review artifacts;
+- planned units targeting 15–30 active minutes, with justified exceptions;
+- focused-first verification that climbs through workspace, integration, checkpoint, and delivery only as needed;
 - scoped `read_set`, exclusive `write_set`, related `impact_set`, and source provenance to avoid unnecessary repository rescans;
-- isolated workstreams and context-aware frontend/backend/integration routing;
-- agent-driven parallel fan-out that fills proven capacity, waits for the first event, refills safely, and joins branches through explicit integration nodes;
-- capability-tier model routing that applies confirmed model/reasoning overrides at Codex task or subagent dispatch when explicitly approved;
-- executable native Codex agent dispatch with neutral-role selection, minimal context, fresh implementer/reviewer identities, and adapter-owned response evidence;
-- automatic fresh-context review against the versioned task SPEC, with at most one focused re-review;
+- maximum-cardinality collision-free scheduling for hosts with proven parallel capacity;
+- atomic compare-and-swap graph transitions, hash-chained events, append-only run metrics, and lighter-lane suggestions;
+- bounded native Codex dispatch packets and fresh-context review when the host provides those capabilities;
 - hackathon mode for compressed discovery and demo-first MVP delivery;
-- mandatory status with progress, blockers, next action, and inspectable paths.
+- a validator covering source, packaged profiles, and installed-host behavior.
 
-The Kit is an artifact-driven scaffold followed by capable agents. It has no unattended background daemon. During an active orchestration session it can launch supported internal subtasks in parallel; it does not lock operating-system files, merge branches, or deploy software on its own.
+The CLI performs deterministic installation, inspection, routing, preflight, scheduling, state transitions, metrics, and dispatch-packet operations. Capable agent hosts perform the actual coding and agent creation. The Kit has no unattended background daemon and does not lock operating-system files, merge branches, or deploy software on its own.
 
 Documentation, source, audio overview, and examples are available in the [GitHub repository](https://github.com/Eduardo-Salvador/Agent-Harness-Kit).

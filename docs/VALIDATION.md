@@ -10,7 +10,7 @@ The validator uses only the Python 3 standard library and does not modify files.
 
 - required root entrypoints, native Codex skills, native Claude Code skills/subagents, roles, templates, playbooks, adapters, examples, and learning-pack modules;
 - required YAML-header keys and Markdown sections in every operational template;
-- a pre-ceremony request-router contract/playbook/template and matching Codex/Claude skills with all four lanes, deterministic-first and AI-only-on-ambiguity behavior, user-override precedence, hard full triggers, full-harness fallback, and automatic promotion;
+- a request router with four public lanes plus orthogonal `none|light|full` assurance, narrow full-Harness conditions, compact/complete execution, and Codex/Claude parity;
 - `direct-trivial` routing for bounded presentation/static-content mechanics and zero-artifact `vibe` routing for small local behavior changes only when a focused deterministic check is available and passes;
 - proportional `evidence_profile` routing: only inline-simple verification-only tasks may use `graph-only`, with no reviewer, zero rounds, no assurance gate, and a concise graph transition instead of handoff/review artifacts; hostile tests reject TDD or assurance bypasses;
 - test-strategy declarations, meaningful RED/GREEN task specs, explicit non-TDD exceptions, handoff evidence sections, and native Codex/Claude TDD routing;
@@ -22,6 +22,9 @@ The validator uses only the Python 3 standard library and does not modify files.
 - JSON task-graph blocks for node shape, unique IDs, existing dependencies, acyclicity, repository-relative write sets, and collisions among active ownership leases;
 - built-in valid and invalid graph fixtures, including missing dependencies, cycles, write-set collisions, self-review, and path traversal;
 - deterministic scheduler tests for dependency/assurance eligibility, numeric capacity, active-slot accounting, collision deferral, and dependency fan-in;
+- prerequisite preflight checks for declared paths, package scripts, environment names, executables, validator, browser state, and worker capacity without exposing secret values;
+- compare-and-swap graph transitions, hash-chained/idempotent event ledgers, append-only run metrics, lighter-lane suggestions, and two-stage inactivity handling;
+- benchmark isolation that scans the resolved work directory and every ancestor before the first injected call, plus a clean external installed-host smoke;
 - hostile parallel-dispatch fixtures that reject over-capacity batches, duplicate contexts, and claims of dispatch without adapter runtime evidence;
 - hostile status mutations that remove mandatory fields, omit human-pending provenance, or escape repository-relative inspectable paths;
 - hostile review mutations that remove the correction delta or SPEC authority, substitute prompt memory, or reuse the implementer context;
@@ -33,7 +36,7 @@ The validator uses only the Python 3 standard library and does not modify files.
 - project-learning activation routing from plain-language study requests, including explicit local/Obsidian/Notion destination discovery and capability-manifest evidence;
 - portable workstream/context routing, separate visible-thread versus subagent capabilities, context-collision checks, and per-area status payloads;
 - first-run and learning-pack exclusion statements in root entry points;
-- overview-audio integrity, inline bilingual README players, versioned script links, and manifest hashes/status so narration drift is visible;
+- overview-audio integrity, language-specific README media links, approved-attachment requirements, versioned script links, and manifest hashes/status so narration drift is visible;
 - distribution-profile boundaries (`core`, `core-learning`, `full`) through dependency-free packaging dry runs.
 - bounded-review invariants: supported profiles, mandatory clean reviewer context, task-SPEC authority instead of prompt memory, a hard two-round maximum, initial scope for round one, and focused scope with a prior-review reference for round two;
 - pending-work schema separation between human actions, macro project gaps, and technical graph execution;
@@ -62,6 +65,6 @@ The YAML reader is deliberately bounded: it validates top-level scalar fields us
 
 Language detection cannot prove that prose is English. The validator rejects a maintained set of unambiguous Portuguese markers outside the allowed README and also checks the removed Portuguese filename. Human review remains necessary for style and semantics.
 
-Audio hash validation proves that the declared scripts and media assets match the manifest. Binary MP3/MP4 hashes are byte-exact; UTF-8 script hashes normalize CRLF and CR line endings to LF so Git checkout policy cannot create false drift. It cannot independently recognize speech. A newly rendered track remains `candidate-awaiting-audition` until a human approves listening quality and semantic fidelity.
+Audio hash validation proves that the declared scripts and media assets match the manifest. Binary MP3/MP4 hashes are byte-exact; UTF-8 script hashes normalize CRLF and CR line endings to LF so Git checkout policy cannot create false drift. It cannot independently recognize speech. A newly rendered track remains `candidate-awaiting-audition` and may omit a GitHub attachment until a human approves listening quality and semantic fidelity; `approved` requires a valid attachment.
 
 If Python 3 is unavailable, an adapter or human runner must implement these same checks and record durable evidence. Lack of a validator is explicit degradation, never a passing result.

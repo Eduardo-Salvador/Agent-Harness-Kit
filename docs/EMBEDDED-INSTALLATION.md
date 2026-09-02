@@ -41,6 +41,8 @@ On Windows, `py -m pip install agent-harness-kit-cli` is equivalent. `uv` and `p
 
 The current directory and `core` profile are defaults. Add `--dry-run` to preview, `--profile core-learning` for optional project-learning support, or pass another project path after `install`. The command still performs the same contained, preflighted installation described below; it only removes the clone-and-path ceremony. `agent-harness doctor` checks the expected entrypoints after installation, and `agent-harness prompt` prints the fallback activation prompt.
 
+The root bridges are not optional side files. A successful installation always creates missing root `AGENTS.md` and `CLAUDE.md` files or updates each existing file with one managed block. If only `agent-harness-kit/` appears, the installation did not complete successfully or the directory was copied manually; run `agent-harness doctor` and reinstall with the CLI rather than relying on the contained directory alone.
+
 The distribution name is `agent-harness-kit-cli` because the shorter `agent-harness-kit` name is owned by an unrelated PyPI project. The installed commands are still `agent-harness` and `ahk`. To run directly from GitHub without a persistent tool installation, use `uvx --from git+https://github.com/Eduardo-Salvador/Agent-Harness-Kit.git agent-harness install`.
 
 ### Clone, fork, ZIP, or offline installation

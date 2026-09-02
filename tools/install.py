@@ -76,6 +76,20 @@ def package_files(profile: str) -> list[str]:
     return [safe_relative(path) for path in files]
 
 
+def package_module_overlays() -> dict[str, Path]:
+    """Expose wheel runtime modules inside the contained installed profile."""
+    if ROOT.name != "assets":
+        return {}
+    package_root = ROOT.parent
+    if not (package_root / "__init__.py").is_file():
+        return {}
+    return {
+        f"agent_harness_kit/{source.name}": source
+        for source in sorted(package_root.glob("*.py"))
+        if source.is_file() and not source.is_symlink()
+    }
+
+
 def newline_for(data: bytes) -> str:
     return "\r\n" if b"\r\n" in data else "\n"
 
@@ -123,13 +137,15 @@ def install(profile: str, host: Path, dry_run: bool) -> list[str]:
     if destination.exists() or destination.is_symlink():
         raise InstallError(f"destination already exists: {destination}")
     files = package_files(profile)
+    source_overrides = package_module_overlays()
+    files = sorted(set(files) | set(source_overrides))
     generated_manifest: bytes | None = None
     if "PACKAGE-MANIFEST.json" not in files:
         sys.path.insert(0, str(ROOT / "tools"))
         from package import manifest
 
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        generated_manifest = manifest(profile, version, files)
+        generated_manifest = manifest(profile, version, files, source_overrides)
     rendered = {name: render_entrypoint(host_root / name, bridge) for name, bridge in ENTRYPOINTS.items()}
     installed_count = len(files) + (1 if generated_manifest is not None else 0)
     actions = [f"install {installed_count} files into {destination}"]
@@ -145,10 +161,13 @@ def install(profile: str, host: Path, dry_run: bool) -> list[str]:
         staged_distribution.mkdir()
         for relative in files:
             relative = safe_relative(relative)
-            source = (ROOT / relative).resolve()
+            source = source_overrides.get(relative, ROOT / relative).resolve()
             target = (staged_distribution / relative).resolve()
             try:
-                source.relative_to(ROOT.resolve())
+                if relative in source_overrides:
+                    source.relative_to(ROOT.parent.resolve())
+                else:
+                    source.relative_to(ROOT.resolve())
                 target.relative_to(staged_distribution.resolve())
             except ValueError as exc:
                 raise InstallError(f"package path escapes installation boundary: {relative}") from exc

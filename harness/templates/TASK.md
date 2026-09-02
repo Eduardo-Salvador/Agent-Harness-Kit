@@ -7,10 +7,14 @@ status: ready
 planning_mode: planned
 implementation_plan: PLAN-001@1
 plan_step: STEP-001
-target_minutes: 5
+target_minutes: 20
 test_strategy: tdd
 tdd_exception: none
 evidence_profile: handoff-review
+assurance: full
+artifact_policy: transfer
+handoff_consumer: reviewer
+test_ladder: focused-unit
 assigned_to: unassigned
 reviewer: unassigned
 workstream: replace-area
@@ -95,4 +99,4 @@ Replace with one bounded result.
 
 ## Exit
 
-For `handoff-review`, write a handoff with criterion-level evidence. For an eligible `graph-only` task, return only the concise outcome and verification result so the orchestrator can advance the graph. Do not self-accept.
+For a real reviewer/human consumer, write a handoff with criterion-level evidence. For a closed single-context task, create no handoff or separate review packet: return the concise outcome and verification result for the atomic graph transition/event. Do not self-accept when assurance requires independent acceptance.

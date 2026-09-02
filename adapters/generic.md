@@ -29,13 +29,13 @@ Every operation returns capability name, status, adapter/version identity, start
 - Never expose credentials in artifacts.
 - Report degradation before dispatch; block when the fallback violates core invariants.
 - Report `spawn_subagent`, `create_thread`, `resume_thread`, `message_thread`, `close_thread`, and `parallel_contexts` separately; one does not imply another. Parallel evidence includes numeric child capacity, quota sharing, and a first-completion/attention wait operation.
-- When parallel capacity is proven, consume the deterministic `agent-harness schedule` batch, reserve it against the expected graph revision, launch every selected child before waiting, persist `harness.parallel-dispatch/v1`, and refill the first freed slot. A planned batch without adapter context references is not execution.
+- When numeric capacity greater than one is proven, launch every collision-free selected child before waiting, report the active worker count, and refill the first freed slot. Warn after 60–90 seconds without observable progress; on the second consecutive occurrence interrupt and reassign/serialize within budget.
 - Report the model catalog and model/reasoning override support per dispatch surface. Return the selected model, confirmation, context reference, and response evidence in `harness.model-dispatch/v1`.
-- After verification, prefer `spawn_subagent` for review when proven. Otherwise use a new visible/manual clean context and send only the pinned SPEC-led review packet; prompt or conversation memory is not acceptance authority.
+- For `assurance: light|full`, use a separate reviewer and send the pinned SPEC-led packet; `none` uses executor verification. Create a handoff only for an actual receiving context.
 
 ## First-run approximation
 
-Before first-run, an explicit edit may use the neutral `direct-trivial` fast path only when it is a localized presentation/static-content mechanic with no behavior, rule, state, contract, data, dependency, risk, or cross-workstream impact. Perform it directly with a minimal check and concise closeout; create no harness artifacts. Promote on uncertainty.
+Read-only audits, explanations, and diagnosis do not trigger first-run. Before first-run, an explicit localized static edit may use `direct-trivial`; perform it with a minimal check and no Harness artifacts.
 
 Before planning, the host or agent performs the side-effect-free initialization test in `harness/playbooks/first-run.md`. If no approved context exists at the neutral default path, it surfaces the discovery interviewer role. A runtime without startup hooks performs this check at the beginning of each operational session; approved versioned state makes the check idempotent.
 

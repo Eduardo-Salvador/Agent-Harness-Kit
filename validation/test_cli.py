@@ -32,8 +32,8 @@ class CliTests(unittest.TestCase):
                 0,
             )
         payload = json.loads(output.getvalue())
-        self.assertEqual(payload["route"], "full-harness")
-        self.assertEqual(payload["reason"], "graph-bound-work-not-graph-only-eligible")
+        self.assertEqual(payload["route"], "graph-only")
+        self.assertEqual(payload["harness_shape"], "compact")
 
     def test_route_can_select_eligible_graph_only_work(self) -> None:
         output = io.StringIO()
@@ -60,18 +60,60 @@ class CliTests(unittest.TestCase):
         self.assertEqual(payload["route"], "vibe")
         self.assertEqual(payload["durable_artifacts"], [])
 
-    def test_route_explicit_full_and_multiple_workstreams_force_full_harness(self) -> None:
-        for arguments, expected_reason in (
-            (["route", "Polish this interaction", "--mode", "full"], "explicit-full"),
-            (["route", "Fix the typo", "--workstreams", "2"], "hard-trigger"),
-        ):
-            with self.subTest(arguments=arguments):
+    def test_route_explicit_full_forces_full_harness(self) -> None:
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(cli.main(["route", "Polish this interaction", "--mode", "full"]), 0)
+        payload = json.loads(output.getvalue())
+        self.assertEqual(payload["route"], "full-harness")
+        self.assertEqual(payload["reason"], "explicit-full")
+
+    def test_route_accepts_adaptive_controls(self) -> None:
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(
+                cli.main(
+                    [
+                        "route",
+                        "Coordinate frontend and backend with an API contract",
+                        "--mode",
+                        "graph-only",
+                        "--assurance",
+                        "none",
+                        "--shape",
+                        "compact",
+                        "--agents",
+                        "1",
+                        "--workstreams",
+                        "2",
+                        "--model-capability",
+                        "strong",
+                    ]
+                ),
+                0,
+            )
+        payload = json.loads(output.getvalue())
+        self.assertEqual(payload["route"], "graph-only")
+        self.assertEqual(payload["assurance"], "none")
+        self.assertEqual(payload["harness_shape"], "compact")
+        self.assertIn("minimal_artifacts", payload)
+        self.assertIn("explicit-assurance-below-risk-recommendation", payload["warnings"])
+
+    def test_route_full_condition_flags(self) -> None:
+        for flag in ("--human-loop", "--audit-required"):
+            with self.subTest(flag=flag):
                 output = io.StringIO()
                 with contextlib.redirect_stdout(output):
-                    self.assertEqual(cli.main(arguments), 0)
-                payload = json.loads(output.getvalue())
-                self.assertEqual(payload["route"], "full-harness")
-                self.assertEqual(payload["reason"], expected_reason)
+                    self.assertEqual(cli.main(["route", "Fix the typo", flag]), 0)
+                self.assertEqual(json.loads(output.getvalue())["route"], "full-harness")
+
+    def test_route_agents_must_be_positive(self) -> None:
+        error = io.StringIO()
+        with contextlib.redirect_stderr(error):
+            with self.assertRaises(SystemExit) as raised:
+                cli.main(["route", "Fix the typo", "--agents", "0"])
+        self.assertEqual(raised.exception.code, 2)
+        self.assertIn("positive integer", error.getvalue())
 
     def test_route_rejects_non_positive_workstream_count(self) -> None:
         error = io.StringIO()
@@ -128,6 +170,51 @@ class CliTests(unittest.TestCase):
         payload = json.loads(output.getvalue())
         self.assertEqual(payload["selected"], ["A", "B"])
         self.assertEqual(payload["schema"], "harness.parallel-dispatch-plan/v1")
+
+    def test_preflight_prints_machine_readable_result_and_exit_status(self) -> None:
+        result = {"schema": "harness.preflight/v1", "status": "blocked", "blockers": ["script:test"]}
+        output = io.StringIO()
+        with patch.object(cli.preflight, "run_preflight", return_value=result) as run, contextlib.redirect_stdout(output):
+            self.assertEqual(
+                cli.main(["preflight", ".", "--path", "src/app.py", "--script", "test", "--workers", "2"]),
+                1,
+            )
+        self.assertEqual(json.loads(output.getvalue()), result)
+        self.assertEqual(run.call_args.kwargs["required_scripts"], ["test"])
+        self.assertEqual(run.call_args.kwargs["workers"], 2)
+
+    def test_transition_uses_compare_and_swap_inputs(self) -> None:
+        result = {"revision": 8, "transition": {"task": "TASK-7", "to": "completed"}}
+        output = io.StringIO()
+        with patch.object(cli.state_runtime, "transition_task_graph", return_value=result) as transition, contextlib.redirect_stdout(output):
+            self.assertEqual(
+                cli.main([
+                    "transition", "TASK-GRAPH.md", "TASK-7", "completed",
+                    "--expected-revision", "7", "--actor", "orchestrator", "--context", "ctx-1",
+                ]),
+                0,
+            )
+        self.assertEqual(json.loads(output.getvalue()), result)
+        self.assertEqual(transition.call_args.args[3], 7)
+
+    def test_metrics_summary_is_machine_readable(self) -> None:
+        result = {"runs": 3, "suggested_lane": "graph-only"}
+        output = io.StringIO()
+        with patch.object(cli.state_runtime, "summarize_metrics", return_value=result), contextlib.redirect_stdout(output):
+            self.assertEqual(cli.main(["metrics", "metrics.jsonl", "--no-gate-threshold", "3"]), 0)
+        self.assertEqual(json.loads(output.getvalue()), result)
+
+    def test_metric_record_appends_declared_run_payload(self) -> None:
+        payload = {"lane": "vibe", "assurance": "none", "harness_shape": "none"}
+        result = {"schema": "harness.runtime-metric/v1", **payload}
+        output = io.StringIO()
+        with patch.object(Path, "read_text", return_value=json.dumps(payload)), patch.object(
+            cli.state_runtime, "record_metric", return_value=result
+        ) as record, contextlib.redirect_stdout(output):
+            self.assertEqual(cli.main(["metric-record", "run.json", "metrics.jsonl"]), 0)
+        self.assertEqual(json.loads(output.getvalue()), result)
+        self.assertEqual(record.call_args.args[0].name, "metrics.jsonl")
+        self.assertEqual(record.call_args.kwargs["lane"], "vibe")
 
     def test_codex_dispatch_prints_native_call_plan(self) -> None:
         request = {

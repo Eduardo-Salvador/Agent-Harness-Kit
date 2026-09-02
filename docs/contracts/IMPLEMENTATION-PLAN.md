@@ -5,7 +5,7 @@
 ## Invariants
 
 - Non-trivial implementation has one plan; a narrowly classified simple task may use only its compact inline task spec.
-- Every unit targets two to five minutes of active agent work and has one observable result, exact change, dependencies, scoped paths, non-goals, acceptance, test strategy, verification, and replan triggers.
+- Every planned unit targets 15–30 minutes of active agent work and has one observable result, exact change, dependencies, scoped paths, non-goals, acceptance, test strategy, verification, and replan triggers. Justify an exception by atomicity, runtime cost, or risk.
 - Behavior-changing and bug-fix units keep RED and GREEN inside the same task and specify the focused failing test, intended failure reason, minimum passing implementation, and proportional regression set.
 - Time spent waiting for tools, CI, downloads, or independent review is not active implementation time.
 - Every planned graph node pins the exact plan revision and step through its task brief.

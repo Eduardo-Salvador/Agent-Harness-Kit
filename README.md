@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version 0.6.1" src="https://img.shields.io/badge/version-0.6.1-4967ff">
+  <img alt="Version 0.7.0" src="https://img.shields.io/badge/version-0.7.0-4967ff">
   <img alt="Python 3.10 or newer" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Install with uv, pipx, or pip" src="https://img.shields.io/badge/installer-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Codex compatible" src="https://img.shields.io/badge/agent-Codex-11131a">
@@ -20,9 +20,9 @@
   <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="#start-here">Start here</a> · <a href="#choose-your-pace">Modes</a> · <a href="docs/ARCHITECTURE.md">Architecture</a>
 </p>
 
-**Source version: `0.6.1`.** Before dispatch, graph readiness is validated from already-loaded graph data, catching false-ready dependency, assurance, and checkpoint state. This costs no AI call or repository scan, does not affect `direct-trivial` or `vibe`, and does not validate live capabilities or task SPEC contents. The Kit remains an executable, artifact-driven scaffold: it has no unattended background daemon and does not lock the operating system.
+**Source version: `0.7.0`.** Execution is now adaptive: four stable lanes, independent `none|light|full` assurance, compact/complete artifact shapes, evidence-first resume, mandatory preflight, consumer-driven handoffs, a proportional test ladder, maximum-cardinality parallel scheduling, atomic graph transitions, and append-only events/metrics. The Kit remains an executable, artifact-driven scaffold: it has no unattended background daemon and does not lock the operating system.
 
-> **A harness mature enough to know when to get out of the way.** Its built-in request router does not treat every prompt like a major project: deterministic safety gates separate instant static edits, small verified “vibe” changes, graph-managed work, and full engineering. AI is consulted only for genuine ambiguity; risk, failed checks, or growing scope automatically promote the work instead of letting speed bypass safety.
+> **A harness mature enough to know when to get out of the way.** Four execution lanes stay separate from `none|light|full` assurance. Failed checks trigger bounded recovery; full orchestration is reserved for real coordination, human governance, required audit, model insufficiency, or unresolved consequential ambiguity.
 
 ## Start here
 
@@ -47,9 +47,31 @@ Then open the project you want to organize and run:
 agent-harness install
 ```
 
-Open a **new agent context at the project root**. The Kit will introduce itself, inspect only the initial state it needs, and begin a short discovery before proposing implementation.
+The installation is immediately discoverable by supported agents. It creates the contained `agent-harness-kit/` directory **and** creates or updates these two files at the project root:
+
+```text
+your-project/
+├── AGENTS.md          # Codex entrypoint
+├── CLAUDE.md          # Claude Code entrypoint
+└── agent-harness-kit/ # versioned Kit distribution
+```
+
+Existing root instructions are preserved outside a small managed bridge block. Run `agent-harness doctor` to verify all three entrypoints. Then open a **new agent context at the project root** so the host reloads `AGENTS.md` or `CLAUDE.md`; no activation prompt is required on hosts that load root instructions normally.
 
 > Prefer to preview first? Run `agent-harness install --dry-run`. Existing root instructions are preserved through managed blocks and namespaced coexistence.
+
+## What it actually does
+
+Agent Harness Kit is a local execution-governance layer for coding agents. Codex or Claude still writes the software; the Kit determines how the work is scoped, ordered, verified, resumed, and—when the host supports it—dispatched across independent agents.
+
+- `route` selects the lightest safe execution lane and an independent assurance level.
+- `preflight` verifies declared files, scripts, environment names, commands, validator, browser/sandbox needs, and worker capacity before decomposition.
+- Durable project context and graph state let a fresh conversation resume from current repository/runtime evidence instead of reconstructing work from chat history.
+- Ownership leases and `schedule` select a maximum-size collision-free batch from ready graph nodes.
+- `transition` advances graph state atomically and records hash-chained events; `metrics` reports ceremony, implementation, gate, review, and remediation signals.
+- A proportional test ladder and consumer-driven review keep small work small while preserving independent assurance when it is actually required.
+
+The CLI performs deterministic installation, inspection, routing, preflight, scheduling, state transitions, metrics, and dispatch-packet operations. Agent hosts perform the actual coding, subagent creation, review, merge, and delivery actions using their available capabilities and permissions.
 
 ## Choose your pace
 
@@ -65,9 +87,7 @@ Hackathon mode keeps state, file leases, checks, and status, but uses light revi
 
 Listen to a short English explanation of what the project does and how its workflow fits together.
 
-https://github.com/user-attachments/assets/1affd407-4d32-4f66-8386-0bdc3666df2e
-
-[Download the English MP3](media/agent-harness-kit-overview-en.mp3) · [Read the English script](media/overview-script-en.txt)
+[Play or download the English MP3](media/agent-harness-kit-overview-en.mp3) · [Open the GitHub-compatible MP4](media/agent-harness-kit-overview-en.mp4) · [Read the English script](media/overview-script-en.txt)
 
 ## Why it exists
 
@@ -103,19 +123,19 @@ Long conversations naturally become slower and more token-intensive across model
 
 ## The working loop
 
-Every request is routed before the Harness loads project context or starts ceremony. Deterministic rules choose among four lanes first: `direct-trivial` for static/mechanical edits, `vibe` for one decided small local behavior change with a focused check and zero artifacts, `graph-only` for low-risk work that genuinely needs scheduling/ownership, and `full-harness` for consequential or ambiguous work. An economical AI classifier is used only when the lane remains ambiguous and classification costs less than the work.
+Every mutating request uses one of four public lanes: `direct-trivial`, `vibe`, `graph-only`, or `full-harness`. Assurance is separate: `none`, `light`, or `full`. Full Harness is automatic only for two or more real agents, a human decision loop, required audit, insufficient model capability, unresolved consequential ambiguity, or an explicit request. Actual security/privacy/authorization/destructive changes require full audit; API and dependency keywords alone do not force a lane.
 
-Explicit full Harness always wins. Authentication, security/privacy, data/schema/API contracts, dependencies, migrations, permissions/accessibility, external side effects, integrations, multiple workstreams, consequential choices, unresolved ambiguity, or failed verification force `full-harness`, even when a fast lane was requested. If scope grows during a fast edit, the agent stops and promotes before further changes.
+Full Harness can be compact for a bounded outcome or complete for discovery, multi-agent coordination, human governance, or full audit. Read-only audits and diagnosis do not trigger first-run. Resume probes current working-tree/runtime/test state first and reads durable artifacts only to fill gaps; current evidence supersedes stale handoffs.
 
 You can inspect the same preflight from the terminal with `agent-harness route "your request"`. Use `--mode vibe` or `--mode full` for an explicit preference, `--workstreams 2` when more than one area is involved, and `--graph-bound --graph-only-eligible` for already specified low-risk graph work. The command always returns one of the four lanes as JSON; ambiguity safely falls back to `full-harness` while signaling that an economical AI classifier may refine it.
 
 1. The agent reads approved context, then human/macro pending work, then the technical graph.
 2. A new feature with open product choices automatically enters a focused brainstorm: known context is reused, credible options are compared, and you approve a feature brief before the graph changes.
-3. Approved non-trivial work becomes one writing plan with independently checkable units targeting roughly two to five minutes; truly simple work keeps only a compact inline spec.
+3. Planned work uses independently checkable units targeting 15–30 active minutes, with exceptions justified by atomicity, runtime cost, or risk.
 4. In Codex, the native dispatcher selects the neutral role, builds only the scoped context packet, resolves model/reasoning, and creates a fresh executable subagent with `fork_turns: none`. It records the returned identity/context/response; without subagents, implementation degrades explicitly to sequential execution while review still requires a separate fresh context. The agent then executes its self-contained SPEC without inventing missing behavior. Code follows RED → GREEN → REFACTOR; a contradiction or invalid RED returns to planning.
-5. A shared in-memory readiness gate rejects nodes falsely marked `ready` or `active` when graph-local dependencies, assurance, or checkpoints have not passed. Then, when two or more collision-free nodes are ready and the host reports numeric capacity, the orchestrator reserves distinct leases and contexts, launches the whole safe batch without waiting between launches, and refills the first released slot. Dependent branches join through an explicit integration node.
-6. Passing work is completed and reported immediately; the next ready task can start without ceremonial approval. An eligible `graph-only` inline-simple task runs its deterministic check and advances only the graph—no handoff, review packet, review artifact, or copied logs. Behavior, TDD, contracts, risk, integrations, failed checks, and assurance still use the full handoff/review path.
-7. For `handoff-review`, after verification the orchestrator launches an independent reviewer in a fresh context—preferably a subagent when supported. It receives the versioned SPEC, relevant diff, handoff, and test evidence, reconstructs acceptance before reading the code, and never relies on the original prompt or implementer memory. Assurance stays non-blocking: one proportional review and, only for a real blocker, at most one focused re-review. There is no third loop.
+5. When two or more collision-free nodes are ready and capacity is greater than one, the orchestrator launches the safe batch, reports its active worker count, and refills the first released slot. It warns after 60–90 seconds without observable progress and interrupts/reassigns on the second consecutive occurrence.
+6. Verification climbs `focused` → `workspace` → `integration` → `global/checkpoint` → `delivery` only as needed. In-scope technical recovery continues automatically; product, scope, material cost, permission, and experimental-integrity changes require a decision.
+7. Same-context nodes use an inline spec and transition. Handoff/review packets exist only for real separate consumers. `assurance: light|full` preserves fresh independent review; `none` closes on executor verification.
 
 For graph-managed work, every progress update includes stage, progress, work continuing automatically, human and technical pending items, blockers, next action, and inspectable paths. `direct-trivial` and `vibe` return only a short edit/check summary; vibe always names its passing focused verification.
 

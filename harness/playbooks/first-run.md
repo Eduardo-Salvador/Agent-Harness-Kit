@@ -1,6 +1,6 @@
 # Playbook: First run
 
-An explicit request that satisfies the `direct-trivial` gate in [writing plans](writing-plans.md) is handled before initialization and creates no context, graph, or other harness artifact. If targeted inspection disqualifies it, stop before editing and resume this first-run flow.
+A read-only audit, explanation, status inspection, or diagnosis is handled directly and never triggers initialization. For mutating work, an explicit request that satisfies the `direct-trivial` gate is handled before initialization. First-run gates planning or mutation, not inspection.
 
 This neutral policy is evaluated whenever the harness is added to or resumed in a host project. Codex reaches it through root `AGENTS.md`; Claude Code reaches the same rule through root `CLAUDE.md` importing `@AGENTS.md`. Both entrypoints may coexist and share neutral state, so no runtime platform guess or manual profile switch is required.
 
@@ -51,7 +51,7 @@ Localize the wording to the user's language. A suitable opening is: “Welcome �
 8. Revalidate discovery snapshot identities and selector expansion immediately before approval.
 9. Obtain explicit approval of project context and consequential decisions, including whether the approved model-routing artifact authorizes automatic model/reasoning overrides on future task dispatches. Without that explicit disposition, keep routing advisory/manual.
 10. Create `harness-state/PENDING.md` from the approved context: human decisions/actions plus a macro project completion overview. Do not put technical order or dependencies there.
-11. Only then follow `harness/playbooks/writing-plans.md`: classify simple work for a compact inline spec or create a ready implementation plan with two-to-five-minute executable units and self-contained task specs.
+11. Only then follow `harness/playbooks/writing-plans.md`: use a compact inline spec where sufficient or create a ready plan with 15–30-minute executable units, justifying exceptions.
 12. Map those specified units into `harness-state/TASK-GRAPH.md`, validate the initial graph, and dispatch only ready nodes with complete specs.
 
 ## Resume behavior

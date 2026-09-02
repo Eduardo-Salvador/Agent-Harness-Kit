@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Versão 0.6.1" src="https://img.shields.io/badge/vers%C3%A3o-0.6.1-4967ff">
+  <img alt="Versão 0.7.0" src="https://img.shields.io/badge/vers%C3%A3o-0.7.0-4967ff">
   <img alt="Python 3.10 ou mais recente" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Instale com uv, pipx ou pip" src="https://img.shields.io/badge/instalador-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Compatível com Codex" src="https://img.shields.io/badge/agente-Codex-11131a">
@@ -20,7 +20,7 @@
   <a href="README.md">English</a> · <a href="#comece-aqui">Comece aqui</a> · <a href="#escolha-o-ritmo">Modos</a> · <a href="docs/ARCHITECTURE.md">Arquitetura</a>
 </p>
 
-**Versão do código-fonte: `0.6.1`.** Antes do dispatch, a prontidão do grafo é validada a partir dos dados já carregados, detectando estados falsamente prontos de dependência, assurance e checkpoint. Isso não custa chamadas de IA nem varredura do repositório, não afeta `direct-trivial` ou `vibe`, e não valida capacidades ao vivo nem o conteúdo das SPECs. O Kit continua sendo um scaffold executável e orientado a artefatos: não mantém um daemon autônomo nem bloqueia o sistema operacional.
+**Versão do código-fonte: `0.7.0`.** A execução agora é adaptativa: quatro lanes estáveis, assurance independente `none|light|full`, formatos compacto/completo, resume guiado por evidência real, preflight obrigatório, handoffs apenas com consumidor, escada proporcional de testes, agendamento paralelo de cardinalidade máxima, transições atômicas e eventos/métricas append-only. O Kit continua sendo um scaffold executável e orientado a artefatos: não mantém um daemon autônomo nem bloqueia o sistema operacional.
 
 > **Um harness maduro o bastante para saber quando sair do caminho.** O router nativo não trata todo prompt como um grande projeto: gates determinísticos de segurança separam edições estáticas imediatas, pequenas mudanças verificadas em modo “vibe”, trabalho gerenciado pelo grafo e engenharia completa. A IA só é consultada diante de ambiguidade real; risco, checks com falha ou crescimento de escopo promovem automaticamente o trabalho, sem deixar a velocidade furar a segurança.
 
@@ -47,9 +47,31 @@ Depois, abra o projeto que você quer organizar e execute:
 agent-harness install
 ```
 
-Abra um **novo contexto do agente na raiz do projeto**. O Kit se apresentará, verificará somente o estado inicial necessário e começará uma descoberta curta antes de propor implementação.
+A instalação fica imediatamente detectável pelos agentes compatíveis. Ela cria a pasta contida `agent-harness-kit/` **e também** cria ou atualiza estes dois arquivos na raiz do projeto:
+
+```text
+seu-projeto/
+├── AGENTS.md          # entrada do Codex
+├── CLAUDE.md          # entrada do Claude Code
+└── agent-harness-kit/ # distribuição versionada do Kit
+```
+
+Instruções que já existiam na raiz são preservadas fora de um pequeno bloco gerenciado. Execute `agent-harness doctor` para conferir as três entradas. Depois, abra um **novo contexto do agente na raiz do projeto** para o host recarregar `AGENTS.md` ou `CLAUDE.md`; nos hosts que carregam instruções da raiz normalmente, não é necessário colar nenhum prompt de ativação.
 
 > Quer apenas conferir antes? Execute `agent-harness install --dry-run`. Instruções existentes na raiz são preservadas por blocos gerenciados e coexistência com namespace.
+
+## O que ele efetivamente faz
+
+O Agent Harness Kit é uma camada local de governança de execução para agentes de programação. Codex ou Claude continuam escrevendo o software; o Kit determina como o trabalho é delimitado, ordenado, verificado, retomado e, quando o host permite, distribuído entre agentes independentes.
+
+- `route` seleciona o caminho de execução mais leve e seguro e um nível de assurance independente.
+- `preflight` verifica arquivos, scripts, nomes de ambiente, comandos, validador, necessidades de navegador/sandbox e capacidade de workers antes da decomposição.
+- Contexto e estado de grafo duráveis permitem que uma conversa nova retome a partir da evidência atual do repositório/runtime, sem reconstruir o trabalho pelo histórico do chat.
+- Leases de ownership e `schedule` selecionam o maior lote sem colisões entre os nós prontos do grafo.
+- `transition` avança o grafo atomicamente e registra eventos encadeados por hash; `metrics` relata sinais de cerimônia, implementação, gates, review e remediação.
+- Uma escada proporcional de testes e reviews criadas apenas para consumidores reais mantêm trabalho pequeno realmente pequeno sem perder garantia independente quando ela é necessária.
+
+A CLI executa instalação, inspeção, roteamento, preflight, agendamento, transições de estado, métricas e preparação de dispatch de forma determinística. O host do agente executa a programação, a criação real de subagentes, a review, a integração e a entrega conforme suas capacidades e permissões.
 
 ## Escolha o ritmo
 
@@ -65,9 +87,7 @@ O modo hackathon mantém estado, leases, checks e status, mas usa review leve po
 
 Ouça uma explicação curta em português sobre o que o projeto faz e como seu fluxo funciona.
 
-https://github.com/user-attachments/assets/d89fe815-da49-452e-bcd4-18f33f728f18
-
-[Baixar o MP3 em português](media/agent-harness-kit-overview-pt-BR.mp3) · [Ler o roteiro em português](media/overview-script-pt-BR.txt)
+[Ouvir ou baixar o MP3 em português](media/agent-harness-kit-overview-pt-BR.mp3) · [Abrir o MP4 compatível com GitHub](media/agent-harness-kit-overview-pt-BR.mp4) · [Ler o roteiro em português](media/overview-script-pt-BR.txt)
 
 ## Por que ele existe
 
@@ -103,19 +123,19 @@ Conversas longas ficam naturalmente mais lentas e consomem mais tokens em todas 
 
 ## O ciclo de trabalho
 
-Toda solicitação é roteada antes de o Harness carregar o contexto do projeto ou iniciar cerimônias. Regras determinísticas escolhem primeiro entre quatro caminhos: `direct-trivial` para edições estáticas/mecânicas, `vibe` para uma pequena mudança local de comportamento já decidida com check focado e zero artefatos, `graph-only` para trabalho de baixo risco que realmente precisa de agendamento/ownership e `full-harness` para trabalho consequente ou ambíguo. Um classificador de IA econômico só é usado quando o caminho continua ambíguo e classificar custa menos que fazer o trabalho.
+Toda solicitação mutável usa um de quatro caminhos públicos: `direct-trivial`, `vibe`, `graph-only` ou `full-harness`. Assurance é uma decisão separada: `none`, `light` ou `full`. O Harness completo é automático apenas para dois ou mais agentes reais, loop humano, auditoria exigida, modelo insuficiente, ambiguidade consequente não resolvida ou pedido explícito. Mudanças reais de segurança/privacidade/autorização/destrutivas exigem auditoria completa; palavras como API ou dependência, sozinhas, não forçam o caminho.
 
-Um pedido explícito de Harness completo sempre vence. Autenticação, segurança/privacidade, contratos de dados/schema/API, dependências, migrações, permissões/acessibilidade, efeitos externos, integrações, vários workstreams, decisões consequentes, ambiguidade não resolvida ou verificação com falha forçam `full-harness`, mesmo quando foi pedido um caminho rápido. Se o escopo crescer durante uma edição rápida, o agente para e promove antes de novas mudanças.
+O Harness completo pode ser compacto para um resultado delimitado ou completo para discovery, coordenação multiagente, governança humana ou auditoria total. Auditoria e diagnóstico somente leitura não acionam first-run. Ao retomar, o agente sonda primeiro o estado real de árvore/processos/testes e consulta artefatos duráveis apenas para preencher lacunas; evidência atual supera handoffs obsoletos.
 
 Você pode inspecionar a mesma pré-classificação no terminal com `agent-harness route "seu pedido"`. Use `--mode vibe` ou `--mode full` para declarar uma preferência, `--workstreams 2` quando houver mais de uma área e `--graph-bound --graph-only-eligible` para trabalho de baixo risco já especificado no grafo. O comando sempre devolve um dos quatro caminhos em JSON; diante de ambiguidade, usa `full-harness` com segurança e sinaliza que um classificador de IA econômico pode refinar a decisão.
 
 1. O agente lê o contexto aprovado, depois as pendências humanas/macro e por último o grafo técnico.
 2. Uma feature nova com decisões de produto abertas entra automaticamente em um brainstorm focado: o contexto conhecido é reaproveitado, caminhos viáveis são comparados e você aprova um brief antes de o grafo mudar.
-3. Trabalho não trivial já aprovado vira um writing plan com unidades verificáveis de aproximadamente dois a cinco minutos; trabalho realmente simples mantém apenas uma spec inline curta.
+3. Trabalho planejado usa unidades verificáveis de 15–30 minutos ativos; exceções justificam atomicidade, custo de runtime ou risco.
 4. No Codex, o dispatcher nativo escolhe a role neutra, monta somente o pacote de contexto focado, resolve modelo/raciocínio e cria um subagente executável novo com `fork_turns: none`. Ele registra identidade, contexto e resposta retornados; sem subagentes, a implementação degrada explicitamente para execução sequencial, enquanto a revisão ainda exige outro contexto novo. Depois, o agente executa sua SPEC autocontida sem inventar comportamento. Código segue RED → GREEN → REFACTOR; contradição ou RED inválido volta ao planejamento.
-5. Um gate compartilhado e em memória rejeita nodes marcados falsamente como `ready` ou `active` quando dependências, assurance ou checkpoints locais do grafo não passaram. Depois, quando dois ou mais nós sem colisão estão prontos e a plataforma informa capacidade numérica, o orquestrador reserva leases e contextos distintos, dispara todo o lote seguro sem esperar entre chamadas e repõe a primeira vaga liberada. Ramos dependentes convergem por um nó explícito de integração.
-6. Trabalho aprovado nos checks é concluído e informado imediatamente; a próxima tarefa pronta pode começar sem aprovação cerimonial. Uma task `graph-only` inline-simple elegível roda seu check determinístico e avança somente o grafo — sem handoff, pacote de review, artefato de review ou logs copiados. Comportamento, TDD, contratos, risco, integrações, checks falhos e assurance continuam no fluxo completo de handoff/review.
-7. Para `handoff-review`, depois da verificação o orquestrador lança um revisor independente em contexto novo — de preferência um subagente quando disponível. Ele recebe a SPEC versionada, diff relevante, handoff e evidências de teste, reconstrói a aceitação antes de ler o código e nunca depende do prompt original ou da memória do implementador. A garantia segue não bloqueante: uma review proporcional e, apenas para bloqueio real, no máximo uma re-review focada. Não existe terceiro loop.
+5. Quando dois ou mais nós sem colisão estão prontos e a capacidade é maior que um, o orquestrador dispara o lote seguro, informa a quantidade de workers ativos e repõe a primeira vaga. Após 60–90 segundos sem progresso observável, avisa; na segunda ocorrência consecutiva, interrompe e reatribui.
+6. A verificação sobe apenas quando necessário: `focused` → `workspace` → `integration` → `global/checkpoint` → `delivery`. Recuperação técnica dentro do escopo continua automaticamente; mudanças de produto, escopo, custo material, permissão ou integridade experimental exigem decisão.
+7. Nós no mesmo contexto usam spec inline e transição. Handoff/pacote de review existe somente para consumidor separado real. `assurance: light|full` preserva review independente; `none` fecha com verificação do executor.
 
 No trabalho gerenciado pelo grafo, toda atualização mostra etapa, andamento, trabalho automático, pendências humanas e técnicas, bloqueios, próxima ação e caminhos inspecionáveis. `direct-trivial` e `vibe` retornam apenas um resumo curto da edição e do check; vibe sempre informa sua verificação focada aprovada.
 

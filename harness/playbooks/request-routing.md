@@ -1,14 +1,15 @@
 # Request routing
 
-Run this playbook before every Harness workflow, including the session-start/status gate. Its purpose is to spend less effort classifying a request than completing it while keeping consequential work inside the full Harness.
+Run this playbook before mutating work or entering Harness ceremony. Read-only audits, explanations, status inspections, and diagnosis do not trigger first-run; route them directly to bounded inspection. Its purpose is to spend less effort classifying a request than completing it. After selecting a lane, independently choose `assurance: none|light|full` using [adaptive execution](../../docs/ADAPTIVE-EXECUTION.md).
 
 ## Route in order
 
 1. Read the request and only the nearest scoped instruction needed to classify it. Do not preload project context, pending state, the graph, or repository-wide evidence.
-2. Apply user precedence: explicit full always wins; explicit fast-lane requests are honored only when no hard full trigger applies.
-3. Apply deterministic rules from the [request-route contract](../../docs/contracts/REQUEST-ROUTE.md). Choose `direct-trivial`, `vibe`, `graph-only`, or `full-harness` when the evidence is clear.
-4. Only when two or more lanes remain plausible, use an available economical AI classifier. Give it the request, lane definitions, hard triggers, and nearest scoped evidence only. It advises classification; it does not change model, authority, or execution context.
-5. If AI classification would cost as much as the work, is unavailable, or leaves ambiguity, use `full-harness`.
+2. Apply user precedence: explicit full always wins. Otherwise honor the requested lane unless a real full-Harness condition is present.
+3. Choose `direct-trivial`, `vibe`, `graph-only`, or `full-harness` deterministically. Automatically select full only for two or more real agents/independent contexts, a human decision loop, a required audit, a model too weak or uncertain for the work, unresolved consequential ambiguity, or explicit full. With assurance auto, actual security/privacy/authorization/destructive changes default to full assurance; honor explicit none/light with a warning unless approved authority mandates audit. API/dependency words alone decide neither lane nor assurance.
+4. Only when two or more lanes remain plausible, use an available economical AI classifier. Give it the request, lane definitions, full-Harness conditions, and nearest scoped evidence only. It advises classification; it does not change model, authority, or execution context.
+5. If AI classification would cost as much as the work, inspect the target directly. Use `full-harness` only if consequential ambiguity remains.
+6. Select assurance independently: `none` for executor verification, `light` for focused independent acceptance, or `full` for required audit/deep assurance.
 
 ## Execute the lane
 
@@ -18,7 +19,7 @@ Inspect the target and nearest rules, make the mechanical edit, run the smallest
 
 ### Vibe
 
-Confirm one workstream, one local ownership area, a decided result, low blast radius, no hard trigger, and a focused deterministic check. Make the smallest implementation directly. Vibe may change small local behavior without a mandatory RED phase, but it never skips focused verification.
+Confirm one working context, a decided result, low blast radius, and a focused deterministic check. Vibe may change small local behavior without mandatory RED, but never skips verification. Failed verification begins bounded recovery and does not alone change the lane.
 
 Create no feature brief, implementation plan, TASK/SPEC, task graph node, lease artifact, TDD evidence, handoff, review, request-route record, or full status artifact. Report the changed behavior and focused check concisely. A check that is missing, ambiguous, or failing promotes the work; it is never treated as success.
 
@@ -28,8 +29,8 @@ Enter the normal approved-context and graph workflow. Use this lane only when sc
 
 ### Full-harness
 
-Enter the existing first-run/status/discovery/planning/graph/TDD/review flow at the applicable gate. `full-harness` is the safe fallback, not an error.
+Choose the compact shape for a bounded decided outcome: minimum durable state, a small graph neighborhood, and a compact inline spec where sufficient. Choose the complete shape when discovery, a human decision loop, multiple coordinated agents/workstreams, material uncertainty, or required full audit needs the complete state chain. Full Harness does not require every artifact.
 
 ## Continuous promotion check
 
-After target inspection and before each further edit, re-evaluate hard triggers. If scope grows beyond the chosen fast lane, stop editing, preserve current changes, state the promotion reason, and continue only through `full-harness`. Never demote a running full-harness task merely because one implementation step looks small.
+After target inspection, re-evaluate coordination and assurance. Failed verification begins bounded technical recovery within current scope. Promote if recovery exposes unresolved consequential ambiguity, a human loop, required audit, insufficient model capability, multiple real agents, or an actual security/privacy/authorization/destructive boundary. Never use an API or dependency keyword as a proxy for those facts.

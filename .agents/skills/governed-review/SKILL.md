@@ -5,7 +5,7 @@ description: Use for independent acceptance review, objective verification, and 
 
 # Governed review
 
-Do not load or run review for a task that validly declares `evidence_profile: graph-only`; its deterministic completion transition is final. If the task no longer satisfies that boundary, promote it to `handoff-review` before closeout.
+Load review only for `assurance: light|full`. `assurance: none` closes on executor verification regardless of lane. Create the packet because an actual separate reviewer will consume it; never create a ceremonial handoff for same-context work.
 
 Follow `../../../harness/playbooks/review-integration.md` and the completed task's `review_profile`/`max_review_rounds`. Assurance is automatic and non-blocking: never request human approval, reopen the historical completed node, or stop unrelated ready work.
 

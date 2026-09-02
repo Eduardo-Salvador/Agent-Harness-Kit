@@ -122,6 +122,21 @@ class InstallerTests(unittest.TestCase):
         for expected in ("root AGENTS.md or CLAUDE.md", "agent-harness-kit/", "PROJECT-CONTEXT.md", "approved context resumes without a first-run welcome", "only missing or unapproved context starts first-run discovery"):
             self.assertIn(expected, prompt)
 
+    def test_wheel_assets_overlay_runtime_modules_into_installed_profile(self) -> None:
+        temporary, root = self.host()
+        self.addCleanup(temporary.cleanup)
+        package_root = root / "agent_harness_kit"
+        assets = package_root / "assets"
+        assets.mkdir(parents=True)
+        (package_root / "__init__.py").write_text("", encoding="utf-8")
+        (package_root / "scheduler.py").write_text("VALUE = 1\n", encoding="utf-8")
+        with patch.object(INSTALLER, "ROOT", assets):
+            overlays = INSTALLER.package_module_overlays()
+        self.assertEqual(
+            sorted(overlays),
+            ["agent_harness_kit/__init__.py", "agent_harness_kit/scheduler.py"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

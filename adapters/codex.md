@@ -16,17 +16,17 @@ Codex natively discovers root `AGENTS.md` and repository skills under `.agents/s
 | Parallel dispatch | Internal subagent creation plus first-completion/attention waiting and numeric child-slot evidence | `sequential-fallback`; never simulate concurrency in the root context |
 | Native agent dispatch | `agent-harness codex-dispatch` plus the host's returned `spawn_agent`/`spawn_subagent` evidence | Sequential implementation or fresh manual review context; never a fabricated child |
 
-At session start, apply the `AGENTS.md` first-run/status gate. For resume or status, read project context, pending-work authority, and task graph in that order before any broad scan. Missing or unapproved `harness-state/PROJECT-CONTEXT.md` means discovery precedes implementation planning. Skills contain routing instructions, not canonical project memory.
+For resume, run a bounded real-state probe first, then read durable context/pending/graph artifacts only to fill gaps; skip stale handoffs when current tests/runtime evidence cover state. Read-only audits and diagnosis do not trigger first-run. Missing project context gates planning or mutation, not inspection.
 
 Apply the `AGENTS.md` `direct-trivial` gate before first-run or task routing. A qualified local presentation/static-content edit is made directly with the smallest useful check and no discovery, SPEC, graph, TDD, review, or full status artifact. Promote it immediately if behavior, ambiguity, risk, or broader impact appears.
 
 With approved project context, automatically load `.agents/skills/feature-discovery/SKILL.md` for unresolved new feature, workflow, integration, or user-facing capability requests. Do not require explicit skill invocation, and do not route routine fixes or already-approved implementation through feature discovery.
 
-Before creating or dispatching non-simple implementation tasks, automatically load `.agents/skills/writing-plans/SKILL.md`. Dispatch only self-contained executable task specs; a specialist returns `needs-replan` rather than improvising beyond the spec.
+Before planned implementation, load `.agents/skills/writing-plans/SKILL.md`; target 15–30 active minutes per unit and justify exceptions. Use compact full Harness for bounded work and complete full Harness only when coordination/discovery/audit requires it.
 
-For code behavior and bug fixes, automatically load `.agents/skills/test-driven-task/SKILL.md`. Require meaningful RED before production edits, GREEN with the identical focused command, and proportional regression evidence in the handoff.
+For code behavior and bug fixes, load `.agents/skills/test-driven-task/SKILL.md`. Require meaningful RED/GREEN and climb `focused` → `workspace` → `integration` → `global/checkpoint` → `delivery` only as needed. Record evidence in the inline transition unless a real consumer needs a handoff.
 
-Apply [bounded review rounds](../docs/REVIEW-ROUNDS.md) to the root agent and every delegated agent. After verification, automatically launch round 1 in a fresh reviewer context with no implementer history: use an internal subagent when `spawn_subagent` is proven, otherwise a new visible task/chat or clean manual context. Same-context review is invalid. Pass the pinned SPEC-led review packet, not the original prompt or conversation. The reviewer derives acceptance from the SPEC before inspecting code. Allow at most one focused fresh re-review; a second rejection forces task/acceptance rewrite, decomposition, or a genuine human product/risk decision, never a third loop.
+Apply [bounded review rounds](../docs/REVIEW-ROUNDS.md) for `assurance: light|full`; `none` closes on executor verification. Required review stays independent and fresh. Create a handoff/review packet only for that actual reviewer consumer, and allow at most one focused re-review.
 
 For every root or delegated agent, apply [status and completion communication](../docs/STATUS-AND-COMPLETION.md) and [`harness.status/v1`](../docs/contracts/STATUS.md). `PENDING.md` owns human decisions/actions and macro project gaps; `TASK-GRAPH.md` owns technical order, dependencies, and execution. Every user-facing progress/step update reports current stage, progress, work continuing without user action, human/macro pending items, active/ready/blocked graph nodes, blockers, next action, and inspectable paths; prose-only updates are invalid. Passing tasks are marked `completed` and unlock the next node immediately; assurance review is automatic, non-blocking, and never a renewed human approval request.
 
@@ -44,7 +44,9 @@ After the host returns, record its agent/context and operation identity with `ag
 
 ## Effective Codex App parallel dispatch
 
-When at least two graph nodes are ready, automatically load `.agents/skills/parallel-dispatch/SKILL.md`. Evidence the current number of available child-agent slots after reserving the orchestrator context, then run `agent-harness schedule harness-state/TASK-GRAPH.md --capacity <child-capacity>`.
+When at least two collision-free graph nodes are ready and numeric capacity is greater than one, load `.agents/skills/parallel-dispatch/SKILL.md`, launch the safe batch, and report the active worker count. Warn after 60–90 seconds without observable progress; on the second consecutive occurrence interrupt and reassign/serialize within budget.
+
+Run `agent-harness schedule harness-state/TASK-GRAPH.md --capacity <proven-capacity>` against the pinned graph revision before reservations; the maximum-cardinality result is the dispatch set, not evidence that dispatch happened.
 
 For each selected node, reserve a distinct lease/isolation and resolve its model dispatch. Then invoke the host's internal subagent creation operation (`spawn_agent`, `spawn_subagent`, or the currently exposed equivalent) once per node without waiting for an earlier child to finish. Pass only the pinned task SPEC/context packet and the resolved model/reasoning values. The calls may return references one at a time, but all confirmed children remain concurrently running. Do not create user-visible Codex tasks unless the user explicitly asked for visible separate tasks.
 

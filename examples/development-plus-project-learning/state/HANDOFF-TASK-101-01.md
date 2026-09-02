@@ -4,6 +4,7 @@ id: HANDOFF-TASK-101-01
 task: TASK-101@1
 attempt: 1
 status: completed
+consumer: reviewer
 author: agent:specialist
 created_at: 2026-08-20T11:30:00Z
 model_tier_used: balanced

@@ -2,9 +2,11 @@
 
 Use this playbook only after [request routing](request-routing.md) selects `graph-only` or `full-harness` and the relevant product context or feature brief is approved. `direct-trivial` and `vibe` stop before planning. The result is an execution packet: a plan for non-trivial work plus one concise task spec per executable unit.
 
+Before decomposition, run `agent-harness preflight` with every prerequisite named by the approved request/context: paths, package scripts, environment-variable names, native commands, validator, browser requirement, and proven worker capacity. Stop on blockers and record exact capability degradation; do not create a speculative graph first.
+
 ## Fast-route boundary
 
-The request router owns pre-Harness classification. `direct-trivial` remains the static/mechanical path below. `vibe` additionally permits one decided, small local behavior change in one workstream when it has low blast radius, no hard full trigger, and a focused deterministic check. Vibe creates no plan, inline spec, task, graph, TDD evidence, handoff, or review artifact. It must promote to `full-harness` before further edits if scope grows, verification fails or becomes ambiguous, or any hard trigger appears.
+The request router owns pre-Harness classification. `vibe` permits one decided, small local behavior change in one working context with low blast radius and a focused check. Failed verification starts bounded in-scope recovery; promote only when a full-Harness condition appears.
 
 ## Direct-trivial gate — no SDD
 
@@ -36,15 +38,15 @@ If uncertain, classify it as `planned`. An `inline-simple` task skips the separa
 
 After a task passes the `inline-simple` gate, it may use `evidence_profile: graph-only` only when verification is deterministic and the task changes no product behavior, security/privacy/authentication boundary, data/schema/API contract, dependency, migration, external side effect, integration boundary, cross-workstream ownership, or assurance-gated outcome. It must use `test_strategy: verification-only`, `review_profile: none`, `max_review_rounds: 0`, `reviewer: not-required`, and `assurance_gate: none`.
 
-The agent still runs the declared verification. On success, the orchestrator records a concise result and check outcome in the graph transition, completes the node, releases the lease, and unlocks dependents. It creates no handoff, review packet, review artifact, copied log, or separate evidence file. Any ambiguous/failed check, behavior/TDD work, consequential risk, remediation, or discovered broader impact promotes the task to `evidence_profile: handoff-review` before completion. Graph-only reduces durable artifacts; it never turns an unverified claim into completion.
+The agent runs declared verification and records the highest sufficient test-ladder rung. A same-context node closes in its graph transition. If `assurance: light|full` requires an independent reviewer, create the consumer-bound packet; otherwise do not create handoff ceremony. Failed checks begin bounded in-scope recovery.
 
 ## Non-trivial planning flow
 
 1. Pin the approved project context and feature brief/decision when applicable. Load only scoped source evidence required to identify paths and dependencies.
 2. Write `harness-state/plans/PLAN-<id>.md` from the implementation-plan template. Keep product choices out of the plan; unresolved consequential behavior returns to discovery.
-3. Decompose the outcome into ordered units targeting two to five minutes of active agent work. Tool runtime, dependency download, CI wait, and independent assurance are not implementation time.
+3. Decompose the outcome into ordered units targeting 15–30 minutes of active agent work. Tool runtime, dependency download, CI wait, and independent assurance are not implementation time. A smaller or larger unit states why atomicity, runtime cost, or risk makes the exception preferable.
 4. Each unit declares one observable result, exact change, dependencies, `read_set`, exclusive `write_set`, `impact_set`, non-goals, acceptance criteria, verification, test strategy, and stop/replan triggers. Behavior changes and bug fixes declare a focused RED test/expected failure, minimum GREEN implementation, and proportional regression command. If these cannot remain concise, split the unit without separating RED from GREEN.
-5. Map each unit to a graph node and generate a self-contained `TASK.md`. The task pins `planning_mode`, plan revision, plan step, target minutes, and `evidence_profile`. Planned units always use `handoff-review`. Copy only executable facts into the task spec; do not make the implementer reread the full plan.
+5. Map each unit to a graph node and generate a self-contained `TASK.md` when a separate implementer will consume it. A same-context inline node uses a compact inline spec plus its graph transition. Pin planning mode, plan revision/step, target minutes, evidence profile, and orthogonal assurance; do not create a handoff merely to transfer work to the same context.
 6. Validate dependency order, path leases, capability availability, acceptance, and integration coverage. Mark the plan `ready`; no ceremonial human approval is required unless planning exposes a consequential product, architecture, risk, permission, budget, or scope decision.
 7. Dispatch only a node with a complete spec. The implementer executes the stated change and checks; it does not redesign the plan while coding.
 
@@ -61,5 +63,6 @@ The orchestrator revises the plan/spec, graph, and budget evidence in one operat
 - One plan may contain many small units; do not create a plan file per unit.
 - One task brief is the unit's executable spec. Do not create a second spec document.
 - The implementer loads its task brief and pinned source paths first; it does not need to load the whole implementation plan during normal execution. The plan is provenance and is opened only for a reported contradiction or replan.
-- Prefer the smallest coherent number of units. Two-to-five minutes is a decomposition target, not a reason to split a single atomic edit into ceremony.
-- Evidence and review remain proportional: eligible inline-simple work may close through one graph transition; all planned, behavior, risky, ambiguous, or assurance-relevant work uses `handoff-review`. Do not add approval gates between correctly specified units.
+- Prefer the smallest coherent number of units. Fifteen-to-thirty minutes is a planning target, not a reason to split an atomic edit or pad a small change.
+- Evidence and review follow `assurance: none|light|full`, independently from lane. Create a handoff and review packet only for an actual separate consumer; preserve fresh independent review whenever `light` or `full` assurance requires it.
+- A separate executor always receives a self-contained task in a separate context; an inline executor uses the compact graph spec.

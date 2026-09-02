@@ -9,6 +9,7 @@ id: HANDOFF-TASK-001-01
 task: TASK-001@1
 attempt: 1
 status: completed                 # completed | blocked | failed
+consumer: reviewer                # reviewer | human; no artifact when consumer is none
 author: agent:builder-1
 workstream: backend
 agent_role: role:backend-specialist
@@ -86,6 +87,7 @@ Implemented graph-cycle and ownership-overlap validation.
 
 ## Invariants
 
+- Create a handoff only when a separate subagent/context or a human will consume it. A closed single-context loop uses `consumer: none` implicitly and records the concise outcome plus verification in the atomic graph transition/event instead of creating this artifact.
 - The handoff pins a task revision and attempt; later attempts create new artifacts.
 - Every acceptance criterion has a result and durable evidence pointer, including failures/not-run reasons.
 - Changed paths stay within ownership or link to an approved lease change.

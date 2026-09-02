@@ -23,6 +23,11 @@ regression_scope: none
 status: final
 reviewer: agent:independent-reviewer
 verdict: changes-requested
+findings: [REV-001]
+evidence: [run:contracts-tests-018]
+commands: [example-test-command tests/contracts]
+duration_ms: 42000
+tokens: host-reported:1840
 created_at: 2026-08-21T12:00:00Z
 ---
 ```
@@ -83,6 +88,7 @@ created_at: 2026-08-21T12:00:00Z
 - Round 1 uses `scope: initial`; round 2 uses `scope: focused-rereview` and pins `prior_review`.
 - Round 2 also pins non-empty `blocking_findings`, `correction_delta`, and `regression_scope`; these are the auditable boundary of the re-review.
 - `changes-requested` requires at least one evidence-backed blocking finding.
+- `verdict` is exactly `accept`, `changes-requested`, `rejected`, or `needs-replan`; every final review also normalizes `findings`, `evidence`, `commands`, `duration_ms`, and `tokens` in frontmatter so metrics never need to parse prose. Use empty lists and `unavailable`, never omit fields.
 - Non-blocking findings cannot prevent `accept` and become follow-up candidates.
 - Round 2 reopens only prior blocking findings, their correction delta, proportional regression risk, and new blockers introduced in that delta.
 - No automatic round 3 exists. A second rejection forces task/contract rewrite, decomposition, or a genuine human product/risk decision under [bounded review rounds](../REVIEW-ROUNDS.md).

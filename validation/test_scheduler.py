@@ -81,6 +81,31 @@ class SchedulerTests(unittest.TestCase):
         self.assertEqual(plan["selected"], ["FIRST"])
         self.assertEqual(plan["deferred"], [{"id": "SECOND", "reason": "write-collision:FIRST"}])
 
+    def test_maximizes_parallel_batch_instead_of_taking_greedy_first_node(self) -> None:
+        graph = {
+            "revision": 9,
+            "nodes": [
+                node("BROAD", write_set=["src/**"]),
+                node("FRONTEND", write_set=["src/frontend/**"]),
+                node("BACKEND", write_set=["src/backend/**"]),
+            ],
+        }
+
+        plan = schedule_ready(graph, capacity=2)
+
+        self.assertEqual(plan["selected"], ["FRONTEND", "BACKEND"])
+        self.assertEqual(plan["graph_revision"], 9)
+        self.assertEqual(plan["ready_without_collision_count"], 2)
+        self.assertEqual(plan["announcement"], "2 collision-free ready nodes, capacity 2: dispatching 2 now")
+        self.assertEqual(plan["deferred"], [{"id": "BROAD", "reason": "write-collision:FRONTEND"}])
+
+    def test_reports_all_collision_free_ready_nodes_even_when_capacity_is_lower(self) -> None:
+        graph = {"nodes": [node("A"), node("B"), node("C")]}
+        plan = schedule_ready(graph, capacity=2)
+        self.assertEqual(plan["ready_without_collision_count"], 3)
+        self.assertEqual(plan["selected"], ["A", "B"])
+        self.assertEqual(plan["announcement"], "3 collision-free ready nodes, capacity 2: dispatching 2 now")
+
     def test_requires_a_positive_host_capacity(self) -> None:
         with self.assertRaisesRegex(ScheduleError, "capacity"):
             schedule_ready({"nodes": []}, capacity=0)

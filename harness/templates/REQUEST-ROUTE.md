@@ -1,9 +1,13 @@
 ---
 schema: harness.request-route/v1
 route: full-harness
+assurance: full
+harness_shape: compact
 classification: deterministic
 user_override: none
-hard_triggers: []
+risk_signals: []
+coordination_signals: []
+warnings: []
 reason: ""
 verification: ""
 promotion_trigger: ""

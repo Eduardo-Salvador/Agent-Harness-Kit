@@ -6,11 +6,11 @@ The harness distinguishes the project-level completion overview and actions that
 
 A request classified by [request routing](../harness/playbooks/request-routing.md) as `direct-trivial` or `vibe` never becomes a task or graph event. Do not emit an intermediate status update or render `harness.status/v1` unless the edit becomes blocked or must be promoted. Make the edit and return a concise closeout naming what changed and the smallest check run. `direct-trivial` may report `not run` when no meaningful check exists for a purely static edit; `vibe` must always report a passing focused deterministic check.
 
-Fast routes cannot hide human pending items requested by the user or bypass an explicit status/resume question. Any scope growth, hard trigger, unavailable/ambiguous check, or failed vibe verification stops further edits and promotes to `full-harness`; subsequent updates follow the mandatory status shape.
+Fast routes cannot hide human pending items or bypass an explicit status/resume question. Failed verification begins bounded in-scope recovery; promotion occurs only when recovery reveals a full-Harness condition.
 
 ## Graph-only closeout
 
-An `inline-simple` task may declare `evidence_profile: graph-only` when it is deterministic, low risk, verification-only, and excluded from behavior, TDD, security/privacy/authentication, data/schema/API contracts, dependencies, migrations, external side effects, integration, cross-workstream ownership, remediation, and assurance gates. It remains a real graph task, so the compact status shape still applies. After the check passes, complete it with one graph transition containing the concise outcome and check result. Do not create a handoff, review packet, review artifact, copied log, or separate evidence file. Failed or ambiguous verification promotes it to `handoff-review` instead of recording completion.
+A graph node remains a real task, but lane and assurance are independent. Same-context work records its outcome and highest sufficient test-ladder rung in one transition and creates no handoff. Create a handoff/review packet only for an actual separate consumer. `assurance: light|full` preserves fresh independent review; `none` closes on executor verification.
 
 ## Mandatory step update
 
@@ -52,25 +52,25 @@ Do not expose only an internal artifact path or say that review is pending witho
 
 ## Continue within granted authority
 
-Local validation, completion transitions, and next-task dispatch already declared by an approved graph are normal execution steps. For `handoff-review`, independent assurance and proportional remediation review are also automatic. Perform them without asking the user to approve the workflow again. Announce material results and continue.
+Local validation, bounded technical recovery, completion transitions, and next-task dispatch inside approved scope/cost/ownership are normal execution steps. Independent assurance and proportional remediation are also automatic when declared. Perform them without asking again.
 
 Do not request approval merely to:
 
 - run the task's declared local checks;
-- dispatch a `handoff-review` task's predeclared independent reviewer;
+- dispatch a predeclared independent reviewer for `assurance: light|full`;
 - record an evidence-backed graph transition;
 - apply corrections inside the existing outcome, lease, paths, capabilities, and review budget; or
 - report completion.
 
 ## Approval request quality
 
-Ask once, as late as safely possible, only when the next action crosses authority already granted: consequential product or architecture choice, scope/budget expansion, new permission/secret/network/integration, destructive or hard-to-recover action, override of failed verification, or external commit/push/deploy/publication when separately gated.
+Ask once, as late as safely possible, only when the next action changes product behavior, approved scope, material cost/budget, permission or external authority, experimental/evaluation integrity, or a separately gated destructive/delivery action. In-scope technical diagnosis, correction, reruns, and proportional regression continue automatically; a failed check alone is not an approval gate.
 
 Before asking, consolidate related approvals and state the exact proposed action, why it is needed now, affected target, material effect/risk, safe default, and what work can continue without it. Never repeat an approval that the durable state already records as granted.
 
 ## Terminal behavior
 
 - Completed: after declared acceptance checks pass, close the task, release its lease, report completion, and dispatch the next dependency-ready task. Do not wait for human approval or assurance review.
-- Post-completion review: run automatically and non-blockingly for `handoff-review`; `graph-only` has no review step. A predeclared critical assurance checkpoint keeps only listed affected actions pending until acceptance. A blocking finding creates a linked remediation task; it does not reopen the completed node or stop unrelated ready work.
+- Post-completion review: run automatically and non-blockingly for `assurance: light|full`; `none` has no review step. A critical checkpoint keeps only affected actions pending.
 - Human-blocked: record one actionable human pending item and ask the concrete decision once.
 - Review budget exhausted: report blockers and escalation/decomposition on the remediation/integration path; do not keep the project in an unnamed review loop.

@@ -11,6 +11,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path, PurePosixPath
+from typing import NamedTuple, Sequence
 from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,6 +24,16 @@ from agent_harness_kit.readiness import readiness_blocker
 EXCLUDED_PARTS = {"work", "outputs", ".git", "__pycache__"}
 READY_STATES = {"ready", "active"}
 ACTIVE_STATES = {"active"}
+FOUNDATIONAL_SCOPE_PATHS = {
+    "AGENTS.md",
+    "CLAUDE.md",
+    "PACKAGE-MANIFEST.json",
+    "pyproject.toml",
+    "tools/package.py",
+    "tools/validate.py",
+    "agent_harness_kit/__main__.py",
+    "agent_harness_kit/cli.py",
+}
 NODE_FIELDS = {
     "id", "goal", "depends_on", "status", "assignee", "reviewer",
     "write_set", "checkpoint", "task_brief", "evidence_profile", "assurance_status", "assurance_requires",
@@ -31,11 +42,35 @@ NODE_CONTEXT_FIELDS = {"workstream", "agent_role", "execution_context", "thread_
 NODE_ENRICHMENT_FIELDS = {"read_set", "impact_set", "context_provenance"}
 
 
+class ScopeError(RuntimeError):
+    """Raised when a requested validation scope cannot be resolved safely."""
+
+
+class ScopeSelection(NamedTuple):
+    requested_scope: str
+    effective_scope: str
+    paths: set[str] | None
+    escalated: bool = False
+
+
 def content_sha256(data: bytes, *, normalize_text: bool = False) -> str:
     if normalize_text:
         text = data.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
         data = text.encode("utf-8")
     return hashlib.sha256(data).hexdigest()
+
+
+def audio_attachment_errors(track: dict) -> list[str]:
+    """Require a GitHub attachment only after a regenerated track is approved."""
+    language = track.get("language", "unknown")
+    attachment = track.get("github_attachment")
+    if not attachment:
+        return [f"media.manifest-attachment: {language}"] if track.get("status") == "approved" else []
+    if not isinstance(attachment, str) or not re.fullmatch(
+        r"https://github\.com/user-attachments/assets/[0-9a-f-]{36}", attachment
+    ):
+        return [f"media.manifest-attachment: {language}"]
+    return []
 
 
 def validate_task_evidence_profile(header: dict[str, str], source: str) -> list[str]:
@@ -60,7 +95,7 @@ REQUIRED_FILES = [
     "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
     "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/PYPI-README.md",
     "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md",
-    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/TDD.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/HACKATHON-MODE.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
+    "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/ADAPTIVE-EXECUTION.md", "docs/RUNTIME-STATE.md", "docs/TDD.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/HACKATHON-MODE.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
     "docs/contracts/REQUEST-ROUTE.md", "docs/contracts/FEATURE-BRIEF.md", "docs/contracts/IMPLEMENTATION-PLAN.md", "docs/contracts/MODEL-DISPATCH.md", "docs/contracts/CODEX-AGENT-DISPATCH.md", "docs/contracts/PARALLEL-DISPATCH.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
     "adapters/README.md", "adapters/generic.md", "adapters/codex.md", "adapters/claude.md",
     "harness/roles/README.md", "harness/roles/discovery-interviewer.md",
@@ -126,7 +161,7 @@ REQUIRED_FILES = [
     "validation/budget-fixtures/invalid/lineage-reset.json",
     "validation/budget-fixtures/invalid/task-only-scope.json",
     "validation/budget-fixtures/invalid/path-traversal.json",
-    "VERSION", "docs/DISTRIBUTION.md", "docs/PUBLICATION-READINESS.md", "pyproject.toml", "agent_harness_kit/__init__.py", "agent_harness_kit/__main__.py", "agent_harness_kit/cli.py", "tools/package.py", "tools/install.py", "validation/test_install.py", "validation/test_cli.py",
+    "VERSION", "docs/DISTRIBUTION.md", "docs/PUBLICATION-READINESS.md", "pyproject.toml", "agent_harness_kit/__init__.py", "agent_harness_kit/__main__.py", "agent_harness_kit/cli.py", "agent_harness_kit/preflight.py", "agent_harness_kit/state_runtime.py", "agent_harness_kit/scheduler.py", "tools/package.py", "tools/install.py", "validation/test_install.py", "validation/test_cli.py", "validation/test_installed_host_smoke.py", "validation/test_validate_cli.py", "validation/test_preflight.py", "validation/test_state_runtime.py", "benchmarks/fullstack/scripts/run_pilot.py", "benchmarks/fullstack/tests/test_run_pilot.py",
     "distribution/project.json", "distribution/profiles/core.json", "distribution/profiles/core-learning.json", "distribution/profiles/full.json",
     "docs/contracts/MIGRATION-MANIFEST.md", "docs/contracts/COEXISTENCE.md", "docs/contracts/ADAPTER-BINDING.md",
     "harness/templates/MIGRATION-MANIFEST.md", "harness/templates/COEXISTENCE.md", "harness/templates/ADAPTER-BINDING.md",
@@ -167,11 +202,11 @@ TEMPLATE_RULES = {
         {"Human action required", "Project completion overview", "Recently resolved"},
     ),
     "TASK.md": (
-        {"schema", "id", "graph", "revision", "status", "planning_mode", "implementation_plan", "plan_step", "target_minutes", "test_strategy", "tdd_exception", "evidence_profile", "assigned_to", "reviewer", "workstream", "agent_role", "execution_context", "thread_policy", "thread_ref", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "model_dispatch", "execution_budget", "review_profile", "max_review_rounds", "assurance_gate"},
+        {"schema", "id", "graph", "revision", "status", "planning_mode", "implementation_plan", "plan_step", "target_minutes", "test_strategy", "tdd_exception", "evidence_profile", "assurance", "artifact_policy", "handoff_consumer", "test_ladder", "assigned_to", "reviewer", "workstream", "agent_role", "execution_context", "thread_policy", "thread_ref", "ownership_lease", "isolation", "updated_at", "capability_manifest", "rules_map", "model_tier", "model_reason", "model_dispatch", "execution_budget", "review_profile", "max_review_rounds", "assurance_gate"},
         {"Outcome", "Executable spec", "Context to load", "Owned paths", "Constraints", "Non-goals", "Rules to load", "Required capabilities", "Acceptance criteria", "Test-first cycle", "Verification", "Stop and replan", "Exit"},
     ),
     "HANDOFF.md": (
-        {"schema", "id", "task", "attempt", "status", "author", "workstream", "agent_role", "execution_context", "thread_ref", "created_at", "model_tier_used", "model_id_used", "reasoning_effort_used", "model_dispatch", "model_route_changes", "execution_budget"},
+        {"schema", "id", "task", "attempt", "status", "consumer", "author", "workstream", "agent_role", "execution_context", "thread_ref", "created_at", "model_tier_used", "model_id_used", "reasoning_effort_used", "model_dispatch", "model_route_changes", "execution_budget"},
         {"Result", "Changes", "Change unit and authority", "Acceptance evidence", "Verification run", "Test-first evidence", "Execution budget", "Discoveries and risks", "Routing and authority", "Review request", "User-facing closeout"},
     ),
     "MODEL-DISPATCH.md": (
@@ -187,7 +222,7 @@ TEMPLATE_RULES = {
         {"Role resolution", "Minimal context packet", "Native call", "Dispatch evidence", "Separation and fallback"},
     ),
     "REVIEW.md": (
-        {"schema", "id", "task", "handoff", "spec_authority", "review_packet", "review_context", "review_context_ref", "prompt_source", "revision", "round", "scope", "prior_review", "blocking_findings", "correction_delta", "regression_scope", "status", "reviewer", "verdict", "created_at"},
+        {"schema", "id", "task", "handoff", "spec_authority", "review_packet", "review_context", "review_context_ref", "prompt_source", "revision", "round", "scope", "prior_review", "blocking_findings", "correction_delta", "regression_scope", "status", "reviewer", "verdict", "findings", "evidence", "commands", "duration_ms", "tokens", "created_at"},
         {"Independence", "Spec authority", "Fresh-context evidence", "Independent reconstruction", "Review profile and scope", "Criterion verdicts", "Findings", "Integration recommendation", "Verification", "Next review boundary"},
     ),
     "STATUS.md": (
@@ -246,6 +281,148 @@ PORTUGUESE_MARKERS = re.compile(
 
 def rel(path: Path) -> str:
     return path.relative_to(ROOT).as_posix()
+
+
+def normalize_scope_path(path: str | Path) -> str:
+    return str(path).replace("\\", "/").removeprefix("./").strip("/")
+
+
+def git_changed_paths() -> set[str]:
+    """Return tracked and untracked worktree changes as repository-relative paths."""
+    try:
+        result = subprocess.run(
+            ["git", "status", "--porcelain=v1", "-z", "--untracked-files=all"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except OSError as exc:
+        raise ScopeError(f"changed scope requires Git: {exc}") from exc
+    if result.returncode:
+        detail = (result.stderr or result.stdout).strip()
+        suffix = f": {detail}" if detail else ""
+        raise ScopeError(f"changed scope requires Git and a readable repository{suffix}")
+
+    entries = result.stdout.split("\0")
+    changed: set[str] = set()
+    index = 0
+    while index < len(entries):
+        entry = entries[index]
+        index += 1
+        if not entry:
+            continue
+        if len(entry) < 4 or entry[2] != " ":
+            continue
+        status = entry[:2]
+        changed.add(normalize_scope_path(entry[3:]))
+        if "R" in status or "C" in status:
+            if index < len(entries) and entries[index]:
+                changed.add(normalize_scope_path(entries[index]))
+            index += 1  # porcelain -z appends the rename/copy source as a second field
+    return changed
+
+
+def foundational_scope_change(paths: set[str]) -> bool:
+    return any(
+        path in FOUNDATIONAL_SCOPE_PATHS or path.startswith("distribution/profiles/")
+        for path in paths
+    )
+
+
+def task_scope_paths(task_path: Path) -> set[str]:
+    path = task_path if task_path.is_absolute() else ROOT / task_path
+    path = path.resolve()
+    try:
+        task_relative = path.relative_to(ROOT.resolve()).as_posix()
+    except ValueError as exc:
+        raise ScopeError(f"task path must be inside the repository: {task_path}") from exc
+    if not path.is_file():
+        raise ScopeError(f"task path does not exist or is not a file: {task_path}")
+
+    text = path.read_text(encoding="utf-8")
+    owned_match = re.search(r"^## Owned paths\s*$([\s\S]*?)(?=^## |\Z)", text, re.MULTILINE)
+    paths = {task_relative}
+    if not owned_match:
+        return paths
+    for raw in re.findall(r"^-\s+`([^`]+)`\s*$", owned_match.group(1), re.MULTILINE):
+        normalized, reason = normalize_owned_path(raw)
+        if reason or not normalized:
+            raise ScopeError(f"task contains an invalid owned path {raw!r}: {reason}")
+        candidate = ROOT / normalized
+        if "*" in raw or "?" in raw:
+            matches = sorted(item for item in ROOT.glob(raw.replace("\\", "/")) if item.is_file())
+            if matches:
+                paths.update(rel(item) for item in matches)
+            else:
+                paths.add(normalized)
+        elif candidate.is_dir():
+            paths.update(rel(item) for item in sorted(candidate.rglob("*")) if item.is_file())
+        else:
+            paths.add(normalized)
+    return paths
+
+
+def resolve_scope(scope: str, task_path: Path | None) -> ScopeSelection:
+    if scope == "repository":
+        return ScopeSelection(scope, scope, None)
+    if scope == "task":
+        if task_path is None:
+            raise ScopeError("--scope task requires --task PATH")
+        return ScopeSelection(scope, scope, task_scope_paths(task_path))
+    paths = git_changed_paths()
+    if foundational_scope_change(paths):
+        return ScopeSelection(scope, "repository", None, True)
+    return ScopeSelection(scope, scope, paths)
+
+
+def error_in_scope(error: str, selected_paths: set[str]) -> bool:
+    detail = error.replace("\\", "/")
+    for path in selected_paths:
+        normalized = normalize_scope_path(path)
+        if normalized and normalized in detail:
+            return True
+    return False
+
+
+def scoped_errors(errors: Sequence[str], selected_paths: set[str] | None) -> list[str]:
+    if selected_paths is None:
+        return list(errors)
+    return [error for error in errors if error_in_scope(error, selected_paths)]
+
+
+def summarize_error_categories(errors: Sequence[str]) -> str:
+    counts: dict[str, int] = {}
+    for error in errors:
+        code = error.split(":", 1)[0]
+        category = code.split(".", 1)[0]
+        counts[category] = counts.get(category, 0) + 1
+    return ", ".join(f"{category}={counts[category]}" for category in sorted(counts))
+
+
+def load_package_manifest() -> dict | None:
+    path = ROOT / "PACKAGE-MANIFEST.json"
+    if not path.is_file():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def selected_required_count(package_manifest: dict | None, selected_paths: set[str] | None) -> int:
+    if package_manifest:
+        required = {
+            normalize_scope_path(entry["path"])
+            for entry in package_manifest.get("files", [])
+            if isinstance(entry, dict) and isinstance(entry.get("path"), str)
+        }
+    else:
+        required = set(REQUIRED_FILES)
+    if selected_paths is None:
+        return len(required)
+    return len(required & {normalize_scope_path(path) for path in selected_paths})
 
 
 def markdown_files() -> list[Path]:
@@ -1102,7 +1279,12 @@ def safe_host_path(host_root: Path, relative: str) -> Path | None:
 
 
 def file_identity(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    data = path.read_bytes()
+    try:
+        digest = content_sha256(data, normalize_text=True)
+    except UnicodeDecodeError:
+        digest = content_sha256(data)
+    return "sha256:" + digest
 
 
 def validate_migration_data(host_root: Path, header: dict[str, str], data: dict, source: str) -> list[str]:
@@ -1301,7 +1483,7 @@ def validate_native_integration() -> list[str]:
         claude_text = claude_path.read_text(encoding="utf-8")
         if not claude_text.startswith("@AGENTS.md\n"):
             errors.append("native.claude-import: CLAUDE.md must start with @AGENTS.md")
-        if len(claude_text) > 1600 or len(claude_text) > len(agents_text) * 0.65:
+        if len(claude_text) > 4000 or len(claude_text) > len(agents_text) * 0.35:
             errors.append("native.context-duplication: CLAUDE.md must remain a thin compatibility entry")
         shared = str(fixture.get("shared_context", ""))
         if shared not in agents_text or shared not in (ROOT / "adapters" / "claude.md").read_text(encoding="utf-8"):
@@ -1311,7 +1493,7 @@ def validate_native_integration() -> list[str]:
         if ".claude/skills/" not in claude_text or "adapters/claude.md" not in claude_text:
             errors.append("native.claude-routing: CLAUDE.md does not route Claude Code")
 
-        router_tokens = ("request-routing gate", "before all harness ceremony", ".agents/skills/request-router/skill.md", "direct-trivial", "vibe", "graph-only", "full-harness", "deterministically first", "explicit `full-harness` always wins", "focused verification", "promotes")
+        router_tokens = ("request-routing gate", "before all harness ceremony", ".agents/skills/request-router/skill.md", "direct-trivial", "vibe", "graph-only", "full-harness", "deterministically first", "explicit `full-harness` always wins", "orthogonal assurance", "15–30")
         if any(token not in agents_text.lower() for token in router_tokens):
             errors.append("native.request-router-root: AGENTS.md must route all requests before Harness ceremony")
 
@@ -1326,19 +1508,19 @@ def validate_native_integration() -> list[str]:
         feature_tokens = ("feature-discovery", "never needs to know its name", "highest-leverage unanswered question", "access/authentication", "failure/recovery paths", "harness-state/features/feature-<id>.md")
         if any(token not in agents_text.lower() for token in feature_tokens):
             errors.append("native.feature-discovery-routing: AGENTS.md must automatically route unresolved new feature requests")
-        plan_tokens = ("writing-plans", "two to five minutes", "compact inline spec", "needs-replan", "never improvise", "harness.implementation-plan/v1")
+        plan_tokens = ("writing-plans", "15–30 minutes", "compact inline spec", "scope", "human decision")
         if any(token not in agents_text.lower() for token in plan_tokens):
             errors.append("native.writing-plans-routing: AGENTS.md must require optimized spec-driven planning before implementation")
-        tdd_tokens = ("test-driven-task", "meaningful red", "minimum production code", "identical focused command", "proportional regression", "do not waive tdd")
+        tdd_tokens = ("test-driven-task", "meaningful red", "green", "focused", "workspace", "delivery")
         if any(token not in agents_text.lower() for token in tdd_tokens):
             errors.append("native.tdd-routing: AGENTS.md must require RED-GREEN evidence for behavior-changing code tasks")
-        direct_tokens = ("direct-trivial fast path", "before first-run", "changing one button color", "no product behavior", "do not start discovery/interview", "full status ceremony")
+        direct_tokens = ("direct-trivial fast path", "few minutes", "no product behavior", "smallest useful check", "no harness artifacts")
         if any(token not in agents_text.lower() for token in direct_tokens):
             errors.append("native.direct-trivial-routing: AGENTS.md must bypass SDD only for bounded mechanical edits")
         model_dispatch_tokens = ("human-approved routing artifact", "actual task, message, or subagent dispatch", "harness.model-dispatch/v1", "same-context mid-turn switch", "manual-required")
         if any(token not in agents_text.lower() for token in model_dispatch_tokens):
             errors.append("native.model-dispatch-routing: AGENTS.md must require confirmed runtime model overrides")
-        parallel_tokens = ("parallel-dispatch", "two or more", "numeric parallel capacity", "without waiting", "first completion or attention event", "integration nodes")
+        parallel_tokens = ("parallel-dispatch", "two or more collision-free", "numeric parallel capacity", "active worker count", "refill capacity")
         if any(token not in agents_text.lower() for token in parallel_tokens):
             errors.append("native.parallel-dispatch-routing: AGENTS.md must automatically fan out and refill safe ready work")
         codex_agent_tokens = ("codex-agent-dispatch", "minimal request", "fork_turns: none", "harness.codex-agent-dispatch/v1", "implementer and reviewer", "manual context")
@@ -1373,11 +1555,11 @@ def validate_native_integration() -> list[str]:
             errors.append(f"native.request-router-surface: missing {rel(surface)}")
     if all(surface.is_file() for surface in request_surfaces):
         combined = "\n".join(surface.read_text(encoding="utf-8").lower() for surface in request_surfaces)
-        for token in ("harness.request-route/v1", "direct-trivial", "vibe", "graph-only", "full-harness", "deterministic", "ai", "hard full trigger", "explicit full", "focused", "promotion"):
+        for token in ("harness.request-route/v1", "direct-trivial", "vibe", "graph-only", "full-harness", "deterministic", "assurance", "compact", "complete", "explicit full", "focused", "reclass"):
             if token not in combined:
                 errors.append(f"native.request-router-contract: neutral surfaces lack {token!r}")
         template_header = frontmatter(request_template.read_text(encoding="utf-8"))
-        required_route_fields = {"schema", "route", "classification", "user_override", "hard_triggers", "reason", "verification", "promotion_trigger"}
+        required_route_fields = {"schema", "route", "assurance", "harness_shape", "classification", "user_override", "risk_signals", "coordination_signals", "warnings", "reason", "verification", "promotion_trigger"}
         if template_header.get("schema") != "harness.request-route/v1" or not required_route_fields <= set(template_header):
             errors.append("native.request-router-template: invalid request-route header")
     for item in (".agents/skills/request-router/SKILL.md", ".claude/skills/request-router/SKILL.md"):
@@ -1386,7 +1568,7 @@ def validate_native_integration() -> list[str]:
             errors.append(f"native.request-router-skill: missing {item}")
             continue
         skill_text = path.read_text(encoding="utf-8").lower()
-        for token in ("automatically classify every request", "before first-run", "deterministically first", "ai classifier only", "direct-trivial", "vibe", "graph-only", "full-harness", "explicit full always wins", "focused deterministic check", "promotes"):
+        for token in ("automatically classify every request", "before mutating work", "deterministically first", "ai classifier only", "direct-trivial", "vibe", "graph-only", "full-harness", "explicit full wins", "focused deterministic check", "promote"):
             if token not in skill_text:
                 errors.append(f"native.request-router-skill: {item} lacks {token!r}")
 
@@ -1413,23 +1595,23 @@ def validate_native_integration() -> list[str]:
 
     if claude_path.is_file():
         claude_text = claude_path.read_text(encoding="utf-8").lower()
-        for token in ("request-router", "before any harness workflow", "direct-trivial", "vibe", "graph-only", "full-harness", "focused check", "promotes"):
+        for token in ("request-router", "before mutating work", "four public lanes", "full-harness", "assurance"):
             if token not in claude_text:
                 errors.append(f"native.claude-request-routing: CLAUDE.md lacks {token!r}")
         for token in (".claude/skills/feature-discovery/skill.md", "automatically load", "need not name it", "failure/recovery", "before pending or graph changes"):
             if token not in claude_text:
                 errors.append(f"native.claude-feature-discovery-routing: CLAUDE.md lacks {token!r}")
-        for token in ("writing-plans", "two-to-five-minute", "replan instead of improvising"):
+        for token in ("writing-plans", "15–30", "inline spec"):
             if token not in claude_text:
                 errors.append(f"native.claude-writing-plans-routing: CLAUDE.md lacks {token!r}")
-        for token in ("test-driven-task", "meaningful red", "green with the same focused test", "proportional regression", "faking red"):
+        for token in ("test-driven-task", "test ladder", "behavior/bugs"):
             if token not in claude_text:
                 errors.append(f"native.claude-tdd-routing: CLAUDE.md lacks {token!r}")
 
     plan_playbook = ROOT / "harness" / "playbooks" / "writing-plans.md"
     if plan_playbook.is_file():
         plan_text = plan_playbook.read_text(encoding="utf-8").lower()
-        for token in ("simple-task gate", "two to five minutes", "self-contained `task.md`", "needs-replan", "does not need to load the whole implementation plan", "do not create a plan file per unit", "no ceremonial human approval"):
+        for token in ("compact inline spec", "15–30 minutes", "separate context", "stop/replan", "actual separate consumer", "no ceremonial human approval"):
             if token not in plan_text:
                 errors.append(f"native.writing-plans-contract: writing plans lacks {token!r}")
         for token in ("direct-trivial gate", "no sdd", "one color", "no product behavior", "do not create a feature brief", "no spec", "promote"):
@@ -1439,7 +1621,7 @@ def validate_native_integration() -> list[str]:
         path = ROOT / item
         if path.is_file():
             skill_text = path.read_text(encoding="utf-8").lower()
-            for token in ("automatically use", "simple-task gate", "two to five minutes", "self-contained `task.md` spec", "does not need to", "request spec revision"):
+            for token in ("automatically use", "compact inline spec", "15–30 minutes", "self-contained `task.md`", "separate executor", "request spec revision"):
                 if token not in skill_text:
                     errors.append(f"native.writing-plans-skill: {item} lacks {token!r}")
             for token in ("direct-trivial", "without loading planning artifacts", "spec/task", "tdd", "review"):
@@ -1449,24 +1631,24 @@ def validate_native_integration() -> list[str]:
     tdd_playbook = ROOT / "harness" / "playbooks" / "test-driven-execution.md"
     if tdd_playbook.is_file():
         tdd_text = tdd_playbook.read_text(encoding="utf-8").lower()
-        for token in ("red → green → refactor", "meaningful failure", "identical focused command", "not valid red", "needs-replan", "inside one task", "full suite only when"):
+        for token in ("red → green → refactor", "meaningful failure", "identical focused command", "not valid red", "needs-replan", "inside one task", "test ladder"):
             if token not in tdd_text:
                 errors.append(f"native.tdd-contract: TDD workflow lacks {token!r}")
     for item in (".agents/skills/test-driven-task/SKILL.md", ".claude/skills/test-driven-task/SKILL.md"):
         path = ROOT / item
         if path.is_file():
             skill_text = path.read_text(encoding="utf-8").lower()
-            for token in ("automatically use", "before observing red", "fails for the wrong reason", "minimum behavior required for green", "same small task", "completion is invalid", "simplicity, deadline, hackathon mode"):
+            for token in ("automatically use", "before observing red", "fails for the wrong reason", "minimum behavior required for green", "same small task", "record red", "simplicity, deadline, hackathon mode"):
                 if token not in skill_text:
                     errors.append(f"native.tdd-skill: {item} lacks {token!r}")
-            for token in ("direct-trivial", "vibe", "small local behavior", "focused deterministic check", "leave the fast path", "full-harness"):
+            for token in ("direct-trivial", "vibe", "focused deterministic check", "promote", "full-harness"):
                 if token not in skill_text:
                     errors.append(f"native.fast-route-tdd-skill: {item} lacks {token!r}")
 
     status_doc = ROOT / "docs" / "STATUS-AND-COMPLETION.md"
     if status_doc.is_file():
         status_text = status_doc.read_text(encoding="utf-8").lower()
-        for token in ("fast-route exception", "direct-trivial", "vibe", "never becomes a task or graph event", "do not emit an intermediate status update", "concise closeout", "passing focused deterministic check", "promotes"):
+        for token in ("fast-route exception", "direct-trivial", "vibe", "never becomes a task or graph event", "do not emit an intermediate status update", "concise closeout", "passing focused deterministic check", "promotion"):
             if token not in status_text:
                 errors.append(f"native.fast-route-status: status policy lacks {token!r}")
     for adapter_name in ("generic.md", "codex.md", "claude.md"):
@@ -1616,7 +1798,7 @@ def validate_native_integration() -> list[str]:
         if any(token not in text for token in required):
             errors.append(f"native.state-authority-routing: {item} must route pending, graph, and completion policy")
         lowered = text.lower()
-        if "completed" not in lowered or "non-block" not in lowered:
+        if not any(token in lowered for token in ("complete", "completed")) or "non-block" not in lowered:
             errors.append(f"native.nonblocking-closeout: {item} must complete passing tasks and keep assurance non-blocking")
 
     graph_sync_surfaces = (
@@ -1704,10 +1886,10 @@ def validate_repository() -> list[str]:
             "media/agent-harness-kit-overview-pt-BR.mp4",
             "media/agent-harness-kit-overview-en.mp4",
             "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
-            "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/VALIDATION.md", "docs/DISTRIBUTION.md",
+            "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/VALIDATION.md", "docs/ADAPTIVE-EXECUTION.md", "docs/RUNTIME-STATE.md", "docs/DISTRIBUTION.md",
             "docs/TDD.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md", "docs/contracts/REQUEST-ROUTE.md", "docs/contracts/FEATURE-BRIEF.md", "docs/contracts/IMPLEMENTATION-PLAN.md", "docs/contracts/MODEL-DISPATCH.md", "docs/contracts/CODEX-AGENT-DISPATCH.md", "docs/contracts/PARALLEL-DISPATCH.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
             "harness/playbooks/request-routing.md", "harness/playbooks/first-run.md", "harness/playbooks/feature-discovery.md", "harness/playbooks/writing-plans.md", "harness/playbooks/test-driven-execution.md", "harness/playbooks/status-resume.md", "harness/playbooks/task-closeout.md", "harness/playbooks/model-routing.md", "harness/playbooks/context-routing.md", "harness/playbooks/frontend-screen.md", "harness/templates/REQUEST-ROUTE.md", "harness/templates/PROJECT-CONTEXT.md", "harness/templates/FEATURE-BRIEF.md", "harness/templates/IMPLEMENTATION-PLAN.md",
-            "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/STATUS.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/MODEL-DISPATCH.md", "harness/templates/CODEX-AGENT-DISPATCH.md", "harness/templates/PARALLEL-DISPATCH.md", "harness/templates/EXECUTION-BUDGET.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "tools/validate.py", "tools/package.py", "tools/install.py", "validation/test_install.py", "validation/test_model_dispatch.py", "validation/test_scheduler.py", "validation/test_parallel_dispatch.py", "validation/test_codex_dispatch.py", "validation/test_codex_agent_dispatch_validation.py", "validation/budget-fixtures/valid.json", "validation/model-dispatch-fixtures/valid.json", "validation/parallel-dispatch-fixtures/valid.json", "validation/codex-agent-dispatch-fixtures/valid.json",
+            "harness/templates/PENDING.md", "harness/templates/TASK-GRAPH.md", "harness/templates/STATUS.md", "harness/templates/MODEL-ROUTING.md", "harness/templates/MODEL-DISPATCH.md", "harness/templates/CODEX-AGENT-DISPATCH.md", "harness/templates/PARALLEL-DISPATCH.md", "harness/templates/EXECUTION-BUDGET.md", "harness/templates/ROOT-AGENTS-BRIDGE.md", "harness/templates/ROOT-CLAUDE-BRIDGE.md", "agent_harness_kit/preflight.py", "agent_harness_kit/state_runtime.py", "agent_harness_kit/scheduler.py", "tools/validate.py", "tools/package.py", "tools/install.py", "validation/test_install.py", "validation/test_installed_host_smoke.py", "validation/test_validate_cli.py", "validation/test_preflight.py", "validation/test_state_runtime.py", "validation/test_model_dispatch.py", "validation/test_scheduler.py", "validation/test_parallel_dispatch.py", "validation/test_codex_dispatch.py", "validation/test_codex_agent_dispatch_validation.py", "validation/budget-fixtures/valid.json", "validation/model-dispatch-fixtures/valid.json", "validation/parallel-dispatch-fixtures/valid.json", "validation/codex-agent-dispatch-fixtures/valid.json", "benchmarks/fullstack/scripts/run_pilot.py", "benchmarks/fullstack/tests/test_run_pilot.py",
             ".agents/skills/request-router/SKILL.md",
             ".agents/skills/first-run-discovery/SKILL.md",
             ".agents/skills/feature-discovery/SKILL.md",
@@ -1785,9 +1967,7 @@ def validate_repository() -> list[str]:
                 language = track.get("language", "unknown")
                 if track.get("status") not in {"candidate-awaiting-audition", "approved", "refresh-required"}:
                     errors.append(f"media.manifest-status: {language}")
-                attachment = track.get("github_attachment", "")
-                if not re.fullmatch(r"https://github\.com/user-attachments/assets/[0-9a-f-]{36}", attachment):
-                    errors.append(f"media.manifest-attachment: {language}")
+                errors.extend(audio_attachment_errors(track))
                 for field in ("audio", "script", "github_player"):
                     value = track.get(field)
                     path = (ROOT / str(value)).resolve() if value else None
@@ -1832,8 +2012,8 @@ def validate_repository() -> list[str]:
             if planning_mode == "planned":
                 if header.get("implementation_plan") in {None, "", "none"} or header.get("plan_step") in {None, "", "inline"}:
                     errors.append(f"task.plan-provenance: {rel(path)} planned work must pin plan revision and step")
-                if not 2 <= target_minutes <= 5:
-                    errors.append(f"task.plan-duration: {rel(path)} planned unit must target 2-5 active minutes")
+                if not 15 <= target_minutes <= 30:
+                    errors.append(f"task.plan-duration: {rel(path)} planned unit must target 15-30 active minutes")
             elif planning_mode == "inline-simple":
                 if header.get("implementation_plan") != "none" or header.get("plan_step") != "inline":
                     errors.append(f"task.simple-provenance: {rel(path)} inline-simple must use none/inline provenance")
@@ -1861,6 +2041,16 @@ def validate_repository() -> list[str]:
                     errors.append(f"task.tdd-spec: {rel(path)} lacks RED/GREEN/refactor/regression specification")
             evidence_profile = header.get("evidence_profile")
             errors.extend(validate_task_evidence_profile(header, rel(path)))
+            if header.get("assurance") not in {"none", "light", "full"}:
+                errors.append(f"task.assurance: {rel(path)}")
+            if header.get("artifact_policy") not in {"inline", "transfer"}:
+                errors.append(f"task.artifact-policy: {rel(path)}")
+            if header.get("handoff_consumer") not in {"none", "reviewer", "human"}:
+                errors.append(f"task.handoff-consumer: {rel(path)}")
+            if header.get("artifact_policy") == "inline" and header.get("handoff_consumer") != "none":
+                errors.append(f"task.inline-consumer: {rel(path)} inline work cannot create a transfer consumer")
+            if header.get("test_ladder") not in {"focused-edit", "focused-unit", "workspace", "integration", "global-checkpoint", "release-full"}:
+                errors.append(f"task.test-ladder: {rel(path)}")
             if evidence_profile != "graph-only" and header.get("review_profile") not in {"light", "standard", "critical"}:
                 errors.append(f"review.profile: {rel(path)}")
             if evidence_profile != "graph-only" and header.get("max_review_rounds") not in {"1", "2"}:
@@ -1875,7 +2065,7 @@ def validate_repository() -> list[str]:
             if header.get("status") not in {"draft", "ready", "superseded"}:
                 errors.append(f"plan.status: {rel(path)}")
             plan_text = text.lower()
-            for token in ("target active work: 2–5 minutes", "exact change:", "write set:", "acceptance:", "verification:", "stop/replan if:"):
+            for token in ("target active work: 15–30 minutes", "exact change:", "write set:", "acceptance:", "verification:", "stop/replan if:"):
                 if token not in plan_text:
                     errors.append(f"plan.unit-spec: {rel(path)} lacks {token!r}")
         if header.get("schema") == "harness.review/v1":
@@ -1898,6 +2088,11 @@ def validate_repository() -> list[str]:
                 errors.append(f"review.prompt-source: {rel(path)}")
             if any(header.get(field) in {None, "", "none"} for field in ("review_packet", "review_context_ref")):
                 errors.append(f"review.context-evidence: {rel(path)}")
+            if header.get("verdict") not in {"accept", "changes-requested", "rejected", "needs-replan"}:
+                errors.append(f"review.verdict: {rel(path)} must use the normalized v0.7 verdict enum")
+            for field in ("findings", "evidence", "commands", "duration_ms", "tokens"):
+                if field not in header:
+                    errors.append(f"review.metrics-field: {rel(path)} missing {field}")
         if header.get("schema") == "harness.handoff/v1":
             if header.get("status") not in {"completed", "blocked", "failed"}:
                 errors.append(f"handoff.status: {rel(path)} must be completed, blocked, or failed")
@@ -1907,6 +2102,8 @@ def validate_repository() -> list[str]:
                 errors.append(f"handoff.closeout-fields: {rel(path)}")
             if "Test-first evidence" not in headings(text):
                 errors.append(f"handoff.test-first-evidence: {rel(path)}")
+            if header.get("consumer") not in {"reviewer", "human"}:
+                errors.append(f"handoff.consumer: {rel(path)} must name a real separate consumer")
             for field in ("model_id_used", "reasoning_effort_used", "model_dispatch"):
                 if header.get(field) in {None, "", "none", "pending", "unknown", "host-default"}:
                     errors.append(f"handoff.model-dispatch: {rel(path)} missing {field}")
@@ -1957,15 +2154,17 @@ def validate_repository() -> list[str]:
                 track.get("language"): track for track in audio_manifest.get("tracks", [])
                 if isinstance(track, dict)
             }
-            expected_attachment = manifest_tracks.get(language, {}).get("github_attachment", "")
+            expected_attachment = manifest_tracks.get(language, {}).get("github_attachment")
             expected_audio = "media/agent-harness-kit-overview-pt-BR.mp3" if is_portuguese else "media/agent-harness-kit-overview-en.mp3"
+            expected_player = "media/agent-harness-kit-overview-pt-BR.mp4" if is_portuguese else "media/agent-harness-kit-overview-en.mp4"
             expected_script = "media/overview-script-pt-BR.txt" if is_portuguese else "media/overview-script-en.txt"
             other_audio = "media/agent-harness-kit-overview-en.mp3" if is_portuguese else "media/agent-harness-kit-overview-pt-BR.mp3"
             other_script = "media/overview-script-en.txt" if is_portuguese else "media/overview-script-pt-BR.txt"
-            if attachment_urls != [expected_attachment]:
-                errors.append(f"media.readme-player: {rel(readme)} must contain only its language-specific GitHub attachment player")
-            if f"]({expected_audio})" not in readme_text or f"]({expected_script})" not in readme_text:
-                errors.append(f"media.readme-language-assets: {rel(readme)} missing its language-specific MP3 or script")
+            expected_urls = [expected_attachment] if expected_attachment else []
+            if attachment_urls != expected_urls:
+                errors.append(f"media.readme-player: {rel(readme)} has a stale or mismatched GitHub attachment player")
+            if any(f"]({asset})" not in readme_text for asset in (expected_audio, expected_player, expected_script)):
+                errors.append(f"media.readme-language-assets: {rel(readme)} missing its language-specific MP3, MP4, or script")
             if other_audio in readme_text or other_script in readme_text:
                 errors.append(f"media.readme-cross-language: {rel(readme)} must not mix overview media languages")
             if "<audio" in readme_text or "<video" in readme_text:
@@ -2029,30 +2228,50 @@ def validate_repository() -> list[str]:
     return errors
 
 
-def main() -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Validate Agent Harness Kit source or a namespaced host adoption")
     parser.add_argument("--host-root", type=Path)
     parser.add_argument("--migration-manifest", type=Path)
-    args = parser.parse_args()
+    parser.add_argument("--scope", choices=("repository", "changed", "task"), default="repository")
+    parser.add_argument("--task", type=Path)
+    args = parser.parse_args(argv)
     if bool(args.host_root) != bool(args.migration_manifest):
         parser.error("--host-root and --migration-manifest must be provided together")
+    if args.scope == "task" and args.task is None:
+        parser.error("--scope task requires --task PATH")
+    if args.task is not None and args.scope != "task":
+        parser.error("--task PATH requires --scope task")
     if args.host_root:
         host_errors = validate_host_integration(args.host_root.resolve(), args.migration_manifest)
         if host_errors:
             print(f"HOST INTEGRATION VALIDATION FAILED ({len(host_errors)} error(s))")
+            print(f"ERROR CATEGORIES: {summarize_error_categories(host_errors)}")
             for error in host_errors:
                 print(f"- {error}")
             return 1
         print("HOST INTEGRATION VALIDATION PASSED: migration coverage, backlinks, snapshot identities, and cutover gates")
         return 0
-    errors = validate_repository()
+    try:
+        selection = resolve_scope(args.scope, args.task)
+    except ScopeError as exc:
+        print(f"VALIDATION SCOPE ERROR: {exc}")
+        return 2
+    if selection.escalated:
+        print("VALIDATION SCOPE: changed -> repository (foundational validator/profile/entrypoint change)")
+    errors = scoped_errors(validate_repository(), selection.paths)
     if errors:
         print(f"VALIDATION FAILED ({len(errors)} error(s))")
+        print(f"ERROR CATEGORIES: {summarize_error_categories(errors)}")
         for error in errors:
             print(f"- {error}")
         return 1
-    required_count = 17 if (ROOT / "PACKAGE-MANIFEST.json").exists() else len(REQUIRED_FILES)
-    print(f"VALIDATION PASSED: {len(markdown_files())} Markdown files, {required_count} required files")
+    selected_markdown = markdown_files()
+    if selection.paths is not None:
+        selected_markdown = [path for path in selected_markdown if rel(path) in selection.paths]
+    required_count = selected_required_count(load_package_manifest(), selection.paths)
+    print(f"VALIDATION PASSED: {len(selected_markdown)} Markdown files, {required_count} required files")
+    if selection.effective_scope != "repository":
+        print(f"Validation scope: {selection.effective_scope}, {len(selection.paths or set())} selected path(s)")
     print("Graph fixtures: valid, missing dependency, cycle, write/context collision, self-review, and path traversal")
     print("Parallel dispatch fixtures: capacity, runtime evidence, distinct contexts, and collision-safe batches")
     print("Model dispatch fixtures: resolved override evidence, recorded-tier-only, silent default, and same-context claim")

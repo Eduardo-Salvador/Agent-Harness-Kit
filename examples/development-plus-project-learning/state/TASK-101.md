@@ -11,6 +11,10 @@ target_minutes: 5
 test_strategy: verification-only
 tdd_exception: Test-only boundary assertions; no production behavior changes.
 evidence_profile: handoff-review
+assurance: light
+artifact_policy: transfer
+handoff_consumer: reviewer
+test_ladder: focused-unit
 assigned_to: agent:specialist
 reviewer: agent:reviewer
 ownership_lease: lease:TASK-101

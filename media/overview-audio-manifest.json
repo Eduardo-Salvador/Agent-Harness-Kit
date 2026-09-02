@@ -1,34 +1,34 @@
 {
   "schema": "agent-harness-kit.overview-audio/v1",
-  "updated_at": "2026-08-30",
+  "updated_at": "2026-09-02",
   "tracks": [
     {
       "language": "en",
       "audio": "media/agent-harness-kit-overview-en.mp3",
       "github_player": "media/agent-harness-kit-overview-en.mp4",
-      "github_attachment": "https://github.com/user-attachments/assets/1affd407-4d32-4f66-8386-0bdc3666df2e",
+      "github_attachment": null,
       "script": "media/overview-script-en.txt",
-      "audio_sha256": "fca9422c259b202f36b6fc0757aee4a4dde2a019a50f3fd12a7644207af482ae",
-      "script_sha256": "68b02723339f9b60dedd03c143bdc6e5124ed7df2b2c655ec68367e86a1df45a",
-      "github_player_sha256": "cc1ad56875effeb993020609eb0ee5b02d832b9c3aafe2d892f8d5973940b65c",
+      "audio_sha256": "dce2edd8cc799443466a2a57bb3e00f59ecf3474c349e1402f6f76f742b36ada",
+      "script_sha256": "61cc2758f96dca2b42d830f79aa5832b5e3b2c1eda00912b7944e58b1ed31e8c",
+      "github_player_sha256": "6f1c5c662422079367230c18f1dcc0e141cb4655c24bb616b923818a1d7b3cde",
       "voice": "en-US-EmmaMultilingualNeural",
       "status": "candidate-awaiting-audition",
       "script_synced": true,
-      "note": "The current narration covers feature discovery, the direct-trivial fast path, executable specifications, TDD, native model and Codex-agent dispatch, safe parallel execution, bounded independent review, learning, hackathon delivery, and honest platform limits; human listening approval remains pending."
+      "note": "The v0.7 narration covers root auto-discovery, adaptive lanes and assurance, executable preflight, evidence-first resume, proportional artifacts and tests, maximum-cardinality scheduling, atomic runtime state, self-measurement, and honest host boundaries; human listening approval and a replacement GitHub attachment remain pending."
     },
     {
       "language": "pt-BR",
       "audio": "media/agent-harness-kit-overview-pt-BR.mp3",
       "github_player": "media/agent-harness-kit-overview-pt-BR.mp4",
-      "github_attachment": "https://github.com/user-attachments/assets/d89fe815-da49-452e-bcd4-18f33f728f18",
+      "github_attachment": null,
       "script": "media/overview-script-pt-BR.txt",
-      "audio_sha256": "91a7e62cf54574584b5dc0b8bce4c30dcec713f6d741523360a1c9a24bd10a0d",
-      "script_sha256": "f53c8a685e1c9d078861e45ead5d5f23901e8a2772df6c3095f0310728012d61",
-      "github_player_sha256": "3599e4e14804714fc9570a764b21c96459122b0a353459c62cf20eee22935343",
+      "audio_sha256": "9d99e78f97a7d7f44904e5b6390d9c935a8f79055f58b5c99243d6c06a82ac69",
+      "script_sha256": "17629f84ce4b0d27f666e3203ca85a88b5839dfede891d122b2fefd8ae316662",
+      "github_player_sha256": "4a28b73dd7e301741bf65c6536de98197451a47affa002468cee0b99677ce1e2",
       "voice": "pt-BR-FranciscaNeural",
       "status": "candidate-awaiting-audition",
       "script_synced": true,
-      "note": "A narração atual cobre descoberta de funcionalidades, caminho direto para mudanças triviais, especificações executáveis, TDD, dispatch nativo de modelos e agentes Codex, execução paralela segura, revisão independente limitada, aprendizado, modo hackathon e limites reais da plataforma; a aprovação humana por audição ainda está pendente."
+      "note": "A narração da v0.7 cobre descoberta automática pelas entradas raiz, lanes e assurance adaptativas, preflight executável, retomada pela evidência, artefatos e testes proporcionais, agendamento de cardinalidade máxima, estado atômico de runtime, automedição e limites reais do host; a aprovação humana por audição e um novo attachment do GitHub ainda estão pendentes."
     }
   ]
 }

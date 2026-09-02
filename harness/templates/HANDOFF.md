@@ -4,6 +4,7 @@ id: HANDOFF-TASK-001-01
 task: TASK-001@1
 attempt: 1
 status: completed
+consumer: reviewer
 author: agent:implementer
 workstream: replace-area
 agent_role: role:generic-specialist
@@ -19,6 +20,8 @@ execution_budget: execution-budget-TASK-001@2
 ---
 
 # Handoff — TASK-001
+
+Create this file only for a real `reviewer` or `human` consumer. For `consumer: none`, record outcome and verification in the graph transition/event and do not instantiate this template.
 
 ## Result
 

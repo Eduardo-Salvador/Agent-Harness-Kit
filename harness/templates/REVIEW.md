@@ -18,6 +18,11 @@ regression_scope: none
 status: final
 reviewer: agent:independent-reviewer
 verdict: changes-requested
+findings: [REV-001]
+evidence: [run:replace]
+commands: [replace-focused-command]
+duration_ms: 0
+tokens: unavailable
 created_at: 2000-01-01T00:00:00Z
 ---
 

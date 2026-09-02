@@ -114,15 +114,27 @@ def boundary_errors(name: str, files: list[str]) -> list[str]:
     return errors
 
 
-def manifest(name: str, version: str, files: list[str]) -> bytes:
+def manifest(
+    name: str,
+    version: str,
+    files: list[str],
+    source_overrides: dict[str, Path] | None = None,
+) -> bytes:
     project = json.loads(PROJECT_METADATA.read_text(encoding="utf-8"))
+    overrides = source_overrides or {}
     data = {
         "name": project["name"],
         "slug": project["slug"],
         "project_learning_activation": "not-activated",
         "profile": name,
         "version": version,
-        "files": [{"path": path, "sha256": hashlib.sha256((ROOT / path).read_bytes()).hexdigest()} for path in files],
+        "files": [
+            {
+                "path": path,
+                "sha256": hashlib.sha256(overrides.get(path, ROOT / path).read_bytes()).hexdigest(),
+            }
+            for path in files
+        ],
     }
     return (json.dumps(data, indent=2, sort_keys=True) + "\n").encode()
 

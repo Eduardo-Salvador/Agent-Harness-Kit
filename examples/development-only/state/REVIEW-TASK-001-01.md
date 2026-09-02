@@ -18,6 +18,11 @@ regression_scope: none
 status: final
 reviewer: agent:reviewer
 verdict: accept
+findings: []
+evidence: [run:example-task-001]
+commands: [example-focused-check]
+duration_ms: 1000
+tokens: unavailable
 created_at: 2026-08-20T10:40:00Z
 ---
 

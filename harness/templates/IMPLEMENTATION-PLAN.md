@@ -31,7 +31,8 @@ source_references: none
 
 ### STEP-001 — Replace with an observable result
 
-- Target active work: 2–5 minutes.
+- Target active work: 15–30 minutes; justify an exception by atomicity, runtime cost, or risk.
+- Assurance: `none` / `light` / `full`.
 - Depends on: none.
 - Exact change: Replace.
 - Read set: `replace/path.ext`.
