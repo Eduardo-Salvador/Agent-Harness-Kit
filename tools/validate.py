@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from agent_harness_kit.readiness import readiness_blocker
+from agent_harness_kit.readiness import acceptance_declaration_blocker, completion_blocker, product_approved, readiness_blocker
 
 
 EXCLUDED_PARTS = {"work", "outputs", ".git", "__pycache__"}
@@ -94,7 +94,7 @@ REQUIRED_FILES = [
     "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "LICENSE", "docs/assets/agent-harness-kit-banner.svg", "docs/assets/harness-demo-flow.svg", "media/agent-harness-kit-overview-en.mp3", "media/agent-harness-kit-overview-pt-BR.mp3", "media/agent-harness-kit-overview-en.mp4", "media/agent-harness-kit-overview-pt-BR.mp4",
     "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
     "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/PYPI-README.md",
-    "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md",
+    "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md", "docs/ACCOMPANIED-DELIVERY.md",
     "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/ADAPTIVE-EXECUTION.md", "docs/RUNTIME-STATE.md", "docs/TDD.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/HACKATHON-MODE.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
     "docs/contracts/REQUEST-ROUTE.md", "docs/contracts/FEATURE-BRIEF.md", "docs/contracts/IMPLEMENTATION-PLAN.md", "docs/contracts/MODEL-DISPATCH.md", "docs/contracts/CODEX-AGENT-DISPATCH.md", "docs/contracts/PARALLEL-DISPATCH.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
     "adapters/README.md", "adapters/generic.md", "adapters/codex.md", "adapters/claude.md",
@@ -558,6 +558,33 @@ def validate_graph(data: dict, source: str) -> list[str]:
         for dependency in dependencies:
             if dependency not in by_id:
                 errors.append(f"graph.missing-dependency: {source} {node_id} -> {dependency}")
+        product_requires = node.get("product_requires", [])
+        if "scope_status" in node and node["scope_status"] not in ("approved", "needs-discovery"):
+            errors.append(f"graph.scope-gate: {source} {node_id} invalid scope status")
+        if node.get("status") == "completed" and node.get("scope_status", "approved") != "approved":
+            errors.append(f"graph.scope-gate: {source} {node_id} scope remains unresolved")
+        if blocker := acceptance_declaration_blocker(node):
+            errors.append(f"graph.completion-evidence: {source} {node_id} {blocker}")
+        if not isinstance(product_requires, list):
+            errors.append(f"graph.product-dependency: {source} {node_id} requires an array")
+        else:
+            for required in product_requires:
+                if not isinstance(required, str) or required not in dependencies or required not in by_id:
+                    errors.append(f"graph.product-dependency: {source} {node_id} -> {required}")
+        if "product_review" in node:
+            review = node["product_review"]
+            if (not isinstance(review, dict)
+                    or review.get("status") not in ("pending", "approved", "changes-requested", "rejected")
+                    or type(node.get("acceptance_revision")) is not int or node["acceptance_revision"] < 1):
+                errors.append(f"graph.product-review: {source} {node_id} invalid declaration")
+            elif review["status"] == "approved" and not product_approved(node):
+                errors.append(f"graph.product-review: {source} {node_id} invalid or stale approval")
+        if "test_strategy" in node and node["test_strategy"] not in ("tdd", "focused", "characterization", "verification-only", "not-applicable"):
+            errors.append(f"graph.completion-evidence: {source} {node_id} invalid test strategy")
+        if "runtime_smoke_required" in node and type(node["runtime_smoke_required"]) is not bool:
+            errors.append(f"graph.completion-evidence: {source} {node_id} invalid smoke requirement")
+        if node.get("status") == "completed" and (blocker := completion_blocker(node)):
+            errors.append(f"graph.completion-evidence: {source} {node_id} {blocker}")
         write_set = node.get("write_set", [])
         if not isinstance(write_set, list) or not write_set:
             errors.append(f"graph.write-set: {source} {node_id} must own at least one path")
@@ -631,6 +658,10 @@ def validate_graph(data: dict, source: str) -> list[str]:
             errors.append(f"graph.dependency-gate: {source} {node_id} waits for completed dependency {required_id}")
         elif gate == "assurance":
             errors.append(f"graph.assurance-gate: {source} {node_id} waits for accepted assurance of {required_id}")
+        elif gate == "scope":
+            errors.append(f"graph.scope-gate: {source} {node_id} requires feature discovery")
+        elif gate in {"product-review", "completion-evidence"}:
+            errors.append(f"graph.{gate}: {source} {node_id} waits for {required_id}")
         else:
             errors.append(f"graph.checkpoint-gate: {source} {node_id} has an unresolved checkpoint")
 
@@ -1582,7 +1613,7 @@ def validate_native_integration() -> list[str]:
         path = ROOT / item
         if path.is_file():
             skill_text = path.read_text(encoding="utf-8").lower()
-            for token in ("automatically use", "first-run-discovery", "exactly one highest-leverage", "forgotten-password recovery", "failure, recovery path", "two to four credible directions", "do not mutate `pending.md` or `task-graph.md`"):
+            for token in ("automatically use", "first-run-discovery", "exactly one highest-leverage", "forgotten-password recovery", "failure, recovery path", "two to four credible directions", "do not add unapproved feature scope", "scope_status: needs-discovery"):
                 if token not in skill_text:
                     errors.append(f"native.feature-discovery-skill: {item} lacks {token!r}")
 
@@ -2083,7 +2114,7 @@ def validate_repository() -> list[str]:
             if header.get("status") not in {"draft", "ready", "superseded"}:
                 errors.append(f"plan.status: {rel(path)}")
             plan_text = text.lower()
-            for token in ("target active work: 15–30 minutes", "exact change:", "write set:", "acceptance:", "verification:", "stop/replan if:"):
+            for token in ("target active work: 15–30 minutes", "exact change:", "write set:", "completion conditions:", "verification:", "stop/replan if:"):
                 if token not in plan_text:
                     errors.append(f"plan.unit-spec: {rel(path)} lacks {token!r}")
         if header.get("schema") == "harness.review/v1":

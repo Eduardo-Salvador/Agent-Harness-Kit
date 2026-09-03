@@ -40,7 +40,13 @@ After a task passes the `inline-simple` gate, it may use `evidence_profile: grap
 
 The agent runs declared verification and records the highest sufficient test-ladder rung. A same-context node closes in its graph transition. If `assurance: light|full` requires an independent reviewer, create the consumer-bound packet; otherwise do not create handoff ceremony. Failed checks begin bounded in-scope recovery.
 
+## Progressive planning boundary
+
+The initial interview approves direction, not all future functionality. Detail only the next approved block; future outcomes stay at roadmap level. Before creating or expanding executable graph nodes, ask through [feature discovery](feature-discovery.md) when functionality, exclusions, or a completion condition is not determined by approved evidence. Help close the rule with examples/options. New nodes pin `scope_status: approved` and the exact scope authority; an unresolved existing placeholder stays pending/blocked with `scope_status: needs-discovery`. Do not infer blanket permission from a request to build a system, and do not interview again for ordinary technical details within an approved feature.
+
 ## Non-trivial planning flow
+
+Apply [accompanied delivery and executable acceptance](../../docs/ACCOMPANIED-DELIVERY.md). Before a substantial block, explain its spec with positive, negative/boundary, and failure/recovery examples derived from approved intent. Plan client evaluation at the first usable slice and material capabilities, not every technical node. Declare `product_review` on milestones and `product_requires` plus normal dependencies on affected descendants. Pin each new node's `acceptance_revision`, `test_strategy`, and `runtime_smoke_required`; require an affected-flow smoke for automation, entrypoints, configuration consumers, and integration paths. Ordinary approved technical decomposition does not need another approval; the planned client milestone does.
 
 1. Pin the approved project context and feature brief/decision when applicable. Load only scoped source evidence required to identify paths and dependencies.
 2. Write `harness-state/plans/PLAN-<id>.md` from the implementation-plan template. Keep product choices out of the plan; unresolved consequential behavior returns to discovery.
@@ -53,6 +59,8 @@ The agent runs declared verification and records the highest sufficient test-lad
 For test strategy and evidence, follow [test-driven execution](test-driven-execution.md). An `inline-simple` graph/full task is exempt from the separate plan, not from TDD when it changes behavior. A `direct-trivial` edit never enters TDD; an eligible `vibe` behavior change also stays outside TDD but still requires focused verification. Hackathon pace narrows the test and regression scope but does not permit implementation before meaningful RED inside `full-harness`.
 
 ## No-improvisation boundary
+
+Every new task spec, including an inline spec, states **"This task is complete only when..."** followed by concrete implementation-success conditions with stable criterion IDs. "Implement search" or "run tests" is an action, not a completion condition. State the required result, affected path, relevant rejected/failure behavior, and how success will be observed. Mirror these in graph `acceptance_criteria`, pin `acceptance_revision`, and require one passing, observed `verification.acceptance` entry per criterion. Missing evidence or an unresolved defect against a condition prevents `completed`. Never retroactively soften the spec to match broken behavior.
 
 An implementer stops and reports `needs-replan` when the spec is missing or contradictory, an undeclared dependency or product choice appears, the required write path is outside the lease, acceptance cannot be evaluated, or the unit is materially larger than planned. It may make ordinary local coding choices that do not change observable behavior, contracts, scope, dependencies, or risk.
 

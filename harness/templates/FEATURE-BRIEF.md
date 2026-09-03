@@ -79,7 +79,11 @@ source_references: none
 
 ## Acceptance criteria
 
-- [ ] Replace with a testable product outcome.
+- [ ] This functionality is complete only when [specific behavior] is implemented successfully through [affected path], produces [expected result], and is demonstrated by [evidence].
+- Positive example: replace with concrete input and desired result.
+- Rejected/boundary example: replace with input that must not pass and the expected reason.
+- Failure/recovery example: replace with visible failure and safe recovery behavior.
+- If a condition is unknown, ask the client before approval rather than inventing functionality. This brief closes only the next bounded feature, not the entire future roadmap.
 
 ## Open questions
 

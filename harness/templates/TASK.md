@@ -76,7 +76,19 @@ Replace with one bounded result.
 
 ## Acceptance criteria
 
-- Replace with an observable criterion.
+- Positive case: concrete input, actor/customer, and expected observable result from approved intent.
+- Negative/boundary case: concrete input that must be excluded or rejected, with expected reason.
+- Failure/recovery case: how the affected flow exposes failure and can safely recover.
+- Product checkpoint: none / milestone ID, demonstration, affected downstream work, and current approval reference.
+
+## Completion conditions — this task is complete only when
+
+- AC-001: The specified behavior is implemented successfully in the affected execution path; replace this sentence with the exact input/action and required observable result.
+- AC-002: The specified rejected/boundary and failure/recovery cases behave as required; replace with concrete conditions.
+- Every required condition above has a recorded observed result and evidence reference; code written, a file created, or tests merely executed is not success.
+- Required focused tests, affected-flow smoke, and proportional regression pass. No unresolved defect contradicts these conditions. Unavailable verification is a blocker, not a pass.
+- Mirror the concrete conditions as `acceptance_criteria` in the graph and record one passing `verification.acceptance` result per ID. Pin the same acceptance revision; do not weaken conditions after implementation to obtain a pass.
+- Technical completion does not imply client approval: if this is a product milestone, affected expansion waits for its explicit `product_review`.
 
 ## Test-first cycle
 
@@ -91,6 +103,8 @@ Replace with one bounded result.
 ## Verification
 
 - Replace with a reproducible command/check or a declared manual evidence procedure.
+- Pin the graph node's `acceptance_revision`, `test_strategy`, and `runtime_smoke_required` before execution; record current `verification` according to [executable acceptance](../../docs/ACCOMPANIED-DELIVERY.md).
+- For automation, entrypoint, configuration-consumer, or integration changes: run a controlled affected-flow smoke including visible failure behavior. Record command, expected/observed results, exit code, and original evidence reference. A build alone is insufficient; reuse a qualifying integration run rather than duplicate it.
 
 ## Stop and replan
 

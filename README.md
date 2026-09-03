@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version 0.7.1" src="https://img.shields.io/badge/version-0.7.1-4967ff">
+  <img alt="Version 0.7.2" src="https://img.shields.io/badge/version-0.7.2-4967ff">
   <img alt="Python 3.10 or newer" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Install with uv, pipx, or pip" src="https://img.shields.io/badge/installer-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Codex compatible" src="https://img.shields.io/badge/agent-Codex-11131a">
@@ -20,7 +20,7 @@
   <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="#start-here">Start here</a> · <a href="#choose-your-pace">Modes</a> · <a href="docs/ARCHITECTURE.md">Architecture</a>
 </p>
 
-**Source version: `0.7.1`.** First-run discovery now resolves architecture and folder organization from approved context or repository evidence, asks only when either remains unclear, and treats coding conventions as optional. Execution remains adaptive: four stable lanes, independent `none|light|full` assurance, compact/complete artifact shapes, evidence-first resume, mandatory preflight, consumer-driven handoffs, a proportional test ladder, maximum-cardinality parallel scheduling, atomic graph transitions, and append-only events/metrics.
+**Source version: `0.7.2`.** Product builds now pause for client evaluation at meaningful milestones. Specs define explicit completion conditions with criterion-level evidence; unresolved feature scope blocks dispatch, and required TDD/affected-flow evidence blocks false completion. Planning is progressive: the initial interview defines direction, not every future functionality. Small fixes remain lightweight.
 
 > **A harness mature enough to know when to get out of the way.** Four execution lanes stay separate from `none|light|full` assurance. Failed checks trigger bounded recovery; full orchestration is reserved for real coordination, human governance, required audit, model insufficiency, or unresolved consequential ambiguity.
 
@@ -76,6 +76,18 @@ Agent Harness Kit is a local execution-governance layer for coding agents. Codex
 
 The CLI performs deterministic installation, inspection, routing, preflight, scheduling, state transitions, metrics, and dispatch-packet operations. Agent hosts perform the actual coding, subagent creation, review, merge, and delivery actions using their available capabilities and permissions.
 
+## Build with the client, not past the client
+
+The default for substantial product builds is **accompanied delivery**. The agent explains the next block, demonstrates the first usable slice and later material capabilities, and waits for the client's evaluation before affected expansion. It does not stop after every technical task; unrelated authorized work may continue. Say “use continuous delivery” to explicitly choose fewer optional product pauses.
+
+Initial discovery is not blanket permission to invent future features. Only the next approved block is detailed. If a functionality's rules, exclusions, or stopping condition remain unclear, the agent asks a focused question and helps close them with examples before dispatch.
+
+Every new spec states **“This task is complete only when…”** followed by successfully implemented behavior, expected results, and how each condition is proven. Desired, rejected, and failure cases come from approved intent—not merely from the code's assumptions. Automation/entrypoint changes require a controlled affected-flow smoke, including visible failure behavior.
+
+The scheduler and atomic transitions enforce declared scope, product-approval, and completion-evidence gates. These validate recorded evidence; they do not authenticate a human decision or guarantee an agent's truthful compliance. Legacy JSON nodes without declarations remain compatible; table-only graphs need an executable JSON block before dispatch/completion. See [the contract and examples](docs/ACCOMPANIED-DELIVERY.md).
+
+Upgrading the CLI does not replace a Kit copy already installed in a project. Preview the existing project's update before applying it, preserve host instructions/state, and open a fresh agent context afterward.
+
 ## Choose your pace
 
 | Say this | What happens |
@@ -100,7 +112,7 @@ Listen to a short English explanation of what the project does and how its workf
 | A long context window becomes slow and expensive | Durable graph state lets a fresh window resume from the active neighborhood instead of chat history |
 | Human decisions mix with technical tasks | `PENDING.md` and `TASK-GRAPH.md` have separate authority |
 | Reviews repeat indefinitely or echo the implementer | A fresh reviewer context judges the SPEC once, with at most one focused re-review |
-| Completion waits for ceremonial approval | Passing work is completed, reported, and advances |
+| The agent builds the whole system before client feedback | Technical tasks close on evidence; product milestones pause affected expansion |
 | Multiple agents collide | Workstreams, ownership leases, and handoffs are explicit |
 | Independent work waits in a single-file queue | The active orchestrator fills proven parallel capacity, then refills the first freed slot |
 | A tiny CSS/copy edit triggers the whole harness | `direct-trivial` edits go straight to the file, with no interview, SPEC, graph, TDD, or review |
@@ -140,7 +152,7 @@ You can inspect the same preflight from the terminal with `agent-harness route "
 6. Verification climbs `focused` → `workspace` → `integration` → `global/checkpoint` → `delivery` only as needed. In-scope technical recovery continues automatically; product, scope, material cost, permission, and experimental-integrity changes require a decision.
 7. Same-context nodes use an inline spec and transition. Handoff/review packets exist only for real separate consumers. `assurance: light|full` preserves fresh independent review; `none` closes on executor verification.
 
-For graph-managed work, every progress update includes stage, progress, work continuing automatically, human and technical pending items, blockers, next action, and inspectable paths. `direct-trivial` and `vibe` return only a short edit/check summary; vibe always names its passing focused verification.
+For graph-managed work, routine progress updates are concise; explicit status views and milestone closeouts include stage, progress, automatic work, human/technical pending items, blockers, next action, and inspectable paths. `direct-trivial` and `vibe` return only a short edit/check summary; vibe always names its passing focused verification.
 
 ## Profiles
 

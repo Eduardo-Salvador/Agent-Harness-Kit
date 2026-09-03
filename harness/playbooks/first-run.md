@@ -68,4 +68,6 @@ These are adaptive discovery decisions, not a fixed three-question form. Keep on
 
 ## Resume behavior
 
+For product builds, include [accompanied delivery](../../docs/ACCOMPANIED-DELIVERY.md) in the consolidated context: a first usable-slice checkpoint and later material capability checkpoints, unless the user explicitly selects continuous delivery. Resolve relevant customer/niche, exclusions, and representative success/failure examples before decomposition. Reuse known answers and keep the existing hackathon question limit; interaction policy is not a new fixed questionnaire. An approved existing project without an interaction choice adopts this default at its next substantial product block without repeating onboarding.
+
 An existing approved context avoids a repeated interview. Reopen only conflicting or newly consequential fields, explain why, and create a new revision. Messages announce the resulting artifact changes.

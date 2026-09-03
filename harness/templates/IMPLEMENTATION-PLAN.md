@@ -29,6 +29,8 @@ source_references: none
 
 ## Task units
 
+Detail only the next approved execution block. Keep later outcomes at roadmap level until their functionality, exclusions, and completion conditions are resolved. Initial project approval is not approval of unspecified future features. If a condition cannot be stated confidently from approved evidence, return to focused feature discovery and ask the client before graph readiness; do not fill the gap with invented scope.
+
 ### STEP-001 — Replace with an observable result
 
 - Target active work: 15–30 minutes; justify an exception by atomicity, runtime cost, or risk.
@@ -39,7 +41,8 @@ source_references: none
 - Write set: `replace/path.ext`.
 - Impact set: `replace/test.ext`.
 - Non-goals: Replace.
-- Acceptance: Replace with an observable criterion.
+- Completion conditions: This task is complete only when AC-001 [specific behavior] is implemented successfully, producing [observable result] through [affected path], evidenced by [check]. Add concrete rejected/failure conditions where relevant.
+- Scope status and authority: approved / needs-discovery; exact feature/decision reference. Only approved scope may become ready.
 - Test strategy: `tdd` / `characterization` / `verification-only` with justified exception.
 - RED: Replace with focused test path, command, and expected behavior failure.
 - GREEN: Replace with the minimum production behavior and the same focused command passing.

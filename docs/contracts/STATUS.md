@@ -15,7 +15,7 @@ task_graph: graph-main@1
 ---
 ```
 
-Every rendered status or user-facing progress/step update and machine payload must contain:
+Every complete rendered status view and machine payload must contain the fields below. Routine progress messages may use a concise result/evidence, human action, and next-action summary under [status and completion](../STATUS-AND-COMPLETION.md); they do not require a new status artifact or full form.
 
 Rendered labels may be localized to the user's language, but the sections and payload fields remain mandatory and separate.
 

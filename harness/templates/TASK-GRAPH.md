@@ -25,6 +25,12 @@ Ready nodes do not own files or contexts. When more than one is eligible, use th
       "id": "TASK-001",
       "goal": "Replace with a bounded outcome",
       "depends_on": [],
+      "product_requires": [],
+      "scope_status": "approved",
+      "acceptance_revision": 1,
+      "acceptance_criteria": [{"id": "AC-001", "condition": "Replace with the exact implemented behavior and observable successful result"}],
+      "test_strategy": "tdd",
+      "runtime_smoke_required": false,
       "status": "ready",
       "assignee": "unassigned",
       "reviewer": "unassigned",
@@ -56,5 +62,7 @@ Ready nodes do not own files or contexts. When more than one is eligible, use th
 ```
 
 ## Transition log
+
+For substantial product builds, declare milestone `product_review` and link affected dependents through `product_requires` as described in [accompanied delivery](../../docs/ACCOMPANIED-DELIVERY.md). Record revision-pinned `verification` inline before completion. Empty `product_requires` is for genuinely independent work, not permission to omit a planned client milestone.
 
 - r1: Draft graph created from approved project context.

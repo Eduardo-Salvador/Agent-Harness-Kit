@@ -21,6 +21,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
+from .readiness import acceptance_declaration_blocker, completion_blocker, readiness_blocker
+
 
 EVENT_SCHEMA = "harness.runtime-event/v1"
 METRIC_SCHEMA = "harness.runtime-metric/v1"
@@ -168,6 +170,23 @@ def _task_from_json(graph: dict[str, Any], task_id: str) -> dict[str, Any]:
     raise KeyError(f"task not found: {task_id}")
 
 
+def _enforce_task_gates(graph: dict, task: dict, requested: str) -> None:
+    collection = graph.get("tasks", graph.get("nodes", []))
+    if isinstance(collection, dict):
+        by_id = {str(key): value for key, value in collection.items() if isinstance(value, dict)}
+    else:
+        by_id = {str(value.get("id", value.get("task_id"))): value
+                 for value in collection if isinstance(value, dict)}
+    if requested in {"ready", "active", "completed"}:
+        blocker = acceptance_declaration_blocker(task) or readiness_blocker(task, by_id)
+        if blocker:
+            raise IllegalTransitionError(f"unmet task gate: {blocker}")
+    if requested == "completed":
+        blocker = completion_blocker(task)
+        if blocker:
+            raise IllegalTransitionError(f"unmet task gate: {blocker}")
+
+
 def _release_ownership(task: dict[str, Any]) -> None:
     for field in _RELEASE_FIELDS:
         if field in task:
@@ -210,6 +229,7 @@ def _transition_json(
     task = _task_from_json(graph, task_id)
     previous = task.get("status")
     _validate_transition(previous, requested)
+    _enforce_task_gates(graph, task, requested)
     resulting_revision = expected_revision + 1
     task["status"] = requested
     if requested in {"completed", "blocked"}:
@@ -276,6 +296,7 @@ def _transition_markdown(
         task = _task_from_json(executable, task_id)
         previous = task.get("status")
         _validate_transition(previous, requested)
+        _enforce_task_gates(executable, task, requested)
         task["status"] = requested
         if requested in {"completed", "blocked"}:
             _release_ownership(task)
@@ -284,6 +305,8 @@ def _transition_markdown(
         lines = content.splitlines()
         revision_line, _ = _frontmatter_revision(lines)
     else:
+        if requested in {"ready", "active", "completed"}:
+            raise IllegalTransitionError("migrate the legacy table to an executable JSON block before dispatch/completion")
         header_index = None
         id_column = status_column = agent_column = None
         for index, line in enumerate(lines):

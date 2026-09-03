@@ -4,6 +4,8 @@ Version 0.7 adds standard-library runtime primitives without introducing a daemo
 
 ## Graph transitions
 
+Since 0.7.2, JSON graphs and Markdown executable JSON blocks share scheduling readiness checks at `ready`, `active`, and `completed` transitions. Declared product dependencies require current human approval; completion requires declared revision-pinned TDD/smoke evidence. Rejection occurs before the atomic write. See [accompanied delivery](ACCOMPANIED-DELIVERY.md) for fields and compatibility limits. These checks validate recorded evidence, not its authenticity.
+
 Use `agent-harness transition <TASK-GRAPH.md|json> <task> <status> --expected-revision <n> --actor <id> --context <id>`. A sibling interprocess lock serializes real agent processes, and the compare-and-swap revision check rejects stale writers. A valid lifecycle transition updates status, releases ownership on completion/block, increments the revision, and adds exactly one transition entry through a flushed temporary file and atomic replacement.
 
 `harness-state/events.jsonl` is the append-only technical history. Runtime integrations call `append_runtime_event` with the graph transaction/revisions; event IDs are idempotent and every record carries payload and chain hashes. `TASK-GRAPH.md` remains the current-state authority—events are recovery/audit history, not another scheduler.

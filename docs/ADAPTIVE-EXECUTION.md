@@ -1,5 +1,7 @@
 # Adaptive execution and assurance
 
+Interaction is also independent: [accompanied delivery](ACCOMPANIED-DELIVERY.md) pauses substantial product builds at client milestones while ordinary technical work stays autonomous. Small decided fixes remain continuous. Product approval is not technical assurance; an explicit continuous-delivery choice cannot waive required safety or authority gates.
+
 The Harness makes two independent decisions for each request:
 
 1. **Execution lane**: `direct-trivial`, `vibe`, `graph-only`, or `full-harness`.

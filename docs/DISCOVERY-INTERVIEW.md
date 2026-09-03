@@ -53,6 +53,8 @@ The explanation should mention the active native entrypoint in plain language wh
 
 ## Coverage model
 
+Use [accompanied delivery](ACCOMPANIED-DELIVERY.md) for product builds: establish meaningful client evaluation milestones in the consolidated context, unless continuous delivery is explicitly chosen. Include relevant customer/niche, concrete desired and undesired results, and failure/recovery examples; a list of features alone is not an acceptance oracle. Reuse prior answers and preserve the hackathon question limit.
+
 Discovery should establish, to the degree relevant:
 
 - intended users, problem, value, and measurable outcomes;

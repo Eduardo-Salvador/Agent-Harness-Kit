@@ -2,7 +2,7 @@
 
 Agent Harness Kit is a local execution-governance layer for coding agents. It gives Codex and Claude Code durable project context, adaptive workflow selection, dependency-aware execution, ownership leases, proportional verification, and inspectable completion.
 
-![Agent Harness Kit](https://raw.githubusercontent.com/Eduardo-Salvador/Agent-Harness-Kit/v0.7.1/docs/assets/agent-harness-kit-banner.svg)
+![Agent Harness Kit](https://raw.githubusercontent.com/Eduardo-Salvador/Agent-Harness-Kit/v0.7.2/docs/assets/agent-harness-kit-banner.svg)
 
 ## Install
 
@@ -30,6 +30,16 @@ agent-harness install
 The recommended `core` profile is installed by default. Use `--dry-run` to preview or `--profile core-learning` to include optional, consented project-learning support.
 
 The installer creates a contained `agent-harness-kit/` directory **plus root `AGENTS.md` and `CLAUDE.md` entrypoints**. Missing root files are created; existing instructions are preserved outside one managed bridge block. Open a new agent context at the project root after installation, then use `agent-harness doctor` to verify the entrypoints.
+
+## New in 0.7.2
+
+Product builds use accompanied delivery: demonstrate the first usable slice and material capabilities, then genuinely wait for client evaluation before dependent expansion. Small fixes remain continuous; continuous product delivery can be explicitly chosen.
+
+Planning is progressive. The initial interview does not authorize unspecified future features. When a functionality or stopping condition remains unclear, the agent asks and helps close it before graph readiness.
+
+Every new spec states “This task is complete only when…” with concrete successful behavior, rejected/failure cases, and evidence per criterion. Scheduling/transitions enforce declared scope, human product-approval, criterion-level completion, and required TDD/affected-flow smoke gates. Routine progress no longer requires a full status form.
+
+Checks validate recorded evidence, not execution authenticity. Legacy JSON nodes without declarations keep their previous behavior; table-only Markdown requires migration to an executable JSON block before dispatch/completion. CLI upgrades do not replace existing project installations.
 
 ## What it does
 

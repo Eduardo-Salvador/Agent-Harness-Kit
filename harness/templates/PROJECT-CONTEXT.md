@@ -45,6 +45,9 @@ pending_authority: harness-state/PENDING.md
 
 ## Delivery shape
 
+- Interaction: accompanied for product builds / continuous when explicitly chosen; decision reference: replace.
+- Client milestones: first usable slice, then material capabilities; demonstration and dependent expansion: replace.
+- Domain examples: intended customer/niche, included/excluded results, and failure behavior when relevant.
 - Pace: standard / hackathon.
 - Deadline/timebox: none / replace.
 - Primary demo path: none / replace.

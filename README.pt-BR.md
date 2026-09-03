@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Versão 0.7.1" src="https://img.shields.io/badge/vers%C3%A3o-0.7.1-4967ff">
+  <img alt="Versão 0.7.2" src="https://img.shields.io/badge/vers%C3%A3o-0.7.2-4967ff">
   <img alt="Python 3.10 ou mais recente" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Instale com uv, pipx ou pip" src="https://img.shields.io/badge/instalador-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Compatível com Codex" src="https://img.shields.io/badge/agente-Codex-11131a">
@@ -20,7 +20,7 @@
   <a href="README.md">English</a> · <a href="#comece-aqui">Comece aqui</a> · <a href="#escolha-o-ritmo">Modos</a> · <a href="docs/ARCHITECTURE.md">Arquitetura</a>
 </p>
 
-**Versão do código-fonte: `0.7.1`.** A descoberta inicial agora resolve arquitetura e organização de pastas pelo contexto aprovado ou pelas evidências do repositório, pergunta somente quando algo continua incerto e trata convenções de código como opcionais. A execução continua adaptativa: quatro lanes estáveis, assurance independente `none|light|full`, formatos compacto/completo, resume guiado por evidência real, preflight obrigatório, handoffs apenas com consumidor e uma escada proporcional de testes.
+**Versão do código-fonte: `0.7.2`.** Sistemas passam a ter pausas reais para avaliação do cliente em marcos relevantes. Specs definem condições explícitas de conclusão com evidência por critério; escopo aberto bloqueia o início, e evidência obrigatória de TDD/fluxo real bloqueia uma conclusão indevida. O planejamento é progressivo: a entrevista inicial define a direção, não todas as funcionalidades futuras. Correções pequenas continuam leves.
 
 > **Um harness maduro o bastante para saber quando sair do caminho.** O router nativo não trata todo prompt como um grande projeto: gates determinísticos de segurança separam edições estáticas imediatas, pequenas mudanças verificadas em modo “vibe”, trabalho gerenciado pelo grafo e engenharia completa. A IA só é consultada diante de ambiguidade real; risco, checks com falha ou crescimento de escopo promovem automaticamente o trabalho, sem deixar a velocidade furar a segurança.
 
@@ -76,6 +76,18 @@ O Agent Harness Kit é uma camada local de governança de execução para agente
 
 A CLI executa instalação, inspeção, roteamento, preflight, agendamento, transições de estado, métricas e preparação de dispatch de forma determinística. O host do agente executa a programação, a criação real de subagentes, a review, a integração e a entrega conforme suas capacidades e permissões.
 
+## Construir junto com o cliente
+
+O padrão para construir um produto é a **entrega acompanhada**. O agente explica o próximo bloco, demonstra a primeira versão utilizável e as capacidades relevantes seguintes, e espera sua avaliação antes de expandir o que depende delas. Não para após cada task técnica; trabalho independente e autorizado pode continuar. Você pode escolher explicitamente “entrega contínua” para reduzir as pausas opcionais de produto.
+
+A entrevista inicial não autoriza o agente a inventar todas as funcionalidades. Só o próximo bloco aprovado é detalhado. Se uma regra, exclusão ou condição de parada estiver aberta, ele pergunta e ajuda a fechá-la com exemplos antes de iniciar a implementação.
+
+Toda spec nova diz **“esta task só está concluída quando…”**, seguida do comportamento implementado com sucesso, resultado esperado e evidência necessária para cada condição. Casos desejados, rejeitados e de falha vêm da intenção aprovada — não apenas das suposições do código. Mudanças em automações ou pontos de entrada precisam testar um ciclo controlado do fluxo afetado, inclusive como a falha aparece.
+
+O scheduler e as transições atômicas verificam os gates declarados de escopo, aprovação do cliente e evidência de conclusão. Isso valida registros; não autentica a pessoa nem garante que um agente relate tudo com veracidade. Nós JSON antigos sem declarações continuam compatíveis; grafos só em tabela precisam de um bloco JSON executável antes de iniciar/concluir trabalho. Veja [o contrato e os exemplos](docs/ACCOMPANIED-DELIVERY.md).
+
+Atualizar a CLI não substitui a cópia do Kit já instalada em um projeto. Confira a atualização desse projeto antes de aplicá-la, preserve instruções e estado e abra um novo contexto do agente depois.
+
 ## Escolha o ritmo
 
 | Diga isto | O que acontece |
@@ -100,7 +112,7 @@ Ouça uma explicação curta em português sobre o que o projeto faz e como seu 
 | Uma context window longa fica lenta e cara | O estado durável do grafo permite retomar em uma janela nova somente pelo entorno ativo, sem depender do histórico do chat |
 | Decisões humanas se misturam com tasks técnicas | `PENDING.md` e `TASK-GRAPH.md` têm autoridades separadas |
 | Reviews se repetem ou ecoam o implementador | Um contexto novo revisa a SPEC uma vez, com no máximo uma re-review focada |
-| A conclusão espera aprovação cerimonial | O trabalho aprovado nos checks é concluído, informado e avança |
+| O agente constrói tudo antes de ouvir o cliente | Tasks fecham com evidência; marcos de produto pausam a expansão afetada |
 | Vários agentes colidem | Áreas, leases de arquivos e handoffs são explícitos |
 | Trabalho independente espera em fila linear | O orquestrador ativo ocupa a capacidade paralela comprovada e repõe a primeira vaga liberada |
 | Uma troca mínima de CSS/texto aciona o harness inteiro | Edições `direct-trivial` vão direto ao arquivo, sem entrevista, SPEC, grafo, TDD ou review |
@@ -140,7 +152,7 @@ Você pode inspecionar a mesma pré-classificação no terminal com `agent-harne
 6. A verificação sobe apenas quando necessário: `focused` → `workspace` → `integration` → `global/checkpoint` → `delivery`. Recuperação técnica dentro do escopo continua automaticamente; mudanças de produto, escopo, custo material, permissão ou integridade experimental exigem decisão.
 7. Nós no mesmo contexto usam spec inline e transição. Handoff/pacote de review existe somente para consumidor separado real. `assurance: light|full` preserva review independente; `none` fecha com verificação do executor.
 
-No trabalho gerenciado pelo grafo, toda atualização mostra etapa, andamento, trabalho automático, pendências humanas e técnicas, bloqueios, próxima ação e caminhos inspecionáveis. `direct-trivial` e `vibe` retornam apenas um resumo curto da edição e do check; vibe sempre informa sua verificação focada aprovada.
+No trabalho gerenciado pelo grafo, atualizações rotineiras são curtas; pedidos de status e fechamento de marcos mostram etapa, andamento, trabalho automático, pendências humanas e técnicas, bloqueios, próxima ação e caminhos inspecionáveis. `direct-trivial` e `vibe` retornam apenas um resumo curto da edição e do check; vibe sempre informa sua verificação focada aprovada.
 
 ## Perfis
 

@@ -4,6 +4,8 @@ This audit applies to the Agent Harness Kit repository, generated profiles, and 
 
 ## Current assessment
 
+Source candidate `0.7.2` adds accompanied delivery, progressive scope closure, explicit task completion conditions, and executable product/evidence gates. Publication and public-index smoke are pending; the confirmed `0.7.1` release evidence below is historical, not proof of this candidate.
+
 Source version `0.7.1` is validated, published on PyPI, and suitable for adaptive first-run project-shape discovery. It resolves architecture and folder organization from approved context or repository evidence before asking, supports user-directed or delegated recommendations, and treats coding conventions as optional. It retains adaptive routing/assurance, compact and complete execution shapes, real-state-first resume, preflight, consumer-driven transfer artifacts, proportional test escalation, maximum-cardinality scheduling, runtime state/event/metric primitives, and scoped validation. It is not an unattended standalone daemon. No profile silently enables an external service, MCP, hook, credential, network permission, or destructive permission.
 
 The `0.7.1` package was built as wheel and source distribution, published through GitHub Actions with PyPI Trusted Publishing, downloaded from the public index without a local package cache, installed into an empty Windows host, and validated from the installed copy. The smoke test verified the CLI version, the packaged project-shape discovery contract, a contained `core` installation, both managed root bridges, `doctor`, and the embedded validator. A successful install creates the contained `agent-harness-kit/` directory and managed root `AGENTS.md` and `CLAUDE.md` bridges.

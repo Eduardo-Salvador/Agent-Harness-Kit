@@ -10,6 +10,10 @@ Do not activate for bug fixes, maintenance, refactors, dependency upgrades, impl
 
 ## Flow
 
+Discovery is progressive, not a one-time interview. Also activate when planning or expanding a graph exposes an unresolved feature boundary or completion condition, even without a new user feature request. An approved initial "build a system" brief does not authorize the agent to decide every later functionality. Explain the gap, ask one highest-leverage question, offer concrete examples/options and a recommendation, and obtain approval of the bounded functionality and its "complete only when" conditions before implementation. Reuse already approved details; do not restart onboarding or question every technical task.
+
+Keep future outcomes at roadmap/macro level while only the next approved block receives executable task specs. A planned placeholder already in the graph remains pending/blocked with `scope_status: needs-discovery`; it must not be scheduled or activated. Record the exact human decision needed in `PENDING.md` when an existing node is blocked, but do not add new unapproved scope. After approval, pin the feature/decision revision, set `scope_status: approved`, and reconcile readiness under all other gates. Initial plan approval never counts as later client demonstration approval.
+
 1. Read approved project context, relevant decisions, the pending authority, and only the graph neighborhood or source evidence needed to avoid repeating known facts.
 2. State briefly that feature discovery is active before implementation. Reflect what is already known and ask one highest-leverage unanswered question at a time.
 3. Run the feature-completeness analysis below. Resolve only consequential gaps, but do not omit a relevant branch merely because the user did not mention it.

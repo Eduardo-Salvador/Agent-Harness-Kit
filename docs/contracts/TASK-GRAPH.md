@@ -1,5 +1,7 @@
 # Contract: Task graph
 
+New planned nodes declare `acceptance_revision`, concrete `acceptance_criteria` (unique ID and condition), `test_strategy`, and `runtime_smoke_required`. Completion requires current `verification.acceptance` for every condition and any required TDD/smoke evidence. Product builds declare milestone `product_review` and affected descendant `product_requires` (also present in `depends_on`). See [accompanied delivery](../ACCOMPANIED-DELIVERY.md) for the full executable schema, genuine human pause, and compatibility limits. Missing declarations on legacy nodes do not create a guarantee.
+
 Canonical coordination state. Only the PO/orchestrator changes graph topology or node lifecycle.
 
 ```yaml
