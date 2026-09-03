@@ -4,13 +4,13 @@ This audit applies to the Agent Harness Kit repository, generated profiles, and 
 
 ## Current assessment
 
-Source candidate `0.7.3` adds explicit accompanied/autonomous/hackathon presets and a read-only `delivery-mode` inspector. Publication verification is pending. The `0.7.2` evidence below is historical and does not attest to this candidate.
+Version `0.7.3` is published on PyPI. It adds explicit accompanied (default), autonomous end-to-end, and hackathon presets; a read-only `delivery-mode` inspector; and greeting-triggered onboarding with a visible welcome and unanswered mode choice. All presets preserve completion evidence, approved scope, existing gates, learning consent, and host-capability parallelism.
 
-Version `0.7.2` is published on PyPI. It adds accompanied delivery with real client milestone pauses, progressive feature scope closure, explicit task completion conditions, criterion-level evidence, and executable scope/product/TDD/affected-flow gates. Routine progress remains concise. Technical completion is distinct from product approval; recorded evidence is structurally checked, not authenticated.
+Wheel and source distribution passed metadata checks. [GitHub Actions Trusted Publishing](https://github.com/Eduardo-Salvador/Agent-Harness-Kit/actions/runs/33768257711) completed successfully. Separate clean Windows environments verified the local wheel and the public-index distribution. The public smoke downloaded `agent-harness-kit-cli==0.7.3` without cache and passed version inspection, core installation, both root bridges, doctor, embedded validation, and 26 delivery-mode/gate tests from the installed copy.
 
-The release was built as wheel and source distribution, checked with Twine, and published through [GitHub Actions Trusted Publishing](https://github.com/Eduardo-Salvador/Agent-Harness-Kit/actions/runs/33711530917). Both local-wheel and public-index smoke tests installed into separate empty Windows hosts. The public test downloaded `agent-harness-kit-cli==0.7.2` from PyPI with cache disabled and verified CLI version, contained core installation, root `AGENTS.md`/`CLAUDE.md` bridges, `doctor`, the embedded validator, and all 20 delivery-gate tests from the installed copy.
+Two real Claude Code 2.1.197 print-mode smoke cases used only the prompt `oi`, an isolated installed host, Read/Glob tools, no session persistence, project-only settings, strict MCP configuration, and a US$1 cap per case. With no approved context, the result visibly welcomed the user, said the Kit was active, and asked the project intent plus accompanied/autonomous/hackathon preference. In a fresh session with approved autonomous context, the response preserved that mode and did not repeat onboarding or ask for mode selection. Both completed without permission denials. These are observed cases, not a universal model-obedience guarantee; Codex behavior is covered by shared-contract/installation checks here, not a new real Codex session trial.
 
-Legacy JSON nodes without new declarations retain prior behavior; newly planned nodes declare their scope and completion conditions. Table-only Markdown requires migration to an executable JSON block before ready/active/completed transitions. The Kit is not an unattended daemon and does not independently enforce truthful evidence or control the host conversation.
+The existing 0.7.2 scope/product/completion gates remain in force. Legacy JSON nodes without declarations retain their earlier behavior; table-only Markdown requires migration before ready/active/completed transitions. The Kit is not an unattended daemon. Project instruction loading remains a host requirement.
 
 ## Evidence currently available
 
@@ -18,9 +18,9 @@ Legacy JSON nodes without new declarations retain prior behavior; newly planned 
 - Each generated directory profile can run its own bundled validator using the generated `PACKAGE-MANIFEST.json`.
 - Host-integration validation covers a sanitized namespaced mature-harness fixture plus missing-backlink, silent-omission, stale-snapshot, and premature-cutover failures.
 - Graph validation covers focused `read_set`, exclusive `write_set`, related `impact_set`, pinned `context_provenance`, and the boundary that repository indexes such as Graphify enrich rather than replace the operational task graph.
-- Packaging uses standard-library Python, fixed ZIP metadata, sorted files, hashes, and the shared source version `0.7.2`.
-- Source regression: 130 tests passed; source validator checked 174 Markdown files and 218 required files; all four changed Codex/Claude skills passed validation.
-- The `0.7.2` public-index smoke installed 242 profile files plus both root bridges, passed `doctor`, passed its embedded validator with 145 Markdown files and 241 required files, and passed all 20 delivery-gate tests.
+- Packaging uses standard-library Python, fixed ZIP metadata, sorted files, hashes, and the shared source version `0.7.3`.
+- Source regression: 136 tests passed; source validator checked 175 Markdown files and 219 required files; both changed native first-run skills passed UTF-8 validation.
+- The `0.7.3` public-index smoke installed 245 profile files plus both root bridges, passed doctor, passed its embedded validator with 146 Markdown files and 244 required files, and passed all 26 delivery-mode/gate tests.
 
 ## Package usability and boundaries
 
@@ -36,7 +36,7 @@ The refreshed English and Portuguese overview tracks are hash-bound to their cur
 
 These items limit stronger claims or future automation; they do not block use of the published scaffold:
 
-1. Record repeatable native Codex and Claude Code onboarding simulations instead of relying only on structural fixtures and observed manual sessions.
+1. Expand the two bounded real Claude onboarding cases into repeatable multi-host/native Codex coverage; do not generalize two successful greetings into guaranteed adherence.
 2. Test packaged installation on additional supported operating systems and record filesystem-specific path, case, symlink, and lease-recovery behavior before stronger concurrency claims.
 3. Complete third-party/trademark review and continue auditing native instruction, skill, agent, and connector security boundaries.
 4. Add live token/time telemetry only where the host exposes trustworthy measurements; do not claim that graph enrichment alone guarantees lower token usage.
