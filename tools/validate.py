@@ -94,7 +94,7 @@ REQUIRED_FILES = [
     "README.md", "README.pt-BR.md", "AGENTS.md", "CLAUDE.md", "LICENSE", "docs/assets/agent-harness-kit-banner.svg", "docs/assets/harness-demo-flow.svg", "media/agent-harness-kit-overview-en.mp3", "media/agent-harness-kit-overview-pt-BR.mp3", "media/agent-harness-kit-overview-en.mp4", "media/agent-harness-kit-overview-pt-BR.mp4",
     "media/overview-script-en.txt", "media/overview-script-pt-BR.txt", "media/overview-audio-manifest.json",
     "OPEN-DECISIONS.md", "docs/PRODUCT.md", "docs/ARCHITECTURE.md", "docs/PYPI-README.md",
-    "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md", "docs/ACCOMPANIED-DELIVERY.md",
+    "docs/CORE-VS-LEARNING.md", "docs/DISCOVERY-INTERVIEW.md", "docs/ACCOMPANIED-DELIVERY.md", "docs/DELIVERY-MODES.md",
     "docs/PORTABILITY.md", "docs/VALIDATION.md", "docs/ADAPTIVE-EXECUTION.md", "docs/RUNTIME-STATE.md", "docs/TDD.md", "docs/MODEL-ROUTING.md", "docs/EXECUTION-BUDGET.md", "docs/REVIEW-ROUNDS.md", "docs/CHANGE-INTEGRATION.md", "docs/CONTEXT-ROUTING.md", "docs/HACKATHON-MODE.md", "docs/STATUS-AND-COMPLETION.md", "docs/EMBEDDED-INSTALLATION.md",
     "docs/contracts/REQUEST-ROUTE.md", "docs/contracts/FEATURE-BRIEF.md", "docs/contracts/IMPLEMENTATION-PLAN.md", "docs/contracts/MODEL-DISPATCH.md", "docs/contracts/CODEX-AGENT-DISPATCH.md", "docs/contracts/PARALLEL-DISPATCH.md", "docs/contracts/REVIEW.md", "docs/contracts/PENDING.md", "docs/contracts/STATUS.md", "docs/contracts/EXECUTION-BUDGET.md",
     "adapters/README.md", "adapters/generic.md", "adapters/codex.md", "adapters/claude.md",

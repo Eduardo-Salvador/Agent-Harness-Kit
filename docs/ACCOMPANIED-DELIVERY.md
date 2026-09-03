@@ -2,6 +2,8 @@
 
 Product builds default to **accompanied delivery**: the agent works autonomously inside an approved block, then stops for the client at meaningful product milestones. This is independent of lane, pace, and technical assurance. It is not a pause after every task, every fixed number of tasks, or every passing test. Small decided fixes and maintenance remain continuous. A user may explicitly choose continuous delivery; record that choice without waiving other required decisions or safety gates.
 
+The three public presets are defined in [delivery modes](DELIVERY-MODES.md): accompanied (default), autonomous, and hackathon. The continuous-delivery option is the autonomous preset, not a one-agent restriction. Its approved scope still needs completion conditions, but it does not create optional feature-evaluation pauses. Hackathon retains the first-demo checkpoint.
+
 ## Plan with the client, execute inside the block
 
 1. Reuse approved intent. Resolve consequential missing actors, customer/niche, business rules, exclusions, and success examples before implementation. Do not repeat discovery or invent domain facts.

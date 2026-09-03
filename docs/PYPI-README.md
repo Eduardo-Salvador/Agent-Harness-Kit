@@ -2,7 +2,7 @@
 
 Agent Harness Kit is a local execution-governance layer for coding agents. It gives Codex and Claude Code durable project context, adaptive workflow selection, dependency-aware execution, ownership leases, proportional verification, and inspectable completion.
 
-![Agent Harness Kit](https://raw.githubusercontent.com/Eduardo-Salvador/Agent-Harness-Kit/v0.7.2/docs/assets/agent-harness-kit-banner.svg)
+![Agent Harness Kit](https://raw.githubusercontent.com/Eduardo-Salvador/Agent-Harness-Kit/v0.7.3/docs/assets/agent-harness-kit-banner.svg)
 
 ## Install
 
@@ -31,7 +31,13 @@ The recommended `core` profile is installed by default. Use `--dry-run` to previ
 
 The installer creates a contained `agent-harness-kit/` directory **plus root `AGENTS.md` and `CLAUDE.md` entrypoints**. Missing root files are created; existing instructions are preserved outside one managed bridge block. Open a new agent context at the project root after installation, then use `agent-harness doctor` to verify the entrypoints.
 
-## New in 0.7.2
+## New in 0.7.3
+
+Choose accompanied (default), autonomous end-to-end, or hackathon delivery. Accompanied waits at product milestones; autonomous executes the agreed scope without optional evaluation pauses; hackathon targets a timeboxed demo and first-demo evaluation. All retain completion evidence and authority limits; autonomous does not mean one worker.
+
+`agent-harness delivery-mode [accompanied|autonomous|hackathon]` previews a preset without changing saved project policy, starting agents, or activating learning. The host agent records the approved selection in project context and preserves it on resume. Existing gates cannot be silently cleared by a mode switch.
+
+## Retained from 0.7.2
 
 Product builds use accompanied delivery: demonstrate the first usable slice and material capabilities, then genuinely wait for client evaluation before dependent expansion. Small fixes remain continuous; continuous product delivery can be explicitly chosen.
 

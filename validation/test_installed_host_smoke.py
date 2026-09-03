@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import json
 import subprocess
 import sys
 import tempfile
@@ -130,6 +131,19 @@ class InstalledHostSmokeTests(unittest.TestCase):
 
                 for bridge in (agents_bridge, claude_bridge):
                     self.assertIn(context_relative.as_posix(), bridge)
+                    self.assertIn('greeting-only', bridge)
+                    self.assertIn('autonomous', bridge)
+
+                context_before = context.read_text(encoding='utf-8')
+                for preset, interaction in (('accompanied', 'accompanied'), ('autonomous', 'continuous'), ('hackathon', 'accompanied')):
+                    mode_result = self.run_command(
+                        sys.executable, '-m', 'agent_harness_kit', 'delivery-mode', preset, cwd=installed,
+                    )
+                    policy = json.loads(mode_result.stdout)
+                    self.assertEqual(policy['preset'], preset)
+                    self.assertEqual(policy['interaction'], interaction)
+                    self.assertFalse(policy['applies_changes'])
+                self.assertEqual(context.read_text(encoding='utf-8'), context_before)
                 context_text = context_relative.read_text(encoding="utf-8")
                 self.assertIn("schema: harness.project-context/v1", context_text)
                 self.assertIn("status: approved", context_text)

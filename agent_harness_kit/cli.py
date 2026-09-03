@@ -11,6 +11,7 @@ from types import ModuleType
 
 from . import __version__
 from . import codex_dispatch
+from . import delivery_modes
 from . import preflight
 from . import request_router
 from . import scheduler
@@ -73,6 +74,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     commands = parser.add_subparsers(dest="command")
+
+    delivery = commands.add_parser("delivery-mode", help="inspect a delivery preset without changing project state")
+    delivery.add_argument("preset", nargs="?", choices=delivery_modes.PRESETS, default="accompanied")
 
     install = commands.add_parser("install", help="install the Kit into a project")
     install.add_argument("path", nargs="?", type=Path, default=Path.cwd(), help="project directory (default: current directory)")
@@ -161,6 +165,9 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.command is None:
         parser.print_help()
+        return 0
+    if args.command == "delivery-mode":
+        print(json.dumps(delivery_modes.resolve_delivery_mode(args.preset), indent=2))
         return 0
     if args.command == "route":
         if not args.request.strip():

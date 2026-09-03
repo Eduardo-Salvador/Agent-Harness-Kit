@@ -2,6 +2,8 @@
 
 Interaction is also independent: [accompanied delivery](ACCOMPANIED-DELIVERY.md) pauses substantial product builds at client milestones while ordinary technical work stays autonomous. Small decided fixes remain continuous. Product approval is not technical assurance; an explicit continuous-delivery choice cannot waive required safety or authority gates.
 
+[Delivery presets](DELIVERY-MODES.md) choose client participation and pace: accompanied by default, autonomous by explicit choice, or hackathon for a timeboxed demo. Presets do not select a lane/assurance or imply one worker. Autonomous may still require full orchestration for actual parallel agents or required audit.
+
 The Harness makes two independent decisions for each request:
 
 1. **Execution lane**: `direct-trivial`, `vibe`, `graph-only`, or `full-harness`.

@@ -9,6 +9,8 @@ id: project-context
 revision: 3
 status: approved                 # draft | awaiting-approval | approved | superseded
 mode: delivery                   # delivery | delivery+learning | hackathon | hackathon+learning
+delivery_preset: accompanied      # accompanied | autonomous | hackathon
+interaction: accompanied          # accompanied | continuous
 updated_at: 2026-08-20T14:00:00Z
 approved_by: human:owner
 supersedes: project-context@2
@@ -72,6 +74,10 @@ pending_authority: harness-state/PENDING.md
 - Pending authority: `harness-state/PENDING.md`; human decisions/actions and macro incomplete project areas only.
 - Provenance: source identities/backlinks in `migration-main@1`.
 ```
+
+## Delivery preset compatibility
+
+Follow [delivery modes](../DELIVERY-MODES.md). New contexts record the preset, interaction, and decision reference. Accompanied and autonomous use existing `delivery` mode; hackathon uses `hackathon`. Preserve approved learning suffixes and explicit interaction overrides without activating new consent. Existing contexts without these fields keep their approved behavior; missing interaction defaults visibly at the next product block. The CLI inspector is not a context write or approval.
 
 ## Invariants
 

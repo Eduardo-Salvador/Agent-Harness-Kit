@@ -4,6 +4,8 @@ This audit applies to the Agent Harness Kit repository, generated profiles, and 
 
 ## Current assessment
 
+Source candidate `0.7.3` adds explicit accompanied/autonomous/hackathon presets and a read-only `delivery-mode` inspector. Publication verification is pending. The `0.7.2` evidence below is historical and does not attest to this candidate.
+
 Version `0.7.2` is published on PyPI. It adds accompanied delivery with real client milestone pauses, progressive feature scope closure, explicit task completion conditions, criterion-level evidence, and executable scope/product/TDD/affected-flow gates. Routine progress remains concise. Technical completion is distinct from product approval; recorded evidence is structurally checked, not authenticated.
 
 The release was built as wheel and source distribution, checked with Twine, and published through [GitHub Actions Trusted Publishing](https://github.com/Eduardo-Salvador/Agent-Harness-Kit/actions/runs/33711530917). Both local-wheel and public-index smoke tests installed into separate empty Windows hosts. The public test downloaded `agent-harness-kit-cli==0.7.2` from PyPI with cache disabled and verified CLI version, contained core installation, root `AGENTS.md`/`CLAUDE.md` bridges, `doctor`, the embedded validator, and all 20 delivery-gate tests from the installed copy.

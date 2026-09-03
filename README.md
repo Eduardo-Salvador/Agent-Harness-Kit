@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version 0.7.2" src="https://img.shields.io/badge/version-0.7.2-4967ff">
+  <img alt="Version 0.7.3" src="https://img.shields.io/badge/version-0.7.3-4967ff">
   <img alt="Python 3.10 or newer" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Install with uv, pipx, or pip" src="https://img.shields.io/badge/installer-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Codex compatible" src="https://img.shields.io/badge/agent-Codex-11131a">
@@ -17,10 +17,10 @@
 </p>
 
 <p align="center">
-  <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="#start-here">Start here</a> · <a href="#choose-your-pace">Modes</a> · <a href="docs/ARCHITECTURE.md">Architecture</a>
+  <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="#start-here">Start here</a> · <a href="#choose-your-delivery-mode">Modes</a> · <a href="docs/ARCHITECTURE.md">Architecture</a>
 </p>
 
-**Source version: `0.7.2`.** Product builds now pause for client evaluation at meaningful milestones. Specs define explicit completion conditions with criterion-level evidence; unresolved feature scope blocks dispatch, and required TDD/affected-flow evidence blocks false completion. Planning is progressive: the initial interview defines direction, not every future functionality. Small fixes remain lightweight.
+**Source version: `0.7.3`.** Choose accompanied delivery (default), autonomous end-to-end execution, or hackathon. All three keep explicit completion conditions, evidence, and scope/authority limits. A new read-only `delivery-mode` command previews their policies; the agent records the approved choice in project context.
 
 > **A harness mature enough to know when to get out of the way.** Four execution lanes stay separate from `none|light|full` assurance. Failed checks trigger bounded recovery; full orchestration is reserved for real coordination, human governance, required audit, model insufficiency, or unresolved consequential ambiguity.
 
@@ -60,6 +60,8 @@ your-project/
 
 Existing root instructions are preserved outside a small managed bridge block. Run `agent-harness doctor` to verify all three entrypoints. Then open a **new agent context at the project root** so the host reloads `AGENTS.md` or `CLAUDE.md`; no activation prompt is required on hosts that load root instructions normally.
 
+After installing, a simple **“hi”** in a fresh Codex or Claude Code context at the project root should trigger the welcome and a question about accompanied, autonomous, or hackathon delivery when project context is not yet approved. An initialized project keeps its saved mode and does not repeat onboarding. This depends on the host loading root instructions; `doctor` checks installation, not model obedience.
+
 > Prefer to preview first? Run `agent-harness install --dry-run`. Existing root instructions are preserved through managed blocks and namespaced coexistence.
 
 ## What it actually does
@@ -88,13 +90,16 @@ The scheduler and atomic transitions enforce declared scope, product-approval, a
 
 Upgrading the CLI does not replace a Kit copy already installed in a project. Preview the existing project's update before applying it, preserve host instructions/state, and open a fresh agent context afterward.
 
-## Choose your pace
+## Choose your delivery mode
 
 | Say this | What happens |
 | --- | --- |
-| “Use standard delivery” | Full discovery where needed, bounded implementation, checks, and independent assurance |
-| “Use hackathon mode” | At most two cohesive discovery questions, then a demo-first graph aimed at a testable MVP |
+| “Build this with me” (default) | Accompanied: define features progressively, demonstrate milestones, and wait for client evaluation before dependent expansion |
+| “Execute the agreed scope end to end” | Autonomous: implement, test, and correct through the approved envelope without optional milestone pauses |
+| “Use hackathon mode” | At most two cohesive discovery questions, a timeboxed demo, and first-demo evaluation |
 | “I also want to learn” | Adds guided learning only after you approve the exact Markdown, Obsidian, Notion/MCP, or other note destination |
+
+All three presets keep completion conditions, evidence, and authority limits; autonomous is not a one-worker restriction. Learning remains an independent consented option. Preview a preset with `agent-harness delivery-mode`, `agent-harness delivery-mode autonomous`, or `agent-harness delivery-mode hackathon`. This read-only command does not save the choice or activate execution; the agent records the approved choice in project context. See [delivery modes](docs/DELIVERY-MODES.md).
 
 Hackathon mode keeps state, file leases, checks, and status, but uses light review by default and cuts secondary scope before the primary demo path.
 

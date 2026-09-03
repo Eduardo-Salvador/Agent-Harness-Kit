@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Versão 0.7.2" src="https://img.shields.io/badge/vers%C3%A3o-0.7.2-4967ff">
+  <img alt="Versão 0.7.3" src="https://img.shields.io/badge/vers%C3%A3o-0.7.3-4967ff">
   <img alt="Python 3.10 ou mais recente" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Instale com uv, pipx ou pip" src="https://img.shields.io/badge/instalador-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Compatível com Codex" src="https://img.shields.io/badge/agente-Codex-11131a">
@@ -17,10 +17,10 @@
 </p>
 
 <p align="center">
-  <a href="README.md">English</a> · <a href="#comece-aqui">Comece aqui</a> · <a href="#escolha-o-ritmo">Modos</a> · <a href="docs/ARCHITECTURE.md">Arquitetura</a>
+  <a href="README.md">English</a> · <a href="#comece-aqui">Comece aqui</a> · <a href="#escolha-o-modo-de-entrega">Modos</a> · <a href="docs/ARCHITECTURE.md">Arquitetura</a>
 </p>
 
-**Versão do código-fonte: `0.7.2`.** Sistemas passam a ter pausas reais para avaliação do cliente em marcos relevantes. Specs definem condições explícitas de conclusão com evidência por critério; escopo aberto bloqueia o início, e evidência obrigatória de TDD/fluxo real bloqueia uma conclusão indevida. O planejamento é progressivo: a entrevista inicial define a direção, não todas as funcionalidades futuras. Correções pequenas continuam leves.
+**Versão do código-fonte: `0.7.3`.** Escolha entrega acompanhada (padrão), execução autônoma de ponta a ponta ou hackathon. Os três modos mantêm condições explícitas de conclusão, evidências e limites de escopo/autoridade. O novo comando `delivery-mode` apenas mostra a política; o agente registra a escolha aprovada no contexto do projeto.
 
 > **Um harness maduro o bastante para saber quando sair do caminho.** O router nativo não trata todo prompt como um grande projeto: gates determinísticos de segurança separam edições estáticas imediatas, pequenas mudanças verificadas em modo “vibe”, trabalho gerenciado pelo grafo e engenharia completa. A IA só é consultada diante de ambiguidade real; risco, checks com falha ou crescimento de escopo promovem automaticamente o trabalho, sem deixar a velocidade furar a segurança.
 
@@ -60,6 +60,8 @@ seu-projeto/
 
 Instruções que já existiam na raiz são preservadas fora de um pequeno bloco gerenciado. Execute `agent-harness doctor` para conferir as três entradas. Depois, abra um **novo contexto do agente na raiz do projeto** para o host recarregar `AGENTS.md` ou `CLAUDE.md`; nos hosts que carregam instruções da raiz normalmente, não é necessário colar nenhum prompt de ativação.
 
+Depois de instalar, basta mandar **“oi”** em um novo contexto do Codex ou Claude Code aberto na raiz do projeto: se o contexto do projeto ainda não foi aprovado, o agente deve dar a mensagem de abertura e perguntar se você prefere acompanhado, autônomo ou hackathon. Em projeto já iniciado, preserva o modo e não repete o onboarding. Isso depende do host carregar as instruções da raiz; o `doctor` verifica a instalação, não garante a obediência do modelo.
+
 > Quer apenas conferir antes? Execute `agent-harness install --dry-run`. Instruções existentes na raiz são preservadas por blocos gerenciados e coexistência com namespace.
 
 ## O que ele efetivamente faz
@@ -88,13 +90,16 @@ O scheduler e as transições atômicas verificam os gates declarados de escopo,
 
 Atualizar a CLI não substitui a cópia do Kit já instalada em um projeto. Confira a atualização desse projeto antes de aplicá-la, preserve instruções e estado e abra um novo contexto do agente depois.
 
-## Escolha o ritmo
+## Escolha o modo de entrega
 
 | Diga isto | O que acontece |
 | --- | --- |
-| “Use entrega normal” | Descoberta completa quando necessária, implementação limitada, checks e garantia independente |
-| “Use modo hackathon” | No máximo duas perguntas coesas e depois um grafo focado em demo para chegar a um MVP testável |
+| “Construa comigo” (padrão) | Acompanhado: define funcionalidades progressivamente, demonstra marcos e espera sua avaliação antes da expansão dependente |
+| “Execute o combinado de ponta a ponta” | Autônomo: implementa, testa e corrige dentro do escopo aprovado, sem pausas opcionais entre marcos |
+| “Use modo hackathon” | No máximo duas perguntas coesas, demo com prazo definido e avaliação da primeira demo |
 | “Também quero aprender” | Adiciona estudo guiado somente após você aprovar o caminho Markdown, Obsidian, alvo/MCP do Notion ou outro destino |
+
+Os três modos mantêm condições de conclusão, evidências e limites de autoridade. Autônomo não significa apenas um agente. Aprendizado continua sendo uma opção independente, com consentimento. Confira um modo com `agent-harness delivery-mode`, `agent-harness delivery-mode autonomous` ou `agent-harness delivery-mode hackathon`. O comando apenas mostra a configuração: não salva a escolha nem inicia execução; o agente registra a escolha aprovada no contexto. Veja [os modos de entrega](docs/DELIVERY-MODES.md).
 
 O modo hackathon mantém estado, leases, checks e status, mas usa review leve por padrão e corta escopo secundário antes do caminho principal da demo.
 

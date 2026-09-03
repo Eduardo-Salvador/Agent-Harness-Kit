@@ -25,6 +25,8 @@ Turn evidence and user answers into a draft project context, explicit decision p
 - A plain-language hackathon, time-boxed MVP, or demo-first request triggers a `hackathon` mode proposal. Use at most two cohesive discovery questions unless consequential safety or authority blocks execution, then propose the compressed context and demo-first graph. Add `+learning` only when study is also explicitly requested.
 - Do not treat the optional Harness Engineering Learning Pack as a runtime mode or preload it.
 
+A greeting-only first message also triggers the initialization check. In uninitialized context, visibly welcome before asking; include the unanswered accompanied/autonomous/hackathon choice in the same kickoff question as missing intent. A correct interview without the opening is incomplete. Preserve approved modes and do not repeat onboarding on resume.
+
 ## Exit
 
 Stop at the documented criteria, present exact outputs, and request the required human approvals.

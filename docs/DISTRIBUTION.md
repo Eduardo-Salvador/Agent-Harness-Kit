@@ -52,6 +52,8 @@ Build the installable Python package separately with `uv build`. Before each rel
 
 ## Version strategy
 
+Source candidate `0.7.3` adds three explicit delivery presets and a read-only CLI inspector while preserving existing runtime modes, approval gates, learning consent, and agent-capacity rules. Publication verification is pending.
+
 Release `0.7.2` adds client milestone pauses, progressive feature scope, explicit completion conditions, and runtime evidence gates. Source, wheel/sdist, clean wheel installation, and public-index installation were verified. Legacy JSON nodes remain compatible, while table-only Markdown requires an executable JSON block before ready/active/completed transitions.
 
 Release `0.7.1` keeps execution adaptive and adds explicit project-shape discovery: architecture and folder organization are resolved from approved evidence or focused questions before planning, while coding conventions remain optional and evidence-first. Lane, assurance, and artifact shape remain independent; resume probes real state first; preflight blocks missing prerequisites; handoff/review files require a real consumer; and proportional tests, scheduling, atomic graph transitions, and metrics retain the `0.7` guarantees.

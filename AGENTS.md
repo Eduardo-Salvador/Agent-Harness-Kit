@@ -24,6 +24,10 @@ Long context windows naturally become slower and more expensive to process acros
 
 For a same-context graph node, run the stated verification and record the concise outcome plus highest sufficient test-ladder rung in `TASK-GRAPH.md`. Do not create a handoff or review packet without an actual separate consumer. Lane and assurance are independent: `none` closes on executor verification; `light|full` uses a fresh independent reviewer and therefore a consumer-bound packet.
 
+## Delivery mode selection
+
+Use [delivery modes](docs/DELIVERY-MODES.md): `accompanied` is the default, `autonomous` executes the approved envelope end to end without optional milestone pauses, and `hackathon` prioritizes one timeboxed demo with first-demo evaluation. Briefly expose all three at onboarding without another questionnaire. Persist `delivery_preset`, existing `mode`, `interaction`, and the decision reference; preserve approved choices on resume. Autonomous does not limit agent count or disable completion evidence, scope/authority gates, or independent assurance. A mode switch does not clear existing gates or activate learning. `agent-harness delivery-mode` only previews a preset; it does not change saved policy.
+
 ## Client milestones and task completion
 
 Follow [accompanied delivery](docs/ACCOMPANIED-DELIVERY.md). Product builds default to a first usable-slice evaluation and subsequent material capability checkpoints, not a pause per task. Summarize the block spec with desired and undesired examples; demonstrate milestones and actually await the client before affected expansion. Declare `product_review` and `product_requires` in the executable graph; technical acceptance never substitutes for human product approval. Small decided fixes remain continuous, and an explicit continuous-delivery choice is recorded without waiving other authority gates.
@@ -35,6 +39,8 @@ Every new inline or separate task spec says "This task is complete only when..."
 Brief progress updates need no full status form or repeated artifact read. Persist meaningful transitions, not every tool call; change `PENDING.md` only for human/macro changes and the rules map only for durable rule changes. Full status/pending questions retain their complete current view.
 
 ## First-run gate
+
+A greeting-only first message (including "oi", "hello", or "hi") triggers the initialization check even though no implementation was requested. For missing/unapproved context, visibly welcome the user and state the Kit is active before asking one cohesive kickoff question covering the unanswered delivery-mode choice and any missing product intent. If the mode is already explicit, acknowledge it rather than ask again. Do not plan or create a graph from a greeting. Approved context skips both the first-run welcome and repeated mode selection.
 
 Read-only audits, explanations, status inspections, and diagnosis never trigger first-run.
 

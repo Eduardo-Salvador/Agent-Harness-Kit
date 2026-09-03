@@ -2,6 +2,8 @@
 
 `hackathon` is a runtime delivery mode for a time-boxed MVP or live demo. It shortens discovery and prioritizes a demonstrable vertical slice without removing project context, task-graph coordination, file leases, verification, status reporting, or independent review.
 
+Hackathon is one of the three [delivery presets](DELIVERY-MODES.md), alongside default accompanied delivery and explicit autonomous end-to-end delivery. It keeps the first-demo client evaluation before dependent expansion; it does not pause after every technical task. Selecting hackathon changes pace and scope, not evidence requirements or worker capacity.
+
 ## Activation
 
 Plain-language requests such as “hackathon mode,” “build an MVP fast,” “demo first,” or a stated hackathon deadline trigger a proposal to use `mode: hackathon`. If the user also explicitly requests guided study, use `hackathon+learning` and complete the normal learning-destination gate before capturing notes.

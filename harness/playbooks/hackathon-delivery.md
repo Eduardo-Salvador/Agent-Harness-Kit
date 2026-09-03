@@ -9,6 +9,8 @@ Use this playbook when approved project context declares `mode: hackathon` or `m
 5. Create one normal `TASK-GRAPH.md` from those specs. Split isolated frontend/backend/data/infrastructure/content work by role and context, add early integration, and end with a demo-rehearsal node. Populate `read_set`, `write_set`, `impact_set`, and `context_provenance` when evidence exists.
 6. Dispatch the critical path first. Parallelize only non-overlapping leases with a real integration point. Prefer reversible choices already inside the approved capability and risk envelope; consequential authority expansion still requires the human owner.
 7. Verify continuously in the actual demo environment. Clearly label fixtures, mocks, seed data, manual setup, feature flags, and non-production shortcuts in handoff and status evidence.
+At the first usable demo, show the primary path, known shortcuts, and verification results; obtain client evaluation before dependent expansion under the hackathon preset. Preserve any explicitly approved legacy interaction override and all mandatory authority gates.
+
 8. Use light independent review by default. A second review is focused only on prior blockers, their correction, and related regressions. There is no third loop.
 9. If time pressure threatens the demo, cut enhancers and secondary breadth, update graph/pending artifacts, and preserve the primary path plus minimum safety and verification. Never silently declare incomplete behavior complete.
 10. Close with a passing demo rehearsal, a short runbook, visible limitations/post-MVP gaps, released leases, completed graph state, and the next recommended post-hackathon action.

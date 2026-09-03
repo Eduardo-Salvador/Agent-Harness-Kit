@@ -6,6 +6,10 @@ Turn an initial idea into an approved [project context](contracts/PROJECT-CONTEX
 
 This interview is the mandatory first-run behavior when `harness-state/PROJECT-CONTEXT.md` is absent or not approved. Codex reaches it through root `AGENTS.md`; Claude Code reaches the same rule through root `CLAUDE.md` importing `@AGENTS.md`. Both may be present, and both use the same neutral context and graph without runtime guessing or profile switching. The interview identifies whether the host project is greenfield, existing, or uncertain; selects standard delivery, optional learning, or the compressed hackathon variant; and completes before implementation planning. See the executable [first-run playbook](../harness/playbooks/first-run.md).
 
+## Delivery choice
+
+Offer [accompanied, autonomous, and hackathon](DELIVERY-MODES.md) as three simple presets. Accompanied is the default; autonomous completes an upfront-approved envelope without optional intermediate client evaluations; hackathon prioritizes a timeboxed demo and first-demo evaluation. Ask any unanswered mode preference in the first cohesive kickoff question alongside missing product intent; include the result in consolidated context approval rather than a separate questionnaire. A greeting-only first message also triggers this welcome and question when context is uninitialized. Preserve existing choices and learning consent on resume. No preset skips verification or grants unspecified scope.
+
 ## Operating loop
 
 1. **Inspect first:** read available project files, existing decisions, constraints, and capability declarations.
@@ -27,7 +31,7 @@ When the user asks for a hackathon, time-boxed MVP, or demo-first build, follow 
 
 For an uninitialized project, the first response identifies that Agent Harness Kit is active, explains briefly that it organizes project context, pending work, and verifiable execution, says discovery establishes context before implementation planning, mentions that the user may choose standard delivery or the faster hackathon mode for a time-boxed MVP/demo, and asks the highest-leverage unanswered question immediately. The welcome is localized to the user's language, at most two short sentences, and is not marketing copy or a separate approval checkpoint.
 
-For an empty or effectively empty greenfield directory, the first question asks what the user wants to create, for whom, what problem/value it addresses, and what the first successful outcome is. The agent does not first invent or recommend product scope, features, visual direction, architecture, stack, implementation steps, or a task graph. When the initial user request already answers some of those fields, reflect and pre-fill them, then ask only for the consequential gap.
+For an empty or effectively empty greenfield directory, the first question asks what the user wants to create, for whom, what problem/value it addresses, and what the first successful outcome is. The same kickoff question asks the delivery-mode preference when unanswered; if the mode is already explicit, acknowledge it instead. The visible kit-active welcome must precede the question. The agent does not first invent or recommend product scope, features, visual direction, architecture, stack, implementation steps, or a task graph. When the initial user request already answers some of those fields, reflect and pre-fill them, then ask only for the consequential gap.
 
 The handshake is a first-response firewall. Before it is sent, the agent does not answer the substantive request, scan broadly, recommend, or output a proposal, plan, status, or graph. It contains exactly one discovery question. A pre-send check replaces any draft that includes a recommendation or a second question. Model memory, summaries, and prior conversations are unverified and cannot establish company facts, brand direction, product scope, technical decisions, or approval; only the current user message and approved project artifacts can do so.
 

@@ -4,6 +4,8 @@ id: project-context
 revision: 1
 status: draft
 mode: delivery
+delivery_preset: accompanied
+interaction: accompanied
 updated_at: 2000-01-01T00:00:00Z
 approved_by: pending
 supersedes: none
@@ -45,8 +47,10 @@ pending_authority: harness-state/PENDING.md
 
 ## Delivery shape
 
-- Interaction: accompanied for product builds / continuous when explicitly chosen; decision reference: replace.
-- Client milestones: first usable slice, then material capabilities; demonstration and dependent expansion: replace.
+- Delivery preset: accompanied (default) / autonomous / hackathon; decision reference: replace.
+- Interaction: accompanied / continuous, consistent with the selected preset or an explicit recorded override.
+- Autonomous envelope: approved scope, completion conditions, limits, and mandatory human gates; replace or not applicable.
+- Client milestones: accompanied = first usable slice and material capabilities; autonomous = no optional milestone pauses; hackathon = first demo. Record any explicit override and affected expansion.
 - Domain examples: intended customer/niche, included/excluded results, and failure behavior when relevant.
 - Pace: standard / hackathon.
 - Deadline/timebox: none / replace.

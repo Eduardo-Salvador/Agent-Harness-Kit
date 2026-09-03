@@ -5,6 +5,8 @@ description: Use when project context is missing, unapproved, stale, or when an 
 
 # First-run discovery
 
+Follow `../../../docs/DELIVERY-MODES.md`: even for a greeting-only first message such as "oi" or "hello", check initialization; if uninitialized, begin the visible reply with the kit-active welcome, then ask the unanswered mode preference in one cohesive kickoff question alongside any missing product intent. Offer standard accompanied delivery (default), autonomous end-to-end delivery, and hackathon. Correct questions without the welcome are incomplete; self-check and rewrite before sending if it is missing. Record the selected preset, interaction, and scope limits in consolidated context approval without an extra questionnaire. Preserve approved choices on resume. Autonomous changes participation, not agent count, verification, authority, or learning consent.
+
 Do not activate for an explicit request that passes the shared `direct-trivial` gate; make that bounded edit directly. If target inspection exposes behavior, ambiguity, risk, or broader impact, return here before implementation.
 
 1. Read `../../../harness/playbooks/first-run.md` and the discovery-interviewer role it references.

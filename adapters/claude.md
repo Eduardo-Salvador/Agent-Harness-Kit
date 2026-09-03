@@ -2,6 +2,10 @@
 
 Claude Code natively loads root `CLAUDE.md`. This kit uses the documented `@AGENTS.md` import so Claude and Codex converge on one neutral policy map, then adds only Claude-specific routing to `.claude/skills/` and `.claude/agents/`.
 
+## Visible greeting and activation
+
+Root `CLAUDE.md` carries the welcome requirement directly as well as importing the shared map. A greeting-only "oi"/"hello" starts onboarding when approved context is missing. The visible first response starts with the localized Kit-active welcome and asks one combined question for unanswered mode preference and missing product intent. Merely asking discovery questions is insufficient. Approved context preserves the existing choice and skips the welcome. Start a new context at the host-project root after installation; disabled project-instruction loading requires the explicit activation fallback, not a claim of automatic enforcement.
+
 ## Native mapping
 
 | Neutral operation | Claude Code surface | Safe fallback |
@@ -27,7 +31,7 @@ Apply [bounded review rounds](../docs/REVIEW-ROUNDS.md) for `assurance: light|fu
 
 The review packet excludes the original prompt and implementer conversation; neither is review authority.
 
-For every main agent or subagent, apply [status and completion communication](../docs/STATUS-AND-COMPLETION.md) and [`harness.status/v1`](../docs/contracts/STATUS.md). `PENDING.md` owns human decisions/actions and macro project gaps; `TASK-GRAPH.md` owns technical order, dependencies, and execution. Every user-facing progress/step update reports current stage, progress, work continuing without user action, human/macro pending items, active/ready/blocked graph nodes, blockers, next action, and inspectable paths; prose-only updates are invalid. Passing tasks are marked `completed` and unlock the next node immediately; assurance review is automatic, non-blocking, and never a renewed human approval request.
+For every main agent or subagent, apply [status and completion communication](../docs/STATUS-AND-COMPLETION.md) and [`harness.status/v1`](../docs/contracts/STATUS.md). `PENDING.md` owns human decisions/actions and macro project gaps; `TASK-GRAPH.md` owns technical order, dependencies, and execution. Explicit status views and milestone closeouts report current stage, progress, work continuing without user action, human/macro pending items, active/ready/blocked graph nodes, blockers, next action, and inspectable paths; routine progress may use concise result/evidence, human action, and next-action text. Passing tasks are marked `completed` and unlock only nodes whose product and technical gates pass; assurance review is automatic, non-blocking, and never a renewed human approval request.
 
 Before that update, persist every technical transition or material progress event in a new `TASK-GRAPH.md` revision. Never use a `PENDING.md` update as its substitute; pending changes only when human/macro state also changes.
 
