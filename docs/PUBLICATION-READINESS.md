@@ -4,11 +4,11 @@ This audit applies to the Agent Harness Kit repository, generated profiles, and 
 
 ## Current assessment
 
-Source candidate `0.7.2` adds accompanied delivery, progressive scope closure, explicit task completion conditions, and executable product/evidence gates. Publication and public-index smoke are pending; the confirmed `0.7.1` release evidence below is historical, not proof of this candidate.
+Version `0.7.2` is published on PyPI. It adds accompanied delivery with real client milestone pauses, progressive feature scope closure, explicit task completion conditions, criterion-level evidence, and executable scope/product/TDD/affected-flow gates. Routine progress remains concise. Technical completion is distinct from product approval; recorded evidence is structurally checked, not authenticated.
 
-Source version `0.7.1` is validated, published on PyPI, and suitable for adaptive first-run project-shape discovery. It resolves architecture and folder organization from approved context or repository evidence before asking, supports user-directed or delegated recommendations, and treats coding conventions as optional. It retains adaptive routing/assurance, compact and complete execution shapes, real-state-first resume, preflight, consumer-driven transfer artifacts, proportional test escalation, maximum-cardinality scheduling, runtime state/event/metric primitives, and scoped validation. It is not an unattended standalone daemon. No profile silently enables an external service, MCP, hook, credential, network permission, or destructive permission.
+The release was built as wheel and source distribution, checked with Twine, and published through [GitHub Actions Trusted Publishing](https://github.com/Eduardo-Salvador/Agent-Harness-Kit/actions/runs/33711530917). Both local-wheel and public-index smoke tests installed into separate empty Windows hosts. The public test downloaded `agent-harness-kit-cli==0.7.2` from PyPI with cache disabled and verified CLI version, contained core installation, root `AGENTS.md`/`CLAUDE.md` bridges, `doctor`, the embedded validator, and all 20 delivery-gate tests from the installed copy.
 
-The `0.7.1` package was built as wheel and source distribution, published through GitHub Actions with PyPI Trusted Publishing, downloaded from the public index without a local package cache, installed into an empty Windows host, and validated from the installed copy. The smoke test verified the CLI version, the packaged project-shape discovery contract, a contained `core` installation, both managed root bridges, `doctor`, and the embedded validator. A successful install creates the contained `agent-harness-kit/` directory and managed root `AGENTS.md` and `CLAUDE.md` bridges.
+Legacy JSON nodes without new declarations retain prior behavior; newly planned nodes declare their scope and completion conditions. Table-only Markdown requires migration to an executable JSON block before ready/active/completed transitions. The Kit is not an unattended daemon and does not independently enforce truthful evidence or control the host conversation.
 
 ## Evidence currently available
 
@@ -16,8 +16,9 @@ The `0.7.1` package was built as wheel and source distribution, published throug
 - Each generated directory profile can run its own bundled validator using the generated `PACKAGE-MANIFEST.json`.
 - Host-integration validation covers a sanitized namespaced mature-harness fixture plus missing-backlink, silent-omission, stale-snapshot, and premature-cutover failures.
 - Graph validation covers focused `read_set`, exclusive `write_set`, related `impact_set`, pinned `context_provenance`, and the boundary that repository indexes such as Graphify enrich rather than replace the operational task graph.
-- Packaging uses standard-library Python, fixed ZIP metadata, sorted files, hashes, and the shared source version `0.7.1`.
-- The `0.7.1` public-index smoke installed 240 profile files plus both root bridges, verified the packaged architecture/folder/conventions contract, passed `doctor`, and passed its embedded validator with 144 Markdown files and 239 required files.
+- Packaging uses standard-library Python, fixed ZIP metadata, sorted files, hashes, and the shared source version `0.7.2`.
+- Source regression: 130 tests passed; source validator checked 174 Markdown files and 218 required files; all four changed Codex/Claude skills passed validation.
+- The `0.7.2` public-index smoke installed 242 profile files plus both root bridges, passed `doctor`, passed its embedded validator with 145 Markdown files and 241 required files, and passed all 20 delivery-gate tests.
 
 ## Package usability and boundaries
 
