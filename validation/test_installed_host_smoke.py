@@ -90,6 +90,25 @@ class InstalledHostSmokeTests(unittest.TestCase):
                 cwd=host,
             )
 
+            installed = host / "agent-harness-kit"
+            compact_manifest = json.loads((installed / "PACKAGE-MANIFEST.json").read_text(encoding="utf-8"))
+            self.assertLessEqual(len(compact_manifest["files"]) + 1, 80)
+            self.assertFalse((installed / "validation").exists())
+            self.assertFalse((installed / "media").exists())
+            self.assertFalse((installed / "harness" / "templates").exists())
+
+            self.run_command(
+                sys.executable,
+                installed / "runtime.pyz",
+                "scaffold",
+                "PROJECT-CONTEXT",
+                "--path",
+                host,
+                "--output",
+                "harness-state/PROJECT-CONTEXT.md",
+                cwd=host,
+            )
+
             context_relative = Path("harness-state/PROJECT-CONTEXT.md")
             task_relative = Path("harness-state/tasks/TASK-SMOKE.md")
             context = host / context_relative
@@ -135,9 +154,13 @@ class InstalledHostSmokeTests(unittest.TestCase):
                     self.assertIn('autonomous', bridge)
 
                 context_before = context.read_text(encoding='utf-8')
+                version_result = self.run_command(
+                    sys.executable, installed / 'runtime.pyz', '--version', cwd=installed,
+                )
+                self.assertIn(version, version_result.stdout)
                 for preset, interaction in (('accompanied', 'accompanied'), ('autonomous', 'continuous'), ('hackathon', 'accompanied')):
                     mode_result = self.run_command(
-                        sys.executable, '-m', 'agent_harness_kit', 'delivery-mode', preset, cwd=installed,
+                        sys.executable, installed / 'runtime.pyz', 'delivery-mode', preset, cwd=installed,
                     )
                     policy = json.loads(mode_result.stdout)
                     self.assertEqual(policy['preset'], preset)
@@ -156,9 +179,7 @@ class InstalledHostSmokeTests(unittest.TestCase):
                 first_run_text = first_run_skill.read_text(encoding="utf-8").lower()
                 self.assertIn("architecture and folder organization", first_run_text)
                 self.assertIn("coding conventions are optional", first_run_text)
-                project_context_template = (installed / "harness/templates/PROJECT-CONTEXT.md").read_text(encoding="utf-8").lower()
-                self.assertIn("## architecture and project organization", project_context_template)
-                self.assertIn("- folder organization:", project_context_template)
+                self.assertTrue((installed / "resources/templates.zip").is_file())
 
                 active_task = next(
                     line.removeprefix("active_task: ").strip()
@@ -173,7 +194,15 @@ class InstalledHostSmokeTests(unittest.TestCase):
                     installed / "tools" / "validate.py",
                     cwd=host_cwd,
                 )
-                self.assertIn("VALIDATION PASSED", validation.stdout)
+                self.assertIn("RUNTIME VALIDATION PASSED", validation.stdout)
+                cli_validation = self.run_command(
+                    sys.executable,
+                    installed / "runtime.pyz",
+                    "validate",
+                    str(host_cwd),
+                    cwd=host_cwd,
+                )
+                self.assertEqual(json.loads(cli_validation.stdout)["status"], "passed")
 
 
 if __name__ == "__main__":

@@ -3,11 +3,11 @@ name: first-run-discovery
 description: Run adaptive discovery when shared project context is absent, unapproved, stale, or a mature harness needs staged adoption.
 ---
 
-The required welcome also tells the user briefly that standard delivery and the faster hackathon mode for a time-boxed MVP/demo are available. Include the mode preference in the single kickoff question when unanswered; never add a second question or repeat an already explicit choice.
+The required welcome also tells the user briefly that standard delivery (accompanied by default), autonomous end-to-end delivery, and the faster hackathon mode for a time-boxed MVP/demo are available. Include the mode preference in the single kickoff question when unanswered; never add a second question or repeat an already explicit choice.
 
 # First-run discovery
 
-Follow `../../../docs/DELIVERY-MODES.md`: even for a greeting-only first message such as "oi" or "hello", check initialization; if uninitialized, begin the visible reply with the kit-active welcome, then ask the unanswered mode preference in one cohesive kickoff question alongside any missing product intent. Offer standard accompanied delivery (default), autonomous end-to-end delivery, and hackathon. Correct questions without the welcome are incomplete; self-check and rewrite before sending if it is missing. Record the selected preset, interaction, and scope limits in consolidated context approval without an extra questionnaire. Preserve approved choices on resume. Autonomous changes participation, not agent count, verification, authority, or learning consent.
+Follow `../../../docs/DELIVERY-MODES.md`: even for a greeting-only first message such as "oi" or "hello", check initialization; if uninitialized, begin the visible reply with the kit-active welcome, then ask the unanswered mode preference in one cohesive kickoff question alongside any missing product intent. Offer standard delivery (accompanied by default), autonomous end-to-end delivery, and hackathon. Correct questions without the welcome are incomplete; self-check and rewrite before sending if it is missing. Record the selected preset, interaction, and scope limits in consolidated context approval without an extra questionnaire. Preserve approved choices on resume. Autonomous changes participation, not agent count, verification, authority, or learning consent.
 
 Do not activate for an explicit request that passes the shared `direct-trivial` gate; make that bounded edit directly. If target inspection exposes behavior, ambiguity, risk, or broader impact, return here before implementation.
 

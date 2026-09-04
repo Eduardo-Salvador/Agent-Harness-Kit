@@ -13,17 +13,34 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 PROFILES = ROOT / "distribution" / "profiles"
 PROJECT_METADATA = ROOT / "distribution" / "project.json"
-IGNORED = {"work", "outputs", "__pycache__", ".git", "PACKAGE-MANIFEST.json"}
+IGNORED = {"work", "outputs", ".tmp", "__pycache__", ".git", "PACKAGE-MANIFEST.json"}
 FIXED_TIME = (2000, 1, 1, 0, 0, 0)
+def package_module_overlays() -> dict[str, Path]:
+    package_root = ROOT.parent if ROOT.name == "assets" else ROOT / "agent_harness_kit"
+    if not package_root.is_dir():
+        return {}
+    return {
+        f"agent_harness_kit/{path.name}": path
+        for path in sorted(package_root.glob("*.py"))
+        if path.is_file() and not path.is_symlink()
+    }
+
+
+def source_path(relative: str) -> Path:
+    return package_module_overlays().get(relative, ROOT / relative)
 
 
 def source_files() -> list[str]:
-    return sorted(
+    files = {
         p.relative_to(ROOT).as_posix() for p in ROOT.rglob("*")
         if p.is_file() and not any(part in IGNORED for part in p.relative_to(ROOT).parts)
-    )
+    }
+    files.update(package_module_overlays())
+    return sorted(files)
 
 
 def read_profile(name: str, seen: set[str] | None = None) -> tuple[list[str], list[str]]:
@@ -56,6 +73,49 @@ def select(name: str) -> list[str]:
     files = [p for p in source_files() if any(matches(p, rule) for rule in includes)]
     files = [p for p in files if not any(matches(p, rule) for rule in excludes)]
     return sorted(set(files))
+
+
+def runtime_boundary_errors(name: str, source_selection: list[str]) -> list[str]:
+    """Validate the exact compact install closure carried by a source profile."""
+    if name not in {"core", "core-learning"}:
+        return []
+    try:
+        from agent_harness_kit.runtime_profiles import (
+            RUNTIME_FILE_BUDGETS,
+            RUNTIME_FORBIDDEN_PREFIXES,
+            load_runtime_profile,
+            runtime_payload_paths,
+        )
+
+        profile = load_runtime_profile(ROOT, name)
+        payload = runtime_payload_paths(ROOT, name)
+    except (ImportError, OSError, ValueError, json.JSONDecodeError) as exc:
+        return [f"{name} compact runtime profile is invalid: {exc}"]
+
+    errors: list[str] = []
+    budget = RUNTIME_FILE_BUDGETS[name]
+    installed_count = len(payload) + 1  # payload plus PACKAGE-MANIFEST.json
+    if installed_count > budget:
+        errors.append(f"{name} compact runtime has {installed_count} files; budget is {budget}")
+    forbidden = [path for path in payload if path.startswith(RUNTIME_FORBIDDEN_PREFIXES)]
+    if forbidden:
+        errors.append(f"{name} compact runtime contains source-only paths: {forbidden}")
+    if any(path.startswith("harness/templates/") for path in payload):
+        errors.append(f"{name} compact runtime exposes templates as separate client files")
+
+    installer_sources = set(profile["files"]) | set(profile["templates"])
+    installer_sources.update({
+        "agent_harness_kit/runtime_profiles.py",
+        "agent_harness_kit/runtime_resources.py",
+        "agent_harness_kit/runtime_validation.py",
+        "distribution/runtime/core.json",
+        f"distribution/runtime/{name}.json",
+        "tools/install.py",
+    })
+    missing_sources = sorted(installer_sources - set(source_selection))
+    if missing_sources:
+        errors.append(f"{name} source artifact cannot build compact runtime: {missing_sources}")
+    return errors
 
 
 def boundary_errors(name: str, files: list[str]) -> list[str]:
@@ -111,6 +171,7 @@ def boundary_errors(name: str, files: list[str]) -> list[str]:
         missing = set(source_files()) - set(files)
         if missing:
             errors.append(f"full is missing canonical source files: {sorted(missing)}")
+    errors.extend(runtime_boundary_errors(name, files))
     return errors
 
 
@@ -131,7 +192,7 @@ def manifest(
         "files": [
             {
                 "path": path,
-                "sha256": hashlib.sha256(overrides.get(path, ROOT / path).read_bytes()).hexdigest(),
+                "sha256": hashlib.sha256(overrides.get(path, source_path(path)).read_bytes()).hexdigest(),
             }
             for path in files
         ],
@@ -145,7 +206,7 @@ def build_zip(target: Path, name: str, version: str, files: list[str]) -> None:
             info = zipfile.ZipInfo(path, FIXED_TIME)
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o100644 << 16
-            archive.writestr(info, (ROOT / path).read_bytes())
+            archive.writestr(info, source_path(path).read_bytes())
         info = zipfile.ZipInfo("PACKAGE-MANIFEST.json", FIXED_TIME)
         info.compress_type = zipfile.ZIP_DEFLATED
         info.external_attr = 0o100644 << 16
@@ -157,7 +218,7 @@ def build_directory(target: Path, name: str, version: str, files: list[str]) -> 
     for path in files:
         destination = target / path
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / path, destination)
+        shutil.copyfile(source_path(path), destination)
     (target / "PACKAGE-MANIFEST.json").write_bytes(manifest(name, version, files))
 
 

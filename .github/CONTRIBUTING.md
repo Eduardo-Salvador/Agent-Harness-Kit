@@ -51,6 +51,16 @@ python tools/package.py --profile core-learning --output work/core-learning --fo
 python tools/package.py --profile full --output work/full --format directory --check
 ```
 
+Before a release build, run the complete release gate:
+
+```text
+python tools/release_check.py
+```
+
+This command runs the source validator, verifies `validation/qa-manifest.json`, runs the complete unittest suite (never fewer than the manifest's minimum), and checks the `core`, `core-learning`, and `full` profiles using operating-system temporary paths outside the repository. Do not build or publish a release unless it passes.
+
+Every `validation/test_*.py` module and every fixture or auxiliary file under `validation/` must be listed explicitly in `validation/qa-manifest.json`. Update the manifest in the same change whenever that QA tree changes; the release gate rejects unlisted additions and stale entries.
+
 Record any unavailable check or explicit degradation. Do not describe an unexecuted check as passing.
 
 ## Pull requests

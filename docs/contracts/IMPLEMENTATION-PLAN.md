@@ -15,4 +15,4 @@
 - A plan can become `ready` without ceremonial approval when it introduces no consequential decision. Consequential scope, architecture, risk, permission, or budget choices still require their named authority.
 - Replanning preserves execution-budget lineage and graph history.
 
-Use [the canonical template](../../harness/templates/IMPLEMENTATION-PLAN.md) and [writing-plans playbook](../../harness/playbooks/writing-plans.md).
+Materialize `IMPLEMENTATION-PLAN` through the [runtime template catalog](../../harness/TEMPLATES.md), then follow the [writing-plans playbook](../../harness/playbooks/writing-plans.md).

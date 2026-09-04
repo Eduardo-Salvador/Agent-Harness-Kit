@@ -5,15 +5,27 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import os
 import shutil
 import sys
 import uuid
+import zipfile
 from pathlib import Path
 from pathlib import PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from agent_harness_kit.runtime_profiles import (
+    RUNTIME_FILE_BUDGETS,
+    RuntimeProfileError,
+    load_runtime_profile,
+    runtime_payload_paths,
+)
+
 DESTINATION_NAME = "agent-harness-kit"
 BEGIN = "<!-- agent-harness-kit:begin -->"
 END = "<!-- agent-harness-kit:end -->"
@@ -34,12 +46,22 @@ class InstallError(RuntimeError):
     pass
 
 
+RUNTIME_MANIFEST_SCHEMA = "agent-harness-kit.runtime-manifest/v1"
+FIXED_TIME = (2000, 1, 1, 0, 0, 0)
+
+
 def safe_relative(raw: object) -> str:
     if not isinstance(raw, str) or not raw or "\\" in raw:
         raise InstallError(f"unsafe package path: {raw!r}")
     candidate = PurePosixPath(raw)
     normalized = candidate.as_posix()
-    if candidate.is_absolute() or normalized != raw or ".." in candidate.parts or ":" in candidate.parts[0]:
+    if (
+        candidate.is_absolute()
+        or normalized != raw
+        or not candidate.parts
+        or ".." in candidate.parts
+        or ":" in candidate.parts[0]
+    ):
         raise InstallError(f"unsafe package path: {raw!r}")
     return normalized
 
@@ -50,12 +72,13 @@ def package_files(profile: str) -> list[str]:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if manifest.get("profile") != profile:
             raise InstallError(f"package profile is {manifest.get('profile')!r}, not {profile!r}")
+        source_overrides = package_module_overlays()
         files = []
         for entry in manifest.get("files", []):
             path = safe_relative(entry.get("path") if isinstance(entry, dict) else None)
-            source = (ROOT / path).resolve()
+            source = source_overrides.get(path, ROOT / path).resolve()
             try:
-                source.relative_to(ROOT.resolve())
+                source.relative_to(ROOT.parent.resolve() if path in source_overrides else ROOT.resolve())
             except ValueError as exc:
                 raise InstallError(f"package path escapes source: {path}") from exc
             if not source.is_file():
@@ -88,6 +111,122 @@ def package_module_overlays() -> dict[str, Path]:
         for source in sorted(package_root.glob("*.py"))
         if source.is_file() and not source.is_symlink()
     }
+
+
+def runtime_files(profile: str) -> list[str]:
+    """Return the exact compact payload, including generated runtime resources."""
+    if profile not in {"core", "core-learning"}:
+        return package_files(profile)
+    try:
+        return runtime_payload_paths(ROOT, profile)
+    except (RuntimeProfileError, OSError, json.JSONDecodeError) as exc:
+        raise InstallError(str(exc)) from exc
+
+
+def _zip_entry(archive: zipfile.ZipFile, name: str, data: bytes) -> None:
+    info = zipfile.ZipInfo(name, FIXED_TIME)
+    info.compress_type = zipfile.ZIP_DEFLATED
+    info.external_attr = 0o100644 << 16
+    archive.writestr(info, data)
+
+
+def runtime_archive_sources() -> dict[str, Path]:
+    """Return every Python source incorporated into the portable runtime."""
+    package_root = ROOT.parent if ROOT.name == "assets" else ROOT / "agent_harness_kit"
+    if not (package_root / "cli.py").is_file():
+        raise InstallError(f"runtime package modules are missing from {package_root}")
+    return {
+        f"agent_harness_kit/{source.name}": source
+        for source in sorted(package_root.glob("*.py"))
+        if source.is_file() and not source.is_symlink()
+    }
+
+
+def verify_compact_source_closure(profile: str, resolved: dict[str, object]) -> None:
+    """Verify a generated package before any compact artifacts are derived from it."""
+    if not (ROOT / "PACKAGE-MANIFEST.json").is_file():
+        return
+    declared = set(package_files(profile))
+    declared.discard("PACKAGE-MANIFEST.json")
+    required = set(resolved["files"]) | set(resolved["templates"])
+    required.update(runtime_archive_sources())
+    required.update({
+        "VERSION",
+        "tools/install.py",
+        "distribution/runtime/core.json",
+        f"distribution/runtime/{profile}.json",
+        "harness/templates/ROOT-AGENTS-BRIDGE.md",
+        "harness/templates/ROOT-CLAUDE-BRIDGE.md",
+    })
+    missing = sorted(required - declared)
+    if missing:
+        raise InstallError(f"package manifest does not declare compact runtime sources: {missing}")
+
+
+def runtime_archive() -> bytes:
+    """Build a deterministic portable zipapp containing the CLI runtime modules."""
+    stream = io.BytesIO()
+    with zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+        _zip_entry(
+            archive,
+            "__main__.py",
+            b"from agent_harness_kit.cli import main\nraise SystemExit(main())\n",
+        )
+        for relative, source in sorted(runtime_archive_sources().items()):
+            _zip_entry(archive, relative, source.read_bytes())
+    return stream.getvalue()
+
+
+def template_archive(profile: str) -> tuple[bytes, list[dict[str, str]]]:
+    """Pack canonical templates without exposing dozens of client files."""
+    resolved = load_runtime_profile(ROOT, profile)
+    stream = io.BytesIO()
+    entries: list[dict[str, str]] = []
+    members: set[str] = set()
+    with zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+        for relative in resolved["templates"]:
+            data = (ROOT / relative).read_bytes()
+            member = Path(relative).name
+            if member in members:
+                raise InstallError(f"duplicate template archive member: {member}")
+            members.add(member)
+            _zip_entry(archive, member, data)
+            entries.append({"path": member, "sha256": hashlib.sha256(data).hexdigest()})
+    return stream.getvalue(), entries
+
+
+def generated_runtime_files(profile: str) -> tuple[dict[str, bytes], list[dict[str, str]]]:
+    templates, template_entries = template_archive(profile)
+    return {
+        "resources/templates.zip": templates,
+        "runtime.pyz": runtime_archive(),
+    }, template_entries
+
+
+def runtime_manifest(
+    profile: str,
+    version: str,
+    static_files: list[str],
+    generated: dict[str, bytes],
+    template_entries: list[dict[str, str]],
+) -> bytes:
+    entries = []
+    for relative in sorted(set(static_files) | set(generated)):
+        data = generated.get(relative)
+        digest = hashlib.sha256(data if data is not None else (ROOT / relative).read_bytes()).hexdigest()
+        entries.append({"path": relative, "sha256": digest})
+    payload = {
+        "schema": RUNTIME_MANIFEST_SCHEMA,
+        "name": "Agent Harness Kit",
+        "slug": "agent-harness-kit",
+        "profile": profile,
+        "version": version,
+        "project_learning_activation": "not-activated",
+        "file_budget": RUNTIME_FILE_BUDGETS[profile],
+        "files": entries,
+        "resources": {"templates": template_entries},
+    }
+    return (json.dumps(payload, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
 def newline_for(data: bytes) -> str:
@@ -136,11 +275,34 @@ def install(profile: str, host: Path, dry_run: bool) -> list[str]:
     destination = host_root / DESTINATION_NAME
     if destination.exists() or destination.is_symlink():
         raise InstallError(f"destination already exists: {destination}")
-    files = package_files(profile)
-    source_overrides = package_module_overlays()
-    files = sorted(set(files) | set(source_overrides))
+    compact_runtime = profile in {"core", "core-learning"}
+    generated: dict[str, bytes] = {}
+    template_entries: list[dict[str, str]] = []
+    if compact_runtime:
+        try:
+            resolved = load_runtime_profile(ROOT, profile)
+            verify_compact_source_closure(profile, resolved)
+            static_files = list(resolved["files"])
+            generated, template_entries = generated_runtime_files(profile)
+        except (RuntimeProfileError, OSError, json.JSONDecodeError, zipfile.BadZipFile) as exc:
+            raise InstallError(f"compact runtime {profile} is invalid: {exc}") from exc
+        source_overrides: dict[str, Path] = {}
+        files = sorted(set(static_files) | set(generated))
+        installed_count = len(files) + 1
+        if installed_count > RUNTIME_FILE_BUDGETS[profile]:
+            raise InstallError(
+                f"compact runtime {profile} has {installed_count} files; "
+                f"budget is {RUNTIME_FILE_BUDGETS[profile]}"
+            )
+    else:
+        files = package_files(profile)
+        source_overrides = package_module_overlays()
+        files = sorted(set(files) | set(source_overrides))
     generated_manifest: bytes | None = None
-    if "PACKAGE-MANIFEST.json" not in files:
+    if compact_runtime:
+        version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+        generated_manifest = runtime_manifest(profile, version, static_files, generated, template_entries)
+    elif "PACKAGE-MANIFEST.json" not in files:
         sys.path.insert(0, str(ROOT / "tools"))
         from package import manifest
 
@@ -161,20 +323,26 @@ def install(profile: str, host: Path, dry_run: bool) -> list[str]:
         staged_distribution.mkdir()
         for relative in files:
             relative = safe_relative(relative)
-            source = source_overrides.get(relative, ROOT / relative).resolve()
             target = (staged_distribution / relative).resolve()
+            generated_data = generated.get(relative)
+            source = source_overrides.get(relative, ROOT / relative).resolve() if generated_data is None else None
             try:
-                if relative in source_overrides:
-                    source.relative_to(ROOT.parent.resolve())
-                else:
-                    source.relative_to(ROOT.resolve())
                 target.relative_to(staged_distribution.resolve())
+                if source is not None:
+                    if relative in source_overrides:
+                        source.relative_to(ROOT.parent.resolve())
+                    else:
+                        source.relative_to(ROOT.resolve())
             except ValueError as exc:
                 raise InstallError(f"package path escapes installation boundary: {relative}") from exc
-            if source.is_symlink() or not source.is_file():
+            if source is not None and (source.is_symlink() or not source.is_file()):
                 raise InstallError(f"source must be a regular file: {relative}")
             target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source, target)
+            if generated_data is None:
+                assert source is not None
+                shutil.copyfile(source, target)
+            else:
+                target.write_bytes(generated_data)
         if generated_manifest is not None:
             (staged_distribution / "PACKAGE-MANIFEST.json").write_bytes(generated_manifest)
         os.replace(staged_distribution, destination)
@@ -203,10 +371,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Install Agent Harness Kit into a host project.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""profiles:
-  core           Delivery, graph, status, review, and validation.
-  core-learning  Core plus optional, consented project-learning support.
-  full           Core-learning plus the separate harness-engineering study pack.
+epilog="""profiles:
+  core           Compact delivery, graph, status, review, and validation runtime.
+  core-learning  Compact core plus optional, consented project-learning support.
+  full           Expanded source, QA, media, learning, and harness-engineering study pack.
 
 examples:
   python tools/install.py --profile core --host ../my-project --dry-run

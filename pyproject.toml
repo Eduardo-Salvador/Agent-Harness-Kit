@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "agent-harness-kit-cli"
-version = "0.7.3"
+version = "0.7.4"
 description = "Artifact-driven development harness for coding agents"
 readme = { file = "docs/PYPI-README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"

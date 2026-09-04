@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import subprocess
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -14,6 +15,8 @@ from . import codex_dispatch
 from . import delivery_modes
 from . import preflight
 from . import request_router
+from . import runtime_resources
+from . import runtime_validation
 from . import scheduler
 from . import state_runtime
 
@@ -38,6 +41,51 @@ def installer_module() -> ModuleType:
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def packager_module() -> ModuleType:
+    root = source_root()
+    path = root / "tools" / "package.py"
+    spec = importlib.util.spec_from_file_location("agent_harness_kit_embedded_packager", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load packager from {path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def installed_kit_root(path: Path) -> Path | None:
+    root = path.expanduser().resolve()
+    candidates = (root, root / "agent-harness-kit")
+    for candidate in candidates:
+        if (candidate / "PACKAGE-MANIFEST.json").is_file():
+            return candidate
+    return None
+
+
+def installed_manifest(kit_root: Path) -> dict:
+    path = kit_root / "PACKAGE-MANIFEST.json"
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise RuntimeError(f"installed manifest is unreadable: {exc}") from exc
+    if not isinstance(payload, dict):
+        raise RuntimeError("installed manifest root must be an object")
+    return payload
+
+
+def run_expanded_validator(kit_root: Path, *, capture_output: bool) -> subprocess.CompletedProcess[str]:
+    validator = kit_root / "tools" / "validate.py"
+    if not validator.is_file():
+        raise RuntimeError(f"expanded validator is missing: {validator}")
+    return subprocess.run(
+        [sys.executable, str(validator)],
+        cwd=kit_root,
+        text=True,
+        capture_output=capture_output,
+        check=False,
+    )
 
 
 def positive_integer(value: str) -> int:
@@ -84,13 +132,26 @@ def build_parser() -> argparse.ArgumentParser:
         "--profile",
         choices=("core", "core-learning", "full"),
         default="core",
-        help="content profile (default: core)",
+        help="compact core by default; full is the expanded source and QA profile",
     )
     install.add_argument("--dry-run", action="store_true", help="preview without changing files")
+
+    export = commands.add_parser("export", help="build a portable expanded profile outside the source repository")
+    export.add_argument("output", type=Path, help="directory that will receive the portable artifact")
+    export.add_argument("--profile", choices=("core", "core-learning", "full"), default="full")
+    export.add_argument("--format", choices=("zip", "directory"), default="zip")
 
     commands.add_parser("prompt", help="print the fallback activation prompt")
     doctor = commands.add_parser("doctor", help="check whether a project has the expected entrypoints")
     doctor.add_argument("path", nargs="?", type=Path, default=Path.cwd(), help="project directory (default: current directory)")
+    validate = commands.add_parser("validate", help="validate a compact client installation or the source checkout")
+    validate.add_argument("path", nargs="?", type=Path, default=Path.cwd(), help="project or kit directory")
+    scaffold = commands.add_parser("scaffold", help="materialize one canonical template from the local resource pack")
+    scaffold.add_argument("template", nargs="?", help="template name such as PROJECT-CONTEXT")
+    scaffold.add_argument("--path", type=Path, default=Path.cwd(), help="host project or installed kit path")
+    scaffold.add_argument("--output", type=Path, help="host-relative destination")
+    scaffold.add_argument("--force", action="store_true", help="replace an existing regular file")
+    scaffold.add_argument("--list", action="store_true", help="list available templates")
     schedule = commands.add_parser("schedule", help="compute the next safe parallel task batch")
     schedule.add_argument("graph", type=Path, help="TASK-GRAPH.md or graph JSON path")
     schedule.add_argument("--capacity", type=int, required=True, help="host-proven maximum concurrent implementation contexts")
@@ -156,6 +217,25 @@ def doctor(path: Path) -> int:
         for item in missing:
             print(f"MISSING {item}")
         return 1
+    kit = root / "agent-harness-kit"
+    try:
+        manifest = installed_manifest(kit)
+        if manifest.get("schema") == runtime_validation.RUNTIME_MANIFEST_SCHEMA:
+            errors = runtime_validation.validate_runtime_install(kit, root)
+            if errors:
+                print("Agent Harness Kit entrypoints exist but runtime integrity failed.")
+                for error in errors:
+                    print(f"ERROR {error}")
+                return 1
+        else:
+            validation = run_expanded_validator(kit, capture_output=True)
+            if validation.returncode != 0:
+                print("Agent Harness Kit entrypoints exist but expanded validation failed.")
+                print((validation.stdout or validation.stderr).strip())
+                return 1
+    except (OSError, RuntimeError) as exc:
+        print(f"Agent Harness Kit entrypoints exist but validation could not run: {exc}")
+        return 1
     print(f"Agent Harness Kit is ready in {root}")
     return 0
 
@@ -168,6 +248,92 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "delivery-mode":
         print(json.dumps(delivery_modes.resolve_delivery_mode(args.preset), indent=2))
+        return 0
+    if args.command == "validate":
+        requested = args.path.expanduser().resolve()
+        kit = installed_kit_root(requested)
+        if kit is not None:
+            try:
+                manifest = installed_manifest(kit)
+                if manifest.get("schema") == runtime_validation.RUNTIME_MANIFEST_SCHEMA:
+                    errors = runtime_validation.validate_runtime_install(kit, kit.parent)
+                    if errors:
+                        print(json.dumps({"status": "failed", "errors": errors}, indent=2, ensure_ascii=False))
+                        return 1
+                    print(json.dumps({
+                        "status": "passed",
+                        "profile": manifest.get("profile"),
+                        "version": manifest.get("version"),
+                        "files": len(manifest.get("files", [])),
+                    }, indent=2, ensure_ascii=False))
+                    return 0
+                return run_expanded_validator(kit, capture_output=False).returncode
+            except (OSError, RuntimeError) as exc:
+                print(f"ERROR: {exc}", file=sys.stderr)
+                return 2
+        validator = requested / "tools" / "validate.py"
+        if not requested.is_dir() or not validator.is_file():
+            print(
+                f"ERROR: no compact installation or source checkout found at {requested}",
+                file=sys.stderr,
+            )
+            return 2
+        result = subprocess.run([sys.executable, str(validator)], cwd=requested, check=False)
+        return result.returncode
+    if args.command == "scaffold":
+        kit = installed_kit_root(args.path)
+        if kit is None:
+            print("ERROR: compact Agent Harness Kit installation not found", file=sys.stderr)
+            return 2
+        if args.list:
+            try:
+                for name in runtime_resources.template_names(kit):
+                    print(name)
+            except (OSError, runtime_resources.RuntimeResourceError) as exc:
+                print(f"ERROR: {exc}", file=sys.stderr)
+                return 2
+            return 0
+        if not args.template or args.output is None:
+            print("ERROR: scaffold requires TEMPLATE and --output, or --list", file=sys.stderr)
+            return 2
+        host = kit.parent
+        try:
+            created = runtime_resources.scaffold_template(
+                kit, args.template, args.output, host_root=host, force=args.force,
+            )
+        except (FileExistsError, OSError, runtime_resources.RuntimeResourceError) as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 2
+        print(f"CREATED {created}")
+        return 0
+    if args.command == "export":
+        try:
+            packager = packager_module()
+            files = packager.select(args.profile)
+            errors = packager.boundary_errors(args.profile, files)
+            if errors:
+                raise RuntimeError("; ".join(errors))
+            root = packager.ROOT
+            metadata = json.loads(packager.PROJECT_METADATA.read_text(encoding="utf-8"))
+            version = (root / metadata["version_file"]).read_text(encoding="utf-8").strip()
+            output = args.output.expanduser().resolve()
+            try:
+                output.relative_to(root.resolve())
+            except ValueError:
+                pass
+            else:
+                raise RuntimeError("output must be outside the source repository")
+            output.mkdir(parents=True, exist_ok=True)
+            suffix = ".zip" if args.format == "zip" else ""
+            target = output / f"{metadata['slug']}-{version}-{args.profile}{suffix}"
+            if target.exists():
+                raise RuntimeError(f"target already exists: {target}")
+            builder = packager.build_zip if args.format == "zip" else packager.build_directory
+            builder(target, args.profile, version, files)
+        except (OSError, RuntimeError, ValueError, json.JSONDecodeError) as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 2
+        print(f"WROTE {target}")
         return 0
     if args.command == "route":
         if not args.request.strip():

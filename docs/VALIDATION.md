@@ -6,6 +6,18 @@ Run from the repository root:
 python tools/validate.py
 ```
 
+Before any release build, run the blocking aggregate gate:
+
+```text
+python tools/release_check.py
+```
+
+`validation/qa-manifest.json` explicitly inventories every test module and fixture/support file. The release gate rejects unlisted additions, stale entries, a test count below the recorded floor, a source-validator failure, or any `core`, `core-learning`, or `full` boundary failure. The tests and fixtures remain in the source/export artifacts; they are intentionally not copied into the default client runtime.
+
+## QA inventory decision
+
+The compact-runtime review classified all 20 current test modules and 59 fixture/support files as source or release QA, not client-runtime dependencies. No test tree was deleted merely to make the installation look smaller. The retained groups cover governance and contract mutations, deterministic runtime primitives, installer/CLI/external-host behavior, compact/full distribution boundaries, native dispatch and concurrency evidence, media integrity, and release gating. Obsolescence is now explicit: removing or adding a QA file requires the same-change manifest update, and reducing executable coverage below the recorded test floor blocks the release.
+
 The validator uses only the Python 3 standard library and does not modify files. It checks:
 
 - required root entrypoints, native Codex skills, native Claude Code skills/subagents, roles, templates, playbooks, adapters, examples, and learning-pack modules;
@@ -47,7 +59,15 @@ The validator uses only the Python 3 standard library and does not modify files.
 - embedded-installation documentation and stable managed bridge markers for root `AGENTS.md` and `CLAUDE.md`;
 - migration coverage, classifications, selector expansion, source identities, destinations/backlinks, unresolved ownership, semantic reviewers, and cutover authority.
 
-Inside a generated directory bundle, `PACKAGE-MANIFEST.json` selects bundle-aware required files and the validator checks only that profile's packaging boundary. This lets each copied profile validate without requiring intentionally omitted optional content.
+Inside an expanded generated directory bundle, `PACKAGE-MANIFEST.json` selects bundle-aware required files and the source validator checks only that profile's packaging boundary. This lets each copied source profile validate without requiring intentionally omitted optional content.
+
+Inside a compact client installation, run:
+
+```text
+agent-harness validate
+```
+
+The compact validator checks the exact file inventory and SHA-256 hashes, profile and file-budget declaration, forbidden source-only directories, the internal template-pack inventory and hashes, the executable `runtime.pyz` structure, closure of every relative Markdown link, and both managed root bridges. This is an installed-runtime integrity check, not a replacement for source QA. Release tests prove the runtime builder and external-host flow before publication, so client projects do not need to carry the test suite to retain that release assurance.
 
 All profiles must contain both native platform entrypoints and core workflow extensions. `core` must exclude platform-specific project-learning skills/agents; `core-learning` and `full` include them without activating learning. These checks are structural filesystem conformance, not proof that installed Codex or Claude Code binaries executed a session.
 

@@ -17,6 +17,9 @@ from urllib.parse import unquote
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+RUNTIME_ARCHIVE = ROOT / "runtime.pyz"
+if RUNTIME_ARCHIVE.is_file() and str(RUNTIME_ARCHIVE) not in sys.path:
+    sys.path.insert(0, str(RUNTIME_ARCHIVE))
 
 from agent_harness_kit.readiness import acceptance_declaration_blocker, completion_blocker, product_approved, readiness_blocker
 
@@ -178,6 +181,19 @@ REQUIRED_FILES = [
     ".claude/skills/governed-review/SKILL.md", ".claude/skills/parallel-dispatch/SKILL.md", ".claude/skills/frontend-screen/SKILL.md", ".claude/skills/project-learning/SKILL.md",
     ".claude/agents/discovery-interviewer.md", ".claude/agents/task-specialist.md",
     ".claude/agents/independent-reviewer.md", ".claude/agents/learning-assessor.md",
+]
+
+REQUIRED_FILES += [
+    "harness/TEMPLATES.md",
+    "agent_harness_kit/runtime_profiles.py",
+    "agent_harness_kit/runtime_resources.py",
+    "agent_harness_kit/runtime_validation.py",
+    "distribution/runtime/core.json",
+    "distribution/runtime/core-learning.json",
+    "tools/release_check.py",
+    "validation/qa-manifest.json",
+    "validation/test_release_check.py",
+    "validation/test_runtime_distribution.py",
 ]
 
 TEMPLATE_RULES = {
@@ -1895,6 +1911,17 @@ def validate_native_integration() -> list[str]:
 
 
 def validate_repository() -> list[str]:
+    runtime_manifest_path = ROOT / "PACKAGE-MANIFEST.json"
+    if runtime_manifest_path.is_file():
+        try:
+            runtime_manifest = json.loads(runtime_manifest_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            runtime_manifest = None
+        if isinstance(runtime_manifest, dict) and runtime_manifest.get("schema") == "agent-harness-kit.runtime-manifest/v1":
+            from agent_harness_kit.runtime_validation import validate_runtime_install
+
+            return validate_runtime_install(ROOT, ROOT.parent)
+
     errors: list[str] = []
     project_metadata_path = ROOT / "distribution" / "project.json"
     project_metadata = {}
@@ -1962,6 +1989,18 @@ def validate_repository() -> list[str]:
             ".claude/agents/task-specialist.md",
             ".claude/agents/independent-reviewer.md",
             "validation/native-integration.json",
+        ]
+        required_files += [
+            "harness/TEMPLATES.md",
+            "agent_harness_kit/runtime_profiles.py",
+            "agent_harness_kit/runtime_resources.py",
+            "agent_harness_kit/runtime_validation.py",
+            "distribution/runtime/core.json",
+            "distribution/runtime/core-learning.json",
+            "tools/release_check.py",
+            "validation/qa-manifest.json",
+            "validation/test_release_check.py",
+            "validation/test_runtime_distribution.py",
         ]
         for entry in package_manifest.get("files", []):
             path = entry.get("path") if isinstance(entry, dict) else None
@@ -2299,6 +2338,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                 print(f"- {error}")
             return 1
         print("HOST INTEGRATION VALIDATION PASSED: migration coverage, backlinks, snapshot identities, and cutover gates")
+        return 0
+    package_manifest = load_package_manifest()
+    if isinstance(package_manifest, dict) and package_manifest.get("schema") == "agent-harness-kit.runtime-manifest/v1":
+        if args.scope != "repository" or args.task is not None:
+            print("RUNTIME VALIDATION SCOPE ERROR: compact installations support repository scope only")
+            return 2
+        runtime_errors = validate_repository()
+        if runtime_errors:
+            print(f"RUNTIME VALIDATION FAILED ({len(runtime_errors)} error(s))")
+            print(f"ERROR CATEGORIES: {summarize_error_categories(runtime_errors)}")
+            for error in runtime_errors:
+                print(f"- {error}")
+            return 1
+        print(f"RUNTIME VALIDATION PASSED: {len(package_manifest.get('files', []))} hash-verified files, bridges, template pack, and client boundary")
         return 0
     try:
         selection = resolve_scope(args.scope, args.task)

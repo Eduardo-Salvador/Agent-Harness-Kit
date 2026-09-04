@@ -22,7 +22,10 @@ class InstallerTests(unittest.TestCase):
         return temporary, Path(temporary.name)
 
     def install(self, host: Path, dry_run: bool = False) -> list[str]:
-        with patch.object(INSTALLER, "package_files", return_value=["AGENTS.md"]):
+        profile = {"files": ["AGENTS.md"], "templates": []}
+        with patch.object(INSTALLER, "load_runtime_profile", return_value=profile), patch.object(
+            INSTALLER, "generated_runtime_files", return_value=({}, [])
+        ):
             return INSTALLER.install("core", host, dry_run)
 
     def test_preserves_entrypoints_and_installs_profile(self) -> None:
@@ -64,6 +67,7 @@ class InstallerTests(unittest.TestCase):
         self.assertTrue(manifest_path.is_file())
         data = json.loads(manifest_path.read_text(encoding="utf-8"))
         self.assertEqual(data["profile"], "core")
+        self.assertEqual(data["schema"], "agent-harness-kit.runtime-manifest/v1")
         self.assertEqual(data["project_learning_activation"], "not-activated")
         self.assertEqual([entry["path"] for entry in data["files"]], ["AGENTS.md"])
 
@@ -106,7 +110,7 @@ class InstallerTests(unittest.TestCase):
             INSTALLER.install("core", ROOT, True)
 
     def test_rejects_traversal_and_absolute_paths(self) -> None:
-        unsafe = ("../escape.txt", "/absolute.txt", "C:/absolute.txt", "nested\\escape.txt")
+        unsafe = (".", "../escape.txt", "/absolute.txt", "C:/absolute.txt", "nested\\escape.txt")
         for value in unsafe:
             with self.subTest(value=value):
                 with self.assertRaises(INSTALLER.InstallError):

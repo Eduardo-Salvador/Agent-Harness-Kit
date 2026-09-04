@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Versão 0.7.3" src="https://img.shields.io/badge/vers%C3%A3o-0.7.3-4967ff">
+  <img alt="Versão 0.7.4" src="https://img.shields.io/badge/vers%C3%A3o-0.7.4-4967ff">
   <img alt="Python 3.10 ou mais recente" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Instale com uv, pipx ou pip" src="https://img.shields.io/badge/instalador-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Compatível com Codex" src="https://img.shields.io/badge/agente-Codex-11131a">
@@ -20,7 +20,7 @@
   <a href="README.md">English</a> · <a href="#comece-aqui">Comece aqui</a> · <a href="#escolha-o-modo-de-entrega">Modos</a> · <a href="docs/ARCHITECTURE.md">Arquitetura</a>
 </p>
 
-**Versão do código-fonte: `0.7.3`.** Escolha entrega acompanhada (padrão), execução autônoma de ponta a ponta ou hackathon. Os três modos mantêm condições explícitas de conclusão, evidências e limites de escopo/autoridade. O novo comando `delivery-mode` apenas mostra a política; o agente registra a escolha aprovada no contexto do projeto.
+**Versão do código-fonte: `0.7.4`.** O runtime padrão `core` agora usa 79 arquivos contidos no projeto cliente, preservando toda a QA de código-fonte e os gates de release. Escolha entrega acompanhada (padrão), execução autônoma de ponta a ponta ou hackathon; os três modos mantêm condições explícitas de conclusão, evidências e limites de escopo e autoridade.
 
 > **Um harness maduro o bastante para saber quando sair do caminho.** O router nativo não trata todo prompt como um grande projeto: gates determinísticos de segurança separam edições estáticas imediatas, pequenas mudanças verificadas em modo “vibe”, trabalho gerenciado pelo grafo e engenharia completa. A IA só é consultada diante de ambiguidade real; risco, checks com falha ou crescimento de escopo promovem automaticamente o trabalho, sem deixar a velocidade furar a segurança.
 
@@ -63,6 +63,28 @@ Instruções que já existiam na raiz são preservadas fora de um pequeno bloco 
 Depois de instalar, basta mandar **“oi”** em um novo contexto do Codex ou Claude Code aberto na raiz do projeto: se o contexto do projeto ainda não foi aprovado, o agente deve dar a mensagem de abertura e perguntar se você prefere acompanhado, autônomo ou hackathon. Em projeto já iniciado, preserva o modo e não repete o onboarding. Isso depende do host carregar as instruções da raiz; o `doctor` verifica a instalação, não garante a obediência do modelo.
 
 > Quer apenas conferir antes? Execute `agent-harness install --dry-run`. Instruções existentes na raiz são preservadas por blocos gerenciados e coexistência com namespace.
+
+## Distribuição compacta no projeto cliente
+
+> Status do release: a versão de código-fonte `0.7.4` contém a distribuição compacta descrita aqui. O pacote `0.7.3` atualmente publicado no PyPI ainda não contém essas mudanças.
+
+O perfil `core`, usado por padrão, instala no máximo 80 arquivos contidos em `agent-harness-kit/`. O manifesto atual contabiliza 79 arquivos, incluindo `PACKAGE-MANIFEST.json`. O projeto cliente não recebe as árvores `validation/`, `media/`, `examples/`, `benchmarks/` ou `.github/`, que pertencem ao repositório de desenvolvimento. Toda a QA continua neste repositório e no gate de release, portanto o payload menor no cliente não reduz o padrão de qualidade.
+
+Os templates canônicos de runtime são empacotados em `resources/templates.zip`. A instalação compacta pode validar a si mesma, listar os templates disponíveis e materializar somente o template necessário para o projeto:
+
+```bash
+agent-harness validate
+agent-harness scaffold --list
+agent-harness scaffold PROJECT-CONTEXT --output harness-state/PROJECT-CONTEXT.md
+```
+
+O perfil `full` é opt-in. Para obter um pacote portátil expandido ou realizar uma auditoria, exporte-o fora da instalação do projeto cliente:
+
+```bash
+agent-harness export <dir> --profile full
+```
+
+Escolher `core` muda o volume instalado, não o padrão de verificação ou de release.
 
 ## O que ele efetivamente faz
 
@@ -163,9 +185,9 @@ No trabalho gerenciado pelo grafo, atualizações rotineiras são curtas; pedido
 
 | Perfil | Inclui | Melhor uso |
 | --- | --- | --- |
-| `core` | Entrega, grafo, status, review e validação | Maioria dos projetos |
+| `core` | Runtime compacto de entrega, grafo, status, review e validação | Instalação padrão nos projetos |
 | `core-learning` | `core` mais aprendizado opcional do projeto | Prática guiada e debriefings |
-| `full` | `core-learning` mais o pacote separado de estudo do harness | Estudar a própria engenharia de harness |
+| `full` | `core-learning` expandido mais o pacote separado de estudo do harness | Exportação opt-in, inspeção ou estudo da engenharia do harness |
 
 O aprendizado nunca é ativado silenciosamente. O usuário escolhe o caminho Markdown, local do Obsidian, alvo/MCP do Notion ou outro destino exato antes da criação de qualquer nota.
 

@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version 0.7.3" src="https://img.shields.io/badge/version-0.7.3-4967ff">
+  <img alt="Version 0.7.4" src="https://img.shields.io/badge/version-0.7.4-4967ff">
   <img alt="Python 3.10 or newer" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Install with uv, pipx, or pip" src="https://img.shields.io/badge/installer-uv%20%7C%20pipx%20%7C%20pip-DE5FE9">
   <img alt="Codex compatible" src="https://img.shields.io/badge/agent-Codex-11131a">
@@ -20,7 +20,7 @@
   <a href="README.pt-BR.md">Português (Brasil)</a> · <a href="#start-here">Start here</a> · <a href="#choose-your-delivery-mode">Modes</a> · <a href="docs/ARCHITECTURE.md">Architecture</a>
 </p>
 
-**Source version: `0.7.3`.** Choose accompanied delivery (default), autonomous end-to-end execution, or hackathon. All three keep explicit completion conditions, evidence, and scope/authority limits. A new read-only `delivery-mode` command previews their policies; the agent records the approved choice in project context.
+**Source version: `0.7.4`.** The default `core` client runtime now uses 79 contained files while keeping source QA and release gates intact. Choose accompanied delivery (default), autonomous end-to-end execution, or hackathon; all three keep explicit completion conditions, evidence, and scope/authority limits.
 
 > **A harness mature enough to know when to get out of the way.** Four execution lanes stay separate from `none|light|full` assurance. Failed checks trigger bounded recovery; full orchestration is reserved for real coordination, human governance, required audit, model insufficiency, or unresolved consequential ambiguity.
 
@@ -63,6 +63,28 @@ Existing root instructions are preserved outside a small managed bridge block. R
 After installing, a simple **“hi”** in a fresh Codex or Claude Code context at the project root should trigger the welcome and a question about accompanied, autonomous, or hackathon delivery when project context is not yet approved. An initialized project keeps its saved mode and does not repeat onboarding. This depends on the host loading root instructions; `doctor` checks installation, not model obedience.
 
 > Prefer to preview first? Run `agent-harness install --dry-run`. Existing root instructions are preserved through managed blocks and namespaced coexistence.
+
+## Compact client distribution
+
+> Release status: source version `0.7.4` contains the compact distribution described here. The currently published PyPI `0.7.3` package does not contain it yet.
+
+The default `core` profile installs no more than 80 contained files inside `agent-harness-kit/`. The current manifest accounts for 79 files, including `PACKAGE-MANIFEST.json`. Client projects do not receive the repository-only `validation/`, `media/`, `examples/`, `benchmarks/`, or `.github/` trees. All QA remains in this repository and in the release gate, so the smaller client payload does not lower the quality bar.
+
+Canonical runtime templates are packaged in `resources/templates.zip`. The compact installation can validate itself, list available templates, and materialize only the template needed by the project:
+
+```bash
+agent-harness validate
+agent-harness scaffold --list
+agent-harness scaffold PROJECT-CONTEXT --output harness-state/PROJECT-CONTEXT.md
+```
+
+The `full` profile is opt-in. For an expanded portable package or an audit, export it outside the client installation:
+
+```bash
+agent-harness export <dir> --profile full
+```
+
+Choosing `core` changes the installed footprint, not the verification or release standard.
 
 ## What it actually does
 
@@ -163,9 +185,9 @@ For graph-managed work, routine progress updates are concise; explicit status vi
 
 | Profile | Includes | Best for |
 | --- | --- | --- |
-| `core` | Delivery, graph, status, review, validation | Most projects |
+| `core` | Compact delivery, graph, status, review, and validation runtime | Default project installation |
 | `core-learning` | `core` plus optional project learning | Guided practice and debriefs |
-| `full` | `core-learning` plus the separate harness study pack | Studying harness engineering itself |
+| `full` | Expanded `core-learning` plus the separate harness study pack | Opt-in export, inspection, or harness engineering study |
 
 Learning support is never silently activated. The user chooses the exact Markdown path, Obsidian location, Notion target/MCP, or another destination before any note is created.
 

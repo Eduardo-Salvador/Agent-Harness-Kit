@@ -1,6 +1,6 @@
 # Request routing
 
-Run this playbook before mutating work or entering Harness ceremony. Read-only audits, explanations, status inspections, and diagnosis do not trigger first-run; route them directly to bounded inspection. Its purpose is to spend less effort classifying a request than completing it. After selecting a lane, independently choose `assurance: none|light|full` using [adaptive execution](../../docs/ADAPTIVE-EXECUTION.md).
+Run this playbook before mutating work or entering Harness ceremony. Read-only audits, explanations, status inspections, and diagnosis do not trigger first-run; route them directly to bounded inspection. Its purpose is to spend less effort classifying a request than completing it. The exchange shape uses `REQUEST-ROUTE` from the [runtime template catalog](../TEMPLATES.md), although fast routes do not persist it. After selecting a lane, independently choose `assurance: none|light|full` using [adaptive execution](../../docs/ADAPTIVE-EXECUTION.md).
 
 ## Route in order
 

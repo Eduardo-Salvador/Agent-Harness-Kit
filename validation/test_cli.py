@@ -152,10 +152,97 @@ class CliTests(unittest.TestCase):
             (root / "agent-harness-kit").mkdir()
             for item in (root / "AGENTS.md", root / "CLAUDE.md", root / "agent-harness-kit" / "PACKAGE-MANIFEST.json"):
                 item.write_text("ok\n", encoding="utf-8")
+            (root / "agent-harness-kit" / "PACKAGE-MANIFEST.json").write_text(
+                json.dumps({"schema": "agent-harness-kit.runtime-manifest/v1"}), encoding="utf-8",
+            )
             output = io.StringIO()
-            with contextlib.redirect_stdout(output):
+            with patch.object(cli.runtime_validation, "validate_runtime_install", return_value=[]), contextlib.redirect_stdout(output):
                 self.assertEqual(cli.doctor(root), 0)
             self.assertIn("is ready", output.getvalue())
+
+    def test_doctor_rejects_runtime_integrity_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "agent-harness-kit").mkdir()
+            for item in (root / "AGENTS.md", root / "CLAUDE.md", root / "agent-harness-kit" / "PACKAGE-MANIFEST.json"):
+                item.write_text("ok\n", encoding="utf-8")
+            (root / "agent-harness-kit" / "PACKAGE-MANIFEST.json").write_text(
+                json.dumps({"schema": "agent-harness-kit.runtime-manifest/v1"}), encoding="utf-8",
+            )
+            output = io.StringIO()
+            with patch.object(
+                cli.runtime_validation, "validate_runtime_install", return_value=["runtime.file-hash: AGENTS.md"]
+            ), contextlib.redirect_stdout(output):
+                self.assertEqual(cli.doctor(root), 1)
+            self.assertIn("runtime.file-hash", output.getvalue())
+
+    def test_doctor_delegates_expanded_profile_to_bundled_validator(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            kit = root / "agent-harness-kit"
+            kit.mkdir()
+            (root / "AGENTS.md").write_text("agents\n", encoding="utf-8")
+            (root / "CLAUDE.md").write_text("claude\n", encoding="utf-8")
+            (kit / "PACKAGE-MANIFEST.json").write_text(
+                json.dumps({"profile": "full", "files": []}), encoding="utf-8",
+            )
+            completed = type("Completed", (), {"returncode": 0, "stdout": "", "stderr": ""})()
+            output = io.StringIO()
+            with patch.object(cli, "run_expanded_validator", return_value=completed) as validator, contextlib.redirect_stdout(output):
+                self.assertEqual(cli.doctor(root), 0)
+            self.assertEqual(validator.call_args.args[0], kit.resolve())
+            self.assertIn("is ready", output.getvalue())
+
+    def test_validate_reports_compact_manifest_summary(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            kit = root / "agent-harness-kit"
+            kit.mkdir()
+            manifest = {
+                "schema": "agent-harness-kit.runtime-manifest/v1",
+                "profile": "core",
+                "version": "9.9.9",
+                "files": [{"path": "AGENTS.md"}],
+            }
+            (kit / "PACKAGE-MANIFEST.json").write_text(json.dumps(manifest), encoding="utf-8")
+            output = io.StringIO()
+            with patch.object(cli.runtime_validation, "validate_runtime_install", return_value=[]), contextlib.redirect_stdout(output):
+                self.assertEqual(cli.main(["validate", str(root)]), 0)
+            self.assertEqual(json.loads(output.getvalue())["profile"], "core")
+
+    def test_validate_delegates_expanded_profile_to_bundled_validator(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            kit = root / "agent-harness-kit"
+            kit.mkdir()
+            (kit / "PACKAGE-MANIFEST.json").write_text(
+                json.dumps({"profile": "full", "files": []}), encoding="utf-8",
+            )
+            completed = type("Completed", (), {"returncode": 0})()
+            with patch.object(cli, "run_expanded_validator", return_value=completed) as validator:
+                self.assertEqual(cli.main(["validate", str(root)]), 0)
+            self.assertEqual(validator.call_args.args[0], kit.resolve())
+
+    def test_validate_rejects_unknown_path_without_source_fallback(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            error = io.StringIO()
+            with patch.object(cli, "source_root", side_effect=AssertionError("unexpected fallback")), contextlib.redirect_stderr(error):
+                self.assertEqual(cli.main(["validate", str(root)]), 2)
+            self.assertIn("no compact installation or source checkout", error.getvalue())
+
+    def test_scaffold_list_reports_unreadable_template_pack_without_traceback(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            kit = root / "agent-harness-kit"
+            kit.mkdir()
+            (kit / "PACKAGE-MANIFEST.json").write_text(
+                json.dumps({"schema": "agent-harness-kit.runtime-manifest/v1"}), encoding="utf-8",
+            )
+            error = io.StringIO()
+            with contextlib.redirect_stderr(error):
+                self.assertEqual(cli.main(["scaffold", "--list", "--path", str(root)]), 2)
+            self.assertIn("template pack is missing", error.getvalue())
 
     def test_schedule_prints_machine_readable_ready_batch(self) -> None:
         graph = {

@@ -4,7 +4,7 @@
 
 Turn an initial idea into an approved [project context](contracts/PROJECT-CONTEXT.md), explicit [decisions](contracts/DECISION.md), an optimized [implementation plan](contracts/IMPLEMENTATION-PLAN.md) when work is non-trivial, and a valid initial [task graph](contracts/TASK-GRAPH.md)—without making the user repeat facts already present in the repository or prior approved artifacts.
 
-This interview is the mandatory first-run behavior when `harness-state/PROJECT-CONTEXT.md` is absent or not approved. Codex reaches it through root `AGENTS.md`; Claude Code reaches the same rule through root `CLAUDE.md` importing `@AGENTS.md`. Both may be present, and both use the same neutral context and graph without runtime guessing or profile switching. The interview identifies whether the host project is greenfield, existing, or uncertain; selects standard delivery, optional learning, or the compressed hackathon variant; and completes before implementation planning. See the executable [first-run playbook](../harness/playbooks/first-run.md).
+This interview is the mandatory first-run behavior when `harness-state/PROJECT-CONTEXT.md` is absent or not approved. Codex reaches it through root `AGENTS.md`; Claude Code reaches the same rule through root `CLAUDE.md` importing `@AGENTS.md`. Both may be present, and both use the same neutral context and graph without runtime guessing or profile switching. The interview identifies whether the host project is greenfield, existing, or uncertain; selects standard delivery (accompanied by default), autonomous delivery, or the compressed hackathon variant, with optional learning when requested; and completes before implementation planning. See the executable [first-run playbook](../harness/playbooks/first-run.md).
 
 ## Delivery choice
 
@@ -29,7 +29,7 @@ When the user asks for a hackathon, time-boxed MVP, or demo-first build, follow 
 
 ## First-response handshake
 
-For an uninitialized project, the first response identifies that Agent Harness Kit is active, explains briefly that it organizes project context, pending work, and verifiable execution, says discovery establishes context before implementation planning, mentions that the user may choose standard delivery or the faster hackathon mode for a time-boxed MVP/demo, and asks the highest-leverage unanswered question immediately. The welcome is localized to the user's language, at most two short sentences, and is not marketing copy or a separate approval checkpoint.
+For an uninitialized project, the first response identifies that Agent Harness Kit is active, explains briefly that it organizes project context, pending work, and verifiable execution, says discovery establishes context before implementation planning, mentions that the user may choose standard delivery (accompanied by default), autonomous end-to-end delivery, or the faster hackathon mode for a time-boxed MVP/demo, and asks the highest-leverage unanswered question immediately. The welcome is localized to the user's language, at most two short sentences, and is not marketing copy or a separate approval checkpoint.
 
 For an empty or effectively empty greenfield directory, the first question asks what the user wants to create, for whom, what problem/value it addresses, and what the first successful outcome is. The same kickoff question asks the delivery-mode preference when unanswered; if the mode is already explicit, acknowledge it instead. The visible kit-active welcome must precede the question. The agent does not first invent or recommend product scope, features, visual direction, architecture, stack, implementation steps, or a task graph. When the initial user request already answers some of those fields, reflect and pre-fill them, then ask only for the consequential gap.
 
@@ -71,7 +71,7 @@ Discovery should establish, to the degree relevant:
 - delivery environment, verification commands, and definition of done;
 - platform capabilities and acceptable degradation;
 - native platform tools, MCP servers/connectors, skills, scripts/commands, hooks, and external integrations, including evidence and `available`/`degraded`/`unavailable`/`optional`/`approval-required` state; never assume installation, authentication, secrets, network, or authorization;
-- user-defined business rules, security/privacy constraints, architectural invariants, coding conventions, and path-scoped rules, indexed in/referenced by a rules map with authority, scope, precedence, approval, and validation;
+- user-defined business rules, security/privacy constraints, architectural invariants, coding conventions, and path-scoped rules, indexed in a rules map materialized through the [runtime template catalog](../harness/TEMPLATES.md), with authority, scope, precedence, approval, and validation;
 - optional coding conventions, recorded as detected, user-specified, stack-defaults-approved, or none rather than silently invented;
 - project-specific domains and whether existing roles suffice; when they do not, proposed specialist responsibilities, least tool access, progressive context packet, ownership boundary, independent reviewer, and verification criteria;
 - known risks, assumptions, dependencies, and open questions;

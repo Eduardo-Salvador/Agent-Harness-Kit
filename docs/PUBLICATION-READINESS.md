@@ -2,7 +2,15 @@
 
 This audit applies to the Agent Harness Kit repository, generated profiles, and the public PyPI distribution `agent-harness-kit-cli`.
 
-## Current assessment
+## Current source work
+
+The source checkout now defines a compact `core` client runtime with an enforced ceiling of 80 contained files, including its manifest. The current generated result uses 79. Tests, fixtures, media, benchmarks, examples, and CI remain mandatory in source and release gates but are not copied into a normal client project. Canonical templates are hash-bound in `resources/templates.zip`; `runtime.pyz` keeps deterministic CLI operations portable; installed validation checks hashes, inventory, budgets, archive structure, Markdown link closure, and root bridges.
+
+This compact-runtime change is part of source version `0.7.4`, not the already published `0.7.3` files. PyPI releases are immutable, so `0.7.4` still requires its wheel build, clean-install smoke, publication, and public-index verification before this document may claim it as publicly available.
+
+Current local evidence: the aggregate release gate passed 160 tests, 176 Markdown files, 229 required source files, and all three source-profile boundaries. A local wheel and source distribution built successfully. A clean wheel environment then installed the 79-file `core`, passed version, doctor, compact validation, and template discovery, and exported `full` with the Python runtime and QA suite present. The expanded `full` installation also passed doctor and its bundled source validator. No publication or public-index verification was performed for this source change.
+
+## Published 0.7.3 assessment
 
 Version `0.7.3` is published on PyPI. It adds explicit accompanied (default), autonomous end-to-end, and hackathon presets; a read-only `delivery-mode` inspector; and greeting-triggered onboarding with a visible welcome and unanswered mode choice. All presets preserve completion evidence, approved scope, existing gates, learning consent, and host-capability parallelism.
 
@@ -18,8 +26,8 @@ The existing 0.7.2 scope/product/completion gates remain in force. Legacy JSON n
 - Each generated directory profile can run its own bundled validator using the generated `PACKAGE-MANIFEST.json`.
 - Host-integration validation covers a sanitized namespaced mature-harness fixture plus missing-backlink, silent-omission, stale-snapshot, and premature-cutover failures.
 - Graph validation covers focused `read_set`, exclusive `write_set`, related `impact_set`, pinned `context_provenance`, and the boundary that repository indexes such as Graphify enrich rather than replace the operational task graph.
-- Packaging uses standard-library Python, fixed ZIP metadata, sorted files, hashes, and the shared source version `0.7.3`.
-- Source regression: 136 tests passed; source validator checked 175 Markdown files and 219 required files; both changed native first-run skills passed UTF-8 validation.
+- Packaging uses standard-library Python, fixed ZIP metadata, sorted files, hashes, and the shared source version `0.7.4`.
+- Source regression: 160 tests passed; source validator checked 176 Markdown files and 229 required files; all compact-runtime and native first-run changes passed UTF-8 validation.
 - The `0.7.3` public-index smoke installed 245 profile files plus both root bridges, passed doctor, passed its embedded validator with 146 Markdown files and 244 required files, and passed all 26 delivery-mode/gate tests.
 
 ## Package usability and boundaries

@@ -26,11 +26,46 @@ jobs:
         with:
           python-version: "3.x"
 
+      - name: Run release quality gates
+        run: python tools/release_check.py
+
       - name: Build release distributions
         run: |
-          # NOTE: put your own distribution build steps here.
           python -m pip install build
           python -m build
+
+      - name: Smoke-test built wheel and compact install
+        shell: bash
+        run: |
+          set -euo pipefail
+          smoke_root="$(mktemp -d)"
+          trap 'rm -rf "$smoke_root"' EXIT
+          python -m venv "$smoke_root/venv"
+          "$smoke_root/venv/bin/python" -m pip install dist/*.whl
+          mkdir "$smoke_root/host"
+          "$smoke_root/venv/bin/agent-harness" install "$smoke_root/host"
+          "$smoke_root/venv/bin/agent-harness" doctor "$smoke_root/host"
+          "$smoke_root/venv/bin/agent-harness" validate "$smoke_root/host"
+          "$smoke_root/venv/bin/agent-harness" scaffold --list --path "$smoke_root/host" | grep PROJECT-CONTEXT
+          mkdir "$smoke_root/export"
+          "$smoke_root/venv/bin/agent-harness" export "$smoke_root/export" --profile full
+          "$smoke_root/venv/bin/python" - "$smoke_root/host" <<'PY'
+          import json
+          import pathlib
+          import sys
+          import zipfile
+
+          host = pathlib.Path(sys.argv[1])
+          manifest = json.loads((host / "agent-harness-kit" / "PACKAGE-MANIFEST.json").read_text())
+          assert manifest["schema"] == "agent-harness-kit.runtime-manifest/v1"
+          assert len(manifest["files"]) + 1 <= 80
+          assert not (host / "agent-harness-kit" / "validation").exists()
+          export = next((host.parent / "export").glob("*.zip"))
+          with zipfile.ZipFile(export) as archive:
+              names = set(archive.namelist())
+          assert "agent_harness_kit/cli.py" in names
+          assert "validation/test_runtime_distribution.py" in names
+          PY
 
       - name: Upload distributions
         uses: actions/upload-artifact@v4

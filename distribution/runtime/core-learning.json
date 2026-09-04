@@ -1,0 +1,19 @@
+{
+  "schema": "agent-harness-kit.runtime-profile/v1",
+  "profile": "core-learning",
+  "project_learning_activation": "not-activated",
+  "extends": "core",
+  "files": [
+    ".agents/skills/project-learning/SKILL.md",
+    ".claude/agents/learning-assessor.md",
+    ".claude/skills/project-learning/SKILL.md",
+    "docs/CORE-VS-LEARNING.md",
+    "harness/playbooks/learning-capture-publication.md",
+    "harness/roles/learning-assessor.md",
+    "harness/roles/learning-debriefer-publisher.md"
+  ],
+  "templates": [
+    "harness/templates/LEARNING-PROFILE.md",
+    "harness/templates/LEARNING-QUEUE.md"
+  ]
+}

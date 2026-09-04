@@ -63,6 +63,6 @@ Ready nodes do not own files or contexts. When more than one is eligible, use th
 
 ## Transition log
 
-For substantial product builds, declare milestone `product_review` and link affected dependents through `product_requires` as described in [accompanied delivery](../../docs/ACCOMPANIED-DELIVERY.md). Record revision-pinned `verification` inline before completion. Empty `product_requires` is for genuinely independent work, not permission to omit a planned client milestone.
+For substantial product builds, declare milestone `product_review` and link affected dependents through `product_requires` as described in `agent-harness-kit/docs/ACCOMPANIED-DELIVERY.md` in the host project. Record revision-pinned `verification` inline before completion. Empty `product_requires` is for genuinely independent work, not permission to omit a planned client milestone.
 
 - r1: Draft graph created from approved project context.

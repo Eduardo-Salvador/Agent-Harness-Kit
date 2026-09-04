@@ -28,4 +28,4 @@ The orchestrator then chooses one bounded action: rewrite acceptance, decompose 
 
 Host-reported token or cost data may be recorded as advisory evidence, but the three structural counters remain mandatory because hosts do not expose usage consistently. Never invent token counts. A future autonomous runtime may enforce an additional numerical token or time ceiling without weakening these limits.
 
-See the executable [`harness.execution-budget/v1` contract](contracts/EXECUTION-BUDGET.md) and its reusable [template](../harness/templates/EXECUTION-BUDGET.md).
+See the executable [`harness.execution-budget/v1` contract](contracts/EXECUTION-BUDGET.md). Materialize `EXECUTION-BUDGET` through the [runtime template catalog](../harness/TEMPLATES.md) only when a separate durable budget artifact is needed.

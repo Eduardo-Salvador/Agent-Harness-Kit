@@ -10,12 +10,13 @@ host-project/
 │   ├── AGENTS.md
 │   ├── CLAUDE.md
 │   ├── harness/
-│   ├── adapters/
-│   └── tools/
+│   ├── resources/templates.zip
+│   ├── runtime.pyz
+│   └── tools/validate.py
 └── harness-state/
 ```
 
-`agent-harness-kit/` contains the selected, versioned distribution. `harness-state/` contains host-owned context, decisions, pending work, graph state, tasks, handoffs, and reviews. Keeping state outside the installed distribution prevents a Kit update from replacing project history.
+`agent-harness-kit/` contains the selected, versioned runtime. The default compact `core` install has an enforced ceiling of 80 contained files, including its manifest. Templates live in one hash-verified resource pack and are materialized only when needed. Source tests, fixtures, media, benchmarks, examples, and CI files remain mandatory release inputs but are not copied into a normal client project. `harness-state/` contains host-owned context, decisions, pending work, graph state, tasks, handoffs, and reviews. Keeping state outside the installed distribution prevents a Kit update from replacing project history.
 
 ## Installation
 
@@ -39,7 +40,9 @@ agent-harness install
 
 On Windows, `py -m pip install agent-harness-kit-cli` is equivalent. `uv` and `pipx` are preferred for a CLI because they isolate it from project dependencies automatically.
 
-The current directory and `core` profile are defaults. Add `--dry-run` to preview, `--profile core-learning` for optional project-learning support, or pass another project path after `install`. The command still performs the same contained, preflighted installation described below; it only removes the clone-and-path ceremony. `agent-harness doctor` checks the expected entrypoints after installation, and `agent-harness prompt` prints the fallback activation prompt.
+The current directory and compact `core` profile are defaults. Add `--dry-run` to preview, `--profile core-learning` for optional project-learning support, or pass another project path after `install`. Choose `full` only when the client truly needs the expanded source, QA, media, and Harness engineering material. `agent-harness doctor` checks the entrypoints and compact-runtime integrity; `agent-harness validate` performs the deterministic installed check; and `agent-harness prompt` prints the fallback activation prompt.
+
+PyPI does not allow replacing files for an existing version. The compact-runtime behavior described by the current source checkout becomes available from PyPI only after it is published under a new version. Always verify `agent-harness --version` after upgrading.
 
 The root bridges are not optional side files. A successful installation always creates missing root `AGENTS.md` and `CLAUDE.md` files or updates each existing file with one managed block. If only `agent-harness-kit/` appears, the installation did not complete successfully or the directory was copied manually; run `agent-harness doctor` and reinstall with the CLI rather than relying on the contained directory alone.
 
@@ -77,7 +80,16 @@ After installation:
 
 1. Inspect root `AGENTS.md` and `CLAUDE.md`; existing content remains outside one managed block.
 2. Open a new agent context at the host-project root so the host reloads the root entrypoint. The bridge routes it to the embedded Kit, which applies first-run or status/resume behavior.
-3. Run the embedded validator from the host root with `python agent-harness-kit/tools/validate.py`.
+3. Run `agent-harness validate`. Without the global CLI, compact installs use `python agent-harness-kit/runtime.pyz validate` from the host root. For expanded `full`, set the working directory to `agent-harness-kit/` and run `python -m agent_harness_kit validate`.
+
+List and materialize canonical templates without unpacking the whole template library:
+
+```text
+agent-harness scaffold --list
+agent-harness scaffold PROJECT-CONTEXT --output harness-state/PROJECT-CONTEXT.md
+```
+
+For a compact install without the global CLI, replace `agent-harness` with `python agent-harness-kit/runtime.pyz`. Scaffold refuses to overwrite an existing file unless `--force` is explicitly provided. An expanded `full` install already exposes the canonical files under `agent-harness-kit/harness/templates/`.
 
 If the host does not load root instructions automatically, paste the same activation prompt printed by the installer:
 
@@ -85,7 +97,7 @@ If the host does not load root instructions automatically, paste the same activa
 Agent Harness Kit is installed in this project. Before scanning, proposing, planning, reporting status, or changing files, read the applicable root AGENTS.md or CLAUDE.md, then follow the referenced instructions under agent-harness-kit/. Check harness-state/PROJECT-CONTEXT.md first: approved context resumes without a first-run welcome; only missing or unapproved context starts first-run discovery.
 ```
 
-Manual installation remains available: copy the complete generated profile to `agent-harness-kit/`, then add exactly one block from the [AGENTS bridge template](../harness/templates/ROOT-AGENTS-BRIDGE.md) and [Claude bridge template](../harness/templates/ROOT-CLAUDE-BRIDGE.md), preserving all surrounding content.
+Manual installation remains available from an expanded source/export profile: copy the generated profile to `agent-harness-kit/`, then add exactly one block from the [AGENTS bridge template](../harness/templates/ROOT-AGENTS-BRIDGE.md) and [Claude bridge template](../harness/templates/ROOT-CLAUDE-BRIDGE.md), preserving all surrounding content. Prefer the installer for compact profiles because it generates and hashes their runtime archive and template pack.
 
 If a root entrypoint does not exist, create it with only the applicable bridge block. If it already exists, add one block without rewriting surrounding project instructions. Do not duplicate the block on later updates.
 

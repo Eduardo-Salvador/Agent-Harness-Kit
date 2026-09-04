@@ -2,28 +2,27 @@
 
 Agent Harness Kit uses the repository slug `Agent-Harness-Kit`, the contained installation directory `agent-harness-kit/`, and the PyPI distribution name `agent-harness-kit-cli`. The shorter PyPI name is owned by an unrelated project.
 
-One canonical source tree produces three downloadable profiles. Long-lived branches are not editions: they would duplicate fixes, contracts, and safety rules and eventually drift. Profiles are generated views of one shared project version.
+One canonical source tree produces three source/export profiles and two compact client-runtime profiles. Long-lived branches are not editions: they would duplicate fixes, contracts, and safety rules and eventually drift. Every profile is a generated view of one shared project version.
 
-Every profile includes the root [MIT License](../LICENSE) with the same copyright notice.
-Every profile also includes both versioned overview audios, their bilingual narration scripts, and `media/overview-audio-manifest.json`. The manifest binds script/audio hashes and audition status so README and audio drift cannot remain invisible after copying.
+Every source/export profile includes the root [MIT License](../LICENSE) with the same copyright notice. Source/export profiles retain both versioned overview audios, their bilingual narration scripts, the complete validation suite, fixtures, benchmarks, and release tooling. These are release and audit inputs, not files that a normal project must carry at runtime.
 
-Every profile includes the provider-neutral capability-routing policy and template. Adapter mappings resolve model names at runtime; changing providers or model catalogs does not fork the core contracts.
+Every client runtime includes the provider-neutral capability-routing policy. Canonical templates are hash-bound inside `resources/templates.zip` and are materialized individually only when an actual consumer exists. Adapter mappings resolve model names at runtime; changing providers or model catalogs does not fork the core contracts.
 
-Every profile includes both native platform entrypoints and the smallest operational extensions: root `AGENTS.md` plus `.agents/skills/` for Codex, and root `CLAUDE.md` plus `.claude/skills/` and bounded `.claude/agents/` for Claude Code. Profile selection is about learning content, not platform. No runtime guess or manual switch is required; each tool reads its own entrypoint and converges on the same neutral core/state. Project-learning skills and agents appear only in `core-learning` and `full`.
+Every runtime includes both native platform entrypoints and the smallest operational extensions: root `AGENTS.md` plus `.agents/skills/` for Codex, and root `CLAUDE.md` plus `.claude/skills/` and bounded `.claude/agents/` for Claude Code. Profile selection is about learning content, not platform. No runtime guess or manual switch is required; each tool reads its own entrypoint and converges on the same neutral core/state. Project-learning skills and agents appear only in `core-learning` and `full`.
 
 | Profile | Includes | Excludes |
 | --- | --- | --- |
-| `core` | Development Core, development-only example, contracts, validation, adapters | Project-learning operational files and Learning Pack |
+| `core` | Complete source QA plus the compact default runtime definition | Project-learning operational files and Learning Pack |
 | `core-learning` | `core` plus project-learning roles/templates/playbook/example | Learning Pack |
-| `full` | `core-learning` plus the removable Learning Pack | Nothing selected by the full manifest |
+| `full` | `core-learning` plus every canonical source, media, fixture, benchmark, and Harness Engineering Learning Pack | Nothing |
 
 Every generated package records `project_learning_activation: not-activated`. Profile selection controls file availability only; it never activates consent, observation, retention, or publication. Mature hosts should install into a namespace and follow the [adoption playbook](../harness/playbooks/mature-harness-adoption.md), not overwrite colliding root entrypoints, `.agents/`, `.claude/`, or `.mcp.json`.
 
-The recommended contained host layout places the complete generated profile under `agent-harness-kit/` and adds only managed bridge blocks to host root entrypoints. The distribution remains replaceable while host-owned `harness-state/` remains outside it. See [embedded installation](EMBEDDED-INSTALLATION.md).
+The recommended contained host layout places the compact generated runtime under `agent-harness-kit/` and adds only managed bridge blocks to host root entrypoints. The default `core` runtime has an enforced ceiling of 80 contained files, including its manifest. It excludes `.github/`, `benchmarks/`, `distribution/`, `examples/`, `media/`, and `validation/` from the client project. Quality is preserved by keeping those assets mandatory in source and blocking releases when the QA inventory, test-count floor, validator, installed-host smoke, or any profile boundary fails. Host-owned `harness-state/` remains outside the replaceable distribution. See [embedded installation](EMBEDDED-INSTALLATION.md).
 
 The end-user CLI is packaged through `pyproject.toml` with no runtime dependencies. Its PyPI distribution name is `agent-harness-kit-cli` because `agent-harness-kit` belongs to an unrelated project. The persistent flow is `uv tool install agent-harness-kit-cli`, then `agent-harness install`; the GitHub `uvx --from git+...` route and legacy source installer remain supported.
 
-The explicit manifests are in [distribution/profiles](../distribution/profiles/core.json). `extends` expresses inheritance; source files remain single-copy. The packager expands sorted inclusion globs, applies exclusions, validates profile boundaries, and writes a generated inventory.
+Source/export manifests are in [distribution/profiles](../distribution/profiles/core.json). Exact client-runtime manifests are in [distribution/runtime](../distribution/runtime/core.json). Source profiles deliberately retain QA and media; runtime profiles use explicit file lists instead of repository-wide globs. Both layers validate their inheritance, boundaries, and non-activation of learning.
 
 ## Build
 
@@ -35,6 +34,14 @@ python tools/package.py --profile core-learning --output <outside-directory> --f
 python tools/package.py --profile full --output <outside-directory>
 ```
 
+The same expanded portable artifact is available through the installed CLI:
+
+```text
+agent-harness export <outside-directory> --profile full
+```
+
+Use an expanded export for offline audit, redistribution, or Harness engineering. It is intentionally not the default project installation.
+
 Install a profile into a host project with a preflight-only pass followed by the explicit write:
 
 ```text
@@ -42,20 +49,20 @@ python tools/install.py --profile core --host <host-project> --dry-run
 python tools/install.py --profile core --host <host-project>
 ```
 
-The source checkout selects the requested profile. A generated package installs only its own manifest-declared profile and verifies every packaged file hash before writing.
+The source checkout selects the requested profile. `core` and `core-learning` install their exact compact runtime, generate a deterministic `runtime.pyz` and template pack, then hash every installed file. `full` remains the explicit expanded installation. A generated source package installs only its own manifest-declared profile and verifies every packaged source hash before writing.
 
 ZIP entries are sorted, use a fixed timestamp and permissions, and contain source bytes plus `PACKAGE-MANIFEST.json`. Repeating a build from identical source/version produces identical archive bytes.
 
 Generated names follow `agent-harness-kit-<version>-<profile>.zip` (or the same name as a directory).
 
-Build the installable Python package separately with `uv build`. Before each release, test the resulting wheel in a clean environment and install a profile into an empty host. Publishing to PyPI is an external release action and is not performed by the build itself. Version `0.7.3` was published as `agent-harness-kit-cli` through GitHub Actions Trusted Publishing, then downloaded without cache into a clean Windows environment. Core installation, both root bridges, doctor, the embedded validator, and all 26 delivery-mode/gate tests passed.
+Build the installable Python package separately with `uv build`. Before each release, test the resulting wheel in a clean environment and install a profile into an empty host. Publishing to PyPI is an external release action and is not performed by the build itself. Version `0.7.3` was published as `agent-harness-kit-cli` through GitHub Actions Trusted Publishing, then downloaded without cache into a clean Windows environment. Core installation, both root bridges, doctor, the embedded validator, and all 26 delivery-mode/gate tests passed. PyPI files are immutable: source version `0.7.4` contains the compact-runtime work, but it must be published before a PyPI upgrade can provide it and must not be described as part of the already published `0.7.3` artifact.
 
 ## Version strategy
 
-Release `0.7.3` adds three explicit delivery presets, a read-only CLI inspector, and greeting-triggered onboarding with a visible welcome and mode question. It preserves existing runtime modes, approval gates, learning consent, and agent-capacity rules. Source, wheel/sdist, clean installation, public-index installation, and two bounded real Claude greeting cases were verified.
+Source version `0.7.4` adds the 79-file default client runtime, packed templates, portable validation and scaffolding, exact QA inventory, source-integrity checks, and blocking release gates. Release `0.7.3` added three explicit delivery presets, a read-only CLI inspector, and greeting-triggered onboarding with a visible welcome and mode question. It preserves existing runtime modes, approval gates, learning consent, and agent-capacity rules. Source, wheel/sdist, clean installation, public-index installation, and two bounded real Claude greeting cases were verified for that public release.
 
 Release `0.7.2` adds client milestone pauses, progressive feature scope, explicit completion conditions, and runtime evidence gates. Source, wheel/sdist, clean wheel installation, and public-index installation were verified. Legacy JSON nodes remain compatible, while table-only Markdown requires an executable JSON block before ready/active/completed transitions.
 
 Release `0.7.1` keeps execution adaptive and adds explicit project-shape discovery: architecture and folder organization are resolved from approved evidence or focused questions before planning, while coding conventions remain optional and evidence-first. Lane, assurance, and artifact shape remain independent; resume probes real state first; preflight blocks missing prerequisites; handoff/review files require a real consumer; and proportional tests, scheduling, atomic graph transitions, and metrics retain the `0.7` guarantees.
 
-`VERSION` is the single version value shared by all three bundles; profile names are suffixes, not independent versions. `0.1.0` is the initial public source version, `0.2.0` adds contained installation plus continuous-delivery governance, `0.3.0` adds executable status reporting and bounded reviews, `0.4.0` adds frontend/learning/context routing, `0.5.x` adds the installable CLI and hackathon delivery, `0.6.x` adds feature discovery, TDD, native dispatch, parallel scheduling, and graph readiness, `0.7.0` adds adaptive execution, real-state-first resume, preflight, compact artifacts, runtime state/event/metric primitives, and benchmark isolation, and `0.7.1` closes architecture/folder organization plus optional coding conventions during adaptive first-run discovery. `0.7.2` adds accompanied delivery and explicit scope/product/completion gates. `0.7.3` adds delivery presets and greeting onboarding. A future approved release changes `VERSION` once and validates all profiles.
+`VERSION` is the single version value shared by all three bundles; profile names are suffixes, not independent versions. `0.1.0` is the initial public source version, `0.2.0` adds contained installation plus continuous-delivery governance, `0.3.0` adds executable status reporting and bounded reviews, `0.4.0` adds frontend/learning/context routing, `0.5.x` adds the installable CLI and hackathon delivery, `0.6.x` adds feature discovery, TDD, native dispatch, parallel scheduling, and graph readiness, `0.7.0` adds adaptive execution, real-state-first resume, preflight, compact artifacts, runtime state/event/metric primitives, and benchmark isolation, and `0.7.1` closes architecture/folder organization plus optional coding conventions during adaptive first-run discovery. `0.7.2` adds accompanied delivery and explicit scope/product/completion gates. `0.7.3` adds delivery presets and greeting onboarding. `0.7.4` adds the compact client runtime and exact release QA gates. A future approved release changes `VERSION` once and validates all profiles.

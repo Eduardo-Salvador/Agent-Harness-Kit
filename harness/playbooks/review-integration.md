@@ -1,6 +1,6 @@
 # Playbook: Review and integration
 
-Enter this playbook only when orthogonal assurance is `light` or `full` and an actual separate reviewer will consume the packet. `none` closes with executor verification in the concise transition/closeout. Same-context self-review is not independent assurance, and same-context execution does not create a ceremonial handoff.
+Enter this playbook only when orthogonal assurance is `light` or `full` and an actual separate reviewer will consume the packet. Record the verdict with a `harness.review/v1` result materialized from `REVIEW` in the [runtime template catalog](../TEMPLATES.md). `none` closes with executor verification in the concise transition/closeout. Same-context self-review is not independent assurance, and same-context execution does not create a ceremonial handoff.
 
 1. Map `assurance: light` to a focused `light` review and `assurance: full` to `standard|critical`; declare `max_review_rounds: 1|2`. A larger automatic budget is invalid.
 2. The implementer writes an immutable completed handoff only because a separate reviewer is the receiving consumer.

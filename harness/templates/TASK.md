@@ -103,7 +103,7 @@ Replace with one bounded result.
 ## Verification
 
 - Replace with a reproducible command/check or a declared manual evidence procedure.
-- Pin the graph node's `acceptance_revision`, `test_strategy`, and `runtime_smoke_required` before execution; record current `verification` according to [executable acceptance](../../docs/ACCOMPANIED-DELIVERY.md).
+- Pin the graph node's `acceptance_revision`, `test_strategy`, and `runtime_smoke_required` before execution; record current `verification` according to `agent-harness-kit/docs/ACCOMPANIED-DELIVERY.md` in the host project.
 - For automation, entrypoint, configuration-consumer, or integration changes: run a controlled affected-flow smoke including visible failure behavior. Record command, expected/observed results, exit code, and original evidence reference. A build alone is insufficient; reuse a qualifying integration run rather than duplicate it.
 
 ## Stop and replan

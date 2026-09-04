@@ -1,6 +1,6 @@
 # Contract: Project context
 
-Canonical approved intent and constraints for a project. Store instances in a future runtime state directory; do not overwrite this template.
+Canonical approved intent and constraints for a project. Store the active instance at `harness-state/PROJECT-CONTEXT.md` in the host-project root; do not overwrite this contract.
 
 ```yaml
 ---
@@ -70,7 +70,7 @@ pending_authority: harness-state/PENDING.md
 - Required: Markdown validator and repository-local test runner.
 
 ## References
-- Decisions: `DEC-001` at `state/decisions/DEC-001.md` (illustrative runtime path)
+- Decisions: `DEC-001` at `harness-state/decisions/DEC-001.md`
 - Pending authority: `harness-state/PENDING.md`; human decisions/actions and macro incomplete project areas only.
 - Provenance: source identities/backlinks in `migration-main@1`.
 ```
